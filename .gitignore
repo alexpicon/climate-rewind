@@ -1,0 +1,20 @@
+node_modules/
+.next/
+next-env.d.ts
+*.tsbuildinfo
+.DS_Store
+public/vendor/
+
+# data pipeline (Python): environment, downloaded sources, build output, caches
+pipeline/.venv/
+pipeline/raw/
+pipeline/out/
+pipeline/cache/
+__pycache__/
+.pytest_cache/
+*.tmp
+
+# secrets: never commit
+.env
+.env.*
+!.env.example
