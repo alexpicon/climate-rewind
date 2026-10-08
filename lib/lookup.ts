@@ -326,6 +326,9 @@ async function summarizeAddressHeat(
     if (!daily.value) return { value: null, notice: daily.notice };
     summary = summarizeHeat(daily.value);
     if (!summary) return { value: null, notice: "There was not enough temperature data for this address." };
+    // Open-Meteo was rate limited or down: the highs are a heat index from NASA POWER. Say so, and keep the regional map (which is
+    // Open-Meteo's feels-like) out of it, so two different measures are never drawn as one.
+    if (daily.source === "nasa-power") return { value: { ...summary, provider: "nasa-power" } };
   }
 
   if (address.city) {

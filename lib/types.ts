@@ -163,6 +163,9 @@ export interface HeatDay {
   feelsF: number;
 }
 
+/** Where the daily highs came from. Absent means Open-Meteo (ERA5 feels-like), the usual source. */
+export type HeatSource = "open-meteo" | "nasa-power";
+
 export interface HeatSummary {
   /** Days per year with a feels-like high of 100 F or more. */
   byYear: Record<string, number>;
@@ -171,6 +174,11 @@ export interface HeatSummary {
   worstWeek: { start: string; end: string; daily: HeatDay[] };
   /** Slug of a regional grid in data/heat/ that matches worstWeek, if any (additive). */
   regionalSlug: string | null;
+  /**
+   * Additive. "nasa-power" when Open-Meteo was rate limited or down and the highs are a heat index (NWS formula) computed from
+   * NASA POWER (MERRA-2) instead of Open-Meteo's feels-like. Absent: Open-Meteo.
+   */
+  provider?: HeatSource;
 }
 
 export interface LookupAddress {
@@ -224,6 +232,11 @@ export interface FloodTrigger {
     updated: string | null;
   } | null;
   notices: { history?: string; forecast?: string };
+  /**
+   * Additive. Where the rain on the flood dates came from: ERA5 via Open-Meteo (absent or "era5"), NASA POWER (MERRA-2) when Open-Meteo
+   * was rate limited or down ("nasa-power"), or a mix of both ("mixed").
+   */
+  rainSource?: "era5" | "nasa-power" | "mixed";
 }
 
 export type Coverage = "indexed" | "fixture" | "not yet indexed";

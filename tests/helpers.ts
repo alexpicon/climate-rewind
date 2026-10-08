@@ -83,7 +83,7 @@ export function openMeteoReply(days: HeatDay[]) {
  * A fetch that answers by URL. Any host without a route throws, so a test can never
  * quietly reach the real network.
  */
-export function fakeFetch(routes: { census?: Route; fema?: Route; nws?: Route; meteo?: Route }): FetchLike {
+export function fakeFetch(routes: { census?: Route; fema?: Route; nws?: Route; meteo?: Route; power?: Route }): FetchLike {
   return async (url) => {
     const pick = (host: string, route?: Route) => {
       if (!url.includes(host)) return null;
@@ -94,7 +94,8 @@ export function fakeFetch(routes: { census?: Route; fema?: Route; nws?: Route; m
       pick("geocoding.geo.census.gov", routes.census) ??
       pick("hazards.fema.gov", routes.fema) ??
       pick("api.weather.gov", routes.nws) ??
-      pick("archive-api.open-meteo.com", routes.meteo);
+      pick("archive-api.open-meteo.com", routes.meteo) ??
+      pick("power.larc.nasa.gov", routes.power);
     if (!hit) throw new Error(`unrouted URL in test: ${url}`);
     return hit;
   };

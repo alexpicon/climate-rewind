@@ -223,3 +223,51 @@ describe("failure notices read as sentences", () => {
     expect(((await response.json()) as LookupErrorBody).error).toBe("We could not reach the US Census address service. Please try again in a moment.");
   });
 });
+
+describe("input that is not an address at all", () => {
+  it.each([
+    ['<img src=x onerror=alert(1)>'],
+    ['<script>alert(1)</script>'],
+    ["100 Main St {{7*7}} | `ls`"],
+    ["!!"],
+    ["\u0007\u0007"],
+  ])("%j: a 400 with a friendly message, and the Census is never asked", async (address) => {
+    let asked = 0;
+    stubServices({ census: () => (asked += 1, json(census(null))) });
+    const response = await lookup(address);
+    expect(response.status).toBe(400);
+    const body = (await response.json()) as LookupErrorBody;
+    expect(body.error).toBe("That doesn't look like a street address. Type the house number, street, city and state, like 100 James Robertson Pkwy, Nashville, TN.");
+    expect(body.error).not.toMatch(/Census service|try again in a moment/);
+    expect(asked).toBe(0);
+  });
+
+  it("when the Census itself refuses the text (HTTP 400) it is the same friendly 400, not a 502", async () => {
+    stubServices({ census: () => json({ errors: ["bad"] }, 400) });
+    const response = await lookup("Nashville banana");
+    expect(response.status).toBe(400);
+    expect(((await response.json()) as LookupErrorBody).error).toMatch(/doesn't look like a street address/);
+  });
+
+  it("but the Census being down (HTTP 500) is still on us: 502", async () => {
+    stubServices({ census: () => json({ errors: ["down"] }, 500) });
+    expect((await lookup("100 James Robertson Pkwy, Nashville, TN")).status).toBe(502);
+  });
+});
+
+describe("the Census failing for a moment", () => {
+  it("one quick failure (HTTP 503) is retried once and the lookup goes through", async () => {
+    let asked = 0;
+    stubServices({ census: () => (asked += 1, asked === 1 ? json({ errors: ["blip"] }, 503) : json(census(NASHVILLE))) });
+    const response = await lookup("100 James Robertson Pkwy, Nashville, TN");
+    expect(response.status).toBe(200);
+    expect(asked).toBe(2);
+  });
+
+  it("two failures in a row are a 502 (one retry, not a loop)", async () => {
+    let asked = 0;
+    stubServices({ census: () => (asked += 1, json({ errors: ["down"] }, 503)) });
+    expect((await lookup("100 James Robertson Pkwy, Nashville, TN")).status).toBe(502);
+    expect(asked).toBe(2);
+  });
+});

@@ -1,6 +1,7 @@
 import type { FloodTrigger } from "@/lib/types";
 import { niceDate } from "@/lib/ui/text";
-import { dayPossessive, TRIGGER_FINE_PRINT, TRIGGER_TITLE, triggerCopy } from "@/lib/ui/trigger-text";
+import { dayPossessive, TRIGGER_TITLE, triggerCopy, triggerFinePrint } from "@/lib/ui/trigger-text";
+import { POWER_NAME } from "@/lib/ui/data-source";
 
 /**
  * "Your street's flood trigger": the typical (median) rain on days with flood reports here, beside the official forecast.
@@ -43,7 +44,13 @@ export function TriggerCard({ trigger }: { trigger: FloodTrigger }) {
           </table>
           <p className="trig-n">The typical rain is the median of these days: {trigger.triggerIn?.toFixed(2)} in.</p>
           <p className="trig-n">
-            Rain is the larger of that day’s total and the day before’s, from ERA5 (about a 25 km grid, which can miss a small storm, so a low total does not mean it was a light rain on the street).
+            Rain is the larger of that day’s total and the day before’s, from{" "}
+            {trigger.rainSource === "nasa-power"
+              ? `${POWER_NAME} (Open-Meteo was not answering; about a 50 km grid`
+              : trigger.rainSource === "mixed"
+                ? `ERA5 and ${POWER_NAME} (Open-Meteo did not answer for some dates; about a 25 to 50 km grid`
+                : "ERA5 (about a 25 km grid"}
+            , which can miss a small storm, so a low total does not mean it was a light rain on the street).
           </p>
           {forecast ? (
             <table>
@@ -66,7 +73,7 @@ export function TriggerCard({ trigger }: { trigger: FloodTrigger }) {
           ) : null}
         </details>
       ) : null}
-      <p className="trig-fine">{TRIGGER_FINE_PRINT}</p>
+      <p className="trig-fine">{triggerFinePrint(trigger)}</p>
     </section>
   );
 }

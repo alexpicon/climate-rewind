@@ -4,7 +4,7 @@ import type { HeatSummary } from "@/lib/types";
  * Days per year at a feels-like high of 100 F or more, at this address. Every bar is a real count;
  * the highest and lowest are labelled and the full list is in the text version's table.
  */
-export function HeatChart({ byYear, hottestYear }: { byYear: HeatSummary["byYear"]; hottestYear: string }) {
+export function HeatChart({ byYear, hottestYear, measure = "feels-like" }: { byYear: HeatSummary["byYear"]; hottestYear: string; /** "feels-like", or "heat index" when NASA POWER stood in for Open-Meteo. */ measure?: string }) {
   const years = Object.keys(byYear).sort();
   const max = Math.max(1, ...years.map((y) => byYear[y]));
   const maxYear = years.reduce((a, b) => (byYear[b] > byYear[a] ? b : a), years[0]);
@@ -20,7 +20,7 @@ export function HeatChart({ byYear, hottestYear }: { byYear: HeatSummary["byYear
   return (
     <figure className="chart-wrap">
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-labelledby="chart-t chart-d">
-        <title id="chart-t">Days per year at 100 degrees or more, feels-like</title>
+        <title id="chart-t">Days per year at 100 degrees or more, {measure}</title>
         <desc id="chart-d">
           {`${years[0]} to ${years[years.length - 1]}. Most: ${byYear[maxYear]} days in ${maxYear}. Fewest: ${byYear[minYear]} days in ${minYear}. The full list is in the text version.`}
         </desc>
@@ -51,7 +51,7 @@ export function HeatChart({ byYear, hottestYear }: { byYear: HeatSummary["byYear
           );
         })}
       </svg>
-      <figcaption className="hint">Days a year the feels-like high reached 100°F at this address. The orange bar holds the hottest day.</figcaption>
+      <figcaption className="hint">Days a year the {measure} high reached 100°F at this address. The orange bar holds the hottest day.</figcaption>
     </figure>
   );
 }

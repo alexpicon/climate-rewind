@@ -10,11 +10,13 @@
  * below, near (within 20% either way) or above.
  *
  * The sample addresses read their rain history from a build-time snapshot (`knownRain`), so only the live forecast is fetched.
+ * When Open-Meteo is rate limited or down, the rain comes from NASA POWER (MERRA-2) instead, and the trigger says so (`rainSource`).
  *
  * Every outside call has the usual 8 s timeout and degrades to a plain-language notice. Tests pass a fake fetch.
  */
 import { describeFailure, fetchJson, USER_AGENT, type FetchLike } from "./http";
 import { gridKey, LruCache } from "./lru";
+import { fetchPowerRain } from "./nasa-power";
 import type { FloodTrigger, ForecastDay, NearbyFlood, TriggerDay, TriggerVerdict } from "./types";
 
 /** Fewer flood dates than this and there is no honest trigger. */
@@ -100,20 +102,38 @@ export function rainRanges(dates: string[]): Array<{ start: string; end: string 
   return cost(single) <= cost(merged) ? single : merged;
 }
 
-/** Daily rain totals (inches) at a point from the Open-Meteo archive (ERA5), for the days around the given flood dates. */
+/** Where a set of rain totals came from. */
+export type RainOrigin = "era5" | "nasa-power" | "mixed";
+
+/**
+ * Daily rain totals (inches) at a point for the days around the given flood dates: Open-Meteo (ERA5) first. Any range it cannot
+ * give (a 429, a timeout, no data) is asked of NASA POWER in ONE request spanning those ranges. `origin` says which was used.
+ */
 export async function fetchRainForDates(
   lat: number,
   lon: number,
   dates: string[],
   fetchFn: FetchLike,
   now: () => Date = () => new Date(),
-): Promise<{ rain: Map<string, number | null> | null; notice?: string }> {
-  const results = await Promise.all(rainRanges(dates).map((range) => fetchDailyRain(lat, lon, range.start, range.end, fetchFn, now)));
-  const failed = results.find((r) => !r.rain);
-  if (failed || results.length === 0) return { rain: null, notice: failed?.notice ?? "The Open-Meteo weather archive had no rainfall records for this address." };
+): Promise<{ rain: Map<string, number | null> | null; notice?: string; origin?: RainOrigin }> {
+  const ranges = rainRanges(dates);
+  const results = await Promise.all(ranges.map((range) => fetchDailyRain(lat, lon, range.start, range.end, fetchFn, now)));
+  if (results.length === 0) return { rain: null, notice: "The Open-Meteo weather archive had no rainfall records for this address." };
+
   const rain = new Map<string, number | null>();
+  const missing = ranges.filter((_range, i) => !results[i].rain);
   for (const r of results) for (const [date, inches] of r.rain ?? []) rain.set(date, inches);
-  return { rain };
+  if (missing.length === 0) return { rain, origin: "era5" };
+
+  const first = missing.map((range) => range.start).sort()[0];
+  const last = missing.map((range) => range.end).sort().at(-1) as string;
+  const power = await fetchPowerRain(lat, lon, first, last, fetchFn, now);
+  const reason = results.find((r) => !r.rain)?.notice ?? "The Open-Meteo weather archive had no rainfall records for this address.";
+  if (!power.value) return { rain: null, notice: `${reason} The fallback did not work either: ${power.notice}` };
+  for (const range of missing) {
+    for (let day = range.start; day <= range.end; day = shiftDate(day, 1)) rain.set(day, power.value.get(day) ?? null);
+  }
+  return { rain, origin: missing.length === ranges.length ? "nasa-power" : "mixed" };
 }
 
 /** The archive request for a point and a range of dates: one daily variable, inches, ERA5, local dates. */
@@ -261,7 +281,7 @@ export async function fetchForecastRain(
 
 // ---------------------------------------------------------------- the whole signal
 
-const NOTHING_TO_FETCH: { rain: Map<string, number | null> | null; notice?: string } = { rain: new Map() };
+const NOTHING_TO_FETCH: { rain: Map<string, number | null> | null; notice?: string; origin?: RainOrigin } = { rain: new Map() };
 
 export interface TriggerDeps {
   fetch: FetchLike;
@@ -305,6 +325,11 @@ export async function buildFloodTrigger(
   }
 
   const result: FloodTrigger = { ...base, status: "ready", triggerIn, history, notices: {} };
+  // Rain from the snapshot (or a fetch) is ERA5; if any of it came from NASA POWER, say so.
+  if (archive.origin === "nasa-power" || archive.origin === "mixed") {
+    const hadEra5 = archive.origin === "mixed" || dates.some((date) => has(date) && has(shiftDate(date, -1)));
+    result.rainSource = hadEra5 ? "mixed" : "nasa-power";
+  }
   if (!forecast.days) {
     result.notices.forecast = forecast.notice;
     return result;

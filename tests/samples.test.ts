@@ -95,10 +95,11 @@ describe("live data for any other address is cached by 0.05 degree cell", () => 
     };
     const failed = await fetchDailyFeelsLike(36.168, -86.777, fetchFn, () => NOW);
     expect(failed.value).toBeNull();
-    expect(failed.notice).toBe("The Open-Meteo weather archive returned an error (HTTP 429).");
+    expect(failed.notice).toMatch(/^The Open-Meteo weather archive returned an error \(HTTP 429\)\. The fallback did not work either: .*NASA POWER/);
     const again = await fetchDailyFeelsLike(36.168, -86.777, fetchFn, () => NOW);
     expect(again.value).not.toBeNull();
-    expect(calls).toBe(2);
+    // 1: Open-Meteo 429, 2: the NASA POWER fallback (also failed here), 3: the retry, answered by Open-Meteo. Nothing failed was cached.
+    expect(calls).toBe(3);
   });
 
   it("the rain history of a cell is reused for another address in it", async () => {
@@ -207,7 +208,7 @@ describe("the flood trigger with known rain", () => {
   it("without a snapshot the archive failing is still shown honestly", async () => {
     const trigger = await buildFloodTrigger({ lat: NASHVILLE[0], lon: NASHVILLE[1] }, reports, { fetch: async () => httpError(429), now: () => NOW });
     expect(trigger.status).toBe("unavailable");
-    expect(trigger.notices.history).toBe("The Open-Meteo weather archive returned an error (HTTP 429).");
+    expect(trigger.notices.history).toMatch(/^The Open-Meteo weather archive returned an error \(HTTP 429\)\. The fallback did not work either: .*NASA POWER/);
   });
 });
 
@@ -254,7 +255,7 @@ describe("a lookup of a sample address", () => {
     const payload = await lookupAddress("100 James Robertson Pkwy, Nashville, TN", deps(calls, [snapshot()]));
     expect(payload.heat).not.toBeNull();
     expect(payload.floodTrigger.status).toBe("unavailable");
-    expect(payload.floodTrigger.notices.history).toBe("The Open-Meteo weather archive returned an error (HTTP 429).");
+    expect(payload.floodTrigger.notices.history).toMatch(/^The Open-Meteo weather archive returned an error \(HTTP 429\)\. The fallback did not work either: .*NASA POWER/);
   });
 
   it("an address 1 km away is not a sample: it is live, and the honest 429 shows", async () => {
@@ -262,7 +263,7 @@ describe("a lookup of a sample address", () => {
     const elsewhere = { result: { addressMatches: [{ ...CENSUS_NASHVILLE.result.addressMatches[0], coordinates: { x: NASHVILLE[1], y: NASHVILLE[0] + 0.01 } }] } };
     const payload = await lookupAddress("somewhere else", deps(calls, [snapshot({ rain })], elsewhere));
     expect(payload.heat).toBeNull();
-    expect(payload.notices.heat).toBe("The Open-Meteo weather archive returned an error (HTTP 429).");
+    expect(payload.notices.heat).toMatch(/^The Open-Meteo weather archive returned an error \(HTTP 429\)\. The fallback did not work either: .*NASA POWER/);
     expect(calls.some((url) => url.includes("archive-api"))).toBe(true);
   });
 

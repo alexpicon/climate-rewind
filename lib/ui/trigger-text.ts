@@ -3,8 +3,13 @@
  * The signal is history-based: it never says a flood "will" happen.
  */
 import type { FloodTrigger } from "../types";
+import { rainLabel } from "./data-source";
 
 export const TRIGGER_FINE_PRINT = "Based on NWS reports near this address and ERA5 rainfall; a history-based signal, not a flood forecast.";
+/** The fine print under the trigger; names NASA POWER when it stood in for Open-Meteo. */
+export function triggerFinePrint(trigger: Pick<FloodTrigger, "rainSource">): string {
+  return `Based on NWS reports near this address and ${rainLabel(trigger)}; a history-based signal, not a flood forecast.`;
+}
 export const TRIGGER_TITLE = "Your street’s flood trigger";
 export const NOT_ENOUGH_HISTORY = "Not enough history at this address yet.";
 

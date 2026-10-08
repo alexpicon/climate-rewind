@@ -1,11 +1,12 @@
 /**
- * The live external sources: Census geocoder, FEMA NFHL, NWS alerts, Open-Meteo.
+ * The live external sources: Census geocoder, FEMA NFHL, NWS alerts, Open-Meteo (with NASA POWER as its fallback).
  * Each call takes an injectable fetch (so tests never touch the network), has an
  * 8 s timeout, and degrades to `null` plus a plain-language notice.
  */
 import { describeFailure, fetchJson, USER_AGENT, type FetchLike } from "./http";
 import { gridKey, LruCache } from "./lru";
-import type { AlertGeometry, FemaZone, HeatDay, LiveAlert, LiveAlerts, LookupAddress } from "./types";
+import { fetchPowerHeat } from "./nasa-power";
+import type { AlertGeometry, FemaZone, HeatDay, HeatSource, LiveAlert, LiveAlerts, LookupAddress } from "./types";
 
 export class LookupError extends Error {
   constructor(
@@ -20,6 +21,8 @@ export class LookupError extends Error {
 export interface Sourced<T> {
   value: T | null;
   notice?: string;
+  /** Which service the value came from, when a fallback exists (heat: Open-Meteo, or NASA POWER when Open-Meteo failed). */
+  source?: HeatSource;
 }
 
 // ---------------------------------------------------------------- Census
@@ -37,6 +40,10 @@ interface CensusResponse {
 
 const MAX_ADDRESS_LENGTH = 200;
 
+/** Characters that never belong in a street address: markup, braces, pipes, backslashes, backticks and control characters. */
+const NOT_ADDRESS_CHARS = /[<>{}|\\`\u0000-\u001f\u007f]/;
+export const NOT_AN_ADDRESS = "That doesn't look like a street address. Type the house number, street, city and state, like 100 James Robertson Pkwy, Nashville, TN.";
+
 /**
  * Match a typed address with the US Census geocoder. The oneline endpoint only
  * returns street-address matches, so a bare city or ZIP comes back empty.
@@ -46,13 +53,20 @@ export async function geocodeAddress(input: string, fetchFn: FetchLike): Promise
   const address = input.trim();
   if (!address) throw new LookupError(400, "Type a street address, like 100 James Robertson Pkwy, Nashville, TN.");
   if (address.length > MAX_ADDRESS_LENGTH) throw new LookupError(400, "That address is too long. Try just the street, city and state.");
+  // Markup or other junk is the visitor's input, not our failure: say so plainly (400) before asking the Census anything.
+  if (NOT_ADDRESS_CHARS.test(address) || !/[A-Za-z0-9]/.test(address)) throw new LookupError(400, NOT_AN_ADDRESS);
 
   const url =
     "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress" +
     `?address=${encodeURIComponent(address)}&benchmark=Public_AR_Current&vintage=Current_Current&layers=Counties&format=json`;
-  const result = await fetchJson<CensusResponse>(fetchFn, url);
+  let result = await fetchJson<CensusResponse>(fetchFn, url);
+  // The Census geocoder now and then fails fast (a dropped connection, a 5xx) and answers a second later. One retry, only for those
+  // quick failures: a timeout is not retried, so the wait never doubles.
+  if (!result.ok && (result.reason === "network" || (result.reason === "http" && (result.status ?? 0) >= 500))) result = await fetchJson<CensusResponse>(fetchFn, url);
 
   if (!result.ok) {
+    // The Census refusing the request itself (a 4xx) means it did not like the text; a timeout, a 5xx or no network is on its side.
+    if (result.reason === "http" && result.status !== undefined && result.status >= 400 && result.status < 500 && result.status !== 429) throw new LookupError(400, NOT_AN_ADDRESS);
     throw new LookupError(502, `${describeFailure("The US Census address service", result)} Please try again in a moment.`);
   }
 
@@ -198,7 +212,11 @@ export function heatDaysFromArchive(data: OpenMeteoResponse): HeatDay[] {
   return days;
 }
 
-/** Daily feels-like highs from the Open-Meteo archive, first year through the end of last year. One variable only: the cost is the 26 years, not the columns. */
+/**
+ * Daily feels-like highs from the Open-Meteo archive, first year through the end of last year. One variable only: the cost is the 26 years,
+ * not the columns. When Open-Meteo is rate limited (429) or otherwise fails, the highs come from NASA POWER instead (a heat index, not
+ * the same measure), and the answer says so in `source`. Only when both fail is there a notice.
+ */
 export async function fetchDailyFeelsLike(
   lat: number,
   lon: number,
@@ -209,15 +227,20 @@ export async function fetchDailyFeelsLike(
   const cell = gridKey(lat, lon);
   const cacheKey = `${cell.key},${lastYear}`;
   const cached = heatCache.get(cacheKey, now().getTime());
-  if (cached) return { value: cached };
+  if (cached) return { value: cached, source: "open-meteo" };
 
   const result = await fetchJson<OpenMeteoResponse>(fetchFn, heatArchiveUrl(cell.lat, cell.lon, lastYear, 2));
+  const days = result.ok ? heatDaysFromArchive(result.data) : [];
+  if (days.length > 0) {
+    heatCache.set(cacheKey, days, now().getTime());
+    return { value: days, source: "open-meteo" };
+  }
 
-  if (!result.ok) return { value: null, notice: describeFailure("The Open-Meteo weather archive", result) };
-
-  const days = heatDaysFromArchive(result.data);
-  if (days.length === 0) return { value: null, notice: "The Open-Meteo weather archive had no temperature data for this address." };
-
-  heatCache.set(cacheKey, days, now().getTime());
-  return { value: days };
+  const notice = result.ok
+    ? "The Open-Meteo weather archive had no temperature data for this address."
+    : describeFailure("The Open-Meteo weather archive", result);
+  const power = await fetchPowerHeat(lat, lon, fetchFn, now);
+  if (power.value) return { value: power.value, source: "nasa-power" };
+  // Both failed: Open-Meteo's reason leads (it is the primary source), and the fallback's follows.
+  return { value: null, notice: `${notice} The fallback did not work either: ${power.notice}` };
 }
