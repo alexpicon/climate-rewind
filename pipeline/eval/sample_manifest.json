@@ -1,0 +1,28 @@
+{
+ "sha256": "3f5a5ea6e48d8f9621b2ae16766bedd7311a9e5840ebddcbbcffa3589d7d8502",
+ "n": 100,
+ "pool_A": 2042,
+ "pool_B": 2117,
+ "seeds": [
+  20261009,
+  20261010
+ ],
+ "excluded_ids": 100,
+ "overlap_with_spike": 0,
+ "states_A": {
+  "TX": 10,
+  "GA": 10,
+  "AZ": 10,
+  "NC": 10,
+  "TN": 10,
+  "MO": 10
+ },
+ "states_B": {
+  "TN": 7,
+  "NC": 7,
+  "TX": 7,
+  "MO": 7,
+  "GA": 6,
+  "AZ": 6
+ }
+}
