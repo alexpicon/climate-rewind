@@ -1,0 +1,59 @@
+{
+ "rule": "scoring_v2.md examples rule, unchanged",
+ "won_n": 1,
+ "lost_n": 18,
+ "won": [
+  {
+   "id": "A-662274",
+   "detective_km": 0.96,
+   "conf": "high",
+   "baseline_km": 6.1,
+   "narrative": "Water was reported over Highway 256 near Wrights Chapel Road due to a long duration of moderate to heavy rainfall.",
+   "rationale": "STATE RTE 256 & WRIGHTS CHAPEL RD, SYLVESTER, GA, 31791",
+   "clues": [
+    "Highway 256 near Wrights Chapel Road"
+   ],
+   "matchType": "intersection"
+  }
+ ],
+ "lost": [
+  {
+   "id": "A-915384",
+   "detective_km": null,
+   "conf": "high",
+   "baseline_km": 0.61,
+   "narrative": "Runoff due to heavy rain from thunderstorms caused an un-named creek to overflow its banks and cause flooding across Elkin Highway in North Wilkesboro.",
+   "rationale": null,
+   "clues": [
+    "Elkin Highway",
+    "North Wilkesboro"
+   ],
+   "matchType": null
+  },
+  {
+   "id": "A-738249",
+   "detective_km": null,
+   "conf": "high",
+   "baseline_km": 0.28,
+   "narrative": "A trained spotter reported part of Missionary Ridge Road near Bon Aqua was washed out due to flooding.",
+   "rationale": null,
+   "clues": [
+    "Missionary Ridge Road",
+    "Bon Aqua"
+   ],
+   "matchType": null
+  },
+  {
+   "id": "A-634997",
+   "detective_km": null,
+   "conf": "high",
+   "baseline_km": 0.25,
+   "narrative": "TSpotter Twitter reports indicated McEwen Drive at Carothers Parkway in Franklin was flooded and impassable.",
+   "rationale": null,
+   "clues": [
+    "McEwen Drive at Carothers Parkway"
+   ],
+   "matchType": null
+  }
+ ]
+}

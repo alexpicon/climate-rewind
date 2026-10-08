@@ -1,0 +1,122 @@
+{
+ "baseline": {
+  "A": {
+   "n": 60,
+   "placed": 0.8833333333333333,
+   "abstain": 0.11666666666666667,
+   "missing_rate": 0.0,
+   "w1": 0.3333333333333333,
+   "w2": 0.48333333333333334,
+   "wrong5": 0.2833333333333333,
+   "wrong5_of_placed": 0.32075471698113206,
+   "median": 1.5232733476935145,
+   "p90": 17.730616908399043,
+   "missing": 0
+  },
+  "B": {
+   "n": 40,
+   "placed": 0.925,
+   "abstain": 0.075,
+   "missing_rate": 0.0,
+   "w1": 0.325,
+   "w2": 0.55,
+   "wrong5": 0.275,
+   "wrong5_of_placed": 0.2972972972972973,
+   "median": 1.2654924791879825,
+   "p90": 15.310778747150213,
+   "missing": 0
+  },
+  "ALL": {
+   "n": 100,
+   "placed": 0.9,
+   "abstain": 0.1,
+   "missing_rate": 0.0,
+   "w1": 0.33,
+   "w2": 0.51,
+   "wrong5": 0.28,
+   "wrong5_of_placed": 0.3111111111111111,
+   "median": 1.5075317217891016,
+   "p90": 17.87515213295439,
+   "missing": 0
+  }
+ },
+ "detective": {
+  "A": {
+   "n": 60,
+   "placed": 0.16666666666666666,
+   "abstain": 0.8333333333333334,
+   "missing_rate": 0.0,
+   "w1": 0.13333333333333333,
+   "w2": 0.13333333333333333,
+   "wrong5": 0.03333333333333333,
+   "wrong5_of_placed": 0.2,
+   "median": 0.2804421364710454,
+   "p90": 5.964711707677681,
+   "missing": 0
+  },
+  "B": {
+   "n": 40,
+   "placed": 0.275,
+   "abstain": 0.725,
+   "missing_rate": 0.0,
+   "w1": 0.2,
+   "w2": 0.275,
+   "wrong5": 0.0,
+   "wrong5_of_placed": 0.0,
+   "median": 0.27734320809730867,
+   "p90": 1.4655995973055658,
+   "missing": 0
+  },
+  "ALL": {
+   "n": 100,
+   "placed": 0.21,
+   "abstain": 0.79,
+   "missing_rate": 0.0,
+   "w1": 0.16,
+   "w2": 0.19,
+   "wrong5": 0.02,
+   "wrong5_of_placed": 0.09523809523809523,
+   "median": 0.27734320809730867,
+   "p90": 1.624935094993242,
+   "missing": 0
+  }
+ },
+ "discordant": {
+  "baseline_only_wrong": 26,
+  "detective_only_wrong": 0
+ },
+ "decision": {
+  "delta_wrong_pp": 26.0,
+  "delta_reach_pp": -17.0,
+  "mcnemar_p": 0.0,
+  "verdict": "FEWER WRONG PINS, LESS REACH",
+  "headline_bar_wrong_le_10pct": true,
+  "missing_records": 0,
+  "complete": true
+ },
+ "calibration": {
+  "high": {
+   "n": 13,
+   "w1": 12,
+   "wrong5": 0
+  },
+  "medium": {
+   "n": 4,
+   "w1": 3,
+   "wrong5": 0
+  },
+  "low": {
+   "n": 4,
+   "w1": 1,
+   "wrong5": 2
+  }
+ },
+ "confidently_wrong": 0,
+ "rejections": {
+  "model_unknown": 79
+ },
+ "tokens": {
+  "input": 361582,
+  "output": 32876
+ }
+}
