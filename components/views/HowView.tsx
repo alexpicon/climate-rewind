@@ -7,7 +7,8 @@ import { FORECAST_SPIKE } from "@/lib/forecast-spike";
 import { ForecasterChart } from "./ForecasterChart";
 import { useRestOnAddress } from "@/components/map/use-rest-on-address";
 import { More } from "@/components/panel/Disclosure";
-import { howHeading, howIntro, PILOT_CAVEATS } from "@/lib/ui/detective-copy";
+import { DETECTIVE_EVAL as EVAL, EVAL_FINE, EVAL_HEADLINE, EVAL_TRADEOFF, PILOT_FOOTNOTE } from "@/lib/detective-eval";
+import { howHeading, howIntro } from "@/lib/ui/detective-copy";
 
 /** How it works: static text. No map animation, so the map just rests behind it. */
 export function HowView({ lat, lon, detectiveRan, aiJobs = [] }: { lat: number; lon: number; detectiveRan: boolean; aiJobs?: AiJob[] }) {
@@ -86,29 +87,30 @@ function HowContent({ detectiveRan, aiJobs }: { detectiveRan: boolean; aiJobs: A
 
       <div className="card" aria-labelledby="cmp-h">
         <p className="eyebrow" id="cmp-h">
-          Wrong pins, more than 5 km off <span className="tag pilot">Pilot</span> <span className="tag sample">Re-test pending</span>
+          Pre-registered test, {EVAL.n} fresh reports <span className="tag real">Measured</span>
         </p>
-        <div className="bars">
-          <div className="row">
-            <b>
-              <span>Without AI</span>
-              <span>36%</span>
-            </b>
-            <div className="track">
-              <div className="fill a" style={{ width: "36%" }} role="img" aria-label="Without AI, 36 percent wrong pins" />
-            </div>
-          </div>
-          <div className="row">
-            <b>
-              <span>Pilot detective (Sonnet agent, pilot harness)</span>
-              <span>8%</span>
-            </b>
-            <div className="track">
-              <div className="fill b" style={{ width: "8%" }} role="img" aria-label="Pilot detective, 8 percent wrong pins" />
-            </div>
-          </div>
-        </div>
-        <p className="fine">{PILOT_CAVEATS}</p>
+        <p className="bars-claim">{EVAL_HEADLINE}</p>
+        <p className="bars-claim">{EVAL_TRADEOFF}</p>
+        <BarGroup
+          title="Wrong pins, more than 5 km off (lower is better)"
+          noun="wrong pins"
+          rows={[
+            { label: "Without AI", value: EVAL.wrong.baseline, kind: "a" },
+            { label: "AI detective", value: EVAL.wrong.detective, kind: "b" },
+          ]}
+        />
+        <BarGroup
+          title="Placed within 1 km of the true spot (higher is better)"
+          noun="placed within 1 km"
+          rows={[
+            { label: "Without AI", value: EVAL.within1km.baseline, kind: "a" },
+            { label: "AI detective", value: EVAL.within1km.detective, kind: "b" },
+          ]}
+        />
+        <p className="fine">{EVAL_FINE}</p>
+        <p className="fine">
+          {PILOT_FOOTNOTE} (an earlier pilot, not pre-registered). Test files: <code>pipeline/eval/score.json</code>, <code>pipeline/eval/PREREG.md</code>.
+        </p>
       </div>
 
       <Forecaster />
@@ -136,10 +138,32 @@ function HowContent({ detectiveRan, aiJobs }: { detectiveRan: boolean; aiJobs: A
           <dt>
             <span className="tag sample">Sample</span>
           </dt>
-          <dd>{detectiveRan ? "The 36% to 8% pilot numbers (a pilot, not the pre-registered result), and anything else that is not real data" : "Detective placements not yet scored, and the 36% to 8% pilot numbers (a pilot, not the pre-registered result)"}</dd>
+          <dd>{detectiveRan ? "The earlier pilot numbers (not the pre-registered result), and anything else that is not real data" : "Detective placements not yet scored, and the earlier pilot numbers (not the pre-registered result)"}</dd>
         </dl>
       </More>
     </>
+  );
+}
+
+/** One bar chart: a title and a row per line. Each bar has a text label and the percentage, so nothing depends on colour or on the bar itself. */
+function BarGroup({ title, noun, rows }: { title: string; noun: string; rows: Array<{ label: string; value: number; kind: "a" | "b" }> }) {
+  return (
+    <div className="bars-group">
+      <p className="bars-sub">{title}</p>
+      <div className="bars">
+        {rows.map((row) => (
+          <div className="row" key={row.label}>
+            <b>
+              <span>{row.label}</span>
+              <span>{row.value}%</span>
+            </b>
+            <div className="track">
+              <div className={`fill ${row.kind}`} style={{ width: `${row.value}%` }} role="img" aria-label={`${row.label}, ${row.value} percent ${noun}`} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 

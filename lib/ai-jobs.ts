@@ -4,6 +4,7 @@
  * a job with no measurement says "pending".
  */
 import type { DetectiveCounts } from "./detective-status";
+import { DETECTIVE_EVAL, EVAL_HEADLINE, EVAL_TRADEOFF, PILOT_FOOTNOTE } from "./detective-eval";
 import { FORECAST_SPIKE } from "./forecast-spike";
 
 /**
@@ -59,9 +60,9 @@ export function describeJobs(input: { detectiveRan: boolean; damagePlaces: numbe
       id: "detective",
       name: "The flood detective",
       does: "Reads each National Weather Service flood report and re-files a misplaced pin at the street the words name, or says it doesn’t know.",
-      status: "pilot",
-      number: "Wrong pins more than 5 km off: 36% without AI, 8% with the pilot detective.",
-      detail: `A pilot on 100 records, not the pre-registered re-test, which is pending.${detectiveRan ? " Real placements are in the data now." : " It has not run on this data yet."}`,
+      status: "measured",
+      number: `${EVAL_HEADLINE} ${EVAL_TRADEOFF}`,
+      detail: `It said “I don’t know” on ${DETECTIVE_EVAL.abstain.detective}% of reports instead of guessing, and no wrong pin was a confident one. ${PILOT_FOOTNOTE}.${detectiveRan ? " Real placements are in the data now." : " It has not run on this data yet."}`,
       result: real
         ? `Real run on this site’s data: it re-filed ${real.placed} of ${real.ran} imprecise flood reports in the ${real.states} sample areas and said “I don’t know” on the other ${real.ran - real.placed}. These re-filings are not scored against the truth yet.`
         : null,

@@ -420,3 +420,8 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .dmg-list b{display:block;font-size:14px}
 .dmg-list q{display:block;font-family:var(--serif);font-size:14.5px;line-height:1.35;color:var(--muted);quotes:"\201C" "\201D"}
 .dmg-list small{display:block;font-size:12.5px;color:var(--faint)}
+
+/* How it works: the detective's two bar groups (wrong pins, reach) */
+.bars-claim{margin:8px 0 0;font-size:15px;line-height:1.45}
+.bars-group{margin-top:16px}
+.bars-sub{margin:0;font-size:13px;color:var(--muted)}

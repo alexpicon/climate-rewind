@@ -621,3 +621,33 @@ Checked what Next does: with `ANTHROPIC_API_KEY=` exported (empty), `@next/env` 
 2. **Map diamonds** are pointer-only and hidden from a screen reader on purpose; confirm nothing on the map is announced as a stray unnamed element, and that hover and tap show the card, and tapping another diamond closes the first.
 3. **Storm tab, step 2 "Correct the pins"** with the Nashville sample: the card, "2 of 5 reports re-filed", and the screen reader announcements while a note moves; Bellevue's report 2 reads "136th Pl NE & NE 20th St".
 4. **How it works** and the landing: the detective and damage job cards (status tag "Pilot result", the real-run line, the numbers) read in order.
+
+---
+
+# Round 5: the pre-registered detective result replaces the pilot numbers (Oct 8)
+
+No git, no new packages, `pipeline/**` untouched. `npm test` 26 files / 454 tests green, `tsc --noEmit` clean, `npm run build` clean (`env -u ANTHROPIC_API_KEY`).
+
+## What changed
+
+- **One constant, `lib/detective-eval.ts`** (`DETECTIVE_EVAL`, plus the copy built from it: `EVAL_HEADLINE`, `EVAL_TRADEOFF`, `PILOT_FOOTNOTE`, `EVAL_FINE`). Not read from `score.json` at runtime: `pipeline/` is not deployed with the app. Instead `tests/detective-eval.test.ts` reads `pipeline/eval/score.json` and fails if wrong-pin, within-1-km and abstain rates, n, confidently-wrong, the discordant counts or the verdict differ. `score.json` rounds McNemar p to 0.0, so p = 3e-8 is checked against the run log text ("p = 3.0e-8"), as is the pilot 36% -> 8%.
+- **Landing** (`lib/ui/detective-copy.ts`): the AI line now reads "In a pre-registered test on 100 fresh reports, the AI detective cut wrong pins from 28% to 2%. It places fewer reports (16% vs 33% within 1 km), because it refuses to guess when a report names only a road." The headline and trade-off are one string (`EVAL_NOTE`), so neither can appear alone. `PILOT_NOTE` and `PILOT_CAVEATS` are gone.
+- **How it works jobs list**: the detective job is now status "Measured" (was "Pilot result"): headline + trade-off, then "It said 'I don't know' on 79% of reports instead of guessing, and no wrong pin was a confident one. Pilot: 36% -> 8%."
+- **How it works bars**: two groups, wrong pins (28% vs 2%) and within 1 km (33% vs 16%), so the trade-off is visible as a bar, not only in a sentence. Each bar has its visible label and percentage and a `role="img"` label. Fine print: pre-registered, ran once, 79% abstain, 26 vs 0 discordant, p = 3e-8, no confident wrong pin, the test's own verdict "fewer wrong pins, less reach". One-line footnote "Pilot: 36% -> 8%" naming the files. The "Re-test pending" and "Pilot" tags, the Sonnet-harness label and the post-hoc/tie caveat are removed (they described the pilot).
+- **README**: tab table line, a new "The AI detective's pre-registered test" section (headline, trade-off, table, p-value, pilot footnote) with relative links to `pipeline/eval/PREREG.md`, `score.json`, the run write-up, the manifest, both outputs and the code hashes. I also corrected the paragraph that still said the detective had not run (110 of 364 re-filed, not scored against truth).
+- **Brief context**: nothing to change; `lib/ai/sources.ts` carries no pilot or re-test wording.
+- CSS: three small rules in `app/calm.css` for the bar group titles.
+- Tests: `render.test.tsx` and `ahead-ui.test.tsx` updated (job status measured, exact headline + trade-off text, bar labels and widths, no "re-test" or "36% to 8%" left on the landing); new `detective-eval.test.ts`.
+
+## Flags
+
+1. **Reach is a loss and the page says so.** The landing job cards show only each job's one-line "does" and result, not the number, so the headline sits only in the AI line there. Both headline and trade-off are always in the same paragraph.
+2. Landing and How both state the headline (jobs card, then bars card). Deliberate; say if you want the repeat removed.
+3. The "Real run on this site's data ... not scored against the truth yet" line stays: those are the production re-filings on the shipped areas, separate from the 100-report test.
+4. Screenshots (production build :3100, headless Chrome, looked at): `/tmp/nova6/landing.png`, `/tmp/nova6/how.png`. The :3100 server is stopped; the :3000 dev server was not touched.
+
+## Alex: check by keyboard and screen reader (I cannot)
+
+1. **How it works, bars card**: the heading line reads "Pre-registered test, 100 fresh reports, Measured". Each bar reads as its label then "Without AI, 28 percent wrong pins" etc. (the visible percentage and the `role="img"` label say the same thing, so check it is not announced twice in a confusing way).
+2. **Landing**: the AI paragraph reads headline, trade-off, then the "How it works" link, in that order.
+3. **Jobs list**: the detective card's tag reads "Measured".

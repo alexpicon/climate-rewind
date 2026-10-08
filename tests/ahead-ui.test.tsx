@@ -222,15 +222,16 @@ describe("the AI jobs, with their numbers or 'pending'", () => {
   it("lists every job once, and marks what is not measured as pending", () => {
     const jobs = describeJobs({ detectiveRan: false, damagePlaces: 0, briefEval: null });
     expect(jobs.map((j) => [j.id, j.status])).toEqual([
-      ["detective", "pilot"],
+      ["detective", "measured"],
       ["damage", "pending"],
       ["briefing", "pending"],
       ["forecaster", "measured"],
     ]);
     expect(jobs[1].number).toBeNull();
     expect(jobs[2].number).toBeNull();
-    expect(jobs[0].number).toContain("36% without AI, 8% with the pilot detective");
-    expect(jobs[0].detail).toContain("pre-registered re-test, which is pending");
+    expect(jobs[0].number).toBe("In a pre-registered test on 100 fresh reports, the AI detective cut wrong pins from 28% to 2%. It places fewer reports (16% vs 33% within 1 km), because it refuses to guess when a report names only a road.");
+    expect(jobs[0].detail).toContain("Pilot: 36% → 8%.");
+    expect(jobs[0].detail).not.toMatch(/pending|re-test/);
     expect(jobs[3].number).toContain("0.0% better than the official outlook");
   });
 
@@ -285,7 +286,7 @@ describe("the AI jobs, with their numbers or 'pending'", () => {
     const html = renderToStaticMarkup(<HowStandalone onBack={noop} detectiveRan={false} aiJobs={describeJobs({ detectiveRan: false, damagePlaces: 0, briefEval: null })} />);
     expect(html).toContain("What the AI does here, and what each job has measured");
     expect((html.match(/class="job-num">Pending</g) ?? []).length).toBe(2);
-    expect(html).toContain("36% without AI, 8% with the pilot detective");
+    expect(html).toContain("cut wrong pins from 28% to 2%. It places fewer reports (16% vs 33% within 1 km)");
     const measured = renderToStaticMarkup(<HowStandalone onBack={noop} detectiveRan={false} aiJobs={describeJobs({ detectiveRan: false, damagePlaces: 0, briefEval: evaluation })} />);
     expect(measured).toContain("90% of the sentences it wrote passed the checks");
     expect((measured.match(/class="job-num">Pending</g) ?? []).length).toBe(1);

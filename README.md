@@ -31,7 +31,7 @@ Try `/?address=100+James+Robertson+Pkwy,+Nashville,+TN` or the API directly:
 | Storm replay | IEM NEXRAD frames every 5 minutes for the busiest flood night near the address (a "Storm nights" picker offers the 5 busiest within 15 km plus any night newer than 2023 with 2 or more reports), one image per frame, playback starting once the first 12 are in while the rest load ahead, with each NWS flood report appearing at the minute it was filed. Step 2: where the AI detective has results, reports the NWS pinned to one city point are re-filed where their own words say, with the words highlighted; where it has not run, step 2 says so and shows the nearby reports as filed, with their precision tiers. |
 | Heat wave | The address's own daily feels-like highs (Open-Meteo): the hottest day, and a chart of days at 100 F or more per year. If `data/heat/<city>.json` exists for that week (Nashville, Asheville, San Antonio and Bellevue ship), a regional replay of 875 squares (0.5 degrees each) around the address. |
 | Tornadoes | Every tornado track within 10 km draws on with a vortex and its damage swath, with the NWS's own damage narrative, ending on the closest pass. |
-| How it works | Each AI job with its measured number (or "pending"), the flood detective in four steps, the flood forecaster we trained and set aside (a small chart), and what is real versus sample. |
+| How it works | Each AI job with its measured number (or "pending"), the flood detective in four steps with its pre-registered result, the flood forecaster we trained and set aside (a small chart), and what is real versus sample. |
 
 **Your street's flood trigger** (storm tab card, and one line in the live drawer): the typical (median) rain (Open-Meteo archive, ERA5 `precipitation_sum`, the larger of the day and the day before) on days with flood reports within 5 km, "on days with flood reports here, the typical rain was X in", compared with the NWS gridded forecast (`api.weather.gov` points, then `quantitativePrecipitation`, per local day for the next 3 days). The forecast is below (under 80% of the median), near (within 20%) or above (over 120%). It needs 3 or more flood dates, otherwise it says "Not enough history at this address yet." A history-based signal, never "will flood". It is the additive `floodTrigger` field of `/api/lookup`.
 
@@ -107,13 +107,34 @@ The payload also carries a few additive fields: `coverage` (`indexed`, `fixture`
 `severity` and `urgency`.
 
 **The indexes are the pipeline's real output** (built Oct 7 2026, six states, plus Washington added Oct 8, NCEI Storm Events and IEM LSRs 2015 to 2025,
-verbatim text and the NWS's own coordinates). The AI detective has not run yet, so `placed` and `detective` are null
-everywhere. Until it does:
+verbatim text and the NWS's own coordinates). The AI detective has since run on the sample areas (110 of 364 imprecise
+reports re-filed, the rest "I don't know"); `placed` and `detective` are null for reports it has not run on. These
+re-filings are not scored against the truth for the shipped areas. The scored result is the pre-registered test below.
 
-- The five Nashville reports pinned to the city point on Mar 27 to 28, 2021 use the prototype's placements, matched by the
-  report's own words (`lib/ui/placements.ts`) and tagged SAMPLE everywhere.
-- Every other address gets an honest step 2: "The AI detective hasn't run for this area yet", the nearby reports as filed,
-  and their precision tiers. Nothing moves.
+- Where the detective has not run for an area, step 2 says "The AI detective hasn't run for this area yet", shows the
+  nearby reports as filed and their precision tiers. Nothing moves.
+- The hand-made Nashville placements (`lib/ui/placements.ts`) are tagged SAMPLE everywhere they appear.
+
+### The AI detective's pre-registered test
+
+> In a pre-registered test on 100 fresh reports, the AI detective cut wrong pins from 28% to 2%.
+> It places fewer reports (16% vs 33% within 1 km), because it refuses to guess when a report names only a road.
+
+| 100 fresh NWS reports, true locations hidden | No AI (baseline) | AI detective |
+| --- | --- | --- |
+| Wrong pins, more than 5 km off (primary) | 28% | 2% |
+| Within 1 km (reach) | 33% | 16% |
+| Abstained ("I don't know") | 10% | 79% |
+
+Exact McNemar test on the discordant pairs: 26 reports wrong only without AI, 0 wrong only with it, p = 3e-8. No wrong pin was
+a confident one. The pre-registered verdict is "fewer wrong pins, less reach", so the two claims always appear together.
+Pilot: 36% → 8% (an earlier pilot on records already seen once; not pre-registered).
+
+- [Protocol, written before the run](pipeline/eval/PREREG.md)
+- [Scores](pipeline/eval/score.json) and [the run write-up](pipeline/RUN-2026-10-08.md#pre-registered-eval-result)
+- [Sample manifest](pipeline/eval/sample_manifest.json), [baseline output](pipeline/eval/out_baseline.jsonl), [detective output](pipeline/eval/out_detective.jsonl), [code hashes at run time](pipeline/eval/code_hashes_at_run.txt)
+
+The numbers on the pages live in one constant, `lib/detective-eval.ts`; `tests/detective-eval.test.ts` fails if it stops matching `pipeline/eval/score.json`.
 
 `tests/fixtures/index/TN.json.gz` is a small hand-built development fixture (`"fixture": true`), used only by tests.
 

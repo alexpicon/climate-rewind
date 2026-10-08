@@ -21,10 +21,12 @@ const noop = () => undefined;
 describe("landing, before any real detective result exists", () => {
   const html = renderToStaticMarkup(<Landing input="" onInput={noop} onSubmit={noop} lookingUp={false} error={null} onHow={noop} detectiveRan={false} />);
 
-  it("says what is true: a detective built to re-file pins, the pilot result, and that the re-test is pending", () => {
+  it("says what is true: a detective built to re-file pins, the pre-registered result and its trade-off together", () => {
     expect(html).toContain("An AI detective");
     expect(html).toContain("that reads each report’s words to re-file misplaced pins.");
-    expect(html).toContain("In our pilot test it cut wrong pins from 36% to 8%; the pre-registered re-test is pending.");
+    expect(html).toContain("In a pre-registered test on 100 fresh reports, the AI detective cut wrong pins from 28% to 2%. It places fewer reports (16% vs 33% within 1 km), because it refuses to guess when a report names only a road.");
+    expect(html).not.toContain("re-test is pending");
+    expect(html).not.toContain("36% to 8%");
     expect(html).toMatch(/<a href="\/\?tab=how"[^>]*>How it works<\/a>/);
   });
 
@@ -56,7 +58,8 @@ describe("landing once real detective results exist", () => {
   it("flips to the plain description of what the detective does", () => {
     expect(html).toContain("An AI flood detective.");
     expect(html).toContain("misfiled flood pins to the street the words name, or says it doesn’t know");
-    expect(html).not.toContain("the pre-registered re-test is pending");
+    expect(html).toContain("cut wrong pins from 28% to 2%. It places fewer reports (16% vs 33% within 1 km)");
+    expect(html).not.toContain("re-test is pending");
     expect(html).not.toContain("hand-made placements");
   });
 });
@@ -77,14 +80,20 @@ describe("how it works with no address", () => {
     expect(html).not.toContain("An AI flood detective that refuses to guess.");
   });
 
-  it("labels the pilot bars: pilot, post-hoc, a Sonnet pilot harness, and the 1 km tie", () => {
+  it("shows the pre-registered bars with the trade-off beside the headline, and the pilot as a one-line footnote", () => {
     const html = renderToStaticMarkup(<HowStandalone onBack={noop} detectiveRan={false} />);
-    expect(html).toContain("Pilot, not the final test");
-    expect(html).toContain("Sonnet agents");
-    expect(html).toContain("post-hoc");
-    expect(html).toContain("Placement within 1 km was a tie");
-    expect(html).toContain("Pilot detective (Sonnet agent, pilot harness)");
-    expect(html).not.toContain("With the detective");
+    expect(html).toContain("Pre-registered test, 100 fresh reports");
+    expect(html).toContain("In a pre-registered test on 100 fresh reports, the AI detective cut wrong pins from 28% to 2%.</p><p class=\"bars-claim\">It places fewer reports (16% vs 33% within 1 km), because it refuses to guess when a report names only a road.");
+    for (const label of ["Without AI, 28 percent wrong pins", "AI detective, 2 percent wrong pins", "Without AI, 33 percent placed within 1 km", "AI detective, 16 percent placed within 1 km"]) {
+      expect(html).toContain(`aria-label="${label}"`);
+    }
+    expect(html).toContain("width:28%");
+    expect(html).toContain("width:16%");
+    expect(html).toContain("McNemar p = 3e-8");
+    expect(html).toContain("No wrong pin was a confident one");
+    expect(html).toContain("Pilot: 36% → 8%");
+    expect(html).toContain("pipeline/eval/score.json");
+    expect(html).not.toMatch(/re-test|Re-test|Sonnet agent|Placement within 1 km was a tie|post-hoc/);
   });
 
   it("flips its wording when real results exist", () => {
