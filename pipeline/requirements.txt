@@ -1,0 +1,7 @@
+# Climate Rewind data pipeline. Python 3.12+ (zoneinfo, "X | None" annotations).
+requests>=2.32
+pandas>=2.2
+numpy>=2.0
+anthropic>=1.0
+pytest>=8
+pyarrow>=15
