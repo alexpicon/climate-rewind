@@ -1,0 +1,60 @@
+{
+ "baseline.wrong5": {
+  "pct": 28.0,
+  "wilson95": [
+   20.1,
+   37.5
+  ]
+ },
+ "baseline.w1": {
+  "pct": 33.0,
+  "wilson95": [
+   24.6,
+   42.7
+  ]
+ },
+ "baseline.abstain": {
+  "pct": 10.0,
+  "wilson95": [
+   5.5,
+   17.4
+  ]
+ },
+ "baseline.missing_rate": {
+  "pct": 0.0,
+  "wilson95": [
+   0.0,
+   3.7
+  ]
+ },
+ "detective.wrong5": {
+  "pct": 2.0,
+  "wilson95": [
+   0.6,
+   7.0
+  ]
+ },
+ "detective.w1": {
+  "pct": 16.0,
+  "wilson95": [
+   10.1,
+   24.4
+  ]
+ },
+ "detective.abstain": {
+  "pct": 79.0,
+  "wilson95": [
+   70.0,
+   85.8
+  ]
+ },
+ "detective.missing_rate": {
+  "pct": 0.0,
+  "wilson95": [
+   0.0,
+   3.7
+  ]
+ },
+ "mcnemar_exact_p_unrounded": 2.9802322387695312e-08,
+ "note": "NOT pre-registered: PREREG.md specifies no confidence intervals. Wilson 95% per rate, n=100, computed after scoring."
+}
