@@ -1,6 +1,7 @@
 /**
- * Quinn's flood-forecaster experiment, as measured (research/forecast-spike/RESULT.md, 2026-10-08). Numbers are copied, not rounded
- * further; a test keeps this file and the chart in step. Client-safe.
+ * The flood-forecaster experiment, as measured on 2026-10-08. The full write-up (setup, every table, the caveats) is
+ * docs/forecast-experiment.md in this repository. Numbers are copied from it, not rounded further; a test keeps this file, that
+ * document and the chart in step. Client-safe.
  *
  * The honest reading: with the rain known only after the fact the model beat the official outlook by 3.5%; with only what is known
  * in advance it did exactly as well as the official outlook (0.0%). So Climate Rewind explains the official forecasts instead of competing.

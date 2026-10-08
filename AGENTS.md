@@ -7,7 +7,7 @@ ForgeHacks 2026 entry (AI + Climate). Submissions lock Sat Oct 10, 12:00 PM ET. 
 - No git commands, no deploys, no new dependencies unless the task names them.
 - Never invent data, quotes, coordinates or alerts. Tag anything not real as SAMPLE.
 - Accessibility (WCAG AA, keyboard, reduced motion, text alternatives) is a hard requirement.
-- External APIs used at runtime: US Census geocoder, FEMA NFHL (ArcGIS REST), api.weather.gov alerts, Open-Meteo archive, IEM NEXRAD tiles. Each must time out (≤8 s) and degrade gracefully with an honest message; tests must not hit the network (use fixtures).
+- External APIs used at runtime: US Census geocoder, FEMA NFHL (ArcGIS REST), api.weather.gov alerts, Open-Meteo archive (NASA POWER is its fallback when Open-Meteo is rate limited), IEM NEXRAD tiles. Each must time out (≤8 s) and degrade gracefully with an honest message; tests must not hit the network (use fixtures).
 
 <!-- BEGIN:nextjs-agent-rules -->
 

@@ -119,10 +119,12 @@ function HowContent({ detectiveRan, aiJobs }: { detectiveRan: boolean; aiJobs: A
         <dl className="kv">
           <dt>Radar</dt>
           <dd>NEXRAD composite, 5-minute frames (Iowa Environmental Mesonet)</dd>
+          <dt>Map</dt>
+          <dd>Esri World Dark Gray tiles (© Esri, HERE, Garmin, © OpenStreetMap contributors). The optional 3D view adds OpenFreeMap (© OpenMapTiles, data from OpenStreetMap) and Mapzen terrain tiles (AWS Terrain Tiles).</dd>
           <dt>Flood reports</dt>
           <dd>NWS Local Storm Reports and NCEI Storm Events, quoted from the archive</dd>
           <dt>Heat</dt>
-          <dd>Weather reanalysis (ERA5 via Open-Meteo), daily feels-like highs. A model fitted to observations, not a thermometer at your door.</dd>
+          <dd>Weather reanalysis (ERA5 via Open-Meteo), daily feels-like highs. A model fitted to observations, not a thermometer at your door. If Open-Meteo is rate limited, the page uses NASA POWER (MERRA-2) instead, computes a heat index from it, and says so where the number appears.</dd>
           <dt>Tornadoes</dt>
           <dd>NOAA Storm Events, including the NWS damage narratives (quoted word for word)</dd>
           <dt>Live strip</dt>
@@ -194,7 +196,7 @@ function AiJobs({ jobs }: { jobs: AiJob[] }) {
   );
 }
 
-/** The flood forecaster we trained: Quinn's real numbers, told as what they show. */
+/** The flood forecaster we trained: the measured numbers (docs/forecast-experiment.md), told as what they show. */
 function Forecaster() {
   const f = FORECAST_SPIKE;
   const hind = f.bars[0];
@@ -231,6 +233,10 @@ function Forecaster() {
           <dd>The labels are flood reports, which follow where people are and report, not flooding itself. The points are cities in seven states. The test has {f.testPositives} reporting days. Absolute probabilities drift and would need re-fitting every year. We did not ship it.</dd>
           <dt>Published research</dt>
           <dd>{f.citation}</dd>
+          <dt>Full write-up</dt>
+          <dd>
+            <code>docs/forecast-experiment.md</code> in the project repository: how it was set up, every table, and the caveats.
+          </dd>
         </dl>
       </More>
     </section>

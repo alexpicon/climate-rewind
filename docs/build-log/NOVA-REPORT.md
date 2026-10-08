@@ -651,3 +651,68 @@ No git, no new packages, `pipeline/**` untouched. `npm test` 26 files / 454 test
 1. **How it works, bars card**: the heading line reads "Pre-registered test, 100 fresh reports, Measured". Each bar reads as its label then "Without AI, 28 percent wrong pins" etc. (the visible percentage and the `role="img"` label say the same thing, so check it is not announced twice in a confusing way).
 2. **Landing**: the AI paragraph reads headline, trade-off, then the "How it works" link, in that order.
 3. **Jobs list**: the detective card's tag reads "Measured".
+
+---
+
+# Round 6 (Oct 8, afternoon): after Vera's final audit
+
+STATUS: DONE. Nothing committed, no packages added, no deploys. Checks ran on the host against `next build` + `next start` (port 3300).
+
+## Blocker: no false all-clear outside our coverage
+
+- `lib/ai/sources.ts`: for a state that is not indexed (or a development fixture) there are **no** flood-history, tornado-history, report or damage sources. One source, id `coverage`, says exactly: "We have not indexed Colorado yet, so we cannot say whether floods or tornadoes were reported here." (`lib/states.ts` turns `CO` into a name; DC reads "the District of Columbia".) The first lock is the missing sources; the second is that report and tornado lists are ignored unless `coverage` is `indexed`.
+- `lib/ai/verify.ts` (rule 7): when a `coverage` source exists, the only sentence about the past that may pass cites it and says "not indexed ... cannot say". Dropped: "no floods / no tornadoes / nothing reported / never / all clear / spared / safe from / clean history / zero reports", and any flood or tornado sentence about reports, records, the past or "events" that does not cite `coverage`. The agencies' own "no risk area", "no tornado watch" are not histories and still pass. The statement cannot carry a denial in the same sentence.
+- `lib/ai/prompt.ts`: rule 10 tells the model the same thing; the brief request says "nothing" is about the outlooks only.
+- Real model, real data (production build): Denver 1437 Bannock St brief = alerts, WPC, SPC, HeatRisk, heat history, then "We have not indexed Colorado yet, so we cannot say whether floods or tornadoes were reported here." DC brief the same with the District of Columbia. Ask "Has it ever flooded here?" (Denver) and "Have there been any tornadoes near this address?" (DC): the coverage statement first, no denial; 1 sentence dropped on the Denver ask.
+- Tests: `tests/ai-coverage.test.ts` (17): the sources for Denver and DC, 12 false all-clears dropped whatever they cite, past-event claims dropped, the statement kept and unable to carry a denial, outlook "no risk area" kept, an indexed state unchanged, and a fake model that tries to say it on a brief and on three Asks for each of Denver and DC.
+
+## Should-fix
+
+2. **Sample cards, one click.** `Landing` gets `onSample`; `ClimateRewindApp.pickSample` fills the box and runs the lookup (`chooseSample` in `lib/ui/tabs.ts`, tested). They are still `<button>`s: Enter or Space does the same. After the lookup focus goes to the new heading (CDP: Enter on the first card -> `ahead-h`). If a lookup fails the landing comes back and **focus goes to the address box** (it was on `body` before).
+3. **Brief cache and budget.** The brief is cached 60 minutes by address + a hash of the active alerts (new alert -> new brief); questions keep the 10 minute cache. To find a cached brief without a full lookup: a 24 h geocode cache plus one NWS alerts call (`alertsDigest`); if that fails it falls back to the full lookup. A cached brief is still served when the day's budget is used up. Default `AI_DAILY_TOKEN_BUDGET` is 3,000,000 (`.env.example`, `lib/ai/guard.ts`). README: the Anthropic console spend cap is the real safety net. Measured: first Denver brief 7.9 s, repeat 0.24 s. Tests in `tests/ai-service.test.ts`.
+4. **NASA POWER fallback** (`lib/nasa-power.ts`). Heat: `T2M_MAX`, humidity at the high from `QV2M` and `PS` (the whole-day `RH2M` average overstates the heat; it is the fallback), NWS Rothfusz heat index (matches the NWS chart: 90 F/60% = 99.7, 100/40 = 109.3, 110/40 = 135.7). Rain: `PRECTOTCORR` mm to inches, one request for all the ranges Open-Meteo could not give. Days are local solar time (`time-standard=LST`). Used when Open-Meteo gives a 429, an error, a timeout or nothing. The page says so: heat panel (visible note, "heat index high", chart caption, text version), flood trigger fine print and card, How it works, and the AI's sources (`HeatSummary.provider`, `FloodTrigger.rainSource`, both additive). The regional (Open-Meteo) map is not linked to a POWER week. **Live proof:** Open-Meteo is answering 429 to this machine right now, so Denver `/api/lookup` came back 200 in 1.2 to 3.6 s with `heat.provider: "nasa-power"` (hottest day Jul 21, 2005, 97.5 F, 0 days at 100 F), and San Antonio and Asheville (whose snapshots hold heat only) got `rainSource: "nasa-power"` triggers. Tests: `tests/nasa-power.test.tsx` (27) with fixtures; 4 existing tests updated for the two-part notice when both fail.
+5. **Citations inside the repo.** `docs/forecast-experiment.md` is `research/forecast-spike/RESULT.md` with the internal names and `/tmp` paths removed and a decision paragraph in place of the recommendation; every number is unchanged (checked by diffing the numbers, and a test asserts the key ones). `lib/forecast-spike.ts` and How it works point to it. **`npm run eval-brief` re-run for real: 66 of 67 sentences verified (98.5%, was 100%), briefs 24 of 24, 157,449 tokens.** The one drop is the Bellevue "Will it flood on my street tomorrow? Give me a percentage." answer: "We cannot give a percentage or say whether it will flood; ..." was dropped by the `will flood` overclaim pattern, i.e. a safe refusal caught by a rule that does not see "whether". I did not loosen the rule to improve the number. The page reads the number from `data/ai-eval/brief.json`, so it now shows 98.5%.
+6. **Repo tidy.** `NOVA-REPORT.md` and the Vera review moved to `docs/build-log/` with a short README; every review item is marked Fixed with the round that fixed it (still open: no LICENSE file). README: "Live demo: <coming>", "Video: <coming>", "Built during ForgeHacks 2026 (Oct 7–10)", an architecture overview, the coverage and cache and budget text, NASA POWER, WA in the index list. Pre-registration wording is now "committed before the run" in the README, `lib/detective-eval.ts` (shown on the site) and `pipeline/README.md`; the git log shows the protocol commit at 14:25 PDT and the first eval output at 14:30. `AGENTS.md` runtime-API line mentions the fallback.
+
+## Nice
+
+- **Step 2, Rosa Parks Blvd.** The detective ran for real and said "unknown": the words name a street and a market but no address or cross street. The card said it "only names a region". Now `Placement.named` carries the clues and `unplacedWords` says: "Its words name Rosa Parks Blvd and Farmers Market, but give no address or cross street, so there is no single spot to pin. So the pin stays." A real region still says region. Fixed in the card, the state line ("Not placed: no single spot"), the pin label, the screen reader announcement, the "What the detective found" list and the dock ("Reading: no single spot to pin"). `tests/unplaced-label.test.tsx`.
+- **"Will my street flood tomorrow?"** `AiAnswer.lead` (ours, not the model's): "We don't forecast; here is the official outlook and how it has played out here." shown above the answer for any question about what will happen, also when nothing could be verified; not for off-topic. The ask prompt tells the model to give the outlook and the record instead of yes or no. Verified live (Denver).
+- **`<img…>` address** -> 400, "That doesn't look like a street address. Type the house number, street, city and state, like ...", the Census is never asked. Also a Census 4xx is a 400, and **one retry** for a quick Census failure (network or 5xx): the first keyboard test hit a real Census 502 that went through on the second try. `/api/lookup`, `/api/brief` and `/api/ask` all return the 400 (curl).
+- **Attribution button at 390 px.** It was a 24 px button under the tab bar: unreachable (the top element at its centre was the "Heat" tab). The map is one `position: fixed` layer under every panel, so a control inside it can never be above them. The same MapLibre control is now mounted in `#map-credits` (a region, "Map credits"), bottom right on a big screen, and at 900 px and below top right under the bar as a 44 px target, collapsed at first. CDP: the button is the top element at its centre at 390 on the 72-hour, heat and storm tabs. How it works now has a "Map" line with the credits too.
+- axe found two more at 390 and both are fixed: the phone tab "Tornado" against the name "Tornadoes" (2.5.3; the short label is now "Tornadoes") and the credits text outside a landmark.
+- Heat panel: when no day reached 100 F it says so instead of "Most days at 100°F or more: 0 in 2000".
+
+## Checks
+
+```
+npm test            31 files, 529 tests passed
+npx tsc --noEmit    clean
+npm run build       passes
+curl, production    Denver /api/lookup 200 (not yet indexed, NASA POWER heat); Denver and DC /api/brief 200, coverage statement,
+                    no "no floods"; Denver/DC /api/ask 200; Nashville, San Antonio, Asheville, Bellevue /api/lookup 200
+                    (floods 42, 27, 14, 2; tornadoes 5, 3, 0, 0; FEMA X, X, AE, X); <img> address 400 on all three routes
+axe-core 4.14       0 violations (wcag2a/aa, 2.1, 2.2 AA, best-practice, label-content-name-mismatch, target-size) on landing 1440 and 390,
+                    Denver 72 hours and heat at 1440, San Antonio 72 hours at 390
+CDP shots           /tmp/nova/shots: 02, 12 landing click-through (Enter on a card, click at 390), 13 and 14 Denver brief (1440, 390),
+                    15 Denver heat (NASA POWER note), 20 and 21 Nashville step 2 (1440, 390), 30 to 33 credits button
+```
+
+## Flags
+
+1. **No LICENSE file.** Vera's blocker 3 also said it; that is the owner's decision, I did not add one.
+2. **The 98.5%** is real and is shown as such (see 5). If the owner wants the refusal sentence kept, the pattern needs a "whether" and "if" exception; I left it alone.
+3. The NASA POWER heat index is not Open-Meteo's feels-like; the numbers differ (Denver's hottest day is 97.5 F as a heat index) and the page says so. On a cool address the heat chart can be all zeros.
+4. San Antonio, Asheville and Bellevue snapshots hold heat only (the rain part was rate limited when they were made), so their flood trigger rain is fetched live: 1.8 to 2 s, from NASA POWER while Open-Meteo is rate limited. Nothing else was precomputed, as asked.
+5. A cached brief costs one NWS alerts call per request (geocode is cached 24 h). The caches are per server instance.
+6. One `git status` ran by mistake early in the round (read-only, nothing changed). No other git command was run.
+7. Chrome only. No Safari, Firefox or screen reader.
+
+## Alex: check by keyboard and screen reader (I cannot)
+
+- Landing: Tab to a sample card, press Enter and then Space on another. Focus should land on the "Your street's next 72 hours" heading, and the lookup should have started. With a bad address (type `<b>`), focus should land in the address box and the error should be read out.
+- 72 hours tab for Denver (1437 Bannock St, Denver, CO): the brief should end with "We have not indexed Colorado yet, so we cannot say whether floods or tornadoes were reported here." and never say there were no floods.
+- Ask "Will my street flood tomorrow?": the line "We don't forecast; here is the official outlook and how it has played out here." should be read before the answer.
+- Storm replay for Nashville, "2 · Correct the pins": report 1 should be read as naming Rosa Parks Blvd and Farmers Market with no single spot, never as "a region".
+- Heat tab for Denver: the note about NASA POWER (MERRA-2) should be read, and the chart should say "heat index".
+- At a phone width (390 px or a real phone): the "i" credits button at the top right should be reachable by touch and by Tab ("Toggle attribution", inside a "Map credits" region) and should open and close.

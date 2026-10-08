@@ -88,7 +88,7 @@ This folder lives in the web repo as `pipeline/`. Set `MEMORIA_DATA_DIR=../data`
 
 ## eval_detective.py: the pre-registered re-test
 
-- **Pre-registration first.** Read `eval/PREREG.md` before anything else. It was written before any eval code ran.
+- **Pre-registration first.** Read `eval/PREREG.md` before anything else. It was committed before the run (the git history shows the order: the protocol commit, then the outputs).
 - **Sample.** The fresh sample is already drawn (`eval/sample.jsonl`, sha256 in `eval/sample_manifest.json`).
   - Seeds 20261009/20261010, 100 records (A 60 / B 40), 0 overlap with the spike's 100.
   - Truth is held only in `eval/truth.jsonl`. Methods see only id, state, county and narrative.
