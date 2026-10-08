@@ -37,8 +37,11 @@ export class RateLimiter {
 
 // ---------------------------------------------------------------- daily token budget
 
-/** Used when AI_DAILY_TOKEN_BUDGET is missing or not a whole number: about 100 briefs a day. */
-export const DEFAULT_DAILY_TOKEN_BUDGET = 400_000;
+/**
+ * Used when AI_DAILY_TOKEN_BUDGET is missing or not a whole number: about 750 briefs a day (roughly 4,000 tokens each), enough
+ * for a judging window. It is a per-instance ceiling; the Anthropic console spend cap is the real safety net (see the README).
+ */
+export const DEFAULT_DAILY_TOKEN_BUDGET = 3_000_000;
 
 /** Reads AI_DAILY_TOKEN_BUDGET. A whole number of 0 or more; 0 switches the AI off. Anything else falls back to the default. */
 export function readDailyBudget(env: Record<string, string | undefined>): number {
@@ -94,12 +97,18 @@ export class TokenBudget {
 // ---------------------------------------------------------------- answer cache
 
 export const ANSWER_CACHE_MS = 10 * 60_000;
+/** The 72-hour brief is kept an hour, by address and active alerts, so a judge clicking back and forth does not pay for it twice. */
+export const BRIEF_CACHE_MS = 60 * 60_000;
 export const ANSWER_CACHE_MAX = 300;
 
-/** Finished answers by address and question for ten minutes, plus the calls still running, so two identical requests make one model call. */
+/** Finished answers by key (ten minutes unless told otherwise), plus the calls still running, so two identical requests make one model call. */
 export class AnswerCache<V> {
-  private readonly done = new LruCache<V>(ANSWER_CACHE_MAX, ANSWER_CACHE_MS);
+  private readonly done: LruCache<V>;
   private readonly running = new Map<string, Promise<V>>();
+
+  constructor(ttlMs: number = ANSWER_CACHE_MS) {
+    this.done = new LruCache<V>(ANSWER_CACHE_MAX, ttlMs);
+  }
 
   static key(address: string, question: string): string {
     const norm = (text: string) => text.toLowerCase().replace(/\s+/g, " ").trim();

@@ -10,11 +10,17 @@
  *   4. Anything in quotation marks must appear word for word in a cited source (a changed quote: dropped).
  *   5. No overclaims: "we predict", "will flood", "you are safe", "guaranteed", "no chance of flooding".
  *   6. Plain text only: no links, tags or line breaks, and a sensible length.
+ *   7. Outside the states we have indexed (a source with the id "coverage" exists), the ONLY allowed statement about whether floods
+ *      or tornadoes were reported is the coverage source's own: "we have not indexed X, so we cannot say". "No floods", "no
+ *      tornadoes", "nothing reported", "all clear", and any claim about past events that does not cite it, are dropped.
  *
  * It checks that the words and numbers are backed by the cited data. It cannot check that a sentence is a fair reading of that
  * data; the prompt, the short sentences and the visible citations are there for that.
  */
 import type { AiSource, DroppedSentence, VerifiedSentence, VerifyResult } from "./types";
+
+/** Same value as COVERAGE_SOURCE_ID in lib/ai/sources.ts (not imported: that file pulls in server-only code). */
+export const COVERAGE_ID = "coverage";
 
 export const MAX_SENTENCE_CHARS = 360;
 export const MIN_SENTENCE_CHARS = 8;
@@ -81,6 +87,43 @@ const OVERCLAIMS: Array<[RegExp, string]> = [
   [/\b(no|zero)\s+(chance|risk|danger)\s+(of|from)\s+(flooding|a\s+flood|flood|tornadoes|a\s+tornado|heat)\b/i, "no chance of"],
 ];
 
+// ---------------------------------------------------------------- coverage gaps (no index for this state)
+
+const HAZARD = /\b(flood\w*|tornado\w*|twister\w*)\b/i;
+
+/** Denying a risk or an alert is not denying a history ("no flood risk area", "no tornado watch"): those are the official products' words. */
+const OFFICIAL_DENIAL = /\b(no|zero|not\s+any|without)\s+(?:\w+\s+){0,2}(?:risk|outlook|probabilit\w*|watch(?:es)?|warnings?|alerts?|threat|level)\b/gi;
+
+/** A claim that nothing happened, or that all is clear. */
+const ALL_CLEAR: RegExp[] = [
+  /\ball[\s-]+clear\b/i,
+  // Without naming the hazard: "a clean history", "nothing has happened here", "no incidents on record".
+  /\b(clean|clear|spotless|quiet|uneventful|unblemished|perfect)\s+(history|record|past|slate)\b/i,
+  /\bnothing\s+(?:\w+\s+){0,2}(happened|occurred|reported|recorded|found|on\s+record)\b/i,
+  /\b(no|zero|never|without)\s+(?:\w+\s+){0,2}(history|incidents?|events?|damage|problems?|trouble)\b/i,
+  /\b(no|zero|none|never|nothing|neither|without|not\s+(?:any|a\s+single|once|ever)|free\s+of|clear\s+of|spared|untouched|unaffected|safe\s+from|hasn'?t|haven'?t|wasn'?t|weren'?t|didn'?t|has\s+not|have\s+not|was\s+not|were\s+not|did\s+not)\b[^.!?]{0,60}\b(flood\w*|tornado\w*|twister\w*)/i,
+  /\b(flood\w*|tornado\w*|twister\w*)\b[^.!?]{0,60}\b(none|never|nothing|zero|absent|no\s+record|not\s+(?:been\s+)?(?:reported|recorded|found|seen|hit|struck|touched)|hasn'?t|haven'?t|wasn'?t|weren'?t|didn'?t|no\s+(?:reports?|events?|tracks?|damage))/i,
+];
+
+/** Talk about the past: reports, records, things that happened. */
+const ABOUT_THE_PAST = /\b(report(?:s|ed)?|record(?:s|ed)?|histor\w*|past|previous\w*|before|ever|since|years?|struck|hit|touched|occurr\w*|happen\w*|events?|tracks?|damage[ds]?)\b/i;
+
+/** The coverage source's own words: we have not indexed the place, so we cannot say. */
+const COVERAGE_STATEMENT = /(?=[\s\S]*\bcannot\s+say\b)(?=[\s\S]*\b(?:not\s+indexed|small\s+development\s+sample)\b)/i;
+
+/**
+ * Why a sentence breaks the coverage rule, or null. Only called when the coverage source exists. The one sentence that may talk
+ * about floods or tornadoes in the past cites "coverage" and says "not indexed ... cannot say" (the source's own words).
+ */
+export function coverageViolation(text: string, cites: readonly string[]): string | null {
+  const statement = cites.includes(COVERAGE_ID) && COVERAGE_STATEMENT.test(text);
+  // The statement's own "not indexed" and "cannot say" are removed before the all-clear check, so it can stand but cannot carry a denial.
+  const checked = (statement ? text.replace(/\b(?:have|has|had)?\s*not\s+indexed\b/gi, " ").replace(/\bcannot\s+say\b/gi, " ") : text).replace(OFFICIAL_DENIAL, " ");
+  if (ALL_CLEAR.some((pattern) => pattern.test(checked))) return "false all-clear outside our coverage";
+  if (!statement && HAZARD.test(checked) && ABOUT_THE_PAST.test(checked)) return "past events outside our coverage";
+  return null;
+}
+
 // ---------------------------------------------------------------- the checks
 
 function normalizeText(text: string): string {
@@ -121,6 +164,11 @@ export function verifySentence(raw: unknown, sources: ReadonlyMap<string, AiSour
 
   for (const [pattern, label] of OVERCLAIMS) {
     if (pattern.test(text)) return fail("overclaim", label);
+  }
+
+  if (sources.has(COVERAGE_ID)) {
+    const violation = coverageViolation(text, cites);
+    if (violation) return fail("overclaim", violation);
   }
 
   return { ok: true, sentence: { text, cites } };

@@ -99,3 +99,19 @@ describe("sameOrigin and clientIp", () => {
     expect(clientIp(new Headers())).toBe("unknown");
   });
 });
+
+describe("input that is not an address", () => {
+  it.each(["brief", "ask"] as const)("%s: <img…> is a 400 with a friendly message, not a 502, and the model is never called", async (mode) => {
+    const { LookupError, NOT_AN_ADDRESS } = await import("@/lib/sources");
+    const d = deps();
+    // The real lookup would throw this for markup; the route must pass its status through.
+    d.lookup = async () => {
+      throw new LookupError(400, NOT_AN_ADDRESS);
+    };
+    const response = await aiRoute(post({ address: "<img src=x onerror=alert(1)>", question: "Will it flood?" }), mode, d);
+    expect(response.status).toBe(400);
+    const body = (await response.json()) as { state: string; message: string };
+    expect(body).toMatchObject({ state: "bad_request", message: "That doesn't look like a street address. Type the house number, street, city and state, like 100 James Robertson Pkwy, Nashville, TN." });
+    expect(d.client.calls).toHaveLength(0);
+  });
+});

@@ -82,6 +82,11 @@ export interface AiAnswer {
   dropped: number;
   /** Plain-language line the page shows for the off-topic and no-answer states. */
   message: string | null;
+  /**
+   * A fixed line from us (never from the model) shown above the answer when the question asks what WILL happen:
+   * "We don't forecast; here is the official outlook and how it has played out here." Absent for other questions.
+   */
+  lead?: string;
   /** ISO time this answer was made. */
   generatedAt: string;
   model: string;

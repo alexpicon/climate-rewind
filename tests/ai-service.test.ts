@@ -4,8 +4,8 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { readEnv } from "@/lib/env";
-import { AnswerCache, RateLimiter, TokenBudget } from "@/lib/ai/guard";
-import { NOT_IN_RECORDS_MESSAGE, NOTHING_VERIFIED_MESSAGE, OFF_TOPIC_MESSAGE } from "@/lib/ai/prompt";
+import { AnswerCache, BRIEF_CACHE_MS, RateLimiter, TokenBudget } from "@/lib/ai/guard";
+import { asksAboutTheFuture, NO_FORECAST_LINE, NOT_IN_RECORDS_MESSAGE, NOTHING_VERIFIED_MESSAGE, OFF_TOPIC_MESSAGE } from "@/lib/ai/prompt";
 import { cleanQuestion, createAiDeps, handleAi, type AiDeps, type AiRequest } from "@/lib/ai/service";
 import { LookupError } from "@/lib/sources";
 import type { AiAnswer } from "@/lib/ai/types";
@@ -309,5 +309,113 @@ describe("createAiDeps", () => {
     const some = createAiDeps({ ANTHROPIC_API_KEY: "test-key-not-real", AI_DAILY_TOKEN_BUDGET: "12345" });
     expect(some.client).not.toBeNull();
     expect(some.budget.limit).toBe(12_345);
+  });
+});
+
+describe("handleAi: the brief is kept for an hour, by address and active alerts", () => {
+  const ALERT = { id: "urn:oid:1", event: "Flood Watch", headline: "Flood Watch issued October 8", ends: "2026-10-11T12:00:00Z", polygon: null, motion: null, severity: null, urgency: null };
+
+  function clocked(client = fakeClient(() => modelReply({ scope: "in_scope", sentences: GOOD })), overrides: Partial<AiDeps> = {}) {
+    let now = NOW;
+    const d = deps(client, { briefCache: new AnswerCache<AiAnswer>(BRIEF_CACHE_MS), now: () => now, ...overrides });
+    return { d, at: (ms: number) => (now = NOW + ms) };
+  }
+
+  it("serves the same brief for 60 minutes with no model call, then makes a new one", async () => {
+    const { d, at } = clocked();
+    expect(((await handleAi(brief(), d)).body as AiAnswer).cached).toBe(false);
+    at(59 * 60_000);
+    expect(((await handleAi(brief(), d)).body as AiAnswer).cached).toBe(true);
+    expect(d.client.calls).toHaveLength(1);
+    at(61 * 60_000);
+    expect(((await handleAi(brief(), d)).body as AiAnswer).cached).toBe(false);
+    expect(d.client.calls).toHaveLength(2);
+  });
+
+  it("makes a new brief when the alerts change, because the brief starts with the alert", async () => {
+    let alerts: typeof ALERT[] = [];
+    const { d } = clocked(undefined, { lookup: async () => lookupFixture({ live: { checkedAt: "2026-10-08T19:00:00.000Z", alerts } }) });
+    await handleAi(brief(), d);
+    await handleAi(brief(), d);
+    expect(d.client.calls).toHaveLength(1);
+    alerts = [ALERT];
+    await handleAi(brief(), d);
+    expect(d.client.calls).toHaveLength(2);
+    // The same alert again is the same key, even in a different order of fields' checkedAt.
+    await handleAi(brief(), d);
+    expect(d.client.calls).toHaveLength(2);
+  });
+
+  it("finds a cached brief with the cheap alerts digest, without a full lookup", async () => {
+    const lookup = vi.fn(async () => lookupFixture());
+    const digest = vi.fn(async () => "abc123");
+    const { d } = clocked(undefined, { lookup, alertsDigest: digest });
+    await handleAi(brief(), d);
+    await handleAi(brief(), d);
+    expect(d.client.calls).toHaveLength(1);
+    // The first call still reads the lookup once, to build the sources; the second does not.
+    expect(lookup).toHaveBeenCalledTimes(1);
+    expect(digest).toHaveBeenCalledTimes(2);
+  });
+
+  it("falls back to the full lookup when the digest cannot be had", async () => {
+    const lookup = vi.fn(async () => lookupFixture());
+    const { d } = clocked(undefined, { lookup, alertsDigest: async () => { throw new Error("NWS down"); } });
+    expect((await handleAi(brief(), d)).status).toBe(200);
+    expect(lookup).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps questions on their own 10 minute cache", async () => {
+    const { d, at } = clocked();
+    await handleAi(ask("Is a flood likely on Saturday?"), d);
+    at(9 * 60_000);
+    expect(((await handleAi(ask("Is a flood likely on Saturday?"), d)).body as AiAnswer).cached).toBe(true);
+    at(11 * 60_000);
+    expect(((await handleAi(ask("Is a flood likely on Saturday?"), d)).body as AiAnswer).cached).toBe(false);
+  });
+
+  it("a cached brief is still served when the day's budget is used up", async () => {
+    const { d } = clocked(fakeClient(() => modelReply({ scope: "in_scope", sentences: GOOD }, { input_tokens: 40_000, output_tokens: 20_000 })), { budget: new TokenBudget(62_000) });
+    expect((await handleAi(brief(), d)).status).toBe(200);
+    expect(((await handleAi(brief(), d)).body as AiAnswer).cached).toBe(true);
+    expect((await handleAi(brief({ address: "1 Other St, Nashville, TN" }), d)).status).toBe(503);
+  });
+
+  it("a lookup error on a brief is reported with its own status", async () => {
+    const { d } = clocked(undefined, { lookup: async () => { throw new LookupError(404, "The Census could not match that to a street address."); } });
+    const result = await handleAi(brief(), d);
+    expect(result.status).toBe(404);
+  });
+});
+
+describe("handleAi: a question about what WILL happen gets the plain no-forecast line", () => {
+  it("says it first, from us, with the outlook and the record after it", async () => {
+    expect(NO_FORECAST_LINE).toBe("We don't forecast; here is the official outlook and how it has played out here.");
+    const d = deps(fakeClient(() => modelReply({ scope: "in_scope", sentences: GOOD })));
+    const body = (await handleAi(ask("Will my street flood tomorrow?"), d)).body as AiAnswer;
+    expect(body.state).toBe("ok");
+    expect(body.lead).toBe(NO_FORECAST_LINE);
+    expect(body.sentences.map((s) => s.cites)).toEqual([["flood-outlook"], ["flood-record"]]);
+    // It is also on the cached copy, and it is not something the model wrote.
+    expect(((await handleAi(ask("Will my street flood tomorrow?"), d)).body as AiAnswer).lead).toBe(NO_FORECAST_LINE);
+    expect(JSON.stringify(body.sentences)).not.toContain("We don't forecast");
+  });
+
+  it("is there even when nothing could be verified, and not for a question about the past or one that is off topic", async () => {
+    const none = deps(fakeClient(() => modelReply({ scope: "in_scope", sentences: [{ text: "It will be fine.", cites: [] }] })));
+    expect(((await handleAi(ask("Will my street flood tomorrow?"), none)).body as AiAnswer)).toMatchObject({ state: "no_answer", lead: NO_FORECAST_LINE });
+
+    const past = deps(fakeClient(() => modelReply({ scope: "in_scope", sentences: GOOD })));
+    expect(((await handleAi(ask("What did the report on March 27 say?"), past)).body as AiAnswer).lead).toBeUndefined();
+
+    const off = deps(fakeClient(() => modelReply({ scope: "off_topic", sentences: [] })));
+    expect(((await handleAi(ask("Will the Titans win tomorrow?"), off)).body as AiAnswer).lead).toBeUndefined();
+    // The brief is the official outlook already: no extra line.
+    expect(((await handleAi(brief(), deps())).body as AiAnswer).lead).toBeUndefined();
+  });
+
+  it("recognises the ways people ask", () => {
+    for (const q of ["will my street flood tomorrow?", "Is a flood likely on Saturday?", "Is it going to flood tonight", "what are the chances this weekend", "Do you predict a tornado?", "Should I expect flooding soon?", "any risk in the next 3 days"]) expect(asksAboutTheFuture(q), q).toBe(true);
+    for (const q of ["What did the March 27 report say?", "How many tornadoes passed near me?", "Is my address in a FEMA flood zone?", "How hot did it get in 2012?"]) expect(asksAboutTheFuture(q), q).toBe(false);
   });
 });

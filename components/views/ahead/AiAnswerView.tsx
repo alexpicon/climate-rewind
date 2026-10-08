@@ -43,6 +43,7 @@ export function AiAnswerView({ answer }: { answer: AiAnswer }) {
   if (answer.state !== "ok") {
     return (
       <div className="ai-msg" data-state={answer.state}>
+        {answer.lead ? <p className="ai-lead">{answer.lead}</p> : null}
         <p>{answer.message}</p>
         {answer.dropped > 0 ? <p className="ai-dropped">{answer.dropped} {answer.dropped === 1 ? "sentence" : "sentences"} the AI wrote could not be matched to a source, so none is shown.</p> : null}
       </div>
@@ -52,6 +53,7 @@ export function AiAnswerView({ answer }: { answer: AiAnswer }) {
   return (
     // Escape closes the open source from the chip or from inside the card.
     <div className="ai-answer" onKeyDown={(event) => event.key === "Escape" && open && close()}>
+      {answer.lead ? <p className="ai-lead">{answer.lead}</p> : null}
       <div className="ai-sents">
         {answer.sentences.map((sentence, i) => (
           <p className="ai-s" key={`${i}-${sentence.text}`}>

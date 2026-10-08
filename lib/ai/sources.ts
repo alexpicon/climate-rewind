@@ -19,6 +19,8 @@ import {
   type RecordCount,
   type TornadoRecordKey,
 } from "../outlook-types";
+import { stateName } from "../states";
+import { heatLabels, POWER_NAME } from "../ui/data-source";
 import { damageWhere } from "../ui/tornado-model";
 import { damageNear, type DamageRow } from "./damage";
 import type { AiSource } from "./types";
@@ -173,6 +175,7 @@ function heatForecastSource(outlook: OutlookPayload): AiSource | null {
 function heatHistorySource(lookup: LookupPayload): AiSource | null {
   const heat = lookup.heat;
   if (!heat) return null;
+  const label = heatLabels(heat);
   const years = Object.keys(heat.byYear).sort();
   const recent = years.slice(-5);
   const total = years.reduce((sum, y) => sum + heat.byYear[y], 0);
@@ -181,10 +184,10 @@ function heatHistorySource(lookup: LookupPayload): AiSource | null {
     kind: "heat",
     chip: "Heat history",
     title: "Hot days at this address since 2000",
-    origin: "Open-Meteo archive (ERA5 reanalysis), daily feels-like high, at this address",
+    origin: label.fallback ? `${POWER_NAME} reanalysis, daily heat-index high (National Weather Service formula), at this address` : "Open-Meteo archive (ERA5 reanalysis), daily feels-like high, at this address",
     text:
-      `Days with a feels-like high of 100 F or more: ${recent.map((y) => `${y}: ${heat.byYear[y]}`).join(", ")}; ${total} in all since ${years[0]}. ` +
-      `The hottest day since ${years[0]} was ${niceDate(heat.hottest.date)}, with a feels-like high of ${heat.hottest.feelsF} F. This is a model of past weather, not a thermometer at the address, and it shows no trend.`,
+      `${label.explain ? `${label.explain} ` : ""}Days with a ${label.measure} high of 100 F or more: ${recent.map((y) => `${y}: ${heat.byYear[y]}`).join(", ")}; ${total} in all since ${years[0]}. ` +
+      `The hottest day since ${years[0]} was ${niceDate(heat.hottest.date)}, with a ${label.measure} high of ${heat.hottest.feelsF} F. This is a model of past weather, not a thermometer at the address, and it shows no trend.`,
   };
 }
 
@@ -200,7 +203,7 @@ function triggerSource(lookup: LookupPayload): AiSource | null {
     kind: "trigger",
     chip: "Flood trigger",
     title: "Your street's flood trigger",
-    origin: "NWS flood reports within 5 km, ERA5 rainfall at the address (Open-Meteo), and the NWS rain forecast",
+    origin: `NWS flood reports within 5 km, ${t.rainSource === "nasa-power" ? `${POWER_NAME} rainfall` : t.rainSource === "mixed" ? `ERA5 (Open-Meteo) and ${POWER_NAME} rainfall` : "ERA5 rainfall at the address (Open-Meteo)"}, and the NWS rain forecast`,
     text: `${t.floodDays} dates had flood reports within 5 km of this address. ${copy.headline} ${copy.context.join(" ")}${forecast} This compares past rain with forecast rain. It is a history-based signal, not a flood forecast.`.replace(/\s+/g, " "),
   };
 }
@@ -246,7 +249,31 @@ export function pickReports(reports: NearbyFlood[], limit = MAX_REPORT_SOURCES):
   return [...reports].sort((a, b) => rank(a) - rank(b) || a.distanceKm - b.distanceKm).slice(0, limit);
 }
 
+/** The id of the one source that speaks for the past when the state is not covered. The verifier (lib/ai/verify.ts) looks for it. */
+export const COVERAGE_SOURCE_ID = "coverage";
+
+/**
+ * Outside the states we have indexed, "nothing found" would be a false all-clear: we did not look. So the past is ONE source that
+ * says exactly that, and the flood and tornado history sources do not exist for the address.
+ */
+function coverageSource(lookup: LookupPayload): AiSource | null {
+  if (lookup.coverage === "indexed") return null;
+  const place = stateName(lookup.address.state);
+  return {
+    id: COVERAGE_SOURCE_ID,
+    kind: "history",
+    chip: "Coverage",
+    title: "What our records cover",
+    origin: "Climate Rewind's state-by-state index of NWS flood reports and NCEI tornado records",
+    text:
+      lookup.coverage === "fixture"
+        ? `Our records for ${place} are only a small development sample, so we cannot say whether floods or tornadoes were reported here.`
+        : `We have not indexed ${place} yet, so we cannot say whether floods or tornadoes were reported here.`,
+  };
+}
+
 function floodHistorySource(lookup: LookupPayload): AiSource | null {
+  if (lookup.coverage !== "indexed") return null;
   const { reports, tierCounts } = lookup.floods;
   if (reports.length === 0) {
     return { id: "flood-history", kind: "history", chip: "Flood reports", title: "Flood reports near this address", origin: "NWS Local Storm Reports and NCEI Storm Events, 2015 to 2025", text: "No flood report within 5 km of this address is in our records (reports we could place near you; not every flood is reported)." };
@@ -291,6 +318,7 @@ function reportSource(report: NearbyFlood, n: number): AiSource {
 }
 
 function tornadoHistorySource(lookup: LookupPayload): AiSource | null {
+  if (lookup.coverage !== "indexed") return null;
   const list = lookup.tornadoes;
   if (list.length === 0) {
     return { id: "tornado-history", kind: "history", chip: "Tornado records", title: "Tornado tracks near this address", origin: "NCEI Storm Events tornado records", text: "No tornado track within 10 km of this address is in our records." };
@@ -357,11 +385,13 @@ export function buildSources({ lookup, outlook, damage }: SourceInputs): AiSourc
     heatHistorySource(lookup),
     triggerSource(lookup),
     femaSource(lookup),
+    coverageSource(lookup),
     floodHistorySource(lookup),
-    ...pickReports(lookup.floods.reports).map((r, i) => reportSource(r, i + 1)),
+    ...(lookup.coverage === "indexed" ? pickReports(lookup.floods.reports).map((r, i) => reportSource(r, i + 1)) : []),
     tornadoHistorySource(lookup),
   ];
-  const nearby = [...lookup.tornadoes];
+  // Nothing from the flood and tornado index is offered for a state we have not indexed (there should be none; this is the second lock).
+  const nearby = lookup.coverage === "indexed" ? [...lookup.tornadoes] : [];
   const chosen = [...nearby].sort((a, b) => a.minDistanceKm - b.minDistanceKm).slice(0, MAX_TORNADO_SOURCES);
   chosen.forEach((t, i) => sources.push(tornadoSource(t, i + 1)));
   damageNear(damage, new Set(nearby.map((t) => t.id)), [lookup.address.lat, lookup.address.lon]).forEach((row, i) => sources.push(damageSource(row, i + 1, nearby)));

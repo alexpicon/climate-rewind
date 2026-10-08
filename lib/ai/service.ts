@@ -6,20 +6,23 @@
  * The model never sees the key, the visitor never sees the model's raw output, and the key never leaves this process.
  */
 import Anthropic from "@anthropic-ai/sdk";
+import { createHash } from "node:crypto";
 import { lookupAddress } from "../lookup";
 import { LruCache } from "../lru";
 import { buildOutlook } from "../outlooks";
-import { LookupError } from "../sources";
-import type { LookupPayload } from "../types";
+import { fetchActiveAlerts, geocodeAddress, LookupError } from "../sources";
+import type { LiveAlerts, LookupPayload } from "../types";
 import type { OutlookPayload } from "../outlook-types";
 import { readEnv } from "../env";
 import { loadDamageRows, type DamageRow } from "./damage";
-import { AnswerCache, RateLimiter, readDailyBudget, TokenBudget } from "./guard";
+import { AnswerCache, BRIEF_CACHE_MS, RateLimiter, readDailyBudget, TokenBudget } from "./guard";
 import {
   AI_MODEL,
   ANSWER_SCHEMA,
+  asksAboutTheFuture,
   buildUserMessage,
   MAX_OUTPUT_TOKENS,
+  NO_FORECAST_LINE,
   NOT_IN_RECORDS_MESSAGE,
   NOTHING_VERIFIED_MESSAGE,
   OFF_TOPIC_MESSAGE,
@@ -47,7 +50,15 @@ export interface AiDeps {
   client: ModelClient | null;
   budget: TokenBudget;
   limiter: RateLimiter;
+  /** Answers to questions ("Ask your street"), kept for 10 minutes by address and question. */
   cache: AnswerCache<AiAnswer>;
+  /** The 72-hour brief, kept for 60 minutes by address and a hash of the active alerts (new alerts: a new brief). Absent: briefs use `cache`. */
+  briefCache?: AnswerCache<AiAnswer>;
+  /**
+   * A cheap digest of the alerts active at an address (no model, no full lookup), used to find a cached brief fast. Null when it
+   * cannot be had; the brief then falls back to the full lookup. Absent: always the full lookup.
+   */
+  alertsDigest?: (address: string) => Promise<string | null>;
   lookup: (address: string) => Promise<LookupPayload>;
   outlook: (lat: number, lon: number) => Promise<OutlookPayload>;
   damage: (state: string) => Promise<DamageRow[]>;
@@ -136,16 +147,36 @@ export async function handleAi(request: AiRequest, deps: AiDeps): Promise<AiResu
     return fail(429, "rate_limited", `Too many requests. Please wait ${limit.retryAfter} seconds.`, { retryAfter: limit.retryAfter }, { "Retry-After": String(limit.retryAfter) });
   }
 
-  const key = AnswerCache.key(address, question ?? "");
-  const cached = deps.cache.get(key, now);
-  if (cached) return { status: 200, body: { ...cached, cached: true } };
-
   if (!deps.client) return fail(503, "unavailable", "The AI briefing is not switched on for this site right now. The official outlooks on this page are unaffected.");
-  if (deps.budget.remaining(now) <= 0) return fail(503, "resting", "Today's allowance for AI answers is used up. It starts again at midnight UTC. The official outlooks on this page are unaffected.");
+  const RESTING = "Today's allowance for AI answers is used up. It starts again at midnight UTC. The official outlooks on this page are unaffected.";
+
+  // A question is remembered by address and question. The brief is remembered by address and the alerts active now: the same
+  // address with new alerts is a new brief, because the brief starts with the alert.
+  let cache = deps.cache;
+  let key = AnswerCache.key(address, question ?? "");
+  let looked: LookupPayload | undefined;
+  if (question === null) {
+    cache = deps.briefCache ?? deps.cache;
+    if (deps.budget.limit <= 0) return fail(503, "resting", RESTING);
+    try {
+      const digest = await deps.alertsDigest?.(address).catch(() => null);
+      if (digest) {
+        key = `${key}|alerts:${digest}`;
+      } else {
+        looked = await deps.lookup(address);
+        key = `${key}|alerts:${alertsDigestOf(looked.live)}`;
+      }
+    } catch (error) {
+      return lookupFailure(error).result;
+    }
+  }
+  const cached = cache.get(key, now);
+  if (cached) return { status: 200, body: { ...cached, cached: true } };
+  if (deps.budget.remaining(now) <= 0) return fail(503, "resting", RESTING);
 
   // Two identical requests at the same moment share one model call.
   try {
-    const answer = await deps.cache.once(key, () => produce(address, question, deps));
+    const answer = await cache.once(key, () => produce(address, question, deps, cache, key, looked));
     return { status: 200, body: answer };
   } catch (error) {
     if (error instanceof Failure) return error.result;
@@ -154,19 +185,30 @@ export async function handleAi(request: AiRequest, deps: AiDeps): Promise<AiResu
   }
 }
 
+/** A short, stable digest of the alerts in force (their ids, events, headlines and end times), so a changed alert list changes the key. */
+export function alertsDigestOf(live: LiveAlerts | null): string {
+  if (!live) return "unknown";
+  const parts = live.alerts.map((a) => `${a.id}|${a.event}|${a.headline}|${a.ends ?? ""}`).sort();
+  return createHash("sha256").update(parts.join("\n")).digest("hex").slice(0, 16);
+}
+
 class Failure extends Error {
   constructor(readonly result: AiResult) {
     super("ai failure");
   }
 }
 
-async function produce(address: string, question: string | null, deps: AiDeps): Promise<AiAnswer> {
+function lookupFailure(error: unknown): Failure {
+  if (error instanceof LookupError) return new Failure(fail(error.status, "bad_request", error.message));
+  return new Failure(fail(502, "error", "We could not read this address's records just now. Please try again."));
+}
+
+async function produce(address: string, question: string | null, deps: AiDeps, cache: AnswerCache<AiAnswer>, cacheKey: string, preloaded?: LookupPayload): Promise<AiAnswer> {
   let lookup: LookupPayload;
   try {
-    lookup = await deps.lookup(address);
+    lookup = preloaded ?? (await deps.lookup(address));
   } catch (error) {
-    if (error instanceof LookupError) throw new Failure(fail(error.status, "bad_request", error.message));
-    throw new Failure(fail(502, "error", "We could not read this address's records just now. Please try again."));
+    throw lookupFailure(error);
   }
   const [outlook, damage] = await Promise.all([deps.outlook(lookup.address.lat, lookup.address.lon), deps.damage(lookup.address.state).catch(() => [])]);
 
@@ -222,24 +264,41 @@ async function produce(address: string, question: string | null, deps: AiDeps): 
       ? { ...base, state: "ok", sentences: shown, sources: publicSources(new Set(shown.flatMap((s) => s.cites)), byId), dropped: dropped.length + (kept.length - shown.length), message: null }
       : { ...base, state: "no_answer", sentences: [], sources: {}, dropped: dropped.length, message: NOTHING_VERIFIED_MESSAGE };
   }
+  // "Will my street flood tomorrow?" is a question we never answer with a forecast: say so first, then the outlook and the record.
+  if (question !== null && answer.state !== "off_topic" && asksAboutTheFuture(question)) answer = { ...answer, lead: NO_FORECAST_LINE };
   // An answer where nothing could be verified is not remembered: asking again may do better.
-  if (answer.state !== "no_answer" || answer.dropped === 0) deps.cache.set(AnswerCache.key(address, question ?? ""), answer, deps.now());
+  if (answer.state !== "no_answer" || answer.dropped === 0) cache.set(cacheKey, answer, deps.now());
   return answer;
 }
 
 // ---------------------------------------------------------------- production wiring
 
 const LOOKUP_CACHE_MS = 5 * 60_000;
+/** A street address does not move: keep its Census match for a day so that finding a cached brief costs one alert check, not a lookup. */
+const GEOCODE_CACHE_MS = 24 * 60 * 60_000;
 
 /** Builds the real dependencies from the environment. The API key is read here and goes nowhere else. */
 export function createAiDeps(env: Record<string, string | undefined> = process.env): AiDeps {
   const apiKey = readEnv(env, "ANTHROPIC_API_KEY");
   const lookups = new LruCache<LookupPayload>(60, LOOKUP_CACHE_MS);
+  const geocodes = new LruCache<Awaited<ReturnType<typeof geocodeAddress>>>(200, GEOCODE_CACHE_MS);
+  const fetchLike = (url: string, init?: RequestInit) => fetch(url, init);
   return {
     client: apiKey ? (new Anthropic({ apiKey, maxRetries: 1, timeout: 45_000 }) as unknown as ModelClient) : null,
     budget: new TokenBudget(readDailyBudget(env)),
     limiter: new RateLimiter(),
     cache: new AnswerCache<AiAnswer>(),
+    briefCache: new AnswerCache<AiAnswer>(BRIEF_CACHE_MS),
+    alertsDigest: async (address) => {
+      const key = address.toLowerCase();
+      let place = geocodes.get(key, Date.now());
+      if (!place) {
+        place = await geocodeAddress(address, fetchLike);
+        geocodes.set(key, place, Date.now());
+      }
+      const alerts = await fetchActiveAlerts(place.lat, place.lon, fetchLike);
+      return alerts.value ? alertsDigestOf(alerts.value) : null;
+    },
     lookup: async (address) => {
       const key = address.toLowerCase();
       const hit = lookups.get(key, Date.now());

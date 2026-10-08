@@ -41,6 +41,7 @@ describe("readDailyBudget", () => {
     expect(readDailyBudget({ AI_DAILY_TOKEN_BUDGET: "150000" })).toBe(150_000);
     expect(readDailyBudget({ AI_DAILY_TOKEN_BUDGET: " 0 " })).toBe(0);
     expect(readDailyBudget({})).toBe(DEFAULT_DAILY_TOKEN_BUDGET);
+    expect(DEFAULT_DAILY_TOKEN_BUDGET).toBe(3_000_000);
     expect(readDailyBudget({ AI_DAILY_TOKEN_BUDGET: "lots" })).toBe(DEFAULT_DAILY_TOKEN_BUDGET);
     expect(readDailyBudget({ AI_DAILY_TOKEN_BUDGET: "-5" })).toBe(DEFAULT_DAILY_TOKEN_BUDGET);
     expect(readDailyBudget({ AI_DAILY_TOKEN_BUDGET: "1e6" })).toBe(DEFAULT_DAILY_TOKEN_BUDGET);
