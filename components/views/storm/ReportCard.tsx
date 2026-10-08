@@ -1,4 +1,5 @@
 import { compassWord } from "@/lib/geo";
+import { unplacedWords } from "@/lib/ui/placements";
 import { highlightSegments, formatAtOffset, readableCase } from "@/lib/ui/text";
 import type { CurrentCorrection, Correction, StormModel } from "@/lib/ui/storm-model";
 import type { Coord } from "@/lib/types";
@@ -30,7 +31,9 @@ export function ReportCard({ model, correction, progress, origin }: Props) {
     progress.phase === "done"
       ? dest
         ? `Re-filed: ${placement.label} · ${correction.km?.toFixed(1)} km ${compassWord(origin, dest)}`
-        : "Not placed: too vague"
+        : placement.named.length > 0 && placement.vague.length === 0
+          ? "Not placed: no single spot"
+          : "Not placed: too vague"
       : !dest
         ? "Reading the words…"
         : progress.phase === "in" || progress.phase === "read"
@@ -40,6 +43,7 @@ export function ReportCard({ model, correction, progress, origin }: Props) {
             : STATE_TEXT.move;
 
   const say = placement.place.join(" and ");
+  const unplaced = unplacedWords(placement);
   const cityKm = model.cityPointKm !== null ? `, ${model.cityPointKm.toFixed(1)} km from your address` : "";
 
   return (
@@ -79,7 +83,9 @@ export function ReportCard({ model, correction, progress, origin }: Props) {
           </>
         ) : (
           <>
-            The NWS filed this note at a city point{cityKm}. Its words only name <b>“{placement.vague[0] ?? "a region"}”</b>: a region, not a place. So the pin stays.
+            The NWS filed this note at a city point{cityKm}. {unplaced.before}
+            {unplaced.strong ? <b>{unplaced.strong}</b> : null}
+            {unplaced.after}
           </>
         )}
         {placement.status === "sample" ? <> <span className="tag sample">Sample</span></> : null}

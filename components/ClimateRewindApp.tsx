@@ -123,6 +123,12 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
     void runLookup(address, tab, true, null, view3d);
   };
 
+  /** A sample card on the landing page: fill the box and look it up in the same click. */
+  const pickSample = (address: string) => {
+    setInput(address);
+    void runLookup(address, tab, true, null, view3d);
+  };
+
   /** Swap in another storm night without looking the address up again. null goes back to the busiest night. */
   const switchNight = async (id: string | null, updateUrl: boolean): Promise<ReplayResult> => {
     if (!data) return { ok: false, message: "Look up an address first." };
@@ -193,6 +199,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
           input={input}
           onInput={setInput}
           onSubmit={submit}
+          onSample={pickSample}
           lookingUp={false}
           error={lookup.status === "error" ? lookup.message : null}
         />

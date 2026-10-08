@@ -15,6 +15,7 @@ import type { ReplayResult } from "@/lib/ui/lookup-client";
 import { MS_PER_FRAME, CORRECTION_MS, buildStormModel, currentCorrection, reportsSoFar, type ReplayReport } from "@/lib/ui/storm-model";
 import { rainNoteText, type RainLink } from "@/lib/ui/rain-link";
 import { focusPanelHeadingSoon } from "@/lib/ui/focus";
+import { unplacedSentence } from "@/lib/ui/placements";
 import { formatAtOffset, niceDate, placeName } from "@/lib/ui/text";
 import { ReportCard } from "./ReportCard";
 import { StormEmpty } from "./StormEmpty";
@@ -179,7 +180,7 @@ function StormReplayView({ data, reduced, firstView, onSeen, onNight, view3d, on
     const c = model.corrections[current.index];
     say(
       `Report ${c.number} of ${model.corrections.length}. It says: ${c.report.row.quote}. ` +
-        (c.placement.dest ? `The NWS filed it at the city center. Its words say ${c.placement.place.join(" and ")}.` : "Its words name only a region. The pin stays."),
+        (c.placement.dest ? `The NWS filed it at the city center. Its words say ${c.placement.place.join(" and ")}.` : unplacedSentence(c.placement)),
     );
   }, [current, playing, model.corrections, say]);
 
@@ -321,7 +322,9 @@ function StormReplayView({ data, reduced, firstView, onSeen, onNight, view3d, on
             : current
               ? model.corrections[current.index].placement.dest
                 ? `Re-filing at ${model.corrections[current.index].placement.label}`
-                : "Reading: region-wide words"
+                : model.corrections[current.index].placement.vague.length > 0
+                  ? "Reading: region-wide words"
+                  : "Reading: no single spot to pin"
               : "Storm time is paused"
         }
         sliderLabel={stage === 1 ? "Storm time" : "Correction progress"}

@@ -8,7 +8,7 @@ import { loadMapLibre } from "@/lib/ui/maplibre";
 import { baseStyle, LABELS_LAYER, liveRadarTiles } from "@/lib/ui/map-style";
 import { bearingWord } from "@/lib/geo";
 import type { FloodTrigger } from "@/lib/types";
-import { TRIGGER_FINE_PRINT, TRIGGER_TITLE, triggerCopy } from "@/lib/ui/trigger-text";
+import { TRIGGER_TITLE, triggerCopy, triggerFinePrint } from "@/lib/ui/trigger-text";
 import type { Live } from "./use-live";
 
 interface Props {
@@ -249,7 +249,7 @@ function TriggerLine({ trigger }: { trigger: FloodTrigger }) {
       <p>{copy.headline}</p>
       {copy.context[0] ? <p className="trig-n">{copy.context[0]}</p> : null}
       {copy.notice ? <p className="trig-n">{copy.notice}</p> : null}
-      <p className="trig-fine">{TRIGGER_FINE_PRINT}</p>
+      <p className="trig-fine">{triggerFinePrint(trigger)}</p>
     </section>
   );
 }

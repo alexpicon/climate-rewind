@@ -12,6 +12,7 @@ import { decorative, el } from "@/lib/ui/dom";
 import { LABELS_LAYER, radarCorners, radarFrameUrl } from "@/lib/ui/map-style";
 import { camera3D, disable3D, enable3D, FLY_IN_MS, is3D, PITCH_3D, STORM_3D_MAX_ZOOM, STORM_BUILDINGS } from "@/lib/ui/terrain3d";
 import { RadarLoader, type RadarProgress } from "@/lib/ui/radar-loader";
+import { unplacedShort } from "@/lib/ui/placements";
 import { rainBeforeReport, type PixelFrame, type RainLink } from "@/lib/ui/rain-link";
 import { CAMERA_SHARE, correctionSlot, currentCorrection, moveProgress, type Correction, type ReplayReport, type StormModel } from "@/lib/ui/storm-model";
 import type { Coord } from "@/lib/types";
@@ -473,14 +474,14 @@ export class StormScene {
         ]),
       );
 
-    const ghostEl = el("div", { className: `pinm ghost${unknown ? " unk" : ""}`, attrs: { tabindex: "0", role: "img", "aria-label": unknown ? `Report ${number}: too vague to place. It stays at the city point.` : `Report ${number}, where the NWS filed it: the city point` } }, [
+    const ghostEl = el("div", { className: `pinm ghost${unknown ? " unk" : ""}`, attrs: { tabindex: "0", role: "img", "aria-label": unknown ? `Report ${number}: ${unplacedShort(placement)} It stays at the city point.` : `Report ${number}, where the NWS filed it: the city point` } }, [
       el("span", { svg: pinSvg(unknown ? "?" : String(number), unknown ? "unknown" : "hollow") }),
     ]);
     ghostEl.style.display = "none";
     const ghost = new gl.Marker({ element: ghostEl, anchor: "center", offset: deck(i) }).setLngLat(lngLat).addTo(map);
 
     if (unknown || !placement.dest) {
-      ghostEl.appendChild(label(`${number} · I don’t know`, "The words name a whole region. Too vague to place.", null));
+      ghostEl.appendChild(label(`${number} · I don’t know`, unplacedShort(placement), null));
       return { correction, ghost, ghostEl, solid: null, solidEl: null };
     }
 

@@ -84,6 +84,18 @@ details.more > summary:hover{color:var(--accent)}
 /* The map's zoom buttons sit below the top bar (maplibre's own stylesheet loads later and would reset these to the corner). */
 #map .maplibregl-ctrl-top-right{top:calc(var(--bar-h) + 22px);right:12px}
 
+/* The map credits button sits in #map-credits (outside #map, so it is above the panels). Bottom right on a big screen. At phone width that
+   corner is under the tab bar, so it moves to the top right (under the top bar) and becomes a 44 px target. maplibre's stylesheet loads later,
+   hence the ids and the !important on the button size. */
+#map-credits{position:fixed;right:0;bottom:0;z-index:15}
+@media (max-width:900px){
+  #map-credits{top:calc(var(--bar-h) + 8px);bottom:auto;right:8px}
+  #map-credits .maplibregl-ctrl-attrib.maplibregl-compact{margin:0;min-width:44px;min-height:44px;padding:0 44px 0 0;box-sizing:border-box;border-radius:22px}
+  #map-credits .maplibregl-ctrl-attrib.maplibregl-compact-show{padding:6px 44px 6px 12px;max-width:calc(100vw - 16px)}
+  #map-credits .maplibregl-ctrl-attrib .maplibregl-ctrl-attrib-button{width:44px!important;height:44px!important;border-radius:22px;background-position:center}
+  #map-credits .maplibregl-ctrl-attrib a{display:inline-block;padding:10px 2px}
+}
+
 /* ---------- 4. the key: collapsed to a small button ---------- */
 #legend-wrap{position:fixed;z-index:9;right:var(--pad);bottom:calc(34px + var(--dock-h,112px) + 14px)}
 .legend-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line-2);background:var(--glass);backdrop-filter:blur(18px);color:var(--ink);font-weight:600;font-size:14.5px}
@@ -296,7 +308,9 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .cite{position:relative}
 .cite::after{content:"";position:absolute;inset:-8px -2px}
 .ai-dropped{margin:6px 0 0;font-size:13.5px;line-height:1.4;color:var(--muted)}
+.ai-lead{margin:0 0 10px;font-size:15.5px;line-height:1.45;font-weight:650;color:var(--ink)}
 .ai-msg{margin:0}
+.ai-msg .ai-lead{margin-bottom:8px;font-weight:650}
 .ai-msg p{margin:0 0 6px;font-size:15.5px;line-height:1.45}
 .srccard{margin:10px 0 2px;padding:12px 14px;border-radius:12px;border:1px solid var(--line-2);background:rgba(6,10,19,.7)}
 .src-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}

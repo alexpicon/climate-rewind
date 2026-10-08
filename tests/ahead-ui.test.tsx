@@ -159,6 +159,9 @@ describe("AiAnswerView", () => {
   });
 
   it("shows only our own message for a refusal or an answer with nothing verified", () => {
+    const withLead = renderToStaticMarkup(<AiAnswerView answer={{ ...answer, lead: "We don't forecast; here is the official outlook and how it has played out here." }} />);
+    expect(withLead).toContain('<p class="ai-lead">We don&#x27;t forecast; here is the official outlook and how it has played out here.</p>');
+    expect(withLead.indexOf("ai-lead")).toBeLessThan(withLead.indexOf("ai-sents"));
     const refusal = renderToStaticMarkup(<AiAnswerView answer={{ ...answer, state: "off_topic", sentences: [], sources: {}, dropped: 0, message: "I can only answer questions about weather hazards at this address: floods, tornadoes, heat, alerts and the official outlooks." }} />);
     expect(refusal).toContain("I can only answer questions about weather hazards");
     expect(refusal).not.toContain("cite");
@@ -192,6 +195,13 @@ describe("the forecaster chart and section", () => {
     expect(html).toContain("0.0%");
     expect(html).toContain("Text version of this chart");
     expect(html).toContain('<th scope="col">95% range</th>');
+  });
+
+  it("keeps the shipped numbers equal to docs/forecast-experiment.md, the write-up How it works points to", async () => {
+    const doc = await readFile(path.join(process.cwd(), "docs", "forecast-experiment.md"), "utf8");
+    for (const text of ["Brier skill +3.5% vs ERO-only (95% CI +1.7% to +5.3%", "AUC 0.954 vs 0.881", "**0.0%** (CI -1.4% to +1.3%)", "+6.0% Brier skill (CI 4.5% to 7.6%)", "350 positives", "199,368", "56,238", "206 distinct dates", "313,404"]) expect(doc, text).toContain(text);
+    expect(doc).not.toMatch(/Quinn|Koda|\/tmp\//);
+    expect(renderToStaticMarkup(<HowStandalone onBack={noop} detectiveRan={false} />)).toContain("docs/forecast-experiment.md");
   });
 
   it("keeps the shipped numbers equal to the spike's RESULT.md", () => {

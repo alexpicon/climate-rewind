@@ -24,6 +24,11 @@ export interface Placement {
   support: string[];
   /** Vague region (dashed underline). */
   vague: string[];
+  /**
+   * Streets or landmarks the words DO name but that give no single spot (no address, no crossing street), for a report left unplaced.
+   * Empty for a placed report and for a vague region.
+   */
+  named: string[];
   /** Why we believe this placement. */
   why: string;
 }
@@ -35,7 +40,40 @@ interface SamplePlacement {
   place: string[];
   support: string[];
   vague: string[];
+  named: string[];
   why: string;
+}
+
+/** What the words of an unplaced report say, split so the card can bold the name: before + strong + after. */
+export interface UnplacedWords {
+  before: string;
+  strong: string;
+  after: string;
+}
+
+/**
+ * Why a report stayed at the city point, in words that are true of THAT report. A region ("the southern half of Nashville") is a
+ * region; a street or landmark with no address or crossing street (Rosa Parks Blvd) is a name without a spot; nothing at all is nothing.
+ */
+export function unplacedWords(placement: Pick<Placement, "vague" | "named">): UnplacedWords {
+  if (placement.vague.length > 0) return { before: "Its words only name ", strong: `“${placement.vague[0]}”`, after: ": a region, not a place. So the pin stays." };
+  if (placement.named.length > 0) {
+    return { before: "Its words name ", strong: placement.named.slice(0, 2).join(" and "), after: ", but give no address or cross street, so there is no single spot to pin. So the pin stays." };
+  }
+  return { before: "Its words do not name a place we could find. So the pin stays.", strong: "", after: "" };
+}
+
+/** The same sentence as plain text, for screen reader announcements. */
+export function unplacedSentence(placement: Pick<Placement, "vague" | "named">): string {
+  const w = unplacedWords(placement);
+  return `${w.before}${w.strong}${w.after}`;
+}
+
+/** The short reason on the pin's own label. */
+export function unplacedShort(placement: Pick<Placement, "vague" | "named">): string {
+  if (placement.vague.length > 0) return "The words name a whole region. Too vague to place.";
+  if (placement.named.length > 0) return `The words name ${placement.named[0]} but give no single spot.`;
+  return "The words name no place we could find.";
 }
 
 /**
@@ -56,6 +94,7 @@ const SAMPLE_PLACEMENTS: Array<SamplePlacement & { quoteStart: string }> = [
     place: ["Rosa Parks Blvd"],
     support: ["Farmers Market"],
     vague: [],
+    named: [],
     why: "The words name Rosa Parks Blvd near the Farmers Market. The spot is approximate.",
   },
   {
@@ -66,6 +105,7 @@ const SAMPLE_PLACEMENTS: Array<SamplePlacement & { quoteStart: string }> = [
     place: ["95 Wallace Road"],
     support: [],
     vague: [],
+    named: [],
     why: "The words give a street address, 95 Wallace Road. The spot is a Census check made by hand for the prototype.",
   },
   {
@@ -76,6 +116,7 @@ const SAMPLE_PLACEMENTS: Array<SamplePlacement & { quoteStart: string }> = [
     place: ["Oak Hill", "Edmondson Pike"],
     support: ["South Nashville"],
     vague: [],
+    named: [],
     why: "The words name an area, not a point. The pin is the neighbourhood centre.",
   },
   {
@@ -86,6 +127,7 @@ const SAMPLE_PLACEMENTS: Array<SamplePlacement & { quoteStart: string }> = [
     place: ["Linbar Drive"],
     support: ["South Brooke Apartments"],
     vague: [],
+    named: [],
     why: "The words name South Brooke Apartments on Linbar Drive. The pin is the middle of the street.",
   },
   {
@@ -96,6 +138,7 @@ const SAMPLE_PLACEMENTS: Array<SamplePlacement & { quoteStart: string }> = [
     place: [],
     support: [],
     vague: ["southern half of Nashville"],
+    named: [],
     why: "The words name a whole region, not a place. The note stays at the city centre. No guess.",
   },
 ];
@@ -113,7 +156,21 @@ export function resolvePlacement(report: FloodRow): Placement | null {
 
   if (result) {
     if (result.verdict === "unknown" || !report.placed) {
-      return { status: "unknown", dest: null, label: "I don't know", kind: "region", place: [], support: [], vague: [], why: "The words are too vague to place. The note stays at the city centre. No guess." };
+      // The detective read the words and could not pin one spot. If the words DO name a street or a landmark, say that: it is not "a region".
+      const named = [...new Set(result.clues.map((clue) => prettyPlace(clue)).filter(Boolean))];
+      return {
+        status: "unknown",
+        dest: null,
+        label: "I don't know",
+        kind: "region",
+        place: [],
+        support: result.clues,
+        vague: [],
+        named,
+        why: named.length
+          ? `The words name ${named.slice(0, 2).join(" and ")} but give no address or cross street, so there is no single spot. The note stays at the city centre. No guess.`
+          : "The words are too vague to place. The note stays at the city centre. No guess.",
+      };
     }
     const verified = result.matchType === "address" || result.matchType === "intersection";
     return {
@@ -124,6 +181,7 @@ export function resolvePlacement(report: FloodRow): Placement | null {
       place: result.clues,
       support: [],
       vague: [],
+      named: [],
       why: verified
         ? `The words give ${result.matchType === "address" ? "a street address" : "an intersection"}, matched by the Census geocoder.`
         : "The words name an area, so the pin is the area centre.",

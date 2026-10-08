@@ -22,6 +22,7 @@ interface Props {
  */
 export function MapCanvas({ address, reducedMotion, children }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const creditsRef = useRef<HTMLDivElement>(null);
   const [api, setApi] = useState<MapApi | null>(null);
   const [tileTrouble, setTileTrouble] = useState(false);
   // The map starts on a placeholder world view while the lookup runs. It stays hidden until a view has put the camera on its
@@ -33,6 +34,7 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
 
   useEffect(() => {
     let map: MapLibreMap | null = null;
+    let attribution: { onRemove(): void } | null = null;
     let cancelled = false;
 
     (async () => {
@@ -52,7 +54,19 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
         pitchWithRotate: false,
         maxPitch: 0,
       });
-      map.addControl(new gl.AttributionControl({ compact: true }), "bottom-right");
+      // The credits button lives in #map-credits, outside #map: the map is one fixed layer under every panel, so a control inside it
+      // is covered by the panel and the tab bar on a phone and cannot be reached. (It is the same MapLibre control, mounted by hand.)
+      const credits = new gl.AttributionControl({ compact: true });
+      attribution = credits;
+      const creditsEl = credits.onAdd(map);
+      if (creditsRef.current) creditsRef.current.appendChild(creditsEl);
+      // MapLibre opens the credits text at first. On a phone it would sit over the panel, so there it starts as the small button.
+      const collapseOnPhone = () => {
+        if (!window.matchMedia("(max-width: 900px)").matches) return;
+        creditsEl.removeAttribute("open");
+        creditsEl.classList.remove("maplibregl-compact-show");
+      };
+      collapseOnPhone();
       map.addControl(new gl.NavigationControl({ showCompass: false }), "top-right");
       map.touchZoomRotate.disableRotation();
 
@@ -84,12 +98,19 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
         if (cancelled || !map) return;
         // Read-only handle for the browser tests (camera, pitch, terrain). Nothing in the app reads it.
         (window as unknown as { __memoriaMap?: MapLibreMap }).__memoriaMap = map;
+        collapseOnPhone();
         setApi({ map, gl });
       });
     })();
 
     return () => {
       cancelled = true;
+      try {
+        attribution?.onRemove();
+      } catch {
+        // the control was never mounted
+      }
+      attribution = null;
       addressMarker.current?.remove();
       addressMarker.current = null;
       map?.remove();
@@ -130,6 +151,7 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
         aria-label={`Interactive weather map${matched ? ` around ${matched}` : ""}. The panel and the text versions hold the same information.`}
       />
       <div id="vignette" aria-hidden="true" />
+      <div id="map-credits" className="maplibregl-ctrl-bottom-right" role="region" aria-label="Map credits" ref={creditsRef} />
       {tileTrouble ? (
         <p id="toast" className="on" role="status">
           Some map tiles did not load. Check your connection; the data still works.

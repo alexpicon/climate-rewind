@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { AiJob } from "@/lib/ai-jobs";
 import { describeJobs } from "@/lib/ai-jobs";
 import { APP_NAME } from "@/lib/brand";
 import { landingLead } from "@/lib/ui/detective-copy";
-import { SAMPLE_ADDRESSES, viewUrl } from "@/lib/ui/tabs";
+import { chooseSample, SAMPLE_ADDRESSES, viewUrl } from "@/lib/ui/tabs";
 
 interface Props {
   input: string;
@@ -18,12 +18,18 @@ interface Props {
   detectiveRan: boolean;
   /** The AI jobs, listed under the search. */
   aiJobs?: AiJob[];
+  /** A sample card was chosen: look that address up now (one click). Absent: the card only fills the box. */
+  onSample?: (address: string) => void;
 }
 
-/** First screen: one search box and three sample addresses. Samples only fill the box. */
-export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, detectiveRan, aiJobs = [] }: Props) {
+/** First screen: one search box and the sample addresses. A sample card is a button: one click (or Enter or Space) looks that address up. */
+export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, detectiveRan, aiJobs = [], onSample }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const ai = landingLead(detectiveRan);
+  // After a lookup that failed the page comes back to this form: put the keyboard where the problem and the fix are.
+  useEffect(() => {
+    if (error) inputRef.current?.focus();
+  }, [error]);
   // Three of the AI jobs are on the landing page; the forecaster experiment is told on How it works.
   const jobs = (aiJobs.length ? aiJobs : describeJobs({ detectiveRan, damagePlaces: 0, briefEval: null })).filter((job) => job.id !== "forecaster");
 
@@ -96,10 +102,8 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
               <button
                 type="button"
                 className="sample-btn"
-                onClick={() => {
-                  onInput(sample.address);
-                  inputRef.current?.focus();
-                }}
+                disabled={lookingUp}
+                onClick={() => chooseSample(sample.address, { fill: onInput, run: onSample, focusInput: () => inputRef.current?.focus() })}
               >
                 <b>{sample.label}</b>
                 <span>{sample.detail}</span>

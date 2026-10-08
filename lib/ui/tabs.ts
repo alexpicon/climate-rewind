@@ -14,7 +14,7 @@ export const TAB_SHORT: Record<Tab, string> = {
   ahead: "72 hours",
   storm: "Storm",
   heat: "Heat",
-  tornado: "Tornado",
+  tornado: "Tornadoes",
   how: "How",
 };
 
@@ -46,3 +46,13 @@ export const SAMPLE_ADDRESSES = [
   { label: "Asheville, NC", detail: "River Arts District", address: "350 Riverside Dr, Asheville, NC" },
   { label: "Bellevue, WA", detail: "2021 heat dome", address: "450 110th Ave NE, Bellevue, WA" },
 ] as const;
+
+/**
+ * What a sample card does when chosen. Fill the box first (so the address is visible, and in the URL once looked up). With a runner,
+ * look it up in the same click; without one, leave the keyboard in the box so Enter finishes the job.
+ */
+export function chooseSample(address: string, handlers: { fill: (address: string) => void; run?: (address: string) => void; focusInput: () => void }): void {
+  handlers.fill(address);
+  if (handlers.run) handlers.run(address);
+  else handlers.focusInput();
+}

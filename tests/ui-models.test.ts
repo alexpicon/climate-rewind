@@ -270,3 +270,19 @@ describe("heat model", () => {
     expect(weekdayOf("2012-06-29")).toBe(5); // a Friday
   });
 });
+
+describe("a sample card on the landing page", () => {
+  it("looks the address up in the same click (it fills the box, then runs)", async () => {
+    const { chooseSample, SAMPLE_ADDRESSES } = await import("@/lib/ui/tabs");
+    const events: string[] = [];
+    chooseSample(SAMPLE_ADDRESSES[0].address, { fill: (a) => events.push(`fill ${a}`), run: (a) => events.push(`run ${a}`), focusInput: () => events.push("focus") });
+    expect(events).toEqual(["fill 100 James Robertson Pkwy, Nashville, TN", "run 100 James Robertson Pkwy, Nashville, TN"]);
+  });
+
+  it("without a runner it only fills the box and leaves the keyboard there", async () => {
+    const { chooseSample } = await import("@/lib/ui/tabs");
+    const events: string[] = [];
+    chooseSample("1 Main St", { fill: (a) => events.push(`fill ${a}`), focusInput: () => events.push("focus") });
+    expect(events).toEqual(["fill 1 Main St", "focus"]);
+  });
+});
