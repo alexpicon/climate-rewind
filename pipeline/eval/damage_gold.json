@@ -1,0 +1,14 @@
+{
+  "labeledBy": "Koda (hand), 2026-10-08, written before any damage_mapper extraction output existed",
+  "rule": "A place counts if the text ties damage (or an EF rating) to it: named street/road/highway, intersection, neighbourhood or unincorporated community, landmark/facility. Excluded: counties, states, whole incorporated cities/towns (Nashville, Mount Juliet, Lebanon, Hendersonville, Gallatin, Alamo Heights, Terrell Hills, Gordonsville), rivers/lakes/creeks, and places named only as where the tornado formed, crossed, lifted, or entered a county with no damage tied to them. inSegment = my reading of whether the place lies in this row's county segment (Davidson or Bexar).",
+  "narratives": {
+    "SE-882999": {"inSegment": ["Bells Bend", "John C. Tune Airport", "Cockrill Bend Way", "Briley Parkway", "Tennessee State Prison", "North Nashville", "Tennessee State University", "I-40", "Buchanan Street", "Germantown", "East Nashville", "Five Points", "Lockeland Springs", "Barclay Drive", "Donelson Hills", "Lincoya Hills", "Donelson", "Standford Estates", "Hermitage"],
+                  "otherCounty": ["Chandler Road", "Triple Crown Parkway", "Catalpa Drive", "Clearview Drive", "Catalpa Drive at Dogwood Drive", "West Wilson Middle School", "Stoner Creek Elementary School", "Golden Bear Parkway", "Eastgate Blvd", "CEVA warehouse", "Athletes Way North", "Tuckers Crossroads", "Grant", "New Middleton"]},
+    "SE-1144554": {"inSegment": ["Brick Church Lane", "Madison", "East Campbell Road", "Nesbitt Lane", "Palmer Avenue", "Stoney River Lane", "Myatt Drive"],
+                   "otherCounty": ["Main Street", "Club at Foxland Harbor", "Foxland Harbor Golf and Country Club", "Highway 109", "Steam Plant Road", "Hartsville Pike", "Lauderdale Lane", "Homer Scott Road", "Browning Branch Road", "Hawkins Branch Road"]},
+    "SE-1144375": {"inSegment": ["Pecan Valley Road"],
+                   "otherCounty": ["Claylick", "Nosegay Road", "Pack Annex Road", "Cheatham Wildlife Management Area", "Dry Creek Road", "River Road"]},
+    "SE-674529": {"inSegment": ["Jackson-Keller Rd", "Linda Dr", "Sharon Dr", "Highway 281", "Alamo Quarry Market"], "otherCounty": []},
+    "SE-1144582": {"inSegment": ["Masonic Cemetery", "E. Commerce St", "E. Crockett St", "Fairchild Park", "N. New Braunfels Ave", "Ft. Sam Houston", "Old Austin Rd", "Alcove Apartments", "N. Vandiver Rd", "Southwest Preparatory school"], "otherCounty": []}
+  }
+}
