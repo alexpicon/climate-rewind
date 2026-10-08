@@ -1,0 +1,572 @@
+[
+ {
+  "tornadoId": "SE-1144372",
+  "place": "Claylick",
+  "phrase": "touched down in the Claylick community in eastern Dickson County, snapping and uprooting several trees and destroyed an outbuilding",
+  "ef": null,
+  "lat": 36.1586688,
+  "lon": -87.2169514,
+  "matchType": "landmark",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144372",
+  "place": "Nosegay Road",
+  "phrase": "intensified to low-end EF-2 strength as it crossed Nosegay Road and demolished a single-story manufactured home",
+  "ef": "EF2",
+  "lat": 36.164322,
+  "lon": -87.21866,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144372",
+  "place": "Pack Annex Road",
+  "phrase": "continued to Pack Annex Road where it did minor damage to the tops of high-tension powerlines",
+  "ef": null,
+  "lat": 36.167477,
+  "lon": -87.207568,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144373",
+  "place": "Dry Creek Road",
+  "phrase": "causing prolific tree damage and structure damage to homes along Dry Creek Road south of Ashland City",
+  "ef": null,
+  "lat": 36.195808,
+  "lon": -87.062808,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144373",
+  "place": "River Road",
+  "phrase": "caused minor outbuilding damage and snapped a few trees near River Road",
+  "ef": null,
+  "lat": 36.205579,
+  "lon": -86.994004,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144375",
+  "place": "Pecan Valley Road",
+  "phrase": "On Pecan Valley Road, some structural damage was observed",
+  "ef": null,
+  "lat": 36.212369,
+  "lon": -86.938834,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144554",
+  "place": "Brick Church Lane",
+  "phrase": "touched down just to the east of I-24 on Brick Church Lane in Davidson County. There were a few trees down and shingle damage to several homes",
+  "ef": null,
+  "lat": 36.244755,
+  "lon": -86.786529,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144554",
+  "place": "East Campbell Road",
+  "phrase": "Multiple single family homes and a church off of East Campbell Road were missing large sections of their roofs",
+  "ef": null,
+  "lat": 36.279433,
+  "lon": -86.710039,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144554",
+  "place": "Myatt Drive",
+  "phrase": "Two buildings were toppled and several others damaged in an industrial complex off of Myatt Drive.",
+  "ef": null,
+  "lat": 36.285097,
+  "lon": -86.692617,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144554",
+  "place": "Nesbitt Lane",
+  "phrase": "Multiple mobile homes were destroyed on Nesbitt Lane, and this is where three fatalities occurred.",
+  "ef": null,
+  "lat": 36.269024,
+  "lon": -86.74206,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144554",
+  "place": "Palmer Avenue",
+  "phrase": "an apartment complex off Palmer Avenue sustained damage",
+  "ef": null,
+  "lat": 36.280045,
+  "lon": -86.703758,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144554",
+  "place": "Stoney River Lane",
+  "phrase": "substantial damage was found to houses in a cul-de-sac on Stoney River Lane",
+  "ef": null,
+  "lat": 36.281981,
+  "lon": -86.700441,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144555",
+  "place": "Hartsville Pike",
+  "phrase": "minor roof and shingle damage to a couple of homes as the tornado crossed Hartsville Pike",
+  "ef": null,
+  "lat": 36.395532,
+  "lon": -86.375619,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144555",
+  "place": "Highway 109",
+  "phrase": "EF-1 damage was found as it crossed Highway 109 and Steam Plant Road",
+  "ef": "EF1",
+  "lat": 36.366514,
+  "lon": -86.458191,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144555",
+  "place": "Homer Scott Road",
+  "phrase": "Scattered trees continued to be blown down along Lauderdale Lane and Homer Scott Road",
+  "ef": null,
+  "lat": 36.428535,
+  "lon": -86.281705,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144555",
+  "place": "Lauderdale Lane",
+  "phrase": "Scattered trees continued to be blown down along Lauderdale Lane and Homer Scott Road",
+  "ef": null,
+  "lat": 36.424297,
+  "lon": -86.293766,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144555",
+  "place": "Steam Plant Road",
+  "phrase": "EF-1 damage was found as it crossed Highway 109 and Steam Plant Road",
+  "ef": "EF1",
+  "lat": 36.379284,
+  "lon": -86.421853,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144556",
+  "place": "Browning Branch Road",
+  "phrase": "Trees continued to be blown down on Browning Branch Road",
+  "ef": null,
+  "lat": 36.443392,
+  "lon": -86.244401,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144556",
+  "place": "Hawkins Branch Road",
+  "phrase": "a home suffered significant roof and porch damage on Hawkins Branch Road",
+  "ef": null,
+  "lat": 36.453969,
+  "lon": -86.219365,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-719854",
+  "place": "133 Queens Lane",
+  "phrase": "The worst damage was to a wood frame home at 133 Queens Lane where a large portion of the roof was blown off",
+  "ef": null,
+  "lat": 36.211718196846,
+  "lon": -86.861204614158,
+  "matchType": "address",
+  "confidence": "high"
+ },
+ {
+  "tornadoId": "SE-719854",
+  "place": "Drakes Branch Road",
+  "phrase": "snapped or uprooted nearly 100 large mature hardwood trees on Hydesdale Lane, Drakes Branch Road, Setters Road, Enchanted Drive, and Queens Lane",
+  "ef": null,
+  "lat": 36.209158,
+  "lon": -86.856853,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-719854",
+  "place": "Hydesdale Lane",
+  "phrase": "snapped or uprooted nearly 100 large mature hardwood trees on Hydesdale Lane, Drakes Branch Road, Setters Road, Enchanted Drive, and Queens Lane",
+  "ef": null,
+  "lat": 36.207876,
+  "lon": -86.854884,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-719854",
+  "place": "Queens Lane",
+  "phrase": "the carport of a home was destroyed on Queens Lane",
+  "ef": null,
+  "lat": 36.211969,
+  "lon": -86.86117,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-719854",
+  "place": "Setters Road",
+  "phrase": "A small portion of the roof was blown off a home on Setters Road north of Drakes Branch Road",
+  "ef": null,
+  "lat": 36.208499,
+  "lon": -86.854421,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-719856",
+  "place": "Dahlia Circle",
+  "phrase": "a carport had minor sheet metal damage on Dahlia Circle",
+  "ef": null,
+  "lat": 36.163125,
+  "lon": -86.71026,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-719856",
+  "place": "Dahlia Drive",
+  "phrase": "Several trees were uprooted in all directions along Dahlia Drive and a small garage building was blown inwards.",
+  "ef": null,
+  "lat": 36.16087,
+  "lon": -86.708706,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-719856",
+  "place": "River Hills Drive",
+  "phrase": "warehouse on River Hills Drive where a large section of a wall was blown out and an 18 wheeler was flipped over",
+  "ef": null,
+  "lat": 36.16506,
+  "lon": -86.712376,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-719856",
+  "place": "Shelby Bottoms Park",
+  "phrase": "Several more trees were snapped along both sides of the Cumberland River and in the Shelby Bottoms Park",
+  "ef": null,
+  "lat": 36.1831742,
+  "lon": -86.7031567,
+  "matchType": "named_area",
+  "confidence": "low"
+ },
+ {
+  "tornadoId": "SE-841531",
+  "place": "Belding Drive",
+  "phrase": "blew down numerous large trees in a convergent pattern on Edgemont Drive, Myrick Drive, Stanford Drive, Belding Drive, and Jenry Drive",
+  "ef": null,
+  "lat": 36.178431,
+  "lon": -86.65004,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-841531",
+  "place": "Edgemont Drive",
+  "phrase": "blew down numerous large trees in a convergent pattern on Edgemont Drive, Myrick Drive, Stanford Drive, Belding Drive, and Jenry Drive",
+  "ef": null,
+  "lat": 36.1794,
+  "lon": -86.651123,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-841531",
+  "place": "Jenry Drive",
+  "phrase": "blew down numerous large trees in a convergent pattern on Edgemont Drive, Myrick Drive, Stanford Drive, Belding Drive, and Jenry Drive",
+  "ef": null,
+  "lat": 36.176797,
+  "lon": -86.648733,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-841531",
+  "place": "Lebanon Pike",
+  "phrase": "blew down many more trees on Wellington Square, Lebanon Pike, and along the Stones River Greenway before lifting",
+  "ef": null,
+  "lat": 36.175283,
+  "lon": -86.646445,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-841531",
+  "place": "Myrick Drive",
+  "phrase": "blew down numerous large trees in a convergent pattern on Edgemont Drive, Myrick Drive, Stanford Drive, Belding Drive, and Jenry Drive",
+  "ef": null,
+  "lat": 36.179359,
+  "lon": -86.64926,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-882999",
+  "place": "Barclay Drive",
+  "phrase": "EF-2 damage to homes in the Lockeland Springs and Barclay Drive neighborhoods",
+  "ef": "EF2",
+  "lat": 36.174779,
+  "lon": -86.719449,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-882999",
+  "place": "Buchanan Street",
+  "phrase": "dozens of homes between I-40 and Buchanan Street",
+  "ef": "EF2",
+  "lat": 36.180028,
+  "lon": -86.80915,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-882999",
+  "place": "Cockrill Bend Way",
+  "phrase": "causing strong EF-2 damage to numerous planes, hangers, warehouses, and other buildings from Cockrill Bend Way to Briley Parkway",
+  "ef": "EF2",
+  "lat": 36.177752,
+  "lon": -86.895707,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-882999",
+  "place": "Donelson Hills",
+  "phrase": "moved northeast through the Donelson Hills and Lincoya Hills neighborhoods of Donelson",
+  "ef": null,
+  "lat": 36.170944,
+  "lon": -86.702801,
+  "matchType": "street",
+  "confidence": "low"
+ },
+ {
+  "tornadoId": "SE-882999",
+  "place": "John C. Tune Airport",
+  "phrase": "causing strong EF-2 damage to numerous planes, hangers, warehouses, and other buildings from Cockrill Bend Way to Briley Parkway",
+  "ef": "EF2",
+  "lat": 36.1840598,
+  "lon": -86.8858988,
+  "matchType": "landmark",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-882999",
+  "place": "Lincoya Hills",
+  "phrase": "moved northeast through the Donelson Hills and Lincoya Hills neighborhoods of Donelson",
+  "ef": null,
+  "lat": 36.1797782,
+  "lon": -86.6766636,
+  "matchType": "named_area",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-882999",
+  "place": "Tennessee State Prison",
+  "phrase": "the tornado caused severe damage to the Tennessee State Prison",
+  "ef": null,
+  "lat": 36.1776425,
+  "lon": -86.8660066,
+  "matchType": "landmark",
+  "confidence": "high"
+ },
+ {
+  "tornadoId": "SE-882999",
+  "place": "Tennessee State University",
+  "phrase": "up to EF-2 damage to farm facilities at Tennessee State University",
+  "ef": "EF2",
+  "lat": 36.1679249,
+  "lon": -86.8271487,
+  "matchType": "landmark",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-883007",
+  "place": "Clearview Drive",
+  "phrase": "leveled numerous homes in the Catalpa Drive and Clearview Drive neighborhoods",
+  "ef": "EF3",
+  "lat": 36.184843,
+  "lon": -86.511257,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-883007",
+  "place": "Dogwood Drive",
+  "phrase": "one elderly couple killed on Catalpa Drive at Dogwood Drive",
+  "ef": null,
+  "lat": 36.182393009131,
+  "lon": -86.524684014654,
+  "matchType": "intersection",
+  "confidence": "high"
+ },
+ {
+  "tornadoId": "SE-883007",
+  "place": "Eastgate Blvd",
+  "phrase": "moved across Golden Bear Parkway and along Eastgate Blvd, leveling several large warehouses",
+  "ef": "EF3",
+  "lat": 36.184887,
+  "lon": -86.437581,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-883007",
+  "place": "Stoner Creek Elementary School",
+  "phrase": "severely damaged West Wilson Middle School and Stoner Creek Elementary School",
+  "ef": null,
+  "lat": 36.1722783,
+  "lon": -86.4941605,
+  "matchType": "landmark",
+  "confidence": "high"
+ },
+ {
+  "tornadoId": "SE-883007",
+  "place": "Triple Crown Parkway",
+  "phrase": "up to EF-2 damage as the tornado moved across the Chandler Road and Triple Crown Parkway neighborhoods",
+  "ef": "EF2",
+  "lat": 36.178584,
+  "lon": -86.535786,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-883007",
+  "place": "Tuckers Crossroads",
+  "phrase": "buildings on both sides of I-40 in Tuckers Crossroads received up to EF-2 damage",
+  "ef": "EF2",
+  "lat": 36.1989435,
+  "lon": -86.173879,
+  "matchType": "landmark",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-883007",
+  "place": "West Wilson Middle School",
+  "phrase": "severely damaged West Wilson Middle School and Stoner Creek Elementary School",
+  "ef": null,
+  "lat": 36.1847734,
+  "lon": -86.5101661,
+  "matchType": "landmark",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-883009",
+  "place": "Grant",
+  "phrase": "EF-1 damage to numerous homes and businesses in Grant, New Middleton, and just south of Gordonsville",
+  "ef": "EF1",
+  "lat": 36.188944,
+  "lon": -86.0722114,
+  "matchType": "landmark",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-883009",
+  "place": "New Middleton",
+  "phrase": "EF-1 damage to numerous homes and businesses in Grant, New Middleton, and just south of Gordonsville",
+  "ef": "EF1",
+  "lat": 36.1747778,
+  "lon": -86.005822,
+  "matchType": "landmark",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-999627",
+  "place": "Briley Parkway",
+  "phrase": "damaged the roofs of numerous homes from Briley Parkway northeastward across Highway 12, Clarksville Pike, and Buena Vista Pike",
+  "ef": null,
+  "lat": 36.205557,
+  "lon": -86.870539,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-999627",
+  "place": "Buena Vista Pike",
+  "phrase": "damaged the roofs of numerous homes from Briley Parkway northeastward across Highway 12, Clarksville Pike, and Buena Vista Pike",
+  "ef": null,
+  "lat": 36.218801,
+  "lon": -86.820792,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-999627",
+  "place": "Clarksville Pike",
+  "phrase": "damaged the roofs of numerous homes from Briley Parkway northeastward across Highway 12, Clarksville Pike, and Buena Vista Pike",
+  "ef": null,
+  "lat": 36.214181,
+  "lon": -86.838146,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-999627",
+  "place": "Cockrill Bend",
+  "phrase": "moved eastward across Bells Bend and Cockrill Bend just north of John Tune Airport, crossing the Cumberland River twice and blowing down numerous trees",
+  "ef": null,
+  "lat": 36.1897907,
+  "lon": -86.8897326,
+  "matchType": "named_area",
+  "confidence": "low"
+ },
+ {
+  "tornadoId": "SE-999627",
+  "place": "Highway 12",
+  "phrase": "damaged the roofs of numerous homes from Briley Parkway northeastward across Highway 12, Clarksville Pike, and Buena Vista Pike",
+  "ef": null,
+  "lat": 36.208272,
+  "lon": -86.860344,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-999726",
+  "place": "Central Pike at Old Hickory Blvd",
+  "phrase": "The roof of a medical building on Central Pike at Old Hickory Blvd was also damaged",
+  "ef": null,
+  "lat": 36.173592015924,
+  "lon": -86.602154990411,
+  "matchType": "intersection",
+  "confidence": "high"
+ },
+ {
+  "tornadoId": "SE-999726",
+  "place": "Seville Drive",
+  "phrase": "More homes were damaged on Seville Drive",
+  "ef": null,
+  "lat": 36.172015,
+  "lon": -86.613673,
+  "matchType": "street",
+  "confidence": "medium"
+ }
+]

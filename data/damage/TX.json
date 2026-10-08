@@ -1,0 +1,112 @@
+[
+ {
+  "tornadoId": "SE-1144582",
+  "place": "Fairchild Park",
+  "phrase": "a fence was damaged at the tennis courts in Fairchild Park",
+  "ef": null,
+  "lat": 29.4229109,
+  "lon": -98.4691789,
+  "matchType": "named_area",
+  "confidence": "high"
+ },
+ {
+  "tornadoId": "SE-1144582",
+  "place": "Ft. Sam Houston",
+  "phrase": "The damage path was more notable within Ft. Sam Houston.",
+  "ef": null,
+  "lat": 29.4623452,
+  "lon": -98.4320532,
+  "matchType": "landmark",
+  "confidence": "low"
+ },
+ {
+  "tornadoId": "SE-1144582",
+  "place": "N. New Braunfels Ave.",
+  "phrase": "a couple metal roof panels were lifted off an old structure in the railyard just west of N. New Braunfels Ave.",
+  "ef": null,
+  "lat": 29.440957,
+  "lon": -98.460938,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-1144582",
+  "place": "Southwest Preparatory school",
+  "phrase": "damage to the Southwest Preparatory school across Seidel Rd",
+  "ef": null,
+  "lat": 29.488772,
+  "lon": -98.4431763,
+  "matchType": "landmark",
+  "confidence": "high"
+ },
+ {
+  "tornadoId": "SE-581287",
+  "place": "Culebra Rd.",
+  "phrase": "displaced two blocks to the north onto the same street near Culebra Rd.",
+  "ef": null,
+  "lat": 29.449462,
+  "lon": -98.569758,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-581287",
+  "place": "Woley Dr.",
+  "phrase": "one house on Woley Dr. did suffer major roof damage",
+  "ef": null,
+  "lat": 29.443099,
+  "lon": -98.573882,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-674529",
+  "place": "Alamo Quarry Market",
+  "phrase": "The tornado crossed Highway 281 near the Alamo Quarry Market shopping center as an EF1",
+  "ef": "EF1",
+  "lat": 29.4950568,
+  "lon": -98.481235,
+  "matchType": "landmark",
+  "confidence": "high"
+ },
+ {
+  "tornadoId": "SE-674529",
+  "place": "Highway 281",
+  "phrase": "The tornado crossed Highway 281 near the Alamo Quarry Market shopping center as an EF1",
+  "ef": "EF1",
+  "lat": 29.495771,
+  "lon": -98.484359,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-674529",
+  "place": "Jackson-Keller Rd.",
+  "phrase": "moved northeastward while strengthening to an EF1 near Jackson-Keller Rd.",
+  "ef": "EF1",
+  "lat": 29.492923,
+  "lon": -98.492637,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-674529",
+  "place": "Linda Dr.",
+  "phrase": "moved due east along Linda Dr. and Sharon Dr. where it had peak winds of near 120 mph making it an EF2 tornado",
+  "ef": "EF2",
+  "lat": 29.500542,
+  "lon": -98.483304,
+  "matchType": "street",
+  "confidence": "medium"
+ },
+ {
+  "tornadoId": "SE-674529",
+  "place": "Sharon Dr.",
+  "phrase": "moved due east along Linda Dr. and Sharon Dr. where it had peak winds of near 120 mph making it an EF2 tornado",
+  "ef": "EF2",
+  "lat": 29.501564,
+  "lon": -98.483079,
+  "matchType": "street",
+  "confidence": "medium"
+ }
+]
