@@ -47,3 +47,22 @@ tier: "mentioned" = detective verdict placed with address/intersection match; "a
 
 ## Honesty rules (both repos)
 Never invent data, quotes, coordinates or alerts. Anything not real is tagged SAMPLE in the UI. Never claim "every flood", "predicts", or a heat trend.
+
+## Addendum (Oct 8, 2026): area events, all event types (file shape for `data/events/<ST>.json.gz`)
+NCEI Storm Events 2000–2025, every EVENT_TYPE, rows with CZ_TYPE "C" (county) or "Z" (NWS forecast zone). gzip JSON:
+```jsonc
+{ "state": "WA", "built": "...", "source": "NCEI Storm Events 2000-2025 (county/zone rows)",
+  "events": [ {
+    "id": "SE-123456", "episodeId": "E-98765",
+    "type": "High Wind",                       // EVENT_TYPE verbatim
+    "start": "2006-12-14T16:00:00-08:00", "end": "...",   // local time WITH offset
+    "area": { "kind": "Z" | "C", "code": "WAZ558" | "WAC033", "name": "SEATTLE AND VICINITY" },
+    "deaths": 0, "injuries": 0, "damageUsd": 1500000,     // DEATHS_DIRECT+INDIRECT, INJURIES_*, DAMAGE_PROPERTY+CROPS parsed to dollars
+    "magnitude": 69, "magnitudeType": "MG" | null,
+    "narrative": "<verbatim EVENT_NARRATIVE, may be empty>",
+    "episodeNarrative": "<verbatim EPISODE_NARRATIVE>"   // dedupe: store once per episode in "episodes" map if size matters
+  } ],
+  "episodes": { "E-98765": "<verbatim EPISODE_NARRATIVE>" }  // optional: if present, events carry only episodeId
+}
+```
+Area codes: zone = ST + "Z" + 3-digit CZ_FIPS (matches api.weather.gov `/points` → `forecastZone` id, e.g. WAZ558); county = ST + "C" + 3-digit CZ_FIPS (matches Census county FIPS within the state, also `/points` → `county` id).
