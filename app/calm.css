@@ -1,0 +1,422 @@
+/* Climate Rewind: the calmer design layer. Loads after prototype.css (the approved v3.3 look) and
+   overrides only what DESIGN.md changes: one panel with a "More" disclosure, a collapsed key,
+   a tiny mode tag, a top bar that never overlaps, and the landing screen. */
+
+/* ---------- 1. top bar: no overlap from 1280 px up ---------- */
+#bar{gap:16px;min-width:0}
+.brand{flex:none}
+.brand span{display:none}
+#addr{flex:1 1 280px;min-width:170px;max-width:560px}
+#addr form{padding-left:14px;gap:8px}
+#addr .ok{display:none}
+#addr .go{display:inline-flex;align-items:center;flex:none;min-height:36px}
+#addr .go[disabled]{opacity:.6;cursor:progress}
+.live{flex:0 1 auto;min-width:0;max-width:232px}
+.live .lf{display:none}
+.live .ls{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live .lt{min-width:0}
+.live[data-state="watch"],.live[data-state="warn"]{max-width:262px}
+#tabs{flex:none;margin-left:auto}
+#tabs a{height:48px;min-width:48px;padding:0 13px;border-radius:999px;color:var(--muted);font-size:15px;font-weight:550;display:flex;align-items:center;gap:8px;white-space:nowrap;text-decoration:none;transition:background .25s var(--ease),color .2s}
+#tabs a:hover{color:var(--ink);background:rgba(255,255,255,.08)}
+#tabs a[aria-current="page"]{background:var(--accent);color:var(--accent-ink)}
+@media (min-width:1500px){#addr .ok{display:inline-flex}#addr .ok span{display:none}}
+@media (min-width:1900px){#addr .ok span{display:inline}}
+@media (min-width:1800px){
+  .brand span{display:inline}
+  .live{max-width:400px}
+  .live .lf{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .live .ls{display:none}
+  .live[data-state="watch"],.live[data-state="warn"]{max-width:440px}
+}
+@media (max-width:1180px){#tabs a .lbl{display:none}#tabs a{padding:0 14px}}
+@media (max-width:900px){
+  .live{max-width:136px}
+  #tabs{position:fixed;left:12px;right:12px;bottom:12px;margin:0;justify-content:space-between;background:var(--glass);backdrop-filter:blur(20px);z-index:30}
+  #tabs a{flex:1;justify-content:center;flex-direction:column;gap:0;height:56px;font-size:12px;border-radius:18px}
+  #tabs a .lbl{display:block;font-size:12px}
+  #addr .go{display:none}
+}
+
+/* ---------- 2. landing ---------- */
+#landing{position:fixed;inset:0;overflow:auto;display:grid;place-items:center;padding:40px 24px;background:radial-gradient(90% 70% at 50% 35%,#13224a 0,#0b1226 52%,#060A13 100%)}
+.landing-inner{width:min(720px,100%)}
+#landing h1{font-family:var(--serif);font-weight:300;font-size:clamp(40px,6.4vw,76px);line-height:1.02;letter-spacing:-.03em;margin:4px 0 18px;text-wrap:balance}
+.landing-sub{font-size:19px;line-height:1.5;color:var(--muted);max-width:56ch;margin:0 0 28px}
+.landing-ai{font-size:17px;line-height:1.5;color:var(--ink);max-width:56ch;margin:0 0 26px;padding-left:16px;border-left:3px solid var(--accent)}
+.landing-ai b{font-weight:650}
+.landing-ai a{color:var(--accent);font-weight:600;text-underline-offset:3px;white-space:nowrap}
+.landing-ai a:hover{color:#FFE2B0}
+.landing-form{display:flex;gap:10px;align-items:stretch;margin-bottom:12px}
+.landing-form input{flex:1;min-width:0;height:60px;padding:0 22px;border-radius:999px;border:1px solid var(--line-2);background:rgba(255,255,255,.08);font-size:18px;color:var(--ink)}
+.landing-form input::placeholder{color:var(--faint)}
+.landing-form input:focus-visible{border-color:#FFE2B0;background:rgba(255,255,255,.12)}
+.landing-form .btn{width:auto;min-height:60px;padding:0 30px;flex:none}
+.landing-error{margin:0 0 8px;padding:14px 18px;border-radius:var(--r-md);border:1px solid rgba(255,138,122,.7);background:rgba(255,138,122,.1);font-size:16px}
+.landing-samples-h{margin-top:30px}
+.samples{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.samples li{display:flex}
+.samples .sample-btn{height:100%}
+.sample-btn{width:100%;text-align:left;padding:14px 16px;min-height:72px;border-radius:var(--r-md);border:1px solid var(--line-2);background:rgba(255,255,255,.06);transition:background .2s,border-color .2s}
+.sample-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)}
+.sample-btn b{display:block;font-size:17px;font-weight:650}
+.sample-btn span{display:block;font-size:14.5px;color:var(--muted);margin-top:2px}
+.landing-fine{margin-top:26px;font-size:14px;color:var(--muted)}
+@media (max-width:720px){.samples{grid-template-columns:1fr}.landing-form{flex-direction:column}.landing-form input{flex:none;width:100%}.landing-form .btn{width:100%}}
+
+/* ---------- 3. one panel: big number, one sentence, "More" ---------- */
+.view{animation:none}
+#panel{padding-bottom:20px}
+#panel .lede{margin-bottom:14px}
+details.more{margin-top:6px;border-top:1px solid var(--line);padding-top:4px}
+details.more > summary{min-height:48px;display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:650;font-size:15px;color:var(--ink);list-style:none;border-radius:10px}
+details.more > summary::-webkit-details-marker{display:none}
+details.more > summary::before{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s}
+details.more[open] > summary::before{transform:rotate(45deg)}
+details.more > summary:hover{color:var(--accent)}
+.more-body{padding:6px 0 4px}
+.more-body details.textver{margin-top:14px}
+.fema.none{background:rgba(255,255,255,.05);border-color:var(--line)}
+.fema.none p{font-size:14.5px;color:var(--muted)}
+#panel .errcard{margin:0}
+#panel .eyebrow[role="status"]{margin-bottom:14px}
+
+/* The map's zoom buttons sit below the top bar (maplibre's own stylesheet loads later and would reset these to the corner). */
+#map .maplibregl-ctrl-top-right{top:calc(var(--bar-h) + 22px);right:12px}
+
+/* ---------- 4. the key: collapsed to a small button ---------- */
+#legend-wrap{position:fixed;z-index:9;right:var(--pad);bottom:calc(34px + var(--dock-h,112px) + 14px)}
+.legend-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line-2);background:var(--glass);backdrop-filter:blur(18px);color:var(--ink);font-weight:600;font-size:14.5px}
+.legend-btn:hover{background:var(--glass-2)}
+.legend-btn[aria-expanded="true"]{border-color:#FFE2B0}
+.legend-body{position:absolute;right:0;bottom:54px;width:332px;border-radius:var(--r-md);padding:12px 16px;font-size:14px;color:var(--muted)}
+.legend-body[hidden]{display:none}
+.legend-body b{display:block;color:var(--ink);font-weight:600;font-size:14px;margin-bottom:8px;line-height:1.25}
+.legend-body b.lgb{display:inline;margin:0;font-size:inherit;font-weight:650}
+.legend-body .lg-row{align-items:center}
+@media (max-width:900px){#legend-wrap{bottom:calc(12px + 70px + 96px + 34vh + 8px);right:12px}.legend-body{width:min(332px,calc(100vw - 24px))}}
+
+/* ---------- 5. the mode tag: tiny ---------- */
+#modebadge{padding:6px 14px 6px 6px;border-radius:999px;gap:10px}
+#modebadge .bm{height:30px;font-size:12px}
+#modebadge:has(#bt){border-radius:18px}
+#modebadge #bs{font-size:14px;color:var(--ink)}
+#modebadge[data-mode="correct"] #bt{font-size:16px}
+
+/* ---------- 6. pins: labels on hover or focus, and for the active pin ---------- */
+.pinm{z-index:2}
+.pinm:hover,.pinm:focus,.pinm.active{z-index:6}
+.pinm .plabel{position:absolute;left:0;bottom:48px;transform:translateX(-50%);width:max-content;max-width:260px;padding:7px 11px;border-radius:12px;background:rgba(10,15,27,.96);border:1px solid var(--line-2);box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s;z-index:4}
+.pinm .plabel b{display:block;font-size:14.5px;font-weight:650;line-height:1.3}
+.pinm .plabel span{font-size:13.5px;color:var(--muted)}
+.pinm .plabel .tag{margin-left:6px;height:20px;font-size:11px;color:inherit}
+.pinm .plabel .tag.sample{color:var(--sample)}
+.pinm .plabel .tag.real{color:#B8F0C8}
+.pinm:hover .plabel,.pinm:focus .plabel,.pinm.active .plabel{opacity:1}
+.pinm.solid .plabel{bottom:96px}
+.pinm:focus{outline:none}
+.pinm:focus-visible .body{outline:3px solid #FFE2B0;outline-offset:3px;border-radius:8px}
+.pinm.ghost .plabel{bottom:48px}
+
+/* ---------- 7. misc ---------- */
+.big.verified span{color:#B8F0C8}
+#radarload{left:calc(var(--pad) + var(--panel-w) + 20px)}
+@media (min-width:901px){#radarload{bottom:calc(34px + var(--dock-h,112px) + 14px)}}
+#radarnote{position:fixed;z-index:11;left:calc(var(--pad) + var(--panel-w) + 20px);bottom:calc(34px + var(--dock-h,112px) + 14px);margin:0;padding:9px 14px;border-radius:14px;font-size:14px;line-height:1.3;color:var(--ink);font-weight:550;max-width:min(420px,calc(100vw - var(--panel-w) - 80px))}
+@media (max-width:900px){#radarnote{left:12px;right:12px;max-width:none;bottom:calc(var(--dock-h,92px) + 82px)}}
+.hint{font-size:14px;color:var(--muted)}
+#how{display:block}
+.chart-wrap{margin:6px 0 10px}
+
+/* the city-point stack explains itself on hover or focus, not all the time */
+.stack .cap{opacity:0!important;pointer-events:none}
+.stack:hover .cap{opacity:1!important}
+
+.noscript{position:fixed;left:24px;right:24px;bottom:24px;z-index:99;margin:0;padding:16px;border-radius:var(--r-md);background:#fff;color:#000}
+#main-content:focus{outline:none}
+#v-tornado .big{margin-bottom:6px}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important;scroll-behavior:auto!important}
+}
+
+/* small screens: the pre-roll card replaces the panel while it is up */
+@media (max-width:900px){
+  body:has(#preroll) #panel{visibility:hidden}
+}
+
+/* the address search shows a clear ring while it has focus (the input itself has no outline) */
+#addr form:focus-within,.landing-form input:focus-visible{box-shadow:0 0 0 3px rgba(255,226,176,.55)}
+
+/* ---------- 8. step 2 before the detective has run: the reports as the NWS filed them ---------- */
+.fdot{width:0;height:0;pointer-events:none}
+.fdot span{position:absolute;left:-7px;top:-7px;width:14px;height:14px;border-radius:50%;box-sizing:border-box}
+.fdot.about1km span,.fdot.mentioned span{background:var(--flood);border:2.5px solid #fff;box-shadow:0 0 0 2px rgba(6,16,26,.85),0 0 12px rgba(95,227,216,.9)}
+.fdot.citywide span{background:rgba(10,15,27,.7);border:2.5px dashed var(--accent);box-shadow:0 0 0 2px rgba(6,16,26,.7)}
+.feed .tiertag{font-size:12px;font-weight:650;color:var(--accent);letter-spacing:.03em}
+.tally .tal span{hyphens:auto}
+
+/* ---------- 9. "How it works" before any address: same page, no map ---------- */
+#landing.how-standalone{place-items:start center}
+.how-standalone .landing-inner{width:min(900px,100%)}
+.how-standalone #how{position:static;display:block;transform:none;left:auto;right:auto;top:auto;bottom:auto;width:auto;max-width:none;max-height:none;overflow:visible;margin:14px 0 0;animation:none}
+.backlink{display:inline-flex;align-items:center;min-height:44px;color:var(--accent);font-weight:600;text-underline-offset:3px}
+.backlink:hover{color:#FFE2B0}
+
+/* phone: the heat day strip gets the room the clock used (each day button still names itself to screen readers) */
+@media (max-width:900px){
+  #dock:has(#strip) #clock{display:none}
+  #dock:has(#strip) #strip button{min-height:60px}
+  #dock:has(#strip) #strip .dv{font-size:14px}
+  #dock:has(#strip) #strip .dw{font-size:10px;letter-spacing:0}
+}
+
+/* ---------- 10. "Storm nights" picker ---------- */
+.nights{margin:0 0 14px}
+.nights label{display:block;margin:0 0 6px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.nights-row{display:flex;gap:8px}
+.nights select{flex:1;min-width:0;min-height:48px;padding:0 12px;border-radius:12px;border:1px solid var(--line-2);background:rgba(255,255,255,.08);color:var(--ink);font:inherit;font-size:15px;font-weight:550}
+.nights select option,.nights select optgroup{background:#0B111E;color:var(--ink)}
+.nights select:disabled{opacity:.6;cursor:progress}
+.nights-go{flex:none;min-height:48px;min-width:64px;padding:0 16px;border-radius:12px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-weight:650;font-size:15px}
+.nights-go:hover:not(:disabled){background:rgba(255,180,90,.14)}
+.nights-go:disabled{opacity:.55;border-color:var(--line-2);color:var(--muted);cursor:default}
+.nights-hint{margin:6px 0 0;font-size:13.5px;color:var(--muted)}
+.nights-error{margin:8px 0 0;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,138,122,.7);background:rgba(255,138,122,.1);font-size:14.5px}
+.fema-caveat{margin:8px 0 0!important;font-size:14px!important;color:var(--muted)}
+.fema:has(.fema-caveat){flex-wrap:wrap}
+.fema-caveat{flex-basis:100%}
+.fema-caveat em{font-style:italic;color:var(--ink)}
+#preroll .btn[aria-disabled="true"]{opacity:.8;cursor:progress}
+
+/* ---------- 11. small screens and large zoom ---------- */
+@media (max-width:900px){
+  /* While the pre-roll card is up, the dock and the mode tag only repeat what the card says (its button is the one action),
+     and they would sit under it. They come back when the card goes. visibility:hidden also takes them out of the reading order. */
+  body:has(#preroll) #dock,body:has(#preroll) #modebadge{visibility:hidden}
+  /* The card starts under the top bar and never grows past the bottom tabs; if the text is taller than that (200% zoom, 320 px), it scrolls inside. */
+  #preroll{top:calc(var(--bar-h) + 8px);max-height:calc(100dvh - var(--bar-h) - 8px - 12px - 70px - 12px);overflow:auto;overscroll-behavior:contain}
+  /* The step 2 report card sits just above the panel (its height is measured into --panel-h), never on top of it, so "More" stays reachable. */
+  #repcard{bottom:calc(12px + 70px + 96px + var(--panel-h,0px) + 8px)}
+  /* ...and the panel gives up height to it; the panel still scrolls, and keyboard focus scrolls it into view. */
+  body:has(#repcard) #panel{max-height:20vh}
+  /* The storm nights picker: compact, with its hint kept for screen readers; the select already shows the date, so the eyebrow is dropped. */
+  .nights{margin-bottom:10px}
+  .nights label{margin-bottom:4px;font-size:12px}
+  .nights-hint{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}
+  #v-storm:has(.nights) > .eyebrow{display:none}
+  .steps{margin-bottom:10px}
+  /* the picker adds a row, so the panel is a little taller (about 4 lines more) and "More" stays on screen */
+  #panel:has(.nights){max-height:42vh}
+  body:has(.nights) #legend-wrap{bottom:calc(12px + 70px + 96px + 42vh + 8px)}
+  /* while the step 2 card is up the Key would sit under it; it is back when the card goes */
+  body:has(#repcard) #legend-wrap{display:none}
+}
+@media (max-width:900px) and (max-height:760px){
+  #preroll{padding:16px 16px 10px}
+  #preroll .pre-s{font-size:21px;margin-bottom:8px}
+  #preroll .pre-scale{font-size:14px;margin-bottom:10px}
+  #preroll .pre-mode{margin-bottom:6px;font-size:12px}
+}
+@media (max-width:900px) and (max-height:480px){
+  /* A very short screen (about 200% zoom on a laptop): the card keeps its sentence and button; the explanation moves to screen readers only so the map stays visible. */
+  #preroll .pre-scale{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}
+  #preroll{padding:12px 16px 8px}
+}
+
+/* ---------- 9. the map fades in only after its first camera is placed (no flight in from the world view) ---------- */
+#map{transition:opacity .7s ease}
+#map.pending{opacity:0}
+.reduce #map{transition:none}
+
+/* ---------- 10. rain and reports: a brief, quiet note ---------- */
+#rainnote-live:empty{display:none}
+#rainnote{position:fixed;z-index:11;left:calc(var(--pad) + var(--panel-w) + 20px);top:calc(var(--bar-h) + 18px + 58px);margin:0;max-width:min(560px,calc(100vw - var(--panel-w) - 150px));display:flex;align-items:center;gap:10px;padding:9px 14px 9px 12px;border-radius:14px;font-size:14px;line-height:1.3;animation:rainin .5s var(--ease) both}
+#rainnote b{display:block;font-weight:600;color:var(--ink)}
+#rainnote small{display:block;font-size:13px;color:var(--muted);margin-top:1px}
+#rainnote .rn-ic{flex:none;width:10px;height:10px;border-radius:50%;background:#FFE24A;box-shadow:0 0 0 3px rgba(255,226,74,.22)}
+@keyframes rainin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.reduce #rainnote{animation:none}
+/* On a phone it sits just above the panel (like the step 2 card), one line, never on the house. */
+@media (max-width:900px){#rainnote{left:12px;right:106px;max-width:none;top:auto;bottom:calc(12px + 70px + 96px + var(--panel-h,0px) + 8px);padding:7px 12px 7px 10px}#rainnote small{display:none}}
+.feed .rainchip{display:inline-block;margin-top:6px;font-size:13px;color:#FFE9A8;border:1px solid rgba(255,226,74,.4);border-radius:999px;padding:2px 10px}
+
+/* ---------- 11. your street's flood trigger: a calm card ---------- */
+.trigger{margin:2px 0 12px;padding:12px 14px 10px;border-radius:var(--r-md);border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.trigger[data-tone="above"]{border-color:rgba(255,180,90,.55);background:rgba(255,180,90,.07)}
+.trigger[data-tone="near"]{border-color:rgba(255,226,74,.4)}
+.trigger[data-tone="below"]{border-color:rgba(143,227,167,.35)}
+.trig-t{margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.trig-h{margin:0 0 6px;font-size:15.5px;line-height:1.35;font-weight:600;color:var(--ink)}
+.trig-c{margin:0 0 6px;font-size:14px;line-height:1.35;color:var(--muted)}
+.trig-n{margin:0 0 6px;font-size:13.5px;line-height:1.35;color:var(--muted)}
+.trig-fine{margin:6px 0 0;font-size:12.5px;line-height:1.35;color:var(--faint)}
+details.trig-days{margin:2px 0 0}
+details.trig-days summary{min-height:44px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;color:var(--muted);list-style:none}
+details.trig-days summary::-webkit-details-marker{display:none}
+details.trig-days summary::before{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s}
+details.trig-days[open] summary::before{transform:rotate(45deg)}
+details.trig-days summary:hover{color:var(--ink)}
+details.trig-days table{width:100%;border-collapse:collapse;font-size:13.5px;color:var(--muted);margin:0 0 8px}
+details.trig-days th,details.trig-days td{text-align:left;padding:5px 6px 5px 0;border-bottom:1px solid var(--line);font-weight:400}
+details.trig-days thead th{font-weight:600;color:var(--ink)}
+details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);font-weight:600}
+
+.trigger-line{margin:14px 0 4px;padding:12px 14px 10px;border-radius:var(--r-md);border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.trigger-line.above{border-color:rgba(255,180,90,.55)}
+.trigger-line h3{margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.trigger-line p{margin:0 0 6px;font-size:14.5px;line-height:1.35;color:var(--ink)}
+.trigger-line p.trig-n{font-size:13.5px;color:var(--muted)}
+.trigger-line p.trig-fine{font-size:12.5px;color:var(--faint);margin-bottom:0}
+
+/* ---------- 12. the 3D switch, under the zoom buttons ---------- */
+.map-toggle{position:fixed;z-index:9;right:12px;top:calc(var(--bar-h) + 128px);display:inline-flex;align-items:center;gap:8px;min-height:44px;min-width:44px;padding:0 14px 0 12px;border-radius:999px;border:1px solid var(--line-2);background:var(--glass);backdrop-filter:blur(18px);color:var(--ink);font-weight:650;font-size:14.5px;letter-spacing:.02em}
+.map-toggle:hover{background:var(--glass-2)}
+.map-toggle[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.map-toggle .mt-icon{display:grid;place-items:center}
+@media (max-width:900px){.map-toggle{top:calc(var(--bar-h) + 150px)}}
+
+/* ---------- 13. "Next 72 hours": the AI brief, the official outlooks made local, and "Ask your street" ---------- */
+#panel.ahead{width:min(460px,calc(100vw - 2 * var(--pad)))}
+.tag.ai{height:22px;color:var(--accent-ink);background:var(--accent);border:0;letter-spacing:.1em;margin-right:6px}
+.ahead-h{font-family:var(--serif);font-weight:350;font-size:clamp(28px,2.6vw,36px);line-height:1.08;letter-spacing:-.02em;margin:0 0 4px;text-wrap:balance}
+.ahead-addr{margin:0 0 18px;font-size:14px;color:var(--muted)}
+.sec-t{margin:0 0 6px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center}
+.ai-brief,.outlooks,.askbox{margin:0 0 20px;padding:16px 16px 14px;border-radius:var(--r-md);border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.ai-brief{border-color:rgba(255,180,90,.45);background:rgba(255,180,90,.06)}
+.ai-sub{margin:0 0 12px;font-size:14px;line-height:1.4;color:var(--muted)}
+.ai-wait{margin:0 0 10px;font-size:14.5px;color:var(--muted)}
+.ai-s{margin:0 0 12px;font-size:16px;line-height:1.5;color:var(--ink)}
+.ai-s:last-child{margin-bottom:4px}
+.cites{display:inline-flex;flex-wrap:wrap;gap:4px;margin-left:6px;vertical-align:baseline}
+.cite{min-height:28px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,180,90,.6);background:rgba(255,180,90,.08);color:#FFE2B0;font-size:12.5px;font-weight:650;letter-spacing:.02em;line-height:1;white-space:nowrap}
+.cite:hover{background:rgba(255,180,90,.2)}
+.cite[aria-expanded="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+/* a 28 px chip is small; the tappable area is padded out to 44 px without growing the line */
+.cite{position:relative}
+.cite::after{content:"";position:absolute;inset:-8px -2px}
+.ai-dropped{margin:6px 0 0;font-size:13.5px;line-height:1.4;color:var(--muted)}
+.ai-msg{margin:0}
+.ai-msg p{margin:0 0 6px;font-size:15.5px;line-height:1.45}
+.srccard{margin:10px 0 2px;padding:12px 14px;border-radius:12px;border:1px solid var(--line-2);background:rgba(6,10,19,.7)}
+.src-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.src-kind{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.src-x{min-height:44px;min-width:44px;padding:0 12px;border-radius:10px;border:1px solid var(--line-2);background:transparent;color:var(--ink);font-size:14px;font-weight:600}
+.src-x:hover{background:rgba(255,255,255,.1)}
+.src-title{margin:0 0 2px;font-size:15.5px;font-weight:650;line-height:1.3}
+.src-origin{margin:0 0 8px;font-size:13px;line-height:1.35;color:var(--muted)}
+.src-text{margin:0 0 8px;font-size:14.5px;line-height:1.45;white-space:pre-line}
+.src-quote{margin:0 0 6px;padding:8px 12px;border-left:3px solid var(--accent);background:rgba(255,255,255,.05);font-size:14px;line-height:1.45;color:var(--ink)}
+.src-link{display:inline-flex;align-items:center;min-height:44px;color:var(--accent);font-weight:600;font-size:14.5px;text-underline-offset:3px}
+.src-link:hover{color:#FFE2B0}
+.ai-problem{padding:12px 14px;border-radius:12px;border:1px dashed var(--line-2);background:rgba(255,255,255,.04)}
+.ai-problem[data-state="error"],.ai-problem[data-state="bad_request"]{border-color:rgba(255,138,122,.6)}
+.ai-p-t{margin:0 0 2px;font-weight:650;font-size:15.5px}
+.ai-p-m{margin:0 0 6px;font-size:14.5px;line-height:1.4;color:var(--muted)}
+.ai-retry{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-weight:650;font-size:14.5px}
+.ai-retry:hover{background:rgba(255,180,90,.14)}
+
+.haz{padding:12px 0 10px;border-top:1px solid var(--line)}
+.haz:first-of-type{border-top:0;padding-top:4px}
+.haz h3{margin:0 0 8px;font-size:17px;font-weight:650;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.haz .who{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.02em}
+.odays{list-style:none;margin:0 0 8px;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.odays li{padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);border-left-width:4px}
+.od-d{display:block;font-size:12.5px;color:var(--muted)}
+.od-v{display:block;font-size:15px;font-weight:650;line-height:1.25}
+/* color is a second cue only: every level is also written out */
+.odays li[data-tone="none"]{border-left-color:#5b6579}
+.odays li[data-tone="MRGL"]{border-left-color:#8FE3A7}
+.odays li[data-tone="SLGT"]{border-left-color:#FFE24A}
+.odays li[data-tone="ENH"],.odays li[data-tone="on"]{border-left-color:#FFB45A}
+.odays li[data-tone="MDT"]{border-left-color:#FF8A7A}
+.odays li[data-tone="HIGH"]{border-left-color:#FF5FA8}
+.odays li[data-tone="0"]{border-left-color:#8FE3A7}
+.odays li[data-tone="1"]{border-left-color:#FFE24A}
+.odays li[data-tone="2"]{border-left-color:#FFB45A}
+.odays li[data-tone="3"]{border-left-color:#FF8A7A}
+.odays li[data-tone="4"]{border-left-color:#FF5FA8}
+.od-note{margin:0 0 8px;font-size:13.5px;line-height:1.4;color:var(--muted)}
+.rec{margin:0 0 4px;font-size:14.5px;line-height:1.45;color:var(--ink)}
+.rec-t{display:block;margin-bottom:2px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--flood)}
+.hz-note{margin:0 0 8px;font-size:13.5px;line-height:1.4;color:var(--muted)}
+.rtable{width:100%;border-collapse:collapse;font-size:13.5px;color:var(--muted);margin:0 0 12px}
+.rtable caption{text-align:left;font-size:13px;color:var(--ink);font-weight:600;padding:0 0 6px;line-height:1.35}
+.rtable th,.rtable td{text-align:left;padding:5px 8px 5px 0;border-bottom:1px solid var(--line);font-weight:400;vertical-align:top}
+.rtable thead th{font-weight:600;color:var(--ink)}
+.rtable tbody th{color:var(--ink);font-weight:600}
+
+.ask-l{display:block;margin:0 0 4px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.askbox textarea{display:block;width:100%;min-height:64px;padding:10px 12px;border-radius:12px;border:1px solid var(--line-2);background:rgba(255,255,255,.08);color:var(--ink);font:inherit;font-size:16px;line-height:1.4;resize:vertical}
+.askbox textarea::placeholder{color:var(--faint)}
+.askbox textarea:focus-visible{border-color:#FFE2B0;background:rgba(255,255,255,.12)}
+.ask-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 10px}
+.ask-count{font-size:13px;color:var(--muted)}
+.ask-count[data-low="true"]{color:#FFE2B0;font-weight:600}
+.ask-go{min-height:48px;min-width:96px;padding:0 22px;border-radius:999px;border:0;background:var(--accent);color:var(--accent-ink);font-weight:650;font-size:15.5px}
+.ask-go:hover:not(:disabled){filter:brightness(1.07)}
+.ask-go:disabled{background:rgba(255,255,255,.1);color:var(--faint);cursor:not-allowed}
+.suggest{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:6px}
+.suggest button{width:100%;min-height:44px;padding:8px 14px;text-align:left;border-radius:12px;border:1px solid var(--line-2);background:rgba(255,255,255,.05);color:var(--ink);font-size:14.5px;line-height:1.3}
+.suggest button:hover:not(:disabled){background:rgba(255,255,255,.12)}
+.suggest button:disabled{opacity:.55;cursor:progress}
+.ask-q{margin:0 0 8px;font-family:var(--serif);font-style:italic;font-size:17px;line-height:1.3;color:#FFD9A3}
+.ask-out:empty{display:none}
+.ahead-fine{margin:0;font-size:13px;line-height:1.4;color:var(--faint)}
+@media (max-width:900px){
+  /* on a phone the sheet is the page: nearly full height, scrolling inside, clear of the top bar and the bottom tabs */
+  #panel.ahead{top:calc(var(--bar-h) + 8px);bottom:calc(12px + 70px + 10px);max-height:none;width:auto}
+  .odays{grid-template-columns:1fr}
+  .odays li{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+}
+
+/* the AI jobs on the landing page */
+.ai-jobs{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ai-jobs li{padding:12px 16px;border-radius:var(--r-md);border:1px solid var(--line);background:rgba(255,255,255,.04);border-left:3px solid var(--accent)}
+.ai-jobs b{display:block;font-size:16px;font-weight:650}
+.ai-jobs span{display:block;margin-top:2px;font-size:14.5px;line-height:1.4;color:var(--muted)}
+
+/* How it works: the AI jobs and the forecaster we trained */
+.how-h2{margin:26px 0 10px;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.2;letter-spacing:-.01em}
+.aijobs .how-h2{margin-top:6px}
+.jobs{list-style:none;margin:0 0 6px;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.jobs li{padding:16px 18px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--glass-2);border-left:3px solid var(--accent)}
+.jobs li[data-status="pending"]{border-left-style:dashed;border-left-color:var(--sample)}
+.job-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.job-head b{font-family:var(--serif);font-size:19px;font-weight:450;line-height:1.2}
+.job-does{margin:0 0 8px;font-size:14.5px;line-height:1.4;color:var(--muted)}
+.job-num{margin:0 0 4px;font-size:16px;line-height:1.35;font-weight:600;color:var(--ink)}
+.job-result{margin:0 0 6px;font-size:14.5px;line-height:1.4;color:var(--ink)}
+.ai-jobs .job-result{margin-top:4px;color:var(--ink)}
+.job-detail{margin:0;font-size:13.5px;line-height:1.4;color:var(--muted)}
+.forecaster .sub{margin-bottom:14px!important}
+.fchart{margin:0 0 14px;padding:16px 18px 12px;border-radius:var(--r-md);background:var(--glass-2);border:1px solid var(--line)}
+.fchart figcaption{margin-top:6px}
+.fc-so{margin:0 0 14px;font-size:16px;line-height:1.5;max-width:64ch}
+@media (max-width:900px){.jobs{grid-template-columns:1fr}}
+
+/* the bottom tab bar on a phone has five tabs: short labels there, the full label stays the accessible name */
+#tabs a .lbl-short{display:none!important}
+@media (max-width:900px){#tabs a .lbl-long{display:none!important}#tabs a .lbl-short{display:block!important}}
+
+/* AI-mapped damage places: a diamond on the tornado map, and the matching list in the survey card */
+.dmgm{width:0;height:0;z-index:3}
+.dmgm:hover,.dmgm.active{z-index:8}
+.dmgm .dmgdot{position:absolute;left:-12px;top:-12px;width:24px;height:24px;display:grid;place-items:center;cursor:pointer}
+.dmgm .dmgdot i{display:block;width:11px;height:11px;transform:rotate(45deg);background:var(--c,#fff);border:2px solid #fff;box-shadow:0 0 0 1px rgba(10,15,27,.75),0 2px 6px rgba(0,0,0,.6);transition:transform .15s}
+.dmgm:hover .dmgdot i,.dmgm.active .dmgdot i{transform:rotate(45deg) scale(1.35)}
+.dmgm .dmglab{position:absolute;left:0;bottom:20px;transform:translateX(-50%);width:max-content;max-width:280px;padding:9px 12px;border-radius:12px;background:rgba(10,15,27,.97);border:1px solid var(--line-2);box-shadow:0 10px 30px rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .15s}
+.dmgm .dmglab b{display:block;font-size:14.5px;font-weight:650;line-height:1.3}
+.dmgm .dmglab q{display:block;margin:3px 0 6px;font-family:var(--serif);font-size:14px;line-height:1.35;color:var(--ink);quotes:"\201C" "\201D"}
+.dmgm .dmglab em{display:block;font-style:normal;font-size:12px;line-height:1.3;letter-spacing:.03em;color:var(--sample)}
+.dmgm:hover .dmglab,.dmgm.active .dmglab{opacity:1}
+.reduce .dmgm .dmglab,.reduce .dmgm .dmgdot i{transition:none}
+.lg-row i.sw-dmg{flex:none;width:11px;height:11px;margin:0 12px;transform:rotate(45deg);background:#FF4FA3;border:2px solid #fff}
+.dmg-det{margin:10px 0 0;font-size:14px;line-height:1.4}
+.dmg-det summary{cursor:pointer;color:var(--ink);font-weight:600;min-height:24px}
+.dmg-det .dmg-ai{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:600;color:var(--sample);border:1px dashed #E7B772;background:rgba(255,217,163,.08);vertical-align:1px}
+.dmg-list{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px;max-height:260px;overflow:auto}
+.dmg-list li{padding:0 0 0 10px;border-left:3px solid var(--c,#fff)}
+.dmg-list b{display:block;font-size:14px}
+.dmg-list q{display:block;font-family:var(--serif);font-size:14.5px;line-height:1.35;color:var(--muted);quotes:"\201C" "\201D"}
+.dmg-list small{display:block;font-size:12.5px;color:var(--faint)}
