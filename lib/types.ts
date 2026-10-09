@@ -243,6 +243,14 @@ export interface FloodTrigger {
 
 export type Coverage = "indexed" | "fixture" | "not yet indexed";
 
+/**
+ * The pieces a lookup is made of when the page asks for them one by one (lib/lookup.ts lookupPart): `records` (flood and tornado index, storm
+ * nights, damage places, quiet placement), `area` (NCEI events), `live` (NWS alerts), `fema`, `heat` (the 26-year heat summary and the
+ * wettest/windiest days) and `trigger` (the flood trigger with the NWS forecast). The address match comes first (lookupGeocode).
+ */
+export type LookupPart = "records" | "area" | "live" | "fema" | "heat" | "trigger";
+export const LOOKUP_PARTS: readonly LookupPart[] = ["records", "area", "live", "fema", "heat", "trigger"];
+
 export type NoticeKey = "fema" | "live" | "heat" | "index" | "areaEvents" | "extremes";
 
 export interface LookupPayload {
@@ -271,6 +279,8 @@ export interface LookupPayload {
   extremes?: AddressExtremes | null;
   /** Additive: how the address compares with the sampled points of its state. */
   quiet?: QuietPlacement | null;
+  /** Additive: parts still being read when the first view is drawn (the page asks for them one by one). Absent or empty: the payload is whole. */
+  pending?: LookupPart[];
 }
 
 
@@ -316,6 +326,8 @@ export interface AreaZoneInfo {
   distanceKm: number;
   /** Events counted from this zone since the first year. */
   events: number;
+  /** Additive: when NWS stopped using this outline (YYYY-MM-DD). Of the zones that hold the address, the latest is the current one. */
+  validTo?: string | null;
 }
 
 /** What happened in the address's county and the forecast zones over it since 2000: counts for all of it, the most severe events in full. */

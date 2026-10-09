@@ -50,6 +50,7 @@ import type {
   HeatSummary,
   LiveAlerts,
   LookupAddress,
+  LookupPart,
   LookupPayload,
   NearbyFlood,
   NearbyTornado,
@@ -449,6 +450,83 @@ export async function lookupAddress(input: string, deps: LookupDeps = defaultDep
     extremes,
     quiet,
   };
+}
+
+// ---------------------------------------------------------------- the lookup in pieces
+
+/**
+ * The same lookup, asked for in pieces so the page can draw the first view in a second or two and fill in the slow sources as they
+ * answer. `lookupGeocode` is the address match; `lookupPart` is one piece for a matched address. Every piece is built from the same
+ * helpers `lookupAddress` uses, and a test checks the pieces put together equal `lookupAddress` for the same inputs.
+ */
+export async function lookupGeocode(input: string, deps: Pick<LookupDeps, "fetch"> = defaultDeps): Promise<LookupAddress> {
+  return geocodeAddress(input, deps.fetch);
+}
+
+import type { LookupPatch } from "./lookup-parts";
+export { applyPart, emptyPayload, type LookupPatch } from "./lookup-parts";
+
+const snapshotFor = async (address: LookupAddress, deps: LookupDeps): Promise<SampleSnapshot | null> =>
+  deps.loadSnapshots ? findSnapshot(address.lat, address.lon, await deps.loadSnapshots().catch(() => [])) : null;
+
+/** One piece of a lookup for an address the Census already matched. Never throws for a slow or failed source: that becomes a notice. */
+export async function lookupPart(part: LookupPart, address: LookupAddress, deps: LookupDeps = defaultDeps, options: { night?: string | null } = {}): Promise<LookupPatch> {
+  const origin: Coord = [address.lat, address.lon];
+  switch (part) {
+    case "records": {
+      const [index, quietFile] = await Promise.all([deps.loadIndex(address.state), deps.loadQuiet ? deps.loadQuiet().catch(() => null) : Promise.resolve(null)]);
+      const nearby = index ? findNearbyFloods(index.floods, origin) : null;
+      const tornadoes = index ? findNearbyTornadoes(index.tornadoes, origin) : [];
+      const damageRows = index && tornadoes.length && deps.loadDamage ? await deps.loadDamage(address.state).catch(() => []) : [];
+      const notices: Partial<Record<NoticeKey, string>> = {};
+      if (!index) notices.index = `We have not indexed ${address.state || "this state"} yet, so flood reports and tornado paths are not shown.`;
+      else if (index.fixture) notices.index = "This state has a small development sample, not the full record of reports.";
+      const floodCount = nearby?.reports.length ?? 0;
+      return {
+        floods: nearby ?? { reports: [], tierCounts: { mentioned: 0, about1km: 0, citywide: 0 } },
+        stormReplay: index ? selectReplayNight(index.floods, origin, options.night) : null,
+        stormNights: index ? listStormNights(index.floods, origin) : [],
+        tornadoes,
+        damage: index ? damagePinsFor(damageRows, index.tornadoes, tornadoes) : [],
+        coverage: coverageOf(index),
+        nearestFlood: index && floodCount === 0 ? findNearestFlood(index.floods, origin) : null,
+        quiet: index ? placeInQuiet(quietFile, address.state, floodCount) : null,
+        notices,
+      };
+    }
+    case "area": {
+      const area = deps.loadEvents
+        ? await lookupAreaEvents(address, { fetch: deps.fetch, loadEvents: deps.loadEvents, now: deps.now }).catch(() => ({ value: null as AreaEventsSummary | null, notice: undefined as string | undefined }))
+        : { value: null as AreaEventsSummary | null, notice: undefined as string | undefined };
+      return { areaEvents: area.value, notices: area.notice ? { areaEvents: area.notice } : {} };
+    }
+    case "live": {
+      const live = await fetchActiveAlerts(address.lat, address.lon, deps.fetch, deps.now);
+      return { live: live.value, notices: live.notice ? { live: live.notice } : {} };
+    }
+    case "fema": {
+      const fema = await fetchFemaZone(address.lat, address.lon, deps.fetch);
+      return { fema: fema.value, notices: fema.notice ? { fema: fema.notice } : {} };
+    }
+    case "heat": {
+      const snapshot = await snapshotFor(address, deps);
+      const [heat, dayExtremes] = await Promise.all([
+        summarizeAddressHeat(address, deps, snapshot),
+        readDayExtremes(address, deps, snapshot).catch(() => ({ value: null as DayExtremes | null, notice: undefined as string | undefined })),
+      ]);
+      const notices: Partial<Record<NoticeKey, string>> = {};
+      if (heat.notice) notices.heat = heat.notice;
+      if (dayExtremes.notice) notices.extremes = dayExtremes.notice;
+      return { heat: heat.value, extremes: joinExtremes(dayExtremes.value, heat.value?.hottest ?? null), notices };
+    }
+    case "trigger": {
+      const snapshot = await snapshotFor(address, deps);
+      const index = await deps.loadIndex(address.state);
+      const nearby = index ? findNearbyFloods(index.floods, origin) : null;
+      const floodTrigger = await buildFloodTrigger(address, nearby?.reports ?? [], { fetch: deps.fetch, now: deps.now, knownRain: snapshot?.rain?.byDate });
+      return { floodTrigger };
+    }
+  }
 }
 
 /** Just the live alerts, for the "check again" button and the 5-minute refresh. */

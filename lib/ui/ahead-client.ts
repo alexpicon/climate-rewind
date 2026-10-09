@@ -31,7 +31,28 @@ async function timedFetch(fetchFn: FetchLike, url: string, init: RequestInit, ti
   }
 }
 
-export async function requestOutlook(lat: number, lon: number, fetchFn: FetchLike = defaultFetch, timeoutMs = OUTLOOK_TIMEOUT_MS): Promise<OutlookResult> {
+/**
+ * The 72-hour tab starts its two reads (official outlooks, the AI brief) the moment the address is matched, while the records are still
+ * loading, and hands them over when the tab opens. A read is used once and only within a minute; a retry always asks again.
+ */
+const PREFETCH_MS = 60_000;
+const prefetched = new Map<string, { at: number; promise: Promise<unknown> }>();
+
+function takePrefetched<T>(key: string): Promise<T> | null {
+  const hit = prefetched.get(key);
+  prefetched.delete(key);
+  return hit && Date.now() - hit.at < PREFETCH_MS ? (hit.promise as Promise<T>) : null;
+}
+
+export function prefetchAhead(address: string, lat: number, lon: number): void {
+  const key = (kind: string, id: string) => `${kind}|${id}`;
+  prefetched.set(key("outlook", `${lat},${lon}`), { at: Date.now(), promise: requestOutlook(lat, lon, defaultFetch, OUTLOOK_TIMEOUT_MS, true) });
+  prefetched.set(key("brief", address.toLowerCase()), { at: Date.now(), promise: requestBrief(address, defaultFetch, AI_TIMEOUT_MS, "prefetch") });
+}
+
+export async function requestOutlook(lat: number, lon: number, fetchFn: FetchLike = defaultFetch, timeoutMs = OUTLOOK_TIMEOUT_MS, fresh = false): Promise<OutlookResult> {
+  const early = !fresh && fetchFn === defaultFetch ? takePrefetched<OutlookResult>(`outlook|${lat},${lon}`) : null;
+  if (early) return early;
   const got = await timedFetch(fetchFn, `/api/outlook?lat=${lat}&lon=${lon}`, {}, timeoutMs);
   if ("error" in got) return { ok: false, message: got.error };
   try {
@@ -45,7 +66,7 @@ export async function requestOutlook(lat: number, lon: number, fetchFn: FetchLik
 
 export type AiResult = { ok: true; answer: AiAnswer } | { ok: false; state: AiErrorState; message: string; retryAfter?: number };
 
-async function postAi(path: "/api/brief" | "/api/ask", payload: Record<string, string>, fetchFn: FetchLike, timeoutMs: number): Promise<AiResult> {
+async function postAi(path: "/api/brief" | "/api/ask", payload: Record<string, string | boolean>, fetchFn: FetchLike, timeoutMs: number): Promise<AiResult> {
   const got = await timedFetch(fetchFn, path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }, timeoutMs);
   if ("error" in got) return { ok: false, state: "error", message: got.error };
   try {
@@ -60,8 +81,13 @@ async function postAi(path: "/api/brief" | "/api/ask", payload: Record<string, s
   }
 }
 
-export function requestBrief(address: string, fetchFn: FetchLike = defaultFetch, timeoutMs = AI_TIMEOUT_MS): Promise<AiResult> {
-  return postAi("/api/brief", { address }, fetchFn, timeoutMs);
+/**
+ * "normal": the tab asks (taking the early read if there is one). "prefetch": the early read itself. "live": skip the brief made ahead of time
+ * for a sample address and write a fresh one (the page asks for this right after it shows the early one).
+ */
+export function requestBrief(address: string, fetchFn: FetchLike = defaultFetch, timeoutMs = AI_TIMEOUT_MS, mode: "normal" | "prefetch" | "live" = "normal"): Promise<AiResult> {
+  const early = mode === "normal" && fetchFn === defaultFetch ? takePrefetched<AiResult>(`brief|${address.toLowerCase()}`) : null;
+  return early ?? postAi("/api/brief", mode === "live" ? { address, fresh: true } : { address }, fetchFn, timeoutMs);
 }
 
 export function requestAsk(address: string, question: string, fetchFn: FetchLike = defaultFetch, timeoutMs = AI_TIMEOUT_MS): Promise<AiResult> {
