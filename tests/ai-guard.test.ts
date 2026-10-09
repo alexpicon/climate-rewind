@@ -34,6 +34,26 @@ describe("RateLimiter", () => {
     // "a" was forgotten, so it is allowed again at once.
     expect(limiter.check("a", 1).ok).toBe(true);
   });
+  it("with a longer window behind it, both must allow: a steady pace under the minute limit still stops at the hourly cap", () => {
+    const limiter = new RateLimiter(10, 60_000, 5000, new RateLimiter(60, 60 * 60_000));
+    // One request every 10 s is 6 a minute, well under 10, but 60 of them fill the hour.
+    for (let i = 0; i < 60; i += 1) expect(limiter.check("a", i * 10_000).ok, `request ${i}`).toBe(true);
+    const blocked = limiter.check("a", 600_000);
+    expect(blocked.ok).toBe(false);
+    if (!blocked.ok) expect(blocked.retryAfter).toBe(3000);
+    expect(limiter.check("b", 600_000).ok).toBe(true);
+    // The first hour's first hit has left the window.
+    expect(limiter.check("a", 60 * 60_000 + 1).ok).toBe(true);
+  });
+});
+
+describe("clientIp", () => {
+  it("takes the first x-forwarded-for entry, then x-real-ip, else one shared bucket", async () => {
+    const { clientIp } = await import("@/lib/ai/guard");
+    expect(clientIp(new Headers({ "x-forwarded-for": "203.0.113.7, 10.0.0.1" }))).toBe("203.0.113.7");
+    expect(clientIp(new Headers({ "x-real-ip": "203.0.113.9" }))).toBe("203.0.113.9");
+    expect(clientIp(new Headers())).toBe("unknown");
+  });
 });
 
 describe("readDailyBudget", () => {

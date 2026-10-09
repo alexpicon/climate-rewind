@@ -17,7 +17,7 @@ import type { OutlookPayload } from "../outlook-types";
 import { readEnv } from "../env";
 import { loadDamageRows, type DamageRow } from "./damage";
 import { sampleAiForAddress } from "./precomputed";
-import { AnswerCache, BRIEF_CACHE_MS, RateLimiter, readDailyBudget, TokenBudget } from "./guard";
+import { AnswerCache, BRIEF_CACHE_MS, clientIp, RATE_LIMIT_PER_HOUR, RATE_LIMIT_PER_MINUTE, RateLimiter, readDailyBudget, TokenBudget } from "./guard";
 import {
   AI_MODEL,
   ANSWER_SCHEMA,
@@ -302,7 +302,7 @@ export function createAiDeps(env: Record<string, string | undefined> = process.e
   return {
     client: apiKey ? (new Anthropic({ apiKey, maxRetries: 1, timeout: 45_000 }) as unknown as ModelClient) : null,
     budget: new TokenBudget(readDailyBudget(env)),
-    limiter: new RateLimiter(),
+    limiter: new RateLimiter(RATE_LIMIT_PER_MINUTE, 60_000, 5000, new RateLimiter(RATE_LIMIT_PER_HOUR, 60 * 60_000)),
     cache: new AnswerCache<AiAnswer>(),
     briefCache: new AnswerCache<AiAnswer>(BRIEF_CACHE_MS),
     alertsDigest: async (address) => {
@@ -351,8 +351,4 @@ export function getAiDeps(): AiDeps {
   return globalForAi.__memoriaAi;
 }
 
-/** The visitor's IP as the host reports it. Behind Vercel the first x-forwarded-for entry is the client. */
-export function clientIp(headers: Headers): string {
-  const forwarded = headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  return forwarded || headers.get("x-real-ip")?.trim() || "unknown";
-}
+export { clientIp };

@@ -8,8 +8,13 @@ import { LruCache } from "../lru";
 // ---------------------------------------------------------------- rate limit
 
 export const RATE_LIMIT_PER_MINUTE = 10;
+/**
+ * The longer window behind the AI routes. At about 4,500 tokens a request, one visitor at this pace needs about eleven hours to
+ * spend the default daily budget, instead of one; a judge exploring a dozen addresses an hour stays well inside it.
+ */
+export const RATE_LIMIT_PER_HOUR = 60;
 
-/** A sliding one-minute window per key (an IP address). */
+/** A sliding window per key (an IP address). `then` is a longer window checked after this one: both must allow the request. */
 export class RateLimiter {
   private readonly hits = new Map<string, number[]>();
 
@@ -17,6 +22,7 @@ export class RateLimiter {
     private readonly max: number = RATE_LIMIT_PER_MINUTE,
     private readonly windowMs: number = 60_000,
     private readonly maxKeys: number = 5000,
+    private readonly then: RateLimiter | null = null,
   ) {}
 
   /** Records the request and says whether it may go ahead. When it may not, `retryAfter` is the seconds until the oldest hit leaves the window. */
@@ -31,8 +37,14 @@ export class RateLimiter {
     this.hits.set(key, recent);
     // Keep memory bounded: forget the keys unused the longest.
     while (this.hits.size > this.maxKeys) this.hits.delete(this.hits.keys().next().value as string);
-    return { ok: true };
+    return this.then ? this.then.check(key, nowMs) : { ok: true };
   }
+}
+
+/** The visitor's IP as the host reports it. Behind Vercel the first x-forwarded-for entry is the client. */
+export function clientIp(headers: Headers): string {
+  const forwarded = headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  return forwarded || headers.get("x-real-ip")?.trim() || "unknown";
 }
 
 // ---------------------------------------------------------------- daily token budget

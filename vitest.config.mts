@@ -16,6 +16,8 @@ export default defineConfig({
       // And the AI answers made ahead of time for the samples.
       MEMORIA_SAMPLE_AI_DIR: path.resolve(import.meta.dirname, "tests", "no-samples", "ai"),
       MEMORIA_QUIET_FILE: path.resolve(import.meta.dirname, "tests", "no-samples", "quiet-percentiles.json"),
+      // The route tests make many lookups from one client; tests/lookup-guard.test.ts checks the limit with its own limiter.
+      MEMORIA_LOOKUP_LIMIT: "off",
     },
   },
 });

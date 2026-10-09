@@ -1,4 +1,5 @@
 import { lookupGeocode, lookupPart } from "@/lib/lookup";
+import { limitLookup } from "@/lib/lookup-guard";
 import { addressFromQuery, isLookupPart } from "@/lib/lookup-query";
 import { LookupError } from "@/lib/sources";
 import type { LookupErrorBody } from "@/lib/types";
@@ -17,6 +18,8 @@ export async function GET(request: Request, context: { params: Promise<{ part: s
 
   try {
     if (part === "geocode") {
+      const limited = limitLookup(request);
+      if (limited) return limited;
       const address = await lookupGeocode(params.get("address") ?? "");
       return Response.json({ address }, { headers });
     }

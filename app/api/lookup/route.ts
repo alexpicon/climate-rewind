@@ -1,4 +1,5 @@
 import { lookupAddress } from "@/lib/lookup";
+import { limitLookup } from "@/lib/lookup-guard";
 import { LookupError } from "@/lib/sources";
 import type { LookupErrorBody } from "@/lib/types";
 
@@ -8,6 +9,8 @@ export async function GET(request: Request): Promise<Response> {
   const address = params.get("address") ?? "";
   // Optional: a storm night id from `stormNights` (a shareable link to a specific night).
   const night = params.get("night");
+  const limited = limitLookup(request);
+  if (limited) return limited;
 
   try {
     const payload = await lookupAddress(address, undefined, { night });
