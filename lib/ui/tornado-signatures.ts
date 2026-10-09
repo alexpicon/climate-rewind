@@ -2,12 +2,18 @@
  * The radar's rotation flags (tornado vortex signatures) for each tornado on the tornado replay. Pure helpers: the box and time
  * window to ask for around one tornado, which tornadoes to ask for, and which flags are on the map at a moment of the reel.
  */
+import { segmentDistance } from "../geo";
 import type { VortexSignature } from "../radar-signatures";
 import type { NearbyTornado } from "../types";
 import { ratingNumber, type TimedTornado, type TornadoTimeline } from "./tornado-model";
 
-/** The box around a track is grown by this much (degrees, about 25 km), since a radar flags rotation in the storm, not on the path. */
-export const TRACK_PAD_DEG = 0.25;
+/** The box asked for around a track is grown by this much (degrees, about 11 km); NEAR_TRACK_KM then keeps only flags near the path. */
+export const TRACK_PAD_DEG = 0.1;
+/**
+ * A rotation flag counts for a tornado only within this distance of its path, which allows for where the radar places the rotation
+ * aloft. Wider, a box picked up other storms' flags (Nashville's EF3: flags up to 22 km off the path with a 25 km box).
+ */
+export const NEAR_TRACK_KM = 8;
 /** Ask from this long before touchdown, so the rotation that came first is seen too. */
 export const BEFORE_MS = 20 * 60_000;
 /** At most this many tornadoes are asked about (the strongest), which keeps one view inside the route's rate limit. */
@@ -36,6 +42,11 @@ export function windowFor(tornado: NearbyTornado): TornadoWindow {
     startMs: touchdown - BEFORE_MS,
     endMs: touchdown + groundMs(tornado.lengthMi),
   };
+}
+
+/** The flags within NEAR_TRACK_KM of a tornado's path (its NWS begin and end points). */
+export function nearTrack(flags: readonly VortexSignature[], tornado: Pick<NearbyTornado, "begin" | "end">): VortexSignature[] {
+  return flags.filter((flag) => segmentDistance([flag.lat, flag.lon], tornado.begin, tornado.end).km <= NEAR_TRACK_KM);
 }
 
 /** The tornadoes to ask about: the strongest first, then the closest, at most MAX_TORNADOES. */

@@ -7,6 +7,7 @@ import { DAMAGE_LABEL, cardTornado, casualtyParts, damageWhere, efColor, pinsOf,
 import { segmentDistance } from "@/lib/geo";
 import type { LookupPayload, NearbyTornado } from "@/lib/types";
 import type { TornadoFlags } from "./use-tornado-flags";
+import { NEAR_TRACK_KM } from "@/lib/ui/tornado-signatures";
 
 interface Props {
   data: LookupPayload;
@@ -186,19 +187,21 @@ export function TornadoPanel({ data, timeline, ms, closest, flags }: Props) {
   );
 }
 
-/** "The KBNA radar flagged rotation 14 times around this path", or that it flagged none, with what a flag is. */
+/** "The KBNA radar flagged rotation 14 times within 8 km of this path", or that it flagged none, with what a flag is. */
 function RadarRotation({ flags }: { flags: readonly { radar: string }[] }) {
   const radars = [...new Set(flags.map((f) => f.radar).filter(Boolean))];
   return (
     <p className="tc-radar">
       <span className="sw-tvs" aria-hidden="true" />
-      {flags.length === 0 ? (
-        <>The radars flagged no rotation around this path, from 20 minutes before touchdown.</>
-      ) : (
-        <>
-          The {radars.join(" and ")} {radars.length === 1 ? "radar" : "radars"} flagged rotation <b>{flags.length}</b> {flags.length === 1 ? "time" : "times"} around this path, from 20 minutes before touchdown (red rings: a tornado vortex signature is a computer flag on the radar, not a confirmed tornado).
-        </>
-      )}
+      <span>
+        {flags.length === 0 ? (
+          <>The radars flagged no rotation within {NEAR_TRACK_KM} km of this path, from 20 minutes before touchdown.</>
+        ) : (
+          <>
+            The {radars.join(" and ")} {radars.length === 1 ? "radar" : "radars"} flagged rotation <b>{flags.length}</b> {flags.length === 1 ? "time" : "times"} within {NEAR_TRACK_KM} km of this path, from 20 minutes before touchdown (red rings: a tornado vortex signature is a computer flag on the radar, not a confirmed tornado).
+          </>
+        )}
+      </span>
     </p>
   );
 }

@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import type { RadarSignatures, VortexSignature } from "@/lib/radar-signatures";
 import type { NearbyTornado } from "@/lib/types";
-import { tornadoesToAsk, windowFor } from "@/lib/ui/tornado-signatures";
+import { nearTrack, tornadoesToAsk, windowFor } from "@/lib/ui/tornado-signatures";
 
 export interface TornadoFlags {
-  /** The radar's rotation flags around each tornado asked about, by tornado id. */
+  /** The radar's rotation flags near each tornado's path (within NEAR_TRACK_KM), by tornado id. */
   byId: ReadonlyMap<string, readonly VortexSignature[]>;
   /** True once every request has answered (or failed). */
   done: boolean;
@@ -28,7 +28,7 @@ export function useTornadoFlags(tornadoes: readonly NearbyTornado[]): TornadoFla
         const response = await fetch(`/api/signatures?${params}`, { signal: controller.signal });
         if (!response.ok) return null;
         const body = (await response.json()) as RadarSignatures;
-        return body.notice ? null : [tornado.id, body.vortex];
+        return body.notice ? null : [tornado.id, nearTrack(body.vortex, tornado)];
       } catch {
         return null;
       }

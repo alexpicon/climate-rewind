@@ -70,3 +70,15 @@ describe("flagsAt", () => {
     expect(flagsAt(timeline, new Map(), item.startMs + item.drawMs)).toEqual([]);
   });
 });
+
+describe("nearTrack", () => {
+  it("keeps flags within NEAR_TRACK_KM of the path and drops other storms' flags", async () => {
+    const { nearTrack, NEAR_TRACK_KM } = await import("@/lib/ui/tornado-signatures");
+    const path = { begin: [36.1717, -86.9562] as [number, number], end: [36.1767, -86.5717] as [number, number] };
+    const at = (lat: number, lon: number): VortexSignature => ({ t: 0, lat, lon, kind: "TVS", shear: 60, deltaV: 100, radar: "KBNA" });
+    const onPath = at(36.174, -86.76);
+    const near = at(36.174 + (NEAR_TRACK_KM - 1) / 111, -86.76);
+    const far = at(36.174 + (NEAR_TRACK_KM + 3) / 111, -86.76);
+    expect(nearTrack([onPath, near, far], path)).toEqual([onPath, near]);
+  });
+});
