@@ -6,6 +6,7 @@ import { describeJobs } from "@/lib/ai-jobs";
 import { APP_NAME } from "@/lib/brand";
 import { landingLead } from "@/lib/ui/detective-copy";
 import { chooseSample, SAMPLE_ADDRESSES, viewUrl, type SampleAddress } from "@/lib/ui/tabs";
+import { TrackReel } from "./landing/TrackReel";
 
 interface Props {
   input: string;
@@ -36,6 +37,7 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
   return (
     <main id="landing" aria-labelledby="landing-h">
       <div className="landing-inner">
+        <TrackReel />
         <p className="eyebrow">{APP_NAME}</p>
         <h1 id="landing-h">What the weather did to your street.</h1>
         <p className="landing-for">For anyone renting, buying or living somewhere the climate is changing.</p>
