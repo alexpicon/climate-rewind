@@ -198,8 +198,12 @@ export interface LookupAddress {
 export interface TriggerDay {
   /** Local date, YYYY-MM-DD. */
   date: string;
-  /** Inches: the larger of that day's rain and the day before's (ERA5 via Open-Meteo, at the address). */
+  /** Inches: the largest daily total around the date, from a NOAA rain gauge when `station` is set, else gridded rain at the address. */
   rainIn: number;
+  /** Additive: measured by NOAA rain gauges (GHCN-Daily): the median of `gauges` stations, the nearest of which is `station`, `stationKm` away. */
+  station?: string;
+  stationKm?: number;
+  gauges?: number;
 }
 
 export interface ForecastDay {

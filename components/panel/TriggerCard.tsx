@@ -1,7 +1,7 @@
 import type { FloodTrigger } from "@/lib/types";
 import { niceDate } from "@/lib/ui/text";
 import { dayPossessive, TRIGGER_TITLE, triggerCopy, triggerFinePrint } from "@/lib/ui/trigger-text";
-import { POWER_NAME } from "@/lib/ui/data-source";
+import { gaugeDays, POWER_NAME } from "@/lib/ui/data-source";
 
 /**
  * "Your street's flood trigger": the typical (median) rain on days with flood reports here, beside the official forecast.
@@ -37,14 +37,26 @@ export function TriggerCard({ trigger }: { trigger: FloodTrigger }) {
               {trigger.history.map((day) => (
                 <tr key={day.date}>
                   <th scope="row">{niceDate(day.date)}</th>
-                  <td>{day.rainIn.toFixed(2)}</td>
+                  <td>
+                    {day.rainIn.toFixed(2)}
+                    <small className="trig-src">{day.station ? ((day.gauges ?? 1) > 1 ? `median of ${day.gauges} gauges, nearest ${day.stationKm} km` : `${titleCase(day.station)} gauge, ${day.stationKm} km`) : "grid"}</small>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
           <p className="trig-n">The typical rain is the median of these days: {trigger.triggerIn?.toFixed(2)} in.</p>
+          {gaugeDays(trigger).measured > 0 ? (
+            <p className="trig-n">
+              Where it says “gauge”, the rain was measured by NOAA rain gauges within 25 km (GHCN-Daily: airports, weather observers and
+              CoCoRaHS volunteers), and where several read the day, it is the median of them. Each gauge counts its largest daily total
+              from the day before to the day itself at an airport, or to the day after at a gauge read each morning, since an evening storm
+              is filed under the next morning’s date.
+            </p>
+          ) : null}
+          {gaugeDays(trigger).measured < trigger.history.length ? (
           <p className="trig-n">
-            Rain is the larger of that day’s total and the day before’s, from{" "}
+            {gaugeDays(trigger).measured > 0 ? "Where it says “grid”, the" : "Rain is the"} larger of that day’s total and the day before’s, from{" "}
             {trigger.rainSource === "nasa-power"
               ? `${POWER_NAME} (Open-Meteo was not answering; about a 50 km grid`
               : trigger.rainSource === "mixed"
@@ -52,6 +64,7 @@ export function TriggerCard({ trigger }: { trigger: FloodTrigger }) {
                 : "ERA5 (about a 25 km grid"}
             , which can miss a small storm, so a low total does not mean it was a light rain on the street).
           </p>
+          ) : null}
           {forecast ? (
             <table>
               <caption className="sr">Official forecast, rain per day</caption>
@@ -76,4 +89,12 @@ export function TriggerCard({ trigger }: { trigger: FloodTrigger }) {
       <p className="trig-fine">{triggerFinePrint(trigger)}</p>
     </section>
   );
+}
+
+/** "NASHVILLE INTERNATIONAL AIRPORT, TN US" as "Nashville International Airport". */
+function titleCase(station: string): string {
+  return station
+    .replace(/,\s*[A-Z]{2}\s+US$/, "")
+    .toLowerCase()
+    .replace(/\b([a-z])/g, (letter) => letter.toUpperCase());
 }

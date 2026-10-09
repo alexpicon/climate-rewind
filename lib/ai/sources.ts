@@ -20,7 +20,7 @@ import {
   type TornadoRecordKey,
 } from "../outlook-types";
 import { stateName } from "../states";
-import { heatLabels, POWER_NAME } from "../ui/data-source";
+import { heatLabels, POWER_NAME, rainLabel } from "../ui/data-source";
 import { damageWhere } from "../ui/tornado-model";
 import { damageNear, type DamageRow } from "./damage";
 import { countsSource, eventSource, storyEvents } from "./event-sources";
@@ -210,7 +210,7 @@ function triggerSource(lookup: LookupPayload): AiSource | null {
     kind: "trigger",
     chip: "Flood trigger",
     title: "Your street's flood trigger",
-    origin: `NWS flood reports within 5 km, ${t.rainSource === "nasa-power" ? `${POWER_NAME} rainfall` : t.rainSource === "mixed" ? `ERA5 (Open-Meteo) and ${POWER_NAME} rainfall` : "ERA5 rainfall at the address (Open-Meteo)"}, and the NWS rain forecast`,
+    origin: `NWS flood reports within 5 km, ${rainLabel(t)}, and the NWS rain forecast`,
     text: `${t.floodDays} dates had flood reports within 5 km of this address. ${copy.headline} ${copy.context.join(" ")}${forecast} This compares past rain with forecast rain. It is a history-based signal, not a flood forecast.`.replace(/\s+/g, " "),
   };
 }

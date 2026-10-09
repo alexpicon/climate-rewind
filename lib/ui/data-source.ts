@@ -30,9 +30,23 @@ export function heatLabels(heat: Pick<HeatSummary, "provider"> | null | undefine
   return { measure: "feels-like", source: OPEN_METEO_NAME, fallback: false, explain: null };
 }
 
-/** The rain source for the flood trigger's fine print. */
-export function rainLabel(trigger: Pick<FloodTrigger, "rainSource">): string {
+/** The gridded rain source (ERA5, NASA POWER or both), for the days no gauge read. */
+function gridRainLabel(trigger: Pick<FloodTrigger, "rainSource">): string {
   if (trigger.rainSource === "nasa-power") return `${POWER_NAME} rainfall`;
   if (trigger.rainSource === "mixed") return `ERA5 and ${POWER_NAME} rainfall`;
   return "ERA5 rainfall";
+}
+
+/** How many of the flood days a NOAA rain gauge measured. */
+export function gaugeDays(trigger: Partial<Pick<FloodTrigger, "history">>): { measured: number; total: number } {
+  const history = trigger.history ?? [];
+  return { measured: history.filter((day) => day.station).length, total: history.length };
+}
+
+/** The rain source for the flood trigger's fine print: NOAA rain gauges where they read the day, gridded rain for the rest. */
+export function rainLabel(trigger: Pick<FloodTrigger, "rainSource"> & Partial<Pick<FloodTrigger, "history">>): string {
+  const { measured, total } = gaugeDays(trigger);
+  if (measured > 0 && measured === total) return "NOAA rain gauge measurements";
+  if (measured > 0) return `NOAA rain gauge measurements (${measured} of ${total} days) and ${gridRainLabel(trigger)}`;
+  return gridRainLabel(trigger);
 }

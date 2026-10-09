@@ -1,8 +1,9 @@
 /**
  * "Your street's flood trigger": a history-based signal, not a flood forecast.
  *
- * History: the distinct local dates with flood reports within 5 km of the address, and the rain at the address on each
- * (Open-Meteo archive, ERA5 `precipitation_sum`, inches; the larger of the day and the day before). With 3 or more dates the
+ * History: the distinct local dates with flood reports within 5 km of the address, and the rain on each: measured by the nearest
+ * NOAA rain gauge first (lib/rain-gauge.ts), and only for dates no gauge read, the Open-Meteo archive at the address (ERA5
+ * `precipitation_sum`, inches; the larger of the day and the day before). With 3 or more dates the
  * signal is the MEDIAN of those totals: "on days with flood reports here, the typical rain was X in". (The lowest total was tried
  * first and is noise: ERA5 is a point on a grid and misses short bursts and flooding from upstream, so one day reads 0.08 in.)
  *
@@ -17,6 +18,7 @@
 import { describeFailure, fetchJson, USER_AGENT, type FetchLike } from "./http";
 import { gridKey, LruCache } from "./lru";
 import { fetchPowerRain } from "./nasa-power";
+import { fetchGaugeRain, type GaugeRain } from "./rain-gauge";
 import type { FloodTrigger, ForecastDay, NearbyFlood, TriggerDay, TriggerVerdict } from "./types";
 
 /** Fewer flood dates than this and there is no honest trigger. */
@@ -291,6 +293,8 @@ export interface TriggerDeps {
    * covered when both it and the day before it are present; only the other dates are fetched.
    */
   knownRain?: Readonly<Record<string, number | null>>;
+  /** False skips the rain gauges (gridded rain only). Default: gauges first. */
+  gauges?: boolean;
 }
 
 /**
@@ -307,27 +311,33 @@ export async function buildFloodTrigger(
   const base: FloodTrigger = { status: "insufficient", floodDays: dates.length, triggerIn: null, history: [], forecast: null, notices: {} };
   if (dates.length < MIN_FLOOD_DAYS) return base;
 
+  const forecastCall = fetchForecastRain(address.lat, address.lon, deps.fetch, deps.now);
+  const noGauges: GaugeRain = { days: [] };
+  const gauge = deps.gauges === false ? noGauges : await fetchGaugeRain(address.lat, address.lon, dates, deps.fetch, deps.now().getTime()).catch(() => noGauges);
+  const measured = new Set(gauge.days.map((day) => day.date));
+  // Gridded rain only for the dates no gauge read: the snapshot where there is one, else the archive (and its fallback).
+  const rest = dates.filter((date) => !measured.has(date));
   const known = deps.knownRain ?? {};
   const has = (date: string) => Object.hasOwn(known, date);
-  const missing = dates.filter((date) => !(has(date) && has(shiftDate(date, -1))));
+  const missing = rest.filter((date) => !(has(date) && has(shiftDate(date, -1))));
   const [archive, forecast] = await Promise.all([
     missing.length ? fetchRainForDates(address.lat, address.lon, missing, deps.fetch, deps.now) : Promise.resolve(NOTHING_TO_FETCH),
-    fetchForecastRain(address.lat, address.lon, deps.fetch, deps.now),
+    forecastCall,
   ]);
 
-  if (!archive.rain) return { ...base, status: "unavailable", notices: { history: archive.notice } };
+  if (!archive.rain && gauge.days.length === 0) return { ...base, status: "unavailable", notices: { history: archive.notice } };
   const rain = new Map<string, number | null>(Object.entries(known));
-  for (const [date, inches] of archive.rain) rain.set(date, inches);
-  const history = rainOnFloodDates(dates, rain);
+  for (const [date, inches] of archive.rain ?? []) rain.set(date, inches);
+  const history = [...gauge.days, ...rainOnFloodDates(rest, rain)].sort((a, b) => (a.date < b.date ? -1 : 1));
   const triggerIn = triggerOf(history);
   if (triggerIn === null) {
     return { ...base, notices: { history: "The rainfall records did not cover enough of the flood dates for this address." } };
   }
 
   const result: FloodTrigger = { ...base, status: "ready", triggerIn, history, notices: {} };
-  // Rain from the snapshot (or a fetch) is ERA5; if any of it came from NASA POWER, say so.
+  // Gridded rain from the snapshot (or a fetch) is ERA5; if any of it came from NASA POWER, say so.
   if (archive.origin === "nasa-power" || archive.origin === "mixed") {
-    const hadEra5 = archive.origin === "mixed" || dates.some((date) => has(date) && has(shiftDate(date, -1)));
+    const hadEra5 = archive.origin === "mixed" || rest.some((date) => has(date) && has(shiftDate(date, -1)));
     result.rainSource = hadEra5 ? "mixed" : "nasa-power";
   }
   if (!forecast.days) {

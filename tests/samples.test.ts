@@ -173,13 +173,14 @@ describe("the flood trigger with known rain", () => {
 
   beforeEach(() => clearRainCache());
 
-  it("makes no archive request at all when the snapshot covers every date (only the live forecast is fetched)", async () => {
+  it("makes no Open-Meteo request when the snapshot covers every date the gauges did not (only NOAA is asked)", async () => {
     const calls: string[] = [];
     const trigger = await buildFloodTrigger({ lat: NASHVILLE[0], lon: NASHVILLE[1] }, reports, { fetch: forecastOnly(calls), now: () => NOW, knownRain: known });
     expect(trigger).toMatchObject({ status: "ready", triggerIn: 2 });
     expect(trigger.history.map((d) => d.rainIn)).toEqual([1, 2, 3]);
     expect(trigger.forecast?.peak.inches).toBe(1);
-    expect(calls.every((url) => url.includes("api.weather.gov"))).toBe(true);
+    expect(calls.some((url) => url.includes("open-meteo"))).toBe(false);
+    expect(calls.every((url) => url.includes("api.weather.gov") || url.includes("ncei.noaa.gov"))).toBe(true);
   });
 
   it("a null day before is fine (a seeded value already includes it), a missing one is fetched live", async () => {
