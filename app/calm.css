@@ -735,3 +735,36 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .mt-tag.end{transform:translateX(calc(-100% + 6px))}
 .mt-tag.start{transform:translateX(-6px)}
 .ar-filter{margin:6px 0 0;font-size:14px;color:var(--muted)}
+
+/* Event replays (/event/<id>): the wind arrows, the hurricane and the reports are drawn on one canvas over the map. */
+.ev-canvas{position:absolute;left:0;top:0;pointer-events:none}
+.ev-bar .ev-back{margin-left:auto;color:var(--ink);text-decoration:none;font-weight:600;font-size:15px;padding:10px 16px;border:1px solid var(--line-2);border-radius:99px;background:var(--glass-2)}
+.ev-bar .ev-back:hover{border-color:var(--accent)}
+.ev-bar .ev-back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ev-panel h1{font-family:var(--serif);font-size:30px;line-height:1.12;font-weight:600;margin:4px 0 12px}
+.ev-caveat{font-size:14px;color:var(--sample);border-left:3px solid var(--sample);padding:2px 0 2px 12px;margin:0 0 14px}
+.ev-now{margin:0 0 14px;display:grid;gap:10px}
+.ev-now div{border-top:1px solid var(--line);padding-top:8px}
+.ev-now dt{font-size:13px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+.ev-now dd{margin:2px 0 0;font-size:15px;color:var(--muted);font-variant-numeric:tabular-nums}
+.ev-now dd b{color:var(--ink);font-size:17px}
+.ev-kinds{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.ev-kinds span{font-size:13px;padding:2px 9px;border-radius:99px;border:1px solid var(--line-2);color:var(--ink)}
+.ev-kinds .k-gust{border-color:#fff}.ev-kinds .k-wind{border-color:#ffb35c}.ev-kinds .k-tornado{border-color:#ff3b6b}
+.ev-kinds .k-flood{border-color:#4da3ff}.ev-kinds .k-surge{border-color:#22d3ee}
+.ev-switches{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:4px 0 10px}
+.ev-seg{display:inline-flex;border:1px solid var(--line-2);border-radius:99px;padding:3px}
+.ev-seg button{font:inherit;font-size:14px;font-weight:600;color:var(--muted);background:none;border:0;border-radius:99px;padding:8px 14px;min-height:36px;cursor:pointer}
+.ev-seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.ev-seg button:focus-visible,.ev-check input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ev-check{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink);min-height:36px;cursor:pointer}
+.ev-check input{width:18px;height:18px;accent-color:var(--accent)}
+.ev-text{margin-top:8px;font-size:14px;color:var(--muted)}
+.ev-text summary{cursor:pointer;font-weight:600;color:var(--ink);min-height:32px}
+.ev-text table{width:100%;border-collapse:collapse;margin:8px 0 12px;font-variant-numeric:tabular-nums}
+.ev-text caption{text-align:left;color:var(--faint);font-size:13px;padding-bottom:4px}
+.ev-text th,.ev-text td{text-align:left;padding:4px 6px 4px 0;border-bottom:1px solid var(--line);font-size:13px}
+.ev-h2{font-size:14px;color:var(--ink);margin:12px 0 4px}
+.ev-gusts,.ev-src{margin:0;padding-left:20px}
+.ev-gusts li,.ev-src li{margin:2px 0}
+.lg-row i.ev-dot{width:11px;height:11px;margin:0 12px;border:1.5px solid rgba(8,12,20,.8)}
