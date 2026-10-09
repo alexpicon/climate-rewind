@@ -1,8 +1,9 @@
 /**
- * Build-time snapshots of the slow outside data for the sample addresses (data/samples/<slug>.json).
+ * Build-time snapshots of the slow outside data for the prepared addresses (data/samples/<slug>.json): the landing page's samples
+ * and moments (lib/ui/prepared.ts).
  *
  * Open-Meteo's free archive has a daily allowance that a 26-year heat request alone eats 680 calls of. Judges click the same
- * four samples many times, so the heat summary and the rain on each flood date for those addresses are saved ahead of time by
+ * prepared addresses many times, so the heat summary and the rain on each flood date for those addresses are saved ahead of time by
  * `npm run snapshot-samples` and read from disk. A lookup uses a snapshot only when the matched point is within 200 m of the
  * sample; everything else (alerts, the NWS forecast, FEMA, any other address) stays live.
  */

@@ -1,5 +1,5 @@
 /**
- * Writes data/samples/ai/<slug>.json for each sample address: the real AI brief, story and plan, made by running the app's own endpoints once.
+ * Writes data/samples/ai/<slug>.json for each prepared address (the samples and the landing page's moments): the real AI brief, story and plan, made by running the app's own endpoints once.
  * The sample clicks then show them at once (lib/ai/precomputed.ts), labelled "computed ahead of time" with the time they were made.
  *
  *   1. Start the app with the answers-ahead-of-time switch OFF (so it records live ones) and the real key in .env.local:
@@ -11,7 +11,7 @@
  * is left as it was (null if there was none), never filled with a made-up answer. The brief opens with live alerts and the next three days, so it
  * goes stale: the page shows its time and asks for a fresh one; run this again before a demo to refresh it. Needs Node 22.7 or newer.
  */
-import { mkdirSync, readFileSync, existsSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 function arg(name: string): string | undefined {
@@ -32,7 +32,12 @@ interface Snapshot {
   lon: number;
 }
 
-const slugs = ["nashville", "san-antonio", "asheville", "bellevue"].filter((slug) => !only || slug === only);
+// Every prepared address that has a snapshot (the samples and the landing page's moments): run snapshot-samples first.
+const slugs = readdirSync(SAMPLES)
+  .filter((name) => name.endsWith(".json"))
+  .map((name) => name.slice(0, -".json".length))
+  .sort()
+  .filter((slug) => !only || slug === only);
 let failed = 0;
 
 async function call(label: string, url: string, init?: RequestInit): Promise<Record<string, unknown> | null> {

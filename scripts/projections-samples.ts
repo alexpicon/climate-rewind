@@ -1,5 +1,5 @@
 /**
- * Writes data/projections/<slug>.json for each sample address: the observed decades and trends (Open-Meteo archive) and the projected range
+ * Writes data/projections/<slug>.json for each prepared address (the samples and the landing page's moments, lib/ui/prepared.ts): the observed decades and trends (Open-Meteo archive) and the projected range
  * (Open-Meteo Climate API, CMIP6 HighResMIP models), and the AI explanation (checked by code), so the four samples never wait on outside services.
  *
  *   node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/projections-samples.ts
@@ -32,7 +32,7 @@ try {
   // no .env.local
 }
 
-const { SAMPLE_ADDRESSES } = await import("../lib/ui/tabs.ts");
+const { PREPARED_ADDRESSES } = await import("../lib/ui/prepared.ts");
 const { geocodeAddress } = await import("../lib/sources.ts");
 const { slugify } = await import("../lib/index-store.ts");
 const { buildObserved } = await import("../lib/climate/observed.ts");
@@ -83,7 +83,7 @@ const aiDeps = explain ? createAiDeps(process.env) : null;
 let incomplete = 0;
 let stoppedByLimit = false;
 
-for (const sample of SAMPLE_ADDRESSES) {
+for (const sample of PREPARED_ADDRESSES) {
   const address = await geocodeAddress(sample.address, asFetch);
   const slug = slugify(address.city ?? sample.label);
   if (only && only !== slug) continue;

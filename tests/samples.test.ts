@@ -2,7 +2,7 @@
  * Build-time snapshots for the sample addresses, and the caches for every other address. No network: every outside call is faked,
  * and a fake that is hit when it should not be fails the test.
  */
-import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -13,6 +13,7 @@ import { findNearbyFloods, lookupAddress, type LookupDeps } from "@/lib/lookup";
 import { gridKey, LruCache, snapToGrid } from "@/lib/lru";
 import { clearSnapshotCache, findSnapshot, isSnapshot, loadSampleSnapshots, SNAPSHOT_RADIUS_M, type SampleSnapshot } from "@/lib/samples";
 import { clearHeatCache, fetchDailyFeelsLike } from "@/lib/sources";
+import { PREPARED_ADDRESSES } from "@/lib/ui/prepared";
 import { SAMPLE_ADDRESSES } from "@/lib/ui/tabs";
 import { CENSUS_NASHVILLE, FEMA_ZONE_X, NASHVILLE, flood, heatYear, httpError, ok, openMeteoReply } from "./helpers";
 
@@ -282,22 +283,25 @@ describe("the snapshots that ship in data/samples", () => {
   const files = readdirSync(SHIPPED).filter((f) => f.endsWith(".json"));
   const read = (name: string) => JSON.parse(readFileSync(path.join(SHIPPED, name), "utf8")) as SampleSnapshot;
 
-  it("there is one for each sample address, and each is well formed", () => {
-    expect(files.sort()).toEqual(["asheville.json", "bellevue.json", "nashville.json", "san-antonio.json"]);
+  it("there is one for each prepared address (the samples and the landing page's moments), and each is well formed", () => {
+    expect(files.sort()).toEqual(["asheville.json", "bellevue.json", "flushing.json", "fort-myers.json", "lahaina.json", "mayfield.json", "nashville.json", "rolling-fork.json", "san-antonio.json"]);
     expect(SAMPLE_ADDRESSES).toHaveLength(4);
     for (const file of files) expect(isSnapshot(read(file)), file).toBe(true);
   });
 
-  it("the sample addresses are the ones in the files", () => {
+  it("the prepared addresses are the ones in the files", () => {
     const addresses = files.map((f) => read(f).address).sort();
-    expect(addresses).toEqual(SAMPLE_ADDRESSES.map((s) => s.address).sort());
+    expect(addresses).toEqual(PREPARED_ADDRESSES.map((s) => s.address).sort());
   });
 
-  it("every heat part is captured, and its week is the week of the shipped regional grid", async () => {
+  it("every heat part is captured, and where a regional grid ships, its week is the grid's week", async () => {
     for (const file of files) {
       const snap = read(file);
       expect(snap.heat, `${file} heat`).not.toBeNull();
-      const grid = JSON.parse(readFileSync(path.join("data", "heat", `${snap.slug}.json`), "utf8")) as { days: string[] };
+      expect(snap.heat!.worstWeek.daily).toHaveLength(7);
+      const gridFile = path.join("data", "heat", `${snap.slug}.json`);
+      if (!existsSync(gridFile)) continue;
+      const grid = JSON.parse(readFileSync(gridFile, "utf8")) as { days: string[] };
       expect(snap.heat!.worstWeek.start, file).toBe(grid.days[0]);
       expect(snap.heat!.worstWeek.end, file).toBe(grid.days[grid.days.length - 1]);
       expect(snap.heat!.worstWeek.daily).toHaveLength(7);

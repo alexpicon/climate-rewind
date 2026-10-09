@@ -1,6 +1,6 @@
 /**
- * Real AI outputs made ahead of time for the four sample addresses (data/samples/ai/<slug>.json, written by `npm run precompute-ai`), so a
- * click on a sample shows the brief, the story and the plan at once. Each part is the same checked answer a live request returns (every
+ * Real AI outputs made ahead of time for the prepared addresses, the landing page's samples and moments (data/samples/ai/<slug>.json,
+ * written by `npm run precompute-ai`), so a click on one shows the brief, the story and the plan at once. Each part is the same checked answer a live request returns (every
  * sentence still cites a source), marked `precomputed: { at }` so the page says it was computed ahead of time and when.
  *
  * The brief is the one part that goes stale (it opens with the live alerts and the next three days), so the page shows it with its time and

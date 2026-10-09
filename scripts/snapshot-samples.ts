@@ -1,5 +1,5 @@
 /**
- * Writes data/samples/<slug>.json for every sample address: the heat summary (26 years of daily feels-like highs) and the rain
+ * Writes data/samples/<slug>.json for every prepared address (the samples and the landing page's moments, lib/ui/prepared.ts): the heat summary (26 years of daily feels-like highs) and the rain
  * on each flood date within 5 km, both from the Open-Meteo archive. The app reads these instead of calling Open-Meteo for the
  * samples (lib/samples.ts), so a judge clicking them over and over cannot use up the free daily allowance.
  *
@@ -31,7 +31,7 @@ register(
     }`),
 );
 
-const { SAMPLE_ADDRESSES } = await import("../lib/ui/tabs.ts");
+const { PREPARED_ADDRESSES } = await import("../lib/ui/prepared.ts");
 const { geocodeAddress, heatArchiveUrl, heatDaysFromArchive } = await import("../lib/sources.ts");
 const { floodDates, rainArchiveUrl, rainFromArchive, rainRanges, shiftDate } = await import("../lib/flood-trigger.ts");
 const { findNearbyFloods, summarizeHeat } = await import("../lib/lookup.ts");
@@ -84,7 +84,7 @@ const rainCovers = (snapshot: SampleSnapshot | null, dates: string[]) =>
   Boolean(snapshot?.rain && !snapshot.rain.seeded && dates.every((d) => Object.hasOwn(snapshot.rain!.byDate, d) && Object.hasOwn(snapshot.rain!.byDate, shiftDate(d, -1))));
 
 let incomplete = 0;
-for (const sample of SAMPLE_ADDRESSES) {
+for (const sample of PREPARED_ADDRESSES) {
   const address = await geocodeAddress(sample.address, asFetch);
   const slug = slugify(address.city ?? sample.label);
   if (only && only !== slug) continue;
