@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAnnounce } from "@/components/announce";
-import { useMapApi } from "@/components/map/map-context";
+import { useMapApi, useMapUnavailable } from "@/components/map/map-context";
 import { View3DToggle } from "@/components/map/View3DToggle";
 import { Dock } from "@/components/panel/Dock";
 import { Legend } from "@/components/panel/Legend";
@@ -69,13 +69,15 @@ function StormReplayView({ data, reduced, firstView, autoplay = false, onSeen, o
   usePanelHeight();
 
   // Play waits only for the first dozen frames; the rest keep loading ahead of the playhead.
-  const radarBusy = stage === 1 && !radar.playable;
+  // Without a map there is no radar to wait for: the replay runs on the panel's clock and reports alone.
+  const mapOff = useMapUnavailable();
+  const radarBusy = stage === 1 && !radar.playable && !mapOff;
   const stageRef = useRef(stage);
   stageRef.current = stage;
   const [playhead, setPlayhead] = useState(0);
   // The playhead needs its frame and the next one settled; otherwise it pauses ("buffering") until they arrive.
   const needed = Math.min(model.frameCount, Math.floor(playhead * (model.frameCount - 1)) + 2);
-  const buffering = stage === 1 && !radar.done && radar.buffered < needed;
+  const buffering = stage === 1 && !radar.done && !mapOff && radar.buffered < needed;
   const playback = usePlayback({
     durationMs: stage === 1 ? (model.frameCount - 1) * MS_PER_FRAME : CORRECTION_MS,
     initialP: reduced ? 1 : 0,
@@ -248,7 +250,7 @@ function StormReplayView({ data, reduced, firstView, autoplay = false, onSeen, o
         </div>
       ) : null}
 
-      {stage === 1 && !radar.done ? <RadarProgressBar radar={radar} buffering={buffering} /> : null}
+      {stage === 1 && !radar.done && !mapOff ? <RadarProgressBar radar={radar} buffering={buffering} /> : null}
       {stage === 1 && radar.done && radar.missing > 0 ? (
         <p id="radarnote" className="glass" role="status">
           {radar.gaveUp ? `Radar frames are not arriving: ${radar.ready} of ${radar.total} loaded. The dots still show when each report was filed.` : `${radar.missing} of ${radar.total} radar frames unavailable; the replay skips them.`}

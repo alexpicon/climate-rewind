@@ -31,6 +31,7 @@ export function LiveDrawer({ live, lat, lon, notice, trigger, onClose }: Props) 
   const mapBox = useRef<HTMLDivElement>(null);
   const miniRef = useRef<{ map: MapLibreMap; markers: Marker[]; gl: typeof import("maplibre-gl") } | null>(null);
   const [miniReady, setMiniReady] = useState(false);
+  const [miniFailed, setMiniFailed] = useState(false);
 
   useEffect(() => {
     headingRef.current?.focus({ preventScroll: true });
@@ -42,19 +43,26 @@ export function LiveDrawer({ live, lat, lon, notice, trigger, onClose }: Props) 
     (async () => {
       const gl = await loadMapLibre();
       if (cancelled || !mapBox.current) return;
-      const map = new gl.Map({
-        container: mapBox.current,
-        style: baseStyle(),
-        center: [lon, lat],
-        zoom: 8.4,
-        minZoom: 5,
-        maxZoom: 11,
-        attributionControl: false,
-        dragRotate: false,
-        pitchWithRotate: false,
-        maxPitch: 0,
-        fadeDuration: 0,
-      });
+      let map: MapLibreMap;
+      try {
+        map = new gl.Map({
+          container: mapBox.current,
+          style: baseStyle(),
+          center: [lon, lat],
+          zoom: 8.4,
+          minZoom: 5,
+          maxZoom: 11,
+          attributionControl: false,
+          dragRotate: false,
+          pitchWithRotate: false,
+          maxPitch: 0,
+          fadeDuration: 0,
+        });
+      } catch {
+        // No WebGL: the drawer's text says everything the small map would show.
+        setMiniFailed(true);
+        return;
+      }
       map.addControl(new gl.NavigationControl({ showCompass: false }), "top-right");
       map.addControl(new gl.AttributionControl({ compact: true }), "bottom-right");
       map.touchZoomRotate.disableRotation();
@@ -187,6 +195,7 @@ export function LiveDrawer({ live, lat, lon, notice, trigger, onClose }: Props) 
 
         <div className="dr-mapwrap">
           <div ref={mapBox} id="dr-map" role="img" aria-label="Small map around your address. It shows the alert outline and storm motion when an alert is active, and live radar if you turn it on." />
+          {miniFailed ? <p className="dr-mapoff">The map can’t be drawn in this browser (it needs WebGL). The alerts above are complete.</p> : null}
           <div className="dr-maplab" aria-hidden="true">
             {radar ? <><b>Live radar</b> NOAA NEXRAD</> : outlined ? <><b>Alert outline</b> and storm motion</> : <><b>Around your address</b> · radar is off</>}
           </div>

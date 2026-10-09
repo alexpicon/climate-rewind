@@ -7,7 +7,7 @@ import { onPlaced } from "@/lib/ui/camera";
 import { createAddressMarkerElement } from "@/lib/ui/dom";
 import { loadMapLibre } from "@/lib/ui/maplibre";
 import { baseStyle } from "@/lib/ui/map-style";
-import { MapContext, type MapApi } from "./map-context";
+import { MapContext, MapUnavailableContext, type MapApi } from "./map-context";
 
 interface Props {
   /** The matched address, or null while the lookup is running. */
@@ -25,6 +25,8 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
   const creditsRef = useRef<HTMLDivElement>(null);
   const [api, setApi] = useState<MapApi | null>(null);
   const [tileTrouble, setTileTrouble] = useState(false);
+  // No WebGL (switched off, blocklisted GPU, some remote desktops): MapLibre cannot start. The panels hold the same information.
+  const [unavailable, setUnavailable] = useState(false);
   // The map starts on a placeholder world view while the lookup runs. It stays hidden until a view has put the camera on its
   // data (never a flight in from the whole country), then fades in.
   const [placed, setPlaced] = useState(false);
@@ -41,19 +43,25 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
       const gl = await loadMapLibre();
       if (cancelled || !containerRef.current) return;
 
-      map = new gl.Map({
-        container: containerRef.current,
-        style: baseStyle(),
-        center: startRef.current,
-        zoom: 4,
-        minZoom: 3,
-        maxZoom: 14,
-        attributionControl: false,
-        fadeDuration: 0,
-        dragRotate: false,
-        pitchWithRotate: false,
-        maxPitch: 0,
-      });
+      try {
+        map = new gl.Map({
+          container: containerRef.current,
+          style: baseStyle(),
+          center: startRef.current,
+          zoom: 4,
+          minZoom: 3,
+          maxZoom: 14,
+          attributionControl: false,
+          fadeDuration: 0,
+          dragRotate: false,
+          pitchWithRotate: false,
+          maxPitch: 0,
+        });
+      } catch (error) {
+        console.error("map unavailable", (error as Error | null)?.name);
+        setUnavailable(true);
+        return;
+      }
       // The credits button lives in #map-credits, outside #map: the map is one fixed layer under every panel, so a control inside it
       // is covered by the panel and the tab bar on a phone and cannot be reached. (It is the same MapLibre control, mounted by hand.)
       const credits = new gl.AttributionControl({ compact: true });
@@ -152,12 +160,20 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
       />
       <div id="vignette" aria-hidden="true" />
       <div id="map-credits" className="maplibregl-ctrl-bottom-right" role="region" aria-label="Map credits" ref={creditsRef} />
+      {unavailable ? (
+        <p id="map-off" className="glass" role="status">
+          <b>The map can’t be drawn in this browser.</b> It needs WebGL, which is switched off or not supported here. Every number, story and
+          replay is still in the panel, with a text version.
+        </p>
+      ) : null}
       {tileTrouble ? (
         <p id="toast" className="on" role="status">
           Some map tiles did not load. Check your connection; the data still works.
         </p>
       ) : null}
-      <MapContext.Provider value={api}>{children}</MapContext.Provider>
+      <MapUnavailableContext.Provider value={unavailable}>
+        <MapContext.Provider value={api}>{children}</MapContext.Provider>
+      </MapUnavailableContext.Provider>
     </>
   );
 }

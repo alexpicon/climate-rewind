@@ -585,3 +585,9 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 
 /* the map credits button on a phone: one icon, not a tiled one */
 #map-credits .maplibregl-ctrl-attrib-button{background-repeat:no-repeat;background-size:24px}
+
+/* No WebGL: the map cannot start. A plain note sits where the map would be; the panels carry the same information. */
+#map-off{position:fixed;z-index:6;top:calc(var(--bar-h) + 16px);right:16px;max-width:380px;margin:0;padding:14px 16px;border-radius:14px;font-size:15px;line-height:1.45;color:var(--ink)}
+#map-off b{display:block;margin-bottom:4px}
+@media (max-width:900px){#map-off{left:12px;right:12px;max-width:none;top:calc(var(--bar-h) + 8px)}}
+.dr-mapoff{position:absolute;left:10px;right:10px;bottom:10px;z-index:3;margin:0;padding:8px 10px;border-radius:8px;background:rgba(10,15,27,.94);font-size:14px;color:var(--muted)}
