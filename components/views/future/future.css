@@ -1,0 +1,39 @@
+/* "What's changing here": the chart, the cards and the trend lines. Loads with the view; builds on prototype.css and calm.css (variables, .glass, .sec-t, .tag). */
+#panel.fx{width:min(500px,calc(100vw - 2 * var(--pad)))}
+.fx-lede{font-size:19.5px;line-height:1.35;margin:0 0 16px}
+.fx-sample{margin:0 0 14px;font-size:14px;color:var(--muted)}
+.fx-card{margin:0 0 18px;padding:16px 16px 14px;border-radius:var(--r-md);border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.fx-card.fx-ai{border-color:rgba(255,180,90,.45);background:rgba(255,180,90,.06)}
+.fx-skel{height:220px}
+.fx-fig{margin:0}
+.fx-svg{display:block;width:100%;height:auto;overflow:visible}
+.fx-grid{stroke:rgba(255,255,255,.1);stroke-width:1}
+.fx-axis{stroke:var(--line-2);stroke-width:1.5}
+.fx-divider{stroke:var(--line-2);stroke-width:1.5;stroke-dasharray:4 5}
+.fx-tick{fill:var(--muted);font-size:12px}
+.fx-bar{fill:#BAC2D1;fill-opacity:.88}
+.fx-band{fill:var(--accent);fill-opacity:.3;stroke:var(--accent);stroke-width:2}
+.fx-band-past{fill-opacity:.12;stroke-dasharray:5 4}
+.fx-median{stroke:var(--accent);stroke-width:3.5;stroke-linecap:round}
+.fx-val{fill:var(--ink);font-size:14px;font-weight:650;font-variant-numeric:tabular-nums}
+.fx-val-future,.fx-val-past{fill:#FFD9A3}
+.fx-cat{fill:var(--ink);font-size:13px;font-weight:600}
+.fx-sub{fill:var(--muted);font-size:12px}
+.fx-legend{display:grid;gap:6px;margin-top:8px;font-size:13.5px;line-height:1.35;color:var(--muted)}
+.fx-legend span{display:flex;gap:8px;align-items:flex-start}
+.fx-sw{flex:none;width:16px;height:14px;border-radius:4px;margin-top:2px}
+.fx-sw-bar{background:#BAC2D1;opacity:.88}
+.fx-sw-band{background:rgba(255,180,90,.3);border:2px solid var(--accent)}
+.fx-measures{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.fx-measures li{display:grid;gap:3px}
+.fx-measures b{font-size:15.5px;font-weight:650}
+.fx-decades{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.fx-trend{font-size:14.5px;color:var(--muted)}
+.fx-trend.yes{color:#FFD9A3;font-weight:600}
+.fx-big{margin:2px 0 4px;font-family:var(--serif);font-weight:300;font-size:clamp(40px,5vw,54px);line-height:1;letter-spacing:-.03em;color:#FFD9A3;font-variant-numeric:tabular-nums}
+.fx-big small{display:block;margin-top:6px;font-family:var(--sans);font-size:14.5px;letter-spacing:0;font-weight:400;color:var(--muted);line-height:1.35}
+.fx-line{margin:8px 0 6px;font-size:15px;line-height:1.45}
+.fx-note{margin:0;font-size:15px;line-height:1.45;color:var(--muted)}
+.fx-fine{margin:10px 0 0;font-size:13px;line-height:1.4;color:var(--faint)}
+.fx-caveat{margin:10px 0 0;padding-left:12px;border-left:3px solid var(--accent);font-size:14.5px;line-height:1.4;color:var(--ink)}
+@media (max-width:900px){#panel.fx{top:calc(var(--bar-h) + 8px);bottom:calc(12px + 70px + 10px);max-height:none;width:auto}}
