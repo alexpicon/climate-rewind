@@ -148,5 +148,15 @@ until Apr 7, 2025 (then 19), GOES-17 for the West until Jan 4, 2023 (then 18).
 | Asheville | 2024-09-25T23:00 (Helene) | GOES-16 | 602 | 1,657 |
 | Bellevue | 2019-12-20T15:58 | GOES-17 | 735 | 0 |
 | San Antonio | 2021-05-01T18:05 | GOES-16 | 677 | 1,309 |
+| ida-queens (the landing page's Ida moment, 41-05 Main St, Flushing) | 2021-09-02T02:00 | GOES-16 | 1,277 | 2,795 |
 
 San Antonio's busiest night (June 2, 2016) is before GLM began; its sample card opens on May 1, 2021 instead.
+
+## The record flash for the landing page (`record_flash.py`)
+
+Writes `public/data/lightning/record-2020-04-29.json`: every light group GOES-16 recorded over the Gulf coast between 14:32:38 and
+14:32:48 UTC on 29 April 2020, the seconds of the World Meteorological Organization's certified 768 km flash (began 14:32:39.016 UTC,
+near Houston into southeastern Mississippi; Peterson et al., BAMS 2022). NOAA's routine processing splits a megaflash into many short
+flashes, so the file keeps the light itself: 8,795 groups from two files, spanning 803 km (other flashes in the same storm are lit in
+those seconds too, and the page says so). The 829 km record of 22 October 2017 cannot be drawn: GOES-16 data on AWS begins on
+13 February 2018.

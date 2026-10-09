@@ -17,6 +17,14 @@
    "flashes": 0
   },
   {
+   "slug": "ida-queens",
+   "nightId": "2021-09-02T02:00",
+   "lat": 40.758019717113,
+   "lon": -73.829301134074,
+   "file": "data/lightning/ida-queens/2021-09-02T0200.json",
+   "flashes": 2795
+  },
+  {
    "slug": "nashville",
    "nightId": "2021-03-28T03:55",
    "lat": 36.168175092703,
