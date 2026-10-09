@@ -22,6 +22,9 @@ import { StormEmpty } from "./StormEmpty";
 import { StormLegend } from "./StormLegend";
 import { notRunSentence, StormPanel } from "./StormPanel";
 import { StormScene, type RadarStatus } from "./storm-scene";
+import { LightningLayer } from "./lightning-layer";
+import { satelliteName } from "@/lib/ui/lightning";
+import { useLightning } from "./use-lightning";
 
 interface Props {
   data: LookupPayload;
@@ -129,6 +132,25 @@ function StormReplayView({ data, reduced, firstView, autoplay = false, onSeen, o
     sceneRef.current?.setView3d(view3d);
   }, [view3d, sceneVersion]);
 
+  // The satellite's lightning for this night, when we have it: above the radar, on the replay's clock, only during the replay itself.
+  const lightning = useLightning(data.address.lat, data.address.lon, replay.nightId);
+  const lightningRef = useRef<LightningLayer | null>(null);
+  const [lightningVersion, setLightningVersion] = useState(0);
+  useEffect(() => {
+    if (!api || !lightning) return;
+    const layer = new LightningLayer(api, lightning, reduced);
+    layer.enter();
+    lightningRef.current = layer;
+    setLightningVersion((v) => v + 1);
+    return () => {
+      layer.destroy();
+      lightningRef.current = null;
+    };
+  }, [api, lightning, reduced]);
+  useEffect(() => {
+    lightningRef.current?.update(model.startMs + p * (model.endMs - model.startMs), stage === 1);
+  }, [p, stage, model, lightningVersion]);
+
   useEffect(() => {
     sceneRef.current?.setStage(stage);
   }, [stage, sceneVersion]);
@@ -218,6 +240,7 @@ function StormReplayView({ data, reduced, firstView, autoplay = false, onSeen, o
         zone={zone}
         onNight={onNight}
         rainOf={(report) => sceneRef.current?.rainFor(report) ?? null}
+        lightning={lightning}
       />
 
       <ModeBadge
@@ -302,7 +325,7 @@ function StormReplayView({ data, reduced, firstView, autoplay = false, onSeen, o
 
       {stage === 2 && current ? <ReportCard model={model} correction={model.corrections[current.index]} progress={current} origin={origin} /> : null}
 
-      {!card ? <StormLegend stage={stage} canCorrect={model.canCorrect} /> : null}
+      {!card ? <StormLegend stage={stage} canCorrect={model.canCorrect} lightning={lightning ? satelliteName(lightning.source) : null} /> : null}
 
       {stage === 1 || model.canCorrect ? (
       <Dock

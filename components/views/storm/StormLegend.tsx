@@ -2,7 +2,8 @@ import { Legend } from "@/components/panel/Legend";
 
 const RAMP = "linear-gradient(90deg,#04e9e7,#019ff4,#0300f4,#02fd02,#01c501,#008e00,#fdf802,#e5bc00,#fd9500,#fd0000,#d40000,#bc0000,#f800fd,#9854c6)";
 
-export function StormLegend({ stage, canCorrect }: { stage: 1 | 2; canCorrect: boolean }) {
+/** `lightning` names the satellite when its flashes are on the map (else null). */
+export function StormLegend({ stage, canCorrect, lightning = null }: { stage: 1 | 2; canCorrect: boolean; lightning?: string | null }) {
   if (stage === 2 && !canCorrect) {
     return (
       <Legend>
@@ -45,6 +46,12 @@ export function StormLegend({ stage, canCorrect }: { stage: 1 | 2; canCorrect: b
         <div className="lg-row">
           <i className="sw-hollow" />
           <span>Reports the NWS pinned to one city point</span>
+        </div>
+      ) : null}
+      {lightning ? (
+        <div className="lg-row">
+          <i className="sw-bolt" />
+          <span><b className="lgb">Lightning flash</b> seen from space by {lightning}, at its minute. Bigger = more light.</span>
         </div>
       ) : null}
       <div className="lg-row lg-note">

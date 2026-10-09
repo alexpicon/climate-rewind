@@ -642,3 +642,11 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
   .samples.start .sample-btn:hover,.samples.start .sample-btn:focus-visible{transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,0,0,.45),0 0 0 1px rgba(255,180,90,.35),0 0 28px rgba(255,180,90,.16)}
   .samples.start .sample-btn:active{transform:translateY(-1px)}
 }
+
+/* ---------- satellite lightning on the storm replay ---------- */
+.bolt-line{margin:2px 0 12px}
+.bolt-line > p{display:flex;align-items:baseline;gap:8px;margin:0;font-size:15px;line-height:1.45;color:var(--muted)}
+.bolt-line > p b{color:var(--ink);font-variant-numeric:tabular-nums}
+.bolt-ic{flex:none;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:rgba(185,198,255,.16);color:#DCE3FF;transform:translateY(4px)}
+.bolt-line .more{margin-top:6px}
+.sw-bolt{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#fff 0 30%,rgba(185,198,255,.7) 45%,rgba(185,198,255,0) 72%)}
