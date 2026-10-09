@@ -1,17 +1,23 @@
 import type { ReactNode } from "react";
+import { PrecomputedNote } from "@/components/panel/PrecomputedNote";
 import type { ReadyItem, ReadyPayload } from "@/lib/ready/types";
 import "./ready.css";
 
 /** One plan item: what to do, why (a real record from the area, with its date), and the official line it follows. */
-export function ReadyItemView({ item, id }: { item: ReadyItem; id: string }) {
+export function ReadyItemView({ item, id, mapped = false, active = false, onShow }: { item: ReadyItem; id: string; mapped?: boolean; active?: boolean; onShow?: () => void }) {
   return (
-    <li className="rd-item">
+    <li className={`rd-item${active ? " lit" : ""}`}>
       <div className="rd-row">
         <input type="checkbox" id={id} className="rd-box" aria-describedby={`${id}-why`} />
         <label htmlFor={id} className="rd-action">
           {item.action}
         </label>
       </div>
+      {mapped && onShow ? (
+        <button type="button" className="rd-show" aria-pressed={active} onClick={onShow}>
+          Show on map
+        </button>
+      ) : null}
       <p className="rd-why" id={`${id}-why`}>
         <span className="rd-k">Why:</span>{" "}
         {item.why.map((fact, i) => (
@@ -54,7 +60,7 @@ export function ReadyItemView({ item, id }: { item: ReadyItem; id: string }) {
 }
 
 /** The plan and what is behind it. `problem` is the honest "AI is not answering" block, shown instead of a plan. */
-export function ReadyContent({ payload, problem, onPrint }: { payload: ReadyPayload; problem: ReactNode; onPrint?: () => void }) {
+export function ReadyContent({ payload, problem, onPrint, pinned, active, onShow }: { payload: ReadyPayload; problem: ReactNode; onPrint?: () => void; pinned?: ReadonlySet<number>; active?: number | null; onShow?: (index: number) => void }) {
   return (
     <>
       {payload.state === "ok" ? (
@@ -67,9 +73,10 @@ export function ReadyContent({ payload, problem, onPrint }: { payload: ReadyPayl
             <span className="sr">Your plan, written by an AI</span>
           </h2>
           <p className="ai-sub">Written by an AI from your area’s record. An item is shown only if it names a real record from your area and an official safety line; tick items off as you go.</p>
+          {payload.precomputed ? <PrecomputedNote at={payload.precomputed.at} what="plan" /> : null}
           <ol className="rd-list">
             {payload.items.map((item, i) => (
-              <ReadyItemView key={`${i}-${item.action}`} item={item} id={`rd-item-${i}`} />
+              <ReadyItemView key={`${i}-${item.action}`} item={item} id={`rd-item-${i}`} mapped={pinned?.has(i)} active={active === i} onShow={onShow ? () => onShow(i) : undefined} />
             ))}
           </ol>
           {payload.dropped > 0 ? (

@@ -152,6 +152,8 @@ export interface ChosenZone {
   tier: "your zone" | "nearby zone";
   /** 0 for your zone; else km to the zone's edge (an approximate zone: to its box). */
   distanceKm: number;
+  /** When NWS stopped using this zone's outline (YYYY-MM-DD), if the file says. The newest of "your zones" is the one in force now. */
+  validTo?: string | null;
 }
 
 /**
@@ -165,12 +167,12 @@ export function chooseZones(lat: number, lon: number, zones: readonly ZoneShape[
     const boxKm = distanceToBboxKm(lat, lon, zone.bbox);
     if (boxKm > maxKm) continue; // the box is never farther than the outline inside it, so this cannot drop a near zone
     if (!zone.polygons) {
-      chosen.push({ code: zone.code, name: zone.name, tier: "nearby zone", distanceKm: boxKm });
+      chosen.push({ code: zone.code, name: zone.name, tier: "nearby zone", distanceKm: boxKm, validTo: zone.validTo });
       continue;
     }
     const { inside, km } = probePolygons(lat, lon, zone.polygons);
-    if (inside) chosen.push({ code: zone.code, name: zone.name, tier: "your zone", distanceKm: 0 });
-    else if (km <= maxKm) chosen.push({ code: zone.code, name: zone.name, tier: "nearby zone", distanceKm: km });
+    if (inside) chosen.push({ code: zone.code, name: zone.name, tier: "your zone", distanceKm: 0, validTo: zone.validTo });
+    else if (km <= maxKm) chosen.push({ code: zone.code, name: zone.name, tier: "nearby zone", distanceKm: km, validTo: zone.validTo });
   }
   return chosen.sort((a, b) => (a.tier === b.tier ? 0 : a.tier === "your zone" ? -1 : 1) || a.distanceKm - b.distanceKm || (a.code < b.code ? -1 : 1));
 }
@@ -258,7 +260,7 @@ export function summarizeAreaEvents(events: readonly AreaEvent[], county: string
     byYear[year] = (byYear[year] ?? 0) + 1;
     perZone[event.area.code] = (perZone[event.area.code] ?? 0) + 1;
   }
-  const zoneInfo: AreaZoneInfo[] = zones.map((z) => ({ code: z.code, name: z.name, tier: z.tier, distanceKm: Math.round(z.distanceKm * 10) / 10, events: perZone[z.code] ?? 0 }));
+  const zoneInfo: AreaZoneInfo[] = zones.map((z) => ({ code: z.code, name: z.name, tier: z.tier, distanceKm: Math.round(z.distanceKm * 10) / 10, events: perZone[z.code] ?? 0, validTo: z.validTo ?? null }));
   return {
     county,
     countyName: county ? (events.find((e) => e.area.code === county)?.area.name ?? null) : null,

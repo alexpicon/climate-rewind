@@ -2,18 +2,20 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAnnounce } from "@/components/announce";
-import { useRestOnAddress } from "@/components/map/use-rest-on-address";
 import type { OutlookPayload } from "@/lib/outlook-types";
 import { requestBrief, requestOutlook, type AiResult } from "@/lib/ui/ahead-client";
 import type { LookupPayload } from "@/lib/types";
 import { isQuiet, QuietCard } from "@/components/panel/QuietCard";
+import { LoadSteps } from "@/components/panel/LoadSteps";
+import { AheadMap } from "./AheadMap";
+import { PrecomputedNote } from "@/components/panel/PrecomputedNote";
 import { AiAnswerView } from "./AiAnswerView";
 import { AiProblem } from "./AiProblem";
 import { AskBox } from "./AskBox";
 import { OutlookCards } from "./OutlookCards";
 
 type Outlook = { status: "loading" } | { status: "ready"; outlook: OutlookPayload } | { status: "error"; message: string };
-type Brief = { status: "loading" } | { status: "done"; result: AiResult };
+type Brief = { status: "loading" } | { status: "done"; result: AiResult; /** An early brief (made ahead of time) is on screen while a live one is asked for. */ refreshing?: "pending" | "failed" };
 
 /**
  * "Your street's next 72 hours": the AI brief on top (every sentence checked against a source), the three official outlooks made
@@ -21,7 +23,6 @@ type Brief = { status: "loading" } | { status: "done"; result: AiResult };
  * even if the AI is resting.
  */
 export function AheadView({ data }: { data: LookupPayload }) {
-  useRestOnAddress(data.address.lat, data.address.lon, 10);
   const say = useAnnounce();
   const address = data.address.input;
   const { lat, lon } = data.address;
@@ -43,9 +44,20 @@ export function AheadView({ data }: { data: LookupPayload }) {
     setBrief({ status: "loading" });
     const result = await requestBrief(address);
     if (id !== run.current) return;
-    setBrief({ status: "done", result });
+    // A brief made ahead of time (a sample address) shows at once with its time on it; a live one is asked for now and takes its place.
+    const early = result.ok && result.answer.precomputed;
+    setBrief({ status: "done", result, ...(early ? { refreshing: "pending" as const } : {}) });
     if (result.ok) say(result.answer.state === "ok" ? `The brief is ready: ${result.answer.sentences.length} checked sentences, each with its source.` : (result.answer.message ?? "No brief."));
     else say(result.message);
+    if (!early) return;
+    const live = await requestBrief(address, undefined, undefined, "live");
+    if (id !== run.current) return;
+    if (live.ok && live.answer.state === "ok") {
+      setBrief({ status: "done", result: live });
+      say("A fresh brief replaced the earlier one.");
+    } else {
+      setBrief({ status: "done", result, refreshing: "failed" });
+    }
   }, [address, say]);
 
   useEffect(() => {
@@ -62,6 +74,8 @@ export function AheadView({ data }: { data: LookupPayload }) {
   }, [say]);
 
   return (
+    <>
+    <AheadMap data={data} outlook={outlook.status === "ready" ? outlook.outlook : null} />
     <aside id="panel" className="glass ahead" aria-label="Story" tabIndex={-1}>
       <section id="v-ahead" className="view on" aria-labelledby="ahead-h">
         <p className="eyebrow">Next 72 hours · official outlooks, made local</p>
@@ -81,13 +95,20 @@ export function AheadView({ data }: { data: LookupPayload }) {
           <p className="ai-sub">Written by an AI from the official outlooks and our records. Only sentences that a source backs up are shown; tap a source to read it.</p>
           {brief.status === "loading" ? (
             <>
-              <p className="ai-wait" role="status">
-                Reading the official outlooks and our records…
-              </p>
+              <LoadSteps
+                label="Writing your brief"
+                steps={[
+                  { id: "outlooks", label: "Reading the official outlooks", state: outlook.status === "loading" ? "active" : "done" },
+                  { id: "brief", label: "Writing your brief", state: "active" },
+                ]}
+              />
               <div className="skeleton" aria-hidden="true" />
             </>
           ) : brief.result.ok ? (
-            <AiAnswerView answer={brief.result.answer} />
+            <>
+              {brief.result.answer.precomputed ? <PrecomputedNote at={brief.result.answer.precomputed.at} refreshing={brief.refreshing} /> : null}
+              <AiAnswerView answer={brief.result.answer} />
+            </>
           ) : (
             <AiProblem result={brief.result} onRetry={() => void loadBrief()} />
           )}
@@ -129,5 +150,6 @@ export function AheadView({ data }: { data: LookupPayload }) {
         </p>
       </section>
     </aside>
+    </>
   );
 }

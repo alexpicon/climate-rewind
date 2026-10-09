@@ -1,12 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAnnounce } from "@/components/announce";
-import { useRestOnAddress } from "@/components/map/use-rest-on-address";
 import { requestReady, type ReadyResult } from "@/lib/ready/client";
 import type { LookupPayload } from "@/lib/types";
 import { AiProblem } from "../ahead/AiProblem";
 import { ReadyContent } from "./ReadyContent";
+import { ReadyMap, useItemPoints } from "./ReadyMap";
 
 type State = { status: "loading" } | { status: "done"; result: ReadyResult };
 
@@ -15,11 +15,22 @@ type State = { status: "loading" } | { status: "done"; result: ReadyResult };
  * line it follows. It prints cleanly (the print button, or the browser's print), with the links written out.
  */
 export function ReadyView({ data }: { data: LookupPayload }) {
-  useRestOnAddress(data.address.lat, data.address.lon, 10);
   const say = useAnnounce();
   const { lat, lon, state } = data.address;
   const [result, setResult] = useState<State>({ status: "loading" });
   const run = useRef(0);
+  // The plan item whose pins are lit on the map (picked from the list or from a pin).
+  const [active, setActive] = useState<number | null>(null);
+  const items = useMemo(() => (result.status === "done" && result.result.ok && result.result.payload.state === "ok" ? result.result.payload.items : []), [result]);
+  const { points, got, map } = useItemPoints(state, items);
+  const pickItem = (index: number, focus: boolean) => {
+    setActive((now) => (now === index && !focus ? null : index));
+    if (focus) {
+      const box = document.getElementById(`rd-item-${index}`);
+      box?.scrollIntoView({ block: "center", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      box?.focus({ preventScroll: true });
+    }
+  };
 
   const load = useCallback(async () => {
     run.current += 1;
@@ -64,6 +75,8 @@ export function ReadyView({ data }: { data: LookupPayload }) {
   }, []);
 
   return (
+    <>
+    <ReadyMap lat={data.address.lat} lon={data.address.lon} items={items} points={points} status={result.status === "loading" ? "loading" : got} map={map} active={active} onPin={(item) => pickItem(item, true)} />
     <aside id="panel" className="glass rd" aria-label="Get ready" tabIndex={-1}>
       <section id="v-ready" className="view on rd-print" aria-labelledby="rd-h">
         <p className="eyebrow">Get ready · built from your area’s record</p>
@@ -83,6 +96,9 @@ export function ReadyView({ data }: { data: LookupPayload }) {
           <ReadyContent
             payload={result.result.payload}
             onPrint={() => window.print()}
+            pinned={new Set(points.map((p) => p.item))}
+            active={active}
+            onShow={(index) => pickItem(index, false)}
             problem={
               result.result.payload.problem ? <AiProblem result={{ ok: false, state: result.result.payload.problem.state, message: result.result.payload.problem.message }} onRetry={() => void load()} /> : null
             }
@@ -103,5 +119,6 @@ export function ReadyView({ data }: { data: LookupPayload }) {
         </p>
       </section>
     </aside>
+    </>
   );
 }

@@ -1,17 +1,21 @@
 "use client";
 
+import { HistoryNav } from "@/components/panel/HistoryNav";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAnnounce } from "@/components/announce";
 import { useRestOnAddress } from "@/components/map/use-rest-on-address";
+import { storyEvents } from "@/lib/ai/event-sources";
 import { ExtremesCard, isQuiet, QuietCard } from "@/components/panel/QuietCard";
 import { More } from "@/components/panel/Disclosure";
+import { PrecomputedNote } from "@/components/panel/PrecomputedNote";
 import type { StoryAnswer } from "@/lib/ai/types";
 import type { AreaEvent, LookupPayload } from "@/lib/types";
 import { requestStory, type StoryResult } from "@/lib/ui/ahead-client";
 import { NEARBY_ZONE_KM } from "@/lib/constants";
-import { eventLabel, FAMILIES, familyOf, tierLabel, zoneLabel, zonesLine } from "@/lib/ui/story-model";
+import { currentZone, eventLabel, FAMILIES, familyOf, otherZonesLine, tierLabel, zoneLabel } from "@/lib/ui/story-model";
 import { AiProblem } from "../ahead/AiProblem";
 import { EventCard } from "./EventCard";
+import { StoryMap } from "./StoryMap";
 import { Timeline } from "./Timeline";
 
 type Story = { status: "loading" } | { status: "done"; result: StoryResult };
@@ -23,13 +27,16 @@ type Selection = { id: string; from: "story" | "timeline" } | null;
  * the National Weather Service's own words one click away, and, for a quiet address, the closer-to-home facts. Every address gets one.
  */
 export function StoryView({ data }: { data: LookupPayload }) {
-  useRestOnAddress(data.address.lat, data.address.lon, 9);
-  const say = useAnnounce();
   const area = data.areaEvents ?? null;
+  // With area events the map view frames your zone itself (StoryMap); without them it just rests on the address.
+  useRestOnAddress(data.address.lat, data.address.lon, 9, !area);
+  const say = useAnnounce();
   const address = data.address.input;
 
   const [story, setStory] = useState<Story>({ status: "loading" });
   const [selection, setSelection] = useState<Selection>(null);
+  // Events a story sentence asked to show on the map (the open event, if there is one, wins).
+  const [focus, setFocus] = useState<string[]>([]);
   const [now] = useState(() => new Date());
   const run = useRef(0);
   const cardRef = useRef<HTMLElement | null>(null);
@@ -60,7 +67,25 @@ export function StoryView({ data }: { data: LookupPayload }) {
   const answer: StoryAnswer | null = story.status === "done" && story.result.ok ? story.result.story : null;
   const selected = selection ? (byId.get(selection.id) ?? null) : null;
 
+  // The events the map is about: the ones the story cites once it is in, else the ten it was asked to write about.
+  const mapEvents = useMemo(() => {
+    if (!area) return [];
+    if (answer) {
+      const cited = new Set([...answer.sentences.flatMap((s) => s.cites), ...answer.impactLines.flatMap((l) => l.eventIds)]);
+      const own = [...cited].map((id) => byId.get(id)).filter((e): e is AreaEvent => !!e);
+      if (own.length) return own;
+    }
+    return storyEvents(area);
+  }, [area, answer, byId]);
+  const highlightIds = useMemo(() => (selection ? [selection.id] : focus), [selection, focus]);
+  const showOnMap = (ids: string[]) => {
+    setSelection(null);
+    setFocus((current) => (current.join() === ids.join() ? [] : ids));
+    say(ids.length ? "Highlighted on the map." : "Map highlight cleared.");
+  };
+
   const select = (id: string, from: "story" | "timeline") => {
+    setFocus([]);
     opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setSelection((current) => (current?.id === id && current.from === from ? null : { id, from }));
     const event = byId.get(id);
@@ -77,7 +102,7 @@ export function StoryView({ data }: { data: LookupPayload }) {
 
   const card = (from: "story" | "timeline") =>
     selected && selection?.from === from ? (
-      <EventCard ref={cardRef} event={selected} impacts={answer?.impacts.filter((i) => i.eventId === selected.id) ?? []} onClose={close} />
+      <EventCard ref={cardRef} event={selected} currentZoneCode={currentZone(area?.zones)?.code ?? null} impacts={answer?.impacts.filter((i) => i.eventId === selected.id) ?? []} onClose={close} />
     ) : null;
 
   const zone = zoneLabel(area?.countyName ?? null);
@@ -87,6 +112,7 @@ export function StoryView({ data }: { data: LookupPayload }) {
     return (
       <aside id="panel" className="glass ahead story" aria-label="Story" tabIndex={-1}>
         <section id="v-story" className="view on" aria-labelledby="story-h">
+          <HistoryNav current="story" address={data.address.input} />
           <p className="eyebrow">Your area’s story</p>
           <h1 id="story-h" className="ahead-h">
             Your area’s story
@@ -102,8 +128,11 @@ export function StoryView({ data }: { data: LookupPayload }) {
   }
 
   return (
+    <>
+    <StoryMap area={area} lat={data.address.lat} lon={data.address.lon} state={data.address.state} events={mapEvents} highlightIds={highlightIds} onSelect={(id) => select(id, "story")} />
     <aside id="panel" className="glass ahead story" aria-label="Story" tabIndex={-1}>
       <section id="v-story" className="view on" aria-labelledby="story-h">
+        <HistoryNav current="story" address={data.address.input} />
         <p className="eyebrow">Your area’s story · NWS Storm Events since {area.since}</p>
         <h1 id="story-h" className="ahead-h">
           Your area’s story
@@ -119,7 +148,16 @@ export function StoryView({ data }: { data: LookupPayload }) {
         <p className="lede">
           weather events recorded for your county, your forecast zone and nearby zones since {area.since}.
         </p>
-        {zonesLine(area.zones) ? <p className="ai-sub story-zones">{zonesLine(area.zones)}</p> : null}
+        {currentZone(area.zones) ? (
+          <p className="ai-sub story-zones">
+            Your zone: <b>{zoneLabel(currentZone(area.zones)!.name) ?? currentZone(area.zones)!.code}</b>
+          </p>
+        ) : null}
+        {otherZonesLine(area.zones) ? (
+          <More label="Other zone names counted">
+            <p className="ai-sub">{otherZonesLine(area.zones)}</p>
+          </More>
+        ) : null}
 
         <section className="ai-brief" aria-labelledby="story-ai-h">
           <h2 id="story-ai-h" className="sec-t">
@@ -130,6 +168,7 @@ export function StoryView({ data }: { data: LookupPayload }) {
             <span className="sr">The AI story</span>
           </h2>
           <p className="ai-sub">Written by an AI from the {Math.min(10, area.top.length)} most significant recorded events here. Only sentences a record backs up are shown; select a source to read the National Weather Service’s own words.</p>
+          {answer?.precomputed ? <PrecomputedNote at={answer.precomputed.at} what="story" /> : null}
           {story.status === "loading" ? (
             <>
               <p className="ai-wait" role="status">
@@ -144,7 +183,7 @@ export function StoryView({ data }: { data: LookupPayload }) {
               <p>{story.result.story.message}</p>
             </div>
           ) : (
-            <StorySentences answer={story.result.story} byId={byId} selectedId={selection?.from === "story" ? selection.id : null} onSelect={(id) => select(id, "story")} />
+            <StorySentences answer={story.result.story} byId={byId} selectedId={selection?.from === "story" ? selection.id : null} onSelect={(id) => select(id, "story")} focus={focus} onShow={showOnMap} />
           )}
           {card("story")}
         </section>
@@ -216,17 +255,27 @@ export function StoryView({ data }: { data: LookupPayload }) {
         </p>
       </section>
     </aside>
+    </>
   );
 }
 
-function StorySentences({ answer, byId, selectedId, onSelect }: { answer: StoryAnswer; byId: ReadonlyMap<string, AreaEvent>; selectedId: string | null; onSelect: (id: string) => void }) {
+function StorySentences({ answer, byId, selectedId, onSelect, focus, onShow }: { answer: StoryAnswer; byId: ReadonlyMap<string, AreaEvent>; selectedId: string | null; onSelect: (id: string) => void; focus: readonly string[]; onShow: (ids: string[]) => void }) {
   const [totals, setTotals] = useState(false);
   const counts = answer.sources["area-counts"];
   return (
     <div className="ai-answer">
       <div className="ai-sents">
         {answer.sentences.map((sentence, i) => (
-          <p className="ai-s" key={`${i}-${sentence.text}`}>
+          <p
+            className="ai-s"
+            key={`${i}-${sentence.text}`}
+            onClick={(event) => {
+              // A plain click on the words highlights the sentence's places on the map; the "Show on map" button is the keyboard way to the same thing.
+              if ((event.target as HTMLElement).closest("button, a")) return;
+              const ids = sentence.cites.filter((id) => byId.has(id));
+              if (ids.length) onShow(ids);
+            }}
+          >
             {sentence.text}
             <span className="cites" role="group" aria-label="Sources for this sentence">
               {sentence.cites.map((id) => {
@@ -247,6 +296,11 @@ function StorySentences({ answer, byId, selectedId, onSelect }: { answer: StoryA
                 }
                 return null;
               })}
+              {sentence.cites.some((id) => byId.has(id)) ? (
+                <button type="button" className="cite map" aria-pressed={focus.length > 0 && focus.join() === sentence.cites.filter((id) => byId.has(id)).join()} onClick={() => onShow(sentence.cites.filter((id) => byId.has(id)))}>
+                  Show on map
+                </button>
+              ) : null}
             </span>
           </p>
         ))}

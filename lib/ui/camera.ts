@@ -6,7 +6,9 @@ export function isMobile(): boolean {
 }
 
 /** Padding that keeps the interesting part of the map clear of the panel, top bar and dock. */
-export function cameraPadding(): PaddingOptions {
+export function cameraPadding(sheet = false): PaddingOptions {
+  // The long-panel views ("Next 72 hours", the story, what's changing, get ready) are a bottom sheet of about half the screen on a phone.
+  if (sheet && isMobile() && window.innerHeight >= 520) return { left: 12, right: 12, top: 104, bottom: Math.round(window.innerHeight * 0.52) + 92 + 16 };
   // On a short screen (200% zoom, a landscape phone) the bottom stack must not eat the whole height, or no camera fits.
   if (isMobile() && window.innerHeight < 520) return { left: 12, right: 12, top: 70, bottom: 90 };
   if (isMobile()) return { left: 12, right: 12, top: 84, bottom: Math.min(Math.round(window.innerHeight * 0.34) + 200, Math.round(window.innerHeight * 0.6)) };

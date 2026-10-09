@@ -2,13 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAnnounce } from "@/components/announce";
-import { useRestOnAddress } from "@/components/map/use-rest-on-address";
 import { requestExplanation, requestFuture, type ExplainResult } from "@/lib/climate/client";
 import type { FuturePayload } from "@/lib/climate/types";
 import type { LookupPayload } from "@/lib/types";
 import { AiAnswerView } from "../ahead/AiAnswerView";
 import { AiProblem } from "../ahead/AiProblem";
 import { FutureContent } from "./FutureContent";
+import { FutureMap } from "./FutureMap";
 
 type Numbers = { status: "loading" } | { status: "ready"; payload: FuturePayload } | { status: "error"; message: string };
 type Explanation = { status: "idle" } | { status: "loading" } | { status: "done"; result: ExplainResult };
@@ -18,7 +18,6 @@ type Explanation = { status: "idle" } | { status: "loading" } | { status: "done"
  * the AI explanation follows (for the sample addresses it was made ahead of time). If the AI is resting, the numbers are unaffected.
  */
 export function FutureView({ data }: { data: LookupPayload }) {
-  useRestOnAddress(data.address.lat, data.address.lon, 9);
   const say = useAnnounce();
   const { lat, lon } = data.address;
   const [numbers, setNumbers] = useState<Numbers>({ status: "loading" });
@@ -93,6 +92,8 @@ export function FutureView({ data }: { data: LookupPayload }) {
   );
 
   return (
+    <>
+    <FutureMap lat={lat} lon={lon} matched={data.address.matched} />
     <aside id="panel" className="glass fx" aria-label="What’s changing here" tabIndex={-1}>
       <section id="v-future" className="view on" aria-labelledby="fx-h">
         <p className="eyebrow">What’s changing here · the record, then climate models</p>
@@ -131,5 +132,6 @@ export function FutureView({ data }: { data: LookupPayload }) {
         <p className="ahead-fine">Projections are model output, not our prediction and not a forecast. For warnings, use weather.gov.</p>
       </section>
     </aside>
+    </>
   );
 }

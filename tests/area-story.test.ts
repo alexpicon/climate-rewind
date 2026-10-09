@@ -16,7 +16,7 @@ import { buildSources } from "@/lib/ai/sources";
 import type { AiDeps } from "@/lib/ai/service";
 import type { StoryAnswer } from "@/lib/ai/types";
 import { axisTicks, extremeItems, familyOf, nearestFloodLine, quietLine, timelineDots } from "@/lib/ui/story-model";
-import { VISIBLE_TABS } from "@/lib/ui/tabs";
+import { VISIBLE_TABS, VISIBLE_TOP_TABS } from "@/lib/ui/tabs";
 import type { AreaEvent, FloodRow } from "@/lib/types";
 import { fakeClient, lookupFixture, modelReply, outlookFixture } from "./ai-fixtures";
 import { CENSUS_NASHVILLE, FEMA_ZONE_X, NASHVILLE, NO_ALERTS, fakeFetch, flood, heatYear, ok, openMeteoReply } from "./helpers";
@@ -394,10 +394,11 @@ describe("the brief's context for a quiet address", () => {
 });
 
 describe("tabs and the timeline model", () => {
-  it("'future' and 'ready' are hidden until their view files exist; the story tab follows the 72 hours", () => {
+  it("'future' and 'ready' are hidden until their view files exist; the story view follows the 72 hours and sits inside Your history", () => {
     expect(VISIBLE_TABS[0]).toBe("ahead");
     expect(VISIBLE_TABS[1]).toBe("story");
     expect(VISIBLE_TABS).toContain("how");
+    expect(VISIBLE_TOP_TABS).toEqual(["ahead", "history", "future", "ready"]);
   });
 
   it("sorts event types into families and puts dots on a 2000-to-now axis, one lane per family in use", () => {

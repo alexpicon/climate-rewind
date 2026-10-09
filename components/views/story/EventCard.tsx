@@ -12,11 +12,11 @@ import { niceDate } from "@/lib/ui/text";
  * the wider storm's narrative behind a disclosure, and the impacts the AI tagged ONLY where the narrative says them, each with the
  * words that show it.
  */
-export const EventCard = forwardRef<HTMLElement, { event: AreaEvent; impacts: readonly VerifiedImpact[]; onClose: () => void }>(function EventCard({ event, impacts, onClose }, ref) {
+export const EventCard = forwardRef<HTMLElement, { event: AreaEvent; impacts: readonly VerifiedImpact[]; onClose: () => void; currentZoneCode?: string | null }>(function EventCard({ event, impacts, onClose, currentZoneCode }, ref) {
   const harm = eventHarm(event);
   const own = event.narrative.trim();
   const episode = event.episodeNarrative.trim();
-  const where = tierLabel(event) ?? zoneLabel(event.area.name) ?? event.area.code;
+  const where = tierLabel(event, currentZoneCode) ?? zoneLabel(event.area.name) ?? event.area.code;
   return (
     <section className="eventcard" ref={ref} tabIndex={-1} aria-label={`${event.type}, ${niceDate(event.start)}`}>
       <div className="src-head">

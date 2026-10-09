@@ -7,7 +7,7 @@ import { chooseZones, clearEventsCache, parseZones, pickTop, selectAreaEvents, s
 import { eventSource, storyEvents, whereText } from "@/lib/ai/event-sources";
 import { storyKey } from "@/lib/ai/story";
 import { rankBySeverity } from "@/lib/event-severity";
-import { tierLabel, zonesLine } from "@/lib/ui/story-model";
+import { currentZone, otherZonesLine, tierLabel, zonesLine } from "@/lib/ui/story-model";
 import { distanceToBboxKm, distanceToPolygonsKm, KM_PER_DEGREE, pointInPolygons, polygonsOf, type PolygonCoords } from "@/lib/zone-geometry";
 import type { AreaEvent } from "@/lib/types";
 
@@ -296,12 +296,42 @@ describe("tiers in the story", () => {
     const found = (await selectAreaEvents(BELLEVUE.lat, BELLEVUE.lon, "WA", "WAC033", dir))!;
     const summary = summarizeAreaEvents(sinceYear(found.events), "WAC033", found.areaCodes, "x", 60, found.zones);
     expect(summary.zones).toEqual([
-      { code: "WAZ505", name: "East Puget Sound Lowlands", tier: "your zone", distanceKm: 0, events: 1 },
-      { code: "WAZ556", name: "Bellevue and Vicinity", tier: "your zone", distanceKm: 0, events: 1 },
-      { code: "WAZ558", name: "Seattle and Vicinity", tier: "nearby zone", distanceKm: 3.5, events: 2 },
+      { code: "WAZ505", name: "East Puget Sound Lowlands", tier: "your zone", distanceKm: 0, events: 1, validTo: "2014-02-08" },
+      { code: "WAZ556", name: "Bellevue and Vicinity", tier: "your zone", distanceKm: 0, events: 1, validTo: "2025-02-25" },
+      { code: "WAZ558", name: "Seattle and Vicinity", tier: "nearby zone", distanceKm: 3.5, events: 2, validTo: "2025-02-25" },
     ]);
     const mountain = { county: "WAC033", areaCodes: ["WAC033", "WAZ568"] };
     expect(storyKey(summary)).not.toBe(storyKey(mountain));
     expect(storyKey({ county: "WAC033", areaCodes: ["WAZ556", "WAC033"] })).toBe(storyKey({ county: "WAC033", areaCodes: ["WAC033", "WAZ556"] }));
+  });
+});
+
+describe("one zone name", () => {
+  const zones = [
+    { code: "WAZ007", name: "Seattle Metropolitan Area", tier: "your zone", distanceKm: 0, events: 1, validTo: "2005-12-25" },
+    { code: "WAZ505", name: "East Puget Sound Lowlands", tier: "your zone", distanceKm: 0, events: 3, validTo: "2014-02-08" },
+    { code: "WAZ556", name: "Bellevue and Vicinity", tier: "your zone", distanceKm: 0, events: 2, validTo: "2025-02-04" },
+    { code: "WAZ558", name: "Seattle and Vicinity", tier: "nearby zone", distanceKm: 3.84, events: 9, validTo: "2025-02-25" },
+    { code: "WAZ555", name: "East Puget Sound Lowlands", tier: "nearby zone", distanceKm: 9.4, events: 4, validTo: "2025-02-25" },
+  ] as const;
+
+  it("'Your zone' is the one that holds the address with the latest validTo, never a nearby zone", () => {
+    expect(currentZone(zones)?.code).toBe("WAZ556");
+    expect(currentZone([...zones].reverse())?.code).toBe("WAZ556");
+    expect(currentZone(zones.filter((z) => z.tier === "nearby zone"))).toBeNull();
+    expect(currentZone(undefined)).toBeNull();
+    // no dates in the file: the higher code stands in, so the answer never changes between runs
+    expect(currentZone([{ code: "WAZ007", name: "a", tier: "your zone", distanceKm: 0, events: 0 }, { code: "WAZ505", name: "b", tier: "your zone", distanceKm: 0, events: 0 }])?.code).toBe("WAZ505");
+  });
+
+  it("retired names and nearby zones go in the 'More' line, each name once, and the current name is not repeated", () => {
+    const line = otherZonesLine(zones)!;
+    expect(line).toContain("Seattle Metropolitan Area");
+    expect(line).toContain("East Puget Sound Lowlands");
+    expect(line).toContain("Seattle and Vicinity (4 km away)");
+    expect(line).not.toContain("Bellevue and Vicinity");
+    expect(line.match(/East Puget Sound Lowlands/g)).toHaveLength(1);
+    expect(otherZonesLine([zones[2]])).toBeNull();
+    expect(otherZonesLine(undefined)).toBeNull();
   });
 });

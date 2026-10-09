@@ -145,9 +145,11 @@ export function extremeItems(x: AddressExtremes | null | undefined): Array<{ key
 }
 
 /** Where an event belongs, in words: "Your zone: Bellevue and Vicinity", "Nearby zone: Seattle and Vicinity", or null for a county row. Never colour alone. */
-export function tierLabel(event: Pick<AreaEvent, "tier" | "zoneName">): string | null {
+export function tierLabel(event: Pick<AreaEvent, "tier" | "zoneName"> & { area?: { code: string } }, currentCode?: string | null): string | null {
   if (event.tier !== "your zone" && event.tier !== "nearby zone") return null;
   const name = zoneLabel(event.zoneName ?? null);
+  // An event filed under an earlier number for the address's place: say so, so "your zone" never shows two different names.
+  if (event.tier === "your zone" && currentCode && event.area && event.area.code !== currentCode) return name ? `Your zone, filed then as ${name}` : "Your zone, filed under an earlier number";
   const head = event.tier === "your zone" ? "Your zone" : "Nearby zone";
   return name ? `${head}: ${name}` : head;
 }
@@ -172,6 +174,36 @@ export function zonesLine(zones: readonly AreaZoneInfo[] | undefined): string | 
     .filter(([label]) => !yours.includes(label))
     .map(([label, km]) => `${label} (${km < 1 ? "under 1" : Math.round(km)} km away)`);
   return [yours.length ? `Your zone: ${yours.join(", ")}.` : "", near.length ? `Also counted, within ${NEARBY_ZONE_KM} km: ${near.join(", ")}.` : ""].filter(Boolean).join(" ") || null;
+}
+
+/**
+ * The ONE zone to call "your zone": of the zones whose outline holds the address, the one NWS used most recently (the latest validTo;
+ * a tie goes to the higher code). Older numbers for the same place are retired outlines and are told under "More".
+ */
+export function currentZone(zones: readonly AreaZoneInfo[] | undefined): AreaZoneInfo | null {
+  const yours = (zones ?? []).filter((z) => z.tier === "your zone");
+  if (yours.length === 0) return null;
+  return [...yours].sort((a, b) => (b.validTo ?? "").localeCompare(a.validTo ?? "") || (a.code < b.code ? 1 : -1))[0];
+}
+
+/** The rest of the zone names the count covers: earlier names for the address's place, then nearby zones. Null when there are none. */
+export function otherZonesLine(zones: readonly AreaZoneInfo[] | undefined): string | null {
+  const now = currentZone(zones);
+  if (!zones || !now) return zones && zones.length ? zonesLine(zones) : null;
+  const nowLabel = zoneLabel(now.name) ?? now.code;
+  const earlier = [...new Set(zones.filter((z) => z.tier === "your zone" && z.code !== now.code).map((z) => zoneLabel(z.name) ?? z.code))].filter((label) => label !== nowLabel);
+  const near = new Map<string, number>();
+  for (const z of zones.filter((x) => x.tier === "nearby zone")) {
+    const label = zoneLabel(z.name) ?? z.code;
+    if (label === nowLabel || earlier.includes(label)) continue;
+    near.set(label, Math.min(near.get(label) ?? Infinity, z.distanceKm));
+  }
+  const nearText = [...near].map(([label, km]) => `${label} (${km < 1 ? "under 1" : Math.round(km)} km away)`);
+  const parts = [
+    earlier.length ? `Earlier names or numbers NWS used for the same place, counted too: ${earlier.join(", ")}.` : "",
+    nearText.length ? `Nearby zones within ${NEARBY_ZONE_KM} km, counted and marked “nearby”: ${nearText.join(", ")}.` : "",
+  ].filter(Boolean);
+  return parts.length ? parts.join(" ") : null;
 }
 
 /** "Seattle And Vicinity" -> "Seattle and Vicinity": the NWS zone name in sentence-friendly case. */
