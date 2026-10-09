@@ -5,10 +5,12 @@
  *   1. It must cite at least one source (no citation: dropped).
  *   2. Every cited id must exist in the context we built (a made-up id: dropped).
  *   3. Every number in the sentence must appear in a cited source (an unsupported number: dropped). Numbers written as words
- *      (two to twenty, thirty to ninety, hundred, thousand, million, dozen) count too. "one" alone is left alone ("one of the
- *      reports"), but "twenty-one" is read as 21.
+ *      (two to twenty, thirty to ninety, hundred, thousand, million, billion, dozen, and their plurals) count too. "one" alone is
+ *      left alone ("one of the reports"), but "twenty-one" is read as 21. A percentage must be a percentage in the source ("10%"
+ *      is not backed by "10 km"), and a multiplier ("doubled", "twice", "half") must be the source's own word.
  *   4. Anything in quotation marks must appear word for word in a cited source (a changed quote: dropped).
- *   5. No overclaims: "we predict", "will flood", "you are safe", "guaranteed", "no chance of flooding".
+ *   5. No overclaims: "we predict", "will flood", "will never flood", "won't flood", "you are safe", "not at risk", "nothing to
+ *      worry about", "guaranteed", "no chance of flooding". These hold everywhere, not only outside our coverage.
  *   6. Plain text only: no links, tags or line breaks, and a sensible length.
  *   7. Outside the states we have indexed (a source with the id "coverage" exists), the ONLY allowed statement about whether floods
  *      or tornadoes were reported is the coverage source's own: "we have not indexed X, so we cannot say". "No floods", "no
@@ -31,7 +33,10 @@ export const MAX_CITES_PER_SENTENCE = 5;
 const UNITS: Record<string, number> = {
   two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13,
   fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20, thirty: 30, forty: 40,
-  fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90, hundred: 100, thousand: 1000, million: 1_000_000, dozen: 12,
+  fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90, hundred: 100, thousand: 1000, million: 1_000_000,
+  billion: 1_000_000_000, dozen: 12,
+  // "Hundreds of floods" is a number too: it needs a source that says 100, which keeps vague magnitudes out.
+  hundreds: 100, thousands: 1000, millions: 1_000_000, billions: 1_000_000_000, dozens: 12,
 };
 const TENS = ["twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
 const SMALL = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
@@ -55,6 +60,16 @@ export function numbersIn(text: string): number[] {
 
 const sameNumber = (a: number, b: number) => Math.abs(a - b) < 1e-9;
 
+const PERCENT = /(\d+(?:\.\d+)?)\s*(?:%|percent\b|per\s+cent\b)/gi;
+
+/** The values written as percentages ("12%", "12 percent"). */
+export function percentagesIn(text: string): number[] {
+  return [...text.matchAll(PERCENT)].map((match) => Number(match[1]));
+}
+
+/** Words that state a ratio without a digit. Each must be the source's own word, since nothing in the source can back it otherwise. */
+const MULTIPLIER = /\b(doubl\w*|tripl\w*|quadrupl\w*|twice|thrice|halv\w*|half)\b/gi;
+
 // ---------------------------------------------------------------- quotes
 
 const QUOTE = /[“"]([^”"]{6,}?)[”"]/g;
@@ -77,14 +92,25 @@ export function quotesIn(text: string): string[] {
 
 // ---------------------------------------------------------------- overclaims
 
+/** What a sentence must not say will (or will not) happen to a place: flooding, a tornado or a hit. */
+const HAZARD_VERB = String.raw`(?:flood|be\s+flooded|see\s+(?:a\s+|any\s+)?(?:flood\w*|tornado\w*)|be\s+hit|hit\s+(?:your|this|the)|strike|touch\s+down)`;
+
 const OVERCLAIMS: Array<[RegExp, string]> = [
   [/\b(we|i)\s+(predict|forecast|expect|project)\b/i, "we predict"],
   [/\bour\s+(prediction|forecast|projection|model\s+(predicts|forecasts|expects))\b/i, "our forecast"],
-  [/\bwill\s+(definitely\s+|certainly\s+|surely\s+)?(flood|be\s+flooded|be\s+hit|hit\s+your|strike|touch\s+down)\b/i, "will flood"],
+  // "will flood", "will never flood", "will not flood", "will likely be hit", "won't flood": any statement of what will happen.
+  [new RegExp(String.raw`\b(?:will|won'?t|shall)\s+(?:\w+\s+){0,2}?${HAZARD_VERB}\b`, "i"), "will flood"],
+  [new RegExp(String.raw`\b(?:likely|unlikely|certain|sure|bound|expected)\s+to\s+${HAZARD_VERB}\b`, "i"), "will flood"],
+  [new RegExp(String.raw`\b(?:can(?:not|'t)|could\s*n(?:o|')t|could\s+never|can\s+never|may\s+never|might\s+never)\s+${HAZARD_VERB}\b`, "i"), "cannot flood"],
   [/\b(going\s+to|gonna)\s+(flood|be\s+flooded)\b/i, "going to flood"],
   [/\bguarantee[sd]?\b/i, "guarantee"],
   [/\b(is|are|was|were|will\s+be|remains?|stays?|you're|it's)\s+(totally\s+|completely\s+|perfectly\s+|entirely\s+)?(safe|in\s+no\s+danger)\b/i, "you are safe"],
   [/\b(no|zero)\s+(chance|risk|danger)\s+(of|from)\s+(flooding|a\s+flood|flood|tornadoes|a\s+tornado|heat)\b/i, "no chance of"],
+  [/\b(?:not|never|isn'?t|aren'?t)\s+(?:\w+\s+){0,2}?(?:at\s+risk|in\s+danger|vulnerable|exposed)\b/i, "not at risk"],
+  [/\b(?:is|are|you'?re|it'?s|be|remains?|stays?)\s+(?:\w+\s+){0,2}?(?:safe|immune|protected|shielded)\s+from\b/i, "you are safe"],
+  [/\b(?:nothing|no\s+need|no\s+reason)\s+to\s+(?:worry|fear|be\s+concerned)\b/i, "nothing to worry about"],
+  [/\bdo(?:es)?\s*n(?:o|')t\s+(?:need|have)\s+to\s+worry\b|\bdon'?t\s+worry\b/i, "nothing to worry about"],
+  [/\b(?:do(?:es)?\s*n(?:o|')t|never)\s+need\s+(?:\w+\s+){0,2}?insurance\b|\bno\s+need\s+for\s+(?:\w+\s+){0,2}?insurance\b/i, "no need for insurance"],
 ];
 
 // ---------------------------------------------------------------- coverage gaps (no index for this state)
@@ -103,10 +129,14 @@ const ALL_CLEAR: RegExp[] = [
   /\b(no|zero|never|without)\s+(?:\w+\s+){0,2}(history|incidents?|events?|damage|problems?|trouble)\b/i,
   /\b(no|zero|none|never|nothing|neither|without|not\s+(?:any|a\s+single|once|ever)|free\s+of|clear\s+of|spared|untouched|unaffected|safe\s+from|hasn'?t|haven'?t|wasn'?t|weren'?t|didn'?t|has\s+not|have\s+not|was\s+not|were\s+not|did\s+not)\b[^.!?]{0,60}\b(flood\w*|tornado\w*|twister\w*)/i,
   /\b(flood\w*|tornado\w*|twister\w*)\b[^.!?]{0,60}\b(none|never|nothing|zero|absent|no\s+record|not\s+(?:been\s+)?(?:reported|recorded|found|seen|hit|struck|touched)|hasn'?t|haven'?t|wasn'?t|weren'?t|didn'?t|no\s+(?:reports?|events?|tracks?|damage))/i,
+  // Rarity is a claim about the record too: "Denver rarely floods", "tornadoes are uncommon here".
+  /\b(rare(?:ly)?|seldom|uncommon|infrequent\w*|unusual)\b[^.!?]{0,60}\b(flood\w*|tornado\w*|twister\w*)/i,
+  /\b(flood\w*|tornado\w*|twister\w*)\b[^.!?]{0,60}\b(rare(?:ly)?|seldom|uncommon|infrequent\w*|unusual)\b/i,
+  /\b(?:has|have|had)\s+been\s+(?:\w+\s+)?(quiet|calm|spared|lucky|fortunate)\b/i,
 ];
 
 /** Talk about the past: reports, records, things that happened. */
-const ABOUT_THE_PAST = /\b(report(?:s|ed)?|record(?:s|ed)?|histor\w*|past|previous\w*|before|ever|since|years?|struck|hit|touched|occurr\w*|happen\w*|events?|tracks?|damage[ds]?)\b/i;
+const ABOUT_THE_PAST = /\b(report(?:s|ed)?|record(?:s|ed)?|histor\w*|past|previous\w*|before|ever|since|years?|decades?|seen|struck|hit|touched|occurr\w*|happen\w*|events?|tracks?|damage[ds]?)\b/i;
 
 /** The coverage source's own words: we have not indexed the place, so we cannot say. */
 const COVERAGE_STATEMENT = /(?=[\s\S]*\bcannot\s+say\b)(?=[\s\S]*\b(?:not\s+indexed|small\s+development\s+sample)\b)/i;
@@ -120,7 +150,8 @@ export function coverageViolation(text: string, cites: readonly string[]): strin
   // The statement's own "not indexed" and "cannot say" are removed before the all-clear check, so it can stand but cannot carry a denial.
   const checked = (statement ? text.replace(/\b(?:have|has|had)?\s*not\s+indexed\b/gi, " ").replace(/\bcannot\s+say\b/gi, " ") : text).replace(OFFICIAL_DENIAL, " ");
   if (ALL_CLEAR.some((pattern) => pattern.test(checked))) return "false all-clear outside our coverage";
-  if (!statement && HAZARD.test(checked) && ABOUT_THE_PAST.test(checked)) return "past events outside our coverage";
+  // The hazard is looked for before official denials are removed: "this area has seen no flood risk in decades" is about the past.
+  if (!statement && HAZARD.test(text) && ABOUT_THE_PAST.test(checked)) return "past events outside our coverage";
   return null;
 }
 
@@ -156,18 +187,27 @@ export function verifySentence(raw: unknown, sources: ReadonlyMap<string, AiSour
   for (const value of numbersIn(text)) {
     if (!supported.some((have) => sameNumber(have, value))) return fail("unsupported_number", String(value));
   }
+  const percentages = percentagesIn(evidence);
+  for (const value of percentagesIn(text)) {
+    if (!percentages.some((have) => sameNumber(have, value))) return fail("unsupported_number", `${value}%`);
+  }
+  for (const match of text.matchAll(MULTIPLIER)) {
+    if (!new RegExp(`\\b${match[1]}\\b`, "i").test(evidence)) return fail("unsupported_number", match[1].toLowerCase());
+  }
 
   const haystack = squash(evidence);
   for (const quote of quotesIn(text)) {
     if (!haystack.includes(squash(quote))) return fail("unsupported_quote", quote.slice(0, 60));
   }
 
+  // Curly apostrophes read as straight ones, so "won’t flood" is caught like "won't flood".
+  const plain = text.replace(/[‘’]/g, "'");
   for (const [pattern, label] of OVERCLAIMS) {
-    if (pattern.test(text)) return fail("overclaim", label);
+    if (pattern.test(plain)) return fail("overclaim", label);
   }
 
   if (sources.has(COVERAGE_ID)) {
-    const violation = coverageViolation(text, cites);
+    const violation = coverageViolation(plain, cites);
     if (violation) return fail("overclaim", violation);
   }
 

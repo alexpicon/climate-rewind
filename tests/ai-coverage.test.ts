@@ -201,3 +201,15 @@ describe.each([
     expect(body.message).not.toMatch(NEVER);
   });
 });
+
+describe("rarity and quiet are all-clears outside our coverage too", () => {
+  it.each([
+    ["Denver rarely floods.", []],
+    ["Tornadoes are rare in this part of Colorado.", []],
+    ["This area has seen no flood risk in decades.", []],
+    ["We have not indexed Colorado yet, so we cannot say whether floods were reported here, but the area has been quiet.", ["coverage"]],
+    ["We have not indexed Colorado yet, so we cannot say; floods are uncommon here anyway.", ["coverage"]],
+  ])("drops %j", (text, extra) => {
+    expect(coverageViolation(text, ["coverage", ...extra])).not.toBeNull();
+  });
+});

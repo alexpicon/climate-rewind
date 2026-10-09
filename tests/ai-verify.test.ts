@@ -142,3 +142,61 @@ describe("verifySentences", () => {
     expect(verifySentences(null, SOURCES)).toEqual({ kept: [], dropped: [] });
   });
 });
+
+describe("overclaims that hold in every state, not only outside our coverage", () => {
+  const dropped = (text: string, cites = ["flood-outlook"]) => verifySentence(sentence(text, cites), SOURCES);
+  const reason = (text: string, cites?: string[]) => {
+    const result = dropped(text, cites);
+    return result.ok ? null : result.dropped.reason;
+  };
+
+  it.each([
+    "This street will never flood.",
+    "This address will not flood.",
+    "This street will likely flood on Day 3.",
+    "This address won’t flood.",
+    "This street won't see a flood.",
+    "This area is unlikely to flood.",
+    "Flooding cannot flood this address.",
+    "This street can't flood.",
+    "Your home is not at risk of flooding.",
+    "This address is not currently at risk.",
+    "You'll be safe from flooding here.",
+    "This address is protected from floods.",
+    "There is nothing to worry about from floods here.",
+    "You do not need flood insurance here.",
+    "Don't worry about the rain.",
+  ])("drops %j", (text) => {
+    expect(reason(text)).toBe("overclaim");
+  });
+
+  it.each([
+    "The Weather Prediction Center shows no risk area at this address for Day 1.",
+    "Day 3 (Sat Oct 10) is rated Slight risk by the Weather Prediction Center.",
+    "The Flood Watch will remain in effect on Day 2.",
+    "On days rated Slight, a flood was reported within 10 km on 10 of 118 days, a count of past days, not a chance for tomorrow.",
+  ])("keeps %j", (text) => {
+    const cites = text.includes("118") ? ["flood-record"] : ["flood-outlook"];
+    expect(dropped(text, cites).ok).toBe(true);
+  });
+});
+
+describe("numbers that are present but mean something else", () => {
+  const check = (text: string, cites: string[]) => verifySentence(sentence(text, cites), SOURCES);
+
+  it("a percentage must be a percentage in the source, not another number that happens to match", () => {
+    const result = check("There is a 10% chance of a flood here.", ["flood-record"]);
+    expect(result.ok ? null : result.dropped).toEqual(expect.objectContaining({ reason: "unsupported_number", detail: "10%" }));
+    expect(check("A flood was reported on 8.5% of the days rated Slight.", ["flood-record"]).ok).toBe(true);
+  });
+
+  it("plural number words and billion are numbers", () => {
+    expect(numbersIn("hundreds of floods, dozens of tornadoes, $3 billion")).toEqual(expect.arrayContaining([100, 12, 3, 1_000_000_000]));
+    expect(check("Hundreds of floods were reported within 10 km.", ["flood-record"]).ok).toBe(false);
+  });
+
+  it("a multiplier must be the source's own word", () => {
+    const result = check("Flooding here doubled on days rated Slight.", ["flood-record"]);
+    expect(result.ok ? null : result.dropped).toEqual(expect.objectContaining({ reason: "unsupported_number", detail: "doubled" }));
+  });
+});
