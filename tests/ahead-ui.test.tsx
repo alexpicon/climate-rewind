@@ -314,7 +314,7 @@ describe("the product name lives in one constant", () => {
 
   it("is what the landing prints", () => {
     const html = renderToStaticMarkup(<Landing input="" onInput={noop} onSubmit={noop} lookingUp={false} error={null} onHow={noop} detectiveRan={false} />);
-    expect(html).toContain(`<p class="eyebrow">${APP_NAME}</p>`);
+    expect(html).toMatch(new RegExp(`<p class="eyebrow brand-eyebrow"><svg[^>]*aria-hidden="true"[\\s\\S]*?</svg>${APP_NAME}</p>`));
   });
 });
 

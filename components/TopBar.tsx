@@ -2,6 +2,7 @@
 
 import type { FormEvent, ReactNode } from "react";
 import { APP_NAME } from "@/lib/brand";
+import { BrandMark } from "./BrandMark";
 import { TOP_LABEL, TOP_SHORT, TOP_TAB_VIEW, topTabOf, viewUrl, VISIBLE_TOP_TABS, type Tab, type TopTab } from "@/lib/ui/tabs";
 
 const TAB_ICON: Record<TopTab, ReactNode> = {
@@ -53,10 +54,7 @@ export function TopBar({ input, onInput, onSubmit, matched, lookingUp, tab, addr
   return (
     <header id="bar">
       <a className="brand" href="/" aria-label={`${APP_NAME}, home`}>
-        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" focusable="false">
-          <path d="M15 2.5c4.6 6 8.2 10 8.2 14.4A8.2 8.2 0 0 1 6.8 16.9C6.8 12.5 10.4 8.5 15 2.5Z" fill="none" stroke="#FFB45A" strokeWidth="2.2" strokeLinejoin="round" />
-          <path d="M11 18.2a4.4 4.4 0 0 0 3.8 3.4" fill="none" stroke="#FFB45A" strokeWidth="2.2" strokeLinecap="round" />
-        </svg>
+        <BrandMark />
         <span>{APP_NAME}</span>
       </a>
 

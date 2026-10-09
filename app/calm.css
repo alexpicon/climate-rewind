@@ -894,3 +894,7 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 @media (prefers-reduced-motion: reduce){.sp-pause{display:none}}
 /* A phone is one continuous page: sections take only the room they need. */
 @media (max-width:700px){#landing .chunk{min-height:0;display:block;padding:28px 0}#landing .chunk-hero{padding-top:16px}}
+
+/* the brand mark beside the name */
+.lbar-name{display:inline-flex;align-items:center;gap:8px}
+.brand-eyebrow{display:inline-flex;align-items:center;gap:8px}

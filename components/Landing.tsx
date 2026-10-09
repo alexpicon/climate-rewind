@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Chunk, LandingChunks } from "./landing/LandingChunks";
 import { LandingSearchBar } from "./landing/LandingSearchBar";
+import { BrandMark } from "./BrandMark";
 import type { AiJob } from "@/lib/ai-jobs";
 import { describeJobs } from "@/lib/ai-jobs";
 import { APP_NAME } from "@/lib/brand";
@@ -107,7 +108,7 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
       <div className="landing-inner">
         <TrackReel />
         <Chunk id="ch-start" label="Start" className="chunk-hero">
-        <p className="eyebrow">{APP_NAME}</p>
+        <p className="eyebrow brand-eyebrow"><BrandMark size={22} />{APP_NAME}</p>
         <h1 id="landing-h">What the weather did to your street.</h1>
         <p className="landing-for">For anyone renting, buying or living somewhere the climate is changing.</p>
         <p className="landing-sub">
