@@ -297,3 +297,24 @@ describe("a sample card on the landing page", () => {
     for (const sample of SAMPLE_ADDRESSES) expect(VISIBLE_TABS).toContain(sample.tab);
   });
 });
+
+describe("live alerts in force", () => {
+  const at = (iso: string) => Date.parse(iso);
+  const alert = (ends: string | null) => ({ id: ends ?? "open", ends });
+
+  it("drops an alert whose stated end has passed and keeps one still running", async () => {
+    const { activeAlerts } = await import("@/lib/ui/alerts");
+    const alerts = [alert("2026-10-11T07:00:00-05:00"), alert("2026-10-08T07:00:00-05:00")];
+    expect(activeAlerts(alerts, at("2026-10-09T12:00:00Z")).map((a) => a.ends)).toEqual(["2026-10-11T07:00:00-05:00"]);
+  });
+
+  it("keeps an alert with no end, or an end it cannot read (never hides a real alert)", async () => {
+    const { activeAlerts } = await import("@/lib/ui/alerts");
+    expect(activeAlerts([alert(null), alert("soon")], at("2030-01-01T00:00:00Z"))).toHaveLength(2);
+  });
+
+  it("an alert ending exactly now is over", async () => {
+    const { activeAlerts } = await import("@/lib/ui/alerts");
+    expect(activeAlerts([alert("2026-10-09T12:00:00Z")], at("2026-10-09T12:00:00Z"))).toEqual([]);
+  });
+});

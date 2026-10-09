@@ -97,7 +97,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
   }, [reduced]);
 
   const data = lookup.status === "ready" ? lookup.data : null;
-  const live = useLive(data ? { lat: data.address.lat, lon: data.address.lon } : null, data?.live ?? null, lookup.status === "loading" || Boolean(data?.pending?.includes("live")));
+  const live = useLive(data?.address.lat ?? null, data?.address.lon ?? null, data?.live ?? null, lookup.status === "loading" || Boolean(data?.pending?.includes("live")));
 
   const runLookup = useCallback(async (address: string, nextTab: Tab, push: boolean, nightId: string | null = null, wants3d = false) => {
     const id = ++requestId.current;

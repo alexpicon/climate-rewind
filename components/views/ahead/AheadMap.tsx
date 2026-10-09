@@ -7,6 +7,7 @@ import type { AlertZone } from "@/lib/alert-zone";
 import { LEVEL_ORDER, type OutlookAreas, type OutlookKind, type OutlookLevel } from "@/lib/outlook-areas";
 import { ERO_LABEL, type OutlookPayload } from "@/lib/outlook-types";
 import type { LookupPayload } from "@/lib/types";
+import { activeAlerts } from "@/lib/ui/alerts";
 
 /** Marginal to High, one calm ramp. Text names every level in the key, so color is never the only signal. */
 export const LEVEL_COLOR: Record<OutlookLevel, string> = { MRGL: "#6BD08A", SLGT: "#FFE066", ENH: "#FFA94D", MDT: "#FF6B57", HIGH: "#FF4FD8" };
@@ -57,7 +58,7 @@ export function AheadMap({ data, outlook }: { data: LookupPayload; outlook: Outl
   }, []);
 
   // A live alert with no polygon (a Flood Watch is issued for zones): draw the zone that holds the address, labelled as the zone.
-  const alerts = data.live?.alerts ?? [];
+  const alerts = useMemo(() => activeAlerts(data.live?.alerts ?? [], Date.now()), [data.live]);
   const bare = alerts.some((a) => !a.polygon);
   useEffect(() => {
     if (!bare) {

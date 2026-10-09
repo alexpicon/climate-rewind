@@ -15,6 +15,14 @@ export function parseMotion(raw: string | null): StormMotion | null {
   return m ? { from: Number(m[1]), knots: Number(m[2]), lat: Number(m[3]), lon: Number(m[4]) } : null;
 }
 
+/** The alerts still in force at `nowMs`: one whose stated end has passed is no longer shown, red or otherwise. No end: in force. */
+export function activeAlerts<T extends Pick<LiveAlert, "ends">>(alerts: readonly T[], nowMs: number): T[] {
+  return alerts.filter((alert) => {
+    const ends = alert.ends ? Date.parse(alert.ends) : Number.NaN;
+    return Number.isNaN(ends) || ends > nowMs;
+  });
+}
+
 export type AlertLevel = "warn" | "watch";
 
 /** Warnings are the red level; watches, advisories and statements are the amber level. */
