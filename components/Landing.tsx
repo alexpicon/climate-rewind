@@ -5,6 +5,7 @@ import type { AiJob } from "@/lib/ai-jobs";
 import { describeJobs } from "@/lib/ai-jobs";
 import { APP_NAME } from "@/lib/brand";
 import { landingLead } from "@/lib/ui/detective-copy";
+import { featureSample, LANDING_FEATURES, type FeatureIcon } from "@/lib/ui/landing-features";
 import { chooseSample, SAMPLE_ADDRESSES, viewUrl, type SampleAddress } from "@/lib/ui/tabs";
 import { TrackReel } from "./landing/TrackReel";
 
@@ -23,7 +24,25 @@ interface Props {
   onSample?: (sample: SampleAddress) => void;
 }
 
-/** First screen: who it is for, four sample addresses to start with (one click each), then a search box for your own. */
+/** One small line icon per feature tile. */
+const ICON_PATHS: Record<FeatureIcon, string> = {
+  clock: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm0 4v5l3.5 2",
+  radar: "M12 12 19 5M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5",
+  tornado: "M4 5h16M6 9h12M8 13h8M10 17h5M12 21h2",
+  calendar: "M4 6h16v14H4zM4 10h16M8 3v5M16 3v5",
+  heat: "M10 13.5V5a2 2 0 1 1 4 0v8.5a4 4 0 1 1-4 0zM12 9v6",
+  trend: "M4 18l6-6 4 4 6-8M15 8h5v5",
+};
+
+function FeatureGlyph({ icon }: { icon: FeatureIcon }) {
+  return (
+    <svg className="feat-ic" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d={ICON_PATHS[icon]} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/** First screen: who it is for, four sample addresses to start with (one click each), a search box for your own, then what it shows. */
 export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, detectiveRan, aiJobs = [], onSample }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const ai = landingLead(detectiveRan);
@@ -42,8 +61,9 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
         <h1 id="landing-h">What the weather did to your street.</h1>
         <p className="landing-for">For anyone renting, buying or living somewhere the climate is changing.</p>
         <p className="landing-sub">
-          See what the National Weather Service recorded near an address, and what it expects in the next 72 hours. Anything that is not
-          real data is tagged SAMPLE.
+          See what the National Weather Service recorded at an address since 2000, from floods and tornadoes to heat, wind, ice and
+          lightning, replayed on the map with real radar, and what it expects in the next 72 hours. Anything that is not real data is
+          tagged SAMPLE.
         </p>
 
         <h2 className="h3 landing-samples-h" id="start-here">
@@ -108,6 +128,33 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
           </p>
         ) : null}
 
+        <h2 className="h3 landing-samples-h" id="features-h">
+          What you’ll see
+        </h2>
+        <ul className="features" aria-labelledby="features-h">
+          {LANDING_FEATURES.map((feature) => {
+            const sample = featureSample(feature);
+            return (
+              <li key={feature.id} className="feature">
+                <FeatureGlyph icon={feature.icon} />
+                <h3 className="feat-t">{feature.title}</h3>
+                <p className="feat-b">{feature.body}</p>
+                {sample ? (
+                  <button
+                    type="button"
+                    className="feat-go"
+                    disabled={lookingUp}
+                    onClick={() => chooseSample(sample, { fill: onInput, run: onSample, focusInput: () => inputRef.current?.focus() })}
+                  >
+                    See it: {sample.label}
+                  </button>
+                ) : null}
+              </li>
+            );
+          })}
+        </ul>
+
+        <h2 className="h3 landing-samples-h">What the AI does here</h2>
         <p className="landing-ai">
           <b>{ai.lead}</b> {ai.body}{" "}
           <a
@@ -121,8 +168,6 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
             How it works
           </a>
         </p>
-
-        <h2 className="h3 landing-samples-h">What the AI does here</h2>
         <ul className="ai-jobs">
           {jobs.map((job) => (
             <li key={job.id}>
@@ -137,7 +182,10 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
             The Nashville storm replay includes a correction demo with hand-made placements. They are labelled <span className="tag sample">Sample</span> everywhere they appear.
           </p>
         )}
-        <p className="fine landing-fine">Shows NWS reports we could place near you, not every flood. We make no forecast of our own: the outlooks are the National Weather Service’s, and the AI only explains them.</p>
+        <p className="fine landing-fine">
+          These are the records the National Weather Service filed and the reports we could place near you: not every storm, and not every flood.
+          We make no forecast of our own: the outlooks are the National Weather Service’s, and the AI only explains them.
+        </p>
       </div>
     </main>
   );

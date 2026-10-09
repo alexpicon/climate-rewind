@@ -671,3 +671,18 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .ar-counts li::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--c)}
 .ar-counts b{color:var(--ink);font-variant-numeric:tabular-nums}
 .ar-notable{min-height:1.45em;margin:4px 0;font-size:15px;line-height:1.45;color:var(--ink)}
+
+/* ---------- landing: what you'll see ---------- */
+.features{list-style:none;margin:0 0 8px;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+/* Solid enough that the tornado reel behind never runs through the text. */
+.feature{display:flex;flex-direction:column;gap:6px;padding:16px 18px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--glass)}
+.feat-ic{color:var(--accent)}
+.feat-t{margin:2px 0 0;font-family:var(--serif);font-weight:400;font-size:21px;line-height:1.15;letter-spacing:-.01em}
+.feat-b{margin:0;font-size:15px;line-height:1.45;color:var(--muted)}
+.feat-go{align-self:flex-start;margin-top:auto;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);background:rgba(255,255,255,.06);font-size:14px;font-weight:600;color:var(--ink)}
+.feat-go:hover,.feat-go:focus-visible{border-color:var(--accent);background:rgba(255,180,90,.12)}
+@media (max-width:720px){.features{grid-template-columns:1fr}}
+@media (prefers-reduced-motion: no-preference){
+  .feature{transition:border-color .25s,background .25s}
+  .feature:hover{border-color:rgba(255,180,90,.45)}
+}
