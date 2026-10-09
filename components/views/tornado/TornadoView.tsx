@@ -21,6 +21,8 @@ interface Props {
   data: LookupPayload;
   reduced: boolean;
   firstView: boolean;
+  /** Arrived from a sample card: skip the intro card and start playing (reduced motion keeps the end state). */
+  autoplay?: boolean;
   onSeen: () => void;
   /** The optional 3D map view (terrain and buildings). */
   view3d: boolean;
@@ -32,14 +34,14 @@ export function TornadoView(props: Props) {
   return <TornadoPlayer {...props} />;
 }
 
-function TornadoPlayer({ data, reduced, firstView, onSeen, view3d, onView3d }: Props) {
+function TornadoPlayer({ data, reduced, firstView, autoplay = false, onSeen, view3d, onView3d }: Props) {
   const api = useMapApi();
   const say = useAnnounce();
   const timeline = useMemo(() => buildTimeline(data.tornadoes), [data.tornadoes]);
   const damage = useMemo(() => data.damage ?? [], [data.damage]);
   const origin = useMemo<[number, number]>(() => [data.address.lat, data.address.lon], [data.address.lat, data.address.lon]);
   const closest = useMemo(() => closestTornado(data.tornadoes)!, [data.tornadoes]);
-  const [card, setCard] = useState(firstView && !reduced);
+  const [card, setCard] = useState(firstView && !reduced && !autoplay);
   const [sceneVersion, setSceneVersion] = useState(0);
   const sceneRef = useRef<TornadoScene | null>(null);
   // The scene is built once; the 3D switch reaches it through setView3d.
@@ -51,6 +53,12 @@ function TornadoPlayer({ data, reduced, firstView, onSeen, view3d, onView3d }: P
   const playback = usePlayback({ durationMs: timeline.totalMs, initialP: reduced ? 1 : 0 });
   const { p, playing } = playback;
   const ms = p * timeline.totalMs;
+
+  useEffect(() => {
+    if (autoplay && !reduced) playback.play();
+    // On arrival only: later visits to the tab start from the card or the controls.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const seconds = Math.round(timeline.totalMs / 1000 / playback.speed);
 
   useEffect(() => {

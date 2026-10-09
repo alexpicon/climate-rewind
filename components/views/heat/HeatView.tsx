@@ -24,6 +24,8 @@ interface Props {
   data: LookupPayload;
   reduced: boolean;
   firstView: boolean;
+  /** Arrived from a sample card: skip the intro card and start playing (reduced motion keeps the end state). */
+  autoplay?: boolean;
   onSeen: () => void;
 }
 
@@ -97,7 +99,7 @@ function HeatAddressOnly({ data }: { data: LookupPayload }) {
   return <HeatPanel data={data} regional={null} />;
 }
 
-function HeatRegional({ data, reduced, firstView, grid }: Props & { grid: HeatGrid }) {
+function HeatRegional({ data, reduced, firstView, autoplay = false, grid }: Props & { grid: HeatGrid }) {
   const api = useMapApi();
   const say = useAnnounce();
   const heat = data.heat!;
@@ -105,13 +107,19 @@ function HeatRegional({ data, reduced, firstView, grid }: Props & { grid: HeatGr
   const summary = useMemo(() => summarizeGrid(grid), [grid]);
   const origin = useMemo<[number, number]>(() => [data.address.lat, data.address.lon], [data.address.lat, data.address.lon]);
   const peakDay = Math.max(0, week.findIndex((d) => d.date === heat.hottest.date));
-  const [card, setCard] = useState(firstView && !reduced);
+  const [card, setCard] = useState(firstView && !reduced && !autoplay);
   const [sceneVersion, setSceneVersion] = useState(0);
   const sceneRef = useRef<HeatScene | null>(null);
 
   const playback = usePlayback({ durationMs: HEAT_MS, initialP: reduced ? peakDay / 6 : 0 });
   const { p } = playback;
   const last = week.length - 1;
+
+  useEffect(() => {
+    if (autoplay && !reduced) playback.play();
+    // On arrival only: later visits to the tab start from the card or the controls.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const x = p * last;
   const day = Math.min(last, Math.round(x));
   const d0 = Math.min(last, Math.floor(x));

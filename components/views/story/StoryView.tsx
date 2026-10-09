@@ -26,7 +26,7 @@ type Selection = { id: string; from: "story" | "timeline" } | null;
  * "Your area's story": the AI's cited account of the area's biggest events, what they did, a timeline of the events since 2000 with
  * the National Weather Service's own words one click away, and, for a quiet address, the closer-to-home facts. Every address gets one.
  */
-export function StoryView({ data }: { data: LookupPayload }) {
+export function StoryView({ data, openEvent = null }: { data: LookupPayload; openEvent?: string | null }) {
   const area = data.areaEvents ?? null;
   // With area events the map view frames your zone itself (StoryMap); without them it just rests on the address.
   useRestOnAddress(data.address.lat, data.address.lon, 9, !area);
@@ -95,6 +95,19 @@ export function StoryView({ data }: { data: LookupPayload }) {
     setSelection(null);
     opener.current?.focus();
   };
+  // Arrived from a sample card that names one record: open it once. The timer lets the page put focus on the heading first,
+  // so the card's own focus (and its scroll into view) comes last.
+  const opened = useRef(false);
+  useEffect(() => {
+    if (opened.current || !openEvent || !byId.has(openEvent)) return;
+    const timer = setTimeout(() => {
+      opened.current = true;
+      select(openEvent, "timeline");
+    }, 0);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openEvent, byId]);
+
   // Bring a freshly opened card into view and put the reading position on it.
   useEffect(() => {
     if (selection) cardRef.current?.focus({ preventScroll: false });

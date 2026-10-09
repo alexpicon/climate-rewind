@@ -5,7 +5,7 @@ import type { AiJob } from "@/lib/ai-jobs";
 import { describeJobs } from "@/lib/ai-jobs";
 import { APP_NAME } from "@/lib/brand";
 import { landingLead } from "@/lib/ui/detective-copy";
-import { chooseSample, SAMPLE_ADDRESSES, viewUrl } from "@/lib/ui/tabs";
+import { chooseSample, SAMPLE_ADDRESSES, viewUrl, type SampleAddress } from "@/lib/ui/tabs";
 
 interface Props {
   input: string;
@@ -18,8 +18,8 @@ interface Props {
   detectiveRan: boolean;
   /** The AI jobs, listed under the search. */
   aiJobs?: AiJob[];
-  /** A sample card was chosen: look that address up now (one click). Absent: the card only fills the box. */
-  onSample?: (address: string) => void;
+  /** A sample card was chosen: look that address up now and open the view its hook is about (one click). Absent: the card only fills the box. */
+  onSample?: (sample: SampleAddress) => void;
 }
 
 /** First screen: who it is for, four sample addresses to start with (one click each), then a search box for your own. */
@@ -54,7 +54,7 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
                 type="button"
                 className="sample-btn"
                 disabled={lookingUp}
-                onClick={() => chooseSample(sample.address, { fill: onInput, run: onSample, focusInput: () => inputRef.current?.focus() })}
+                onClick={() => chooseSample(sample, { fill: onInput, run: onSample, focusInput: () => inputRef.current?.focus() })}
               >
                 <b>{sample.label}</b>
                 <span className="hook">{sample.hook}</span>

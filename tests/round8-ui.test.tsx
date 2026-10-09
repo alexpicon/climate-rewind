@@ -31,7 +31,7 @@ describe("landing: who it is for, then four samples to start with, then your own
     expect(html).toContain("Hurricane Helene’s floods");
     expect(html).toContain("Flash floods on downtown streets");
     expect(html).toContain("The 2021 heat dome, 115°F feels-like");
-    expect(html).toContain("A tornado 0.65 km away");
+    expect(html).toContain("An EF3 tornado passed 0.65 km away");
     expect(html).toContain("Or your own address");
     expect(html).toMatch(/first look takes a few seconds/);
   });

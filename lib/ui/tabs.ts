@@ -90,23 +90,38 @@ export function viewUrl(address: string | null, tab: Tab, night: string | null =
   return query ? `/?${query}` : "/";
 }
 
+/** A sample card on the landing page: one click lands on the view its hook is about, already playing. */
+export interface SampleAddress {
+  label: string;
+  detail: string;
+  /** The one line under the name. It names what the card opens on. */
+  hook: string;
+  address: string;
+  /** The view the hook is about. */
+  tab: Tab;
+  /** For the story: the NWS record the hook names, opened on arrival. */
+  event?: string;
+}
+
 /**
- * The four samples on the landing page. `hook` is the one line under the name; each is checked against the data we ship
- * (tests/samples.test.ts reads the snapshots, and the numbers below come from a lookup of that address).
+ * The four samples on the landing page. Each hook is checked against the data we ship (tests/samples.test.ts reads the snapshots,
+ * and the numbers below come from a lookup of that address): Nashville's EF3 of Mar 3, 2020 passed 0.65 km away; San Antonio's
+ * busiest flood night has 7 reports downtown; Buncombe County's Sept 27, 2024 flash flood (SE-1218197) is Helene's; Bellevue's
+ * hottest feels-like day is 114.7 F on June 28, 2021.
  */
-export const SAMPLE_ADDRESSES = [
-  { label: "Nashville, TN", detail: "Downtown, near the Cumberland River", hook: "A tornado 0.65 km away, and the alerts live right now", address: "100 James Robertson Pkwy, Nashville, TN" },
-  { label: "San Antonio, TX", detail: "Downtown, Military Plaza", hook: "Flash floods on downtown streets", address: "100 Military Plaza, San Antonio, TX" },
-  { label: "Asheville, NC", detail: "River Arts District", hook: "Hurricane Helene’s floods", address: "350 Riverside Dr, Asheville, NC" },
-  { label: "Bellevue, WA", detail: "Downtown, City Hall area", hook: "The 2021 heat dome, 115°F feels-like", address: "450 110th Ave NE, Bellevue, WA" },
-] as const;
+export const SAMPLE_ADDRESSES: readonly SampleAddress[] = [
+  { label: "Nashville, TN", detail: "Downtown, near the Cumberland River", hook: "An EF3 tornado passed 0.65 km away", address: "100 James Robertson Pkwy, Nashville, TN", tab: "tornado" },
+  { label: "San Antonio, TX", detail: "Downtown, Military Plaza", hook: "Flash floods on downtown streets", address: "100 Military Plaza, San Antonio, TX", tab: "storm" },
+  { label: "Asheville, NC", detail: "River Arts District", hook: "Hurricane Helene’s floods", address: "350 Riverside Dr, Asheville, NC", tab: "story", event: "SE-1218197" },
+  { label: "Bellevue, WA", detail: "Downtown, City Hall area", hook: "The 2021 heat dome, 115°F feels-like", address: "450 110th Ave NE, Bellevue, WA", tab: "heat" },
+];
 
 /**
  * What a sample card does when chosen. Fill the box first (so the address is visible, and in the URL once looked up). With a runner,
  * look it up in the same click; without one, leave the keyboard in the box so Enter finishes the job.
  */
-export function chooseSample(address: string, handlers: { fill: (address: string) => void; run?: (address: string) => void; focusInput: () => void }): void {
-  handlers.fill(address);
-  if (handlers.run) handlers.run(address);
+export function chooseSample(sample: SampleAddress, handlers: { fill: (address: string) => void; run?: (sample: SampleAddress) => void; focusInput: () => void }): void {
+  handlers.fill(sample.address);
+  if (handlers.run) handlers.run(sample);
   else handlers.focusInput();
 }

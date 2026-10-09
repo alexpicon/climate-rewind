@@ -27,6 +27,8 @@ interface Props {
   data: LookupPayload;
   reduced: boolean;
   firstView: boolean;
+  /** Arrived from a sample card: skip the intro card and start playing (reduced motion keeps the end state). */
+  autoplay?: boolean;
   onSeen: () => void;
   /** Switch to another storm night from the picker. */
   onNight: (id: string) => Promise<ReplayResult>;
@@ -42,7 +44,7 @@ export function StormView(props: Props) {
 
 type Card = "intro" | "next" | null;
 
-function StormReplayView({ data, reduced, firstView, onSeen, onNight, view3d, onView3d }: Props) {
+function StormReplayView({ data, reduced, firstView, autoplay = false, onSeen, onNight, view3d, onView3d }: Props) {
   const api = useMapApi();
   const say = useAnnounce();
   const origin = useMemo<[number, number]>(() => [data.address.lat, data.address.lon], [data.address.lat, data.address.lon]);
@@ -50,7 +52,7 @@ function StormReplayView({ data, reduced, firstView, onSeen, onNight, view3d, on
   const model = useMemo(() => buildStormModel(replay, data.address, data.floods.reports), [replay, data.address, data.floods.reports]);
 
   const [stage, setStage] = useState<1 | 2>(1);
-  const [card, setCard] = useState<Card>(firstView && !reduced ? "intro" : null);
+  const [card, setCard] = useState<Card>(firstView && !reduced && !autoplay ? "intro" : null);
   const [radar, setRadar] = useState<RadarStatus>({ total: model.frameCount, ready: 0, missing: 0, buffered: 0, playable: false, done: false, gaveUp: false });
   const [sceneVersion, setSceneVersion] = useState(0);
   const sceneRef = useRef<StormScene | null>(null);
@@ -87,6 +89,12 @@ function StormReplayView({ data, reduced, firstView, onSeen, onNight, view3d, on
   });
   const { p, playing } = playback;
   useEffect(() => setPlayhead(p), [p]);
+
+  useEffect(() => {
+    // On arrival only. The clock waits for the first radar frames by itself (stalled), so playing now is safe.
+    if (autoplay && !reduced) playback.play();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // The map scene lives as long as this view does.
   useEffect(() => {

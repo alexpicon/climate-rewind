@@ -272,17 +272,28 @@ describe("heat model", () => {
 });
 
 describe("a sample card on the landing page", () => {
-  it("looks the address up in the same click (it fills the box, then runs)", async () => {
+  it("looks the address up in the same click (it fills the box, then runs) and hands over where to land", async () => {
     const { chooseSample, SAMPLE_ADDRESSES } = await import("@/lib/ui/tabs");
     const events: string[] = [];
-    chooseSample(SAMPLE_ADDRESSES[0].address, { fill: (a) => events.push(`fill ${a}`), run: (a) => events.push(`run ${a}`), focusInput: () => events.push("focus") });
-    expect(events).toEqual(["fill 100 James Robertson Pkwy, Nashville, TN", "run 100 James Robertson Pkwy, Nashville, TN"]);
+    chooseSample(SAMPLE_ADDRESSES[0], { fill: (a) => events.push(`fill ${a}`), run: (s) => events.push(`run ${s.address} on ${s.tab}`), focusInput: () => events.push("focus") });
+    expect(events).toEqual(["fill 100 James Robertson Pkwy, Nashville, TN", "run 100 James Robertson Pkwy, Nashville, TN on tornado"]);
   });
 
   it("without a runner it only fills the box and leaves the keyboard there", async () => {
     const { chooseSample } = await import("@/lib/ui/tabs");
     const events: string[] = [];
-    chooseSample("1 Main St", { fill: (a) => events.push(`fill ${a}`), focusInput: () => events.push("focus") });
+    chooseSample({ label: "X", detail: "", hook: "", address: "1 Main St", tab: "ahead" }, { fill: (a) => events.push(`fill ${a}`), focusInput: () => events.push("focus") });
     expect(events).toEqual(["fill 1 Main St", "focus"]);
+  });
+
+  it("each card lands on the view its hook is about, and only the story names a record", async () => {
+    const { SAMPLE_ADDRESSES, VISIBLE_TABS } = await import("@/lib/ui/tabs");
+    expect(SAMPLE_ADDRESSES.map((s) => [s.label, s.tab, s.event ?? null])).toEqual([
+      ["Nashville, TN", "tornado", null],
+      ["San Antonio, TX", "storm", null],
+      ["Asheville, NC", "story", "SE-1218197"],
+      ["Bellevue, WA", "heat", null],
+    ]);
+    for (const sample of SAMPLE_ADDRESSES) expect(VISIBLE_TABS).toContain(sample.tab);
   });
 });

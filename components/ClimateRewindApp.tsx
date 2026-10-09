@@ -9,7 +9,7 @@ import { tidyAddress } from "@/lib/ui/text";
 import { prefetchAhead } from "@/lib/ui/ahead-client";
 import { applyPart } from "@/lib/lookup-parts";
 import { requestReplay, requestStagedLookup, type ReplayResult } from "@/lib/ui/lookup-client";
-import { DEFAULT_TAB, parseTab, viewUrl, TAB_LABEL, type Tab } from "@/lib/ui/tabs";
+import { DEFAULT_TAB, parseTab, viewUrl, TAB_LABEL, type SampleAddress, type Tab } from "@/lib/ui/tabs";
 import { AnnounceProvider } from "./announce";
 import { NavProvider, type AppNav } from "./nav-context";
 import { Landing } from "./Landing";
@@ -80,6 +80,8 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
   const [view3d, setView3d] = useState(initialView3d);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [seenTabs, setSeenTabs] = useState<ReadonlySet<Tab>>(new Set());
+  // Where a sample card asked to land: that view starts playing (or opens its record) on arrival. Any other navigation clears it.
+  const [arrival, setArrival] = useState<{ tab: Tab; event: string | null } | null>(null);
   const reduced = useReducedMotion();
   const requestId = useRef(0);
   const drawerReturnFocus = useRef<HTMLElement | null>(null);
@@ -140,6 +142,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
       const nextTab = parseTab(params.get("tab"));
       const nextNight = params.get("night")?.trim() || null;
       setTab(nextTab);
+      setArrival(null);
       setView3d(params.get("view") === "3d");
       if (!address) {
         requestId.current += 1;
@@ -158,13 +161,16 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
   const submit = () => {
     const address = input.trim();
     if (!address) return;
+    setArrival(null);
     void runLookup(address, tab, true, null, view3d);
   };
 
-  /** A sample card on the landing page: fill the box and look it up in the same click. */
-  const pickSample = (address: string) => {
-    setInput(address);
-    void runLookup(address, tab, true, null, view3d);
+  /** A sample card on the landing page: look it up in the same click and land on the view its hook is about. */
+  const pickSample = (sample: SampleAddress) => {
+    setInput(sample.address);
+    setTab(sample.tab);
+    setArrival({ tab: sample.tab, event: sample.event ?? null });
+    void runLookup(sample.address, sample.tab, true, null, false);
   };
 
   /** Swap in another storm night without looking the address up again. null goes back to the busiest night. */
@@ -185,6 +191,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
   const changeTab = (next: Tab) => {
     if (next === "how") pendingFocus.current = true;
     setTab(next);
+    setArrival(null);
     setDrawerOpen(false);
     window.history.pushState(null, "", viewUrl(data?.address.input ?? null, next, night, view3d));
     document.title = pageTitle(TAB_LABEL[next]);
@@ -202,6 +209,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
     openAddress: (address, nextTab) => {
       setInput(address);
       setTab(nextTab);
+      setArrival(null);
       void runLookup(address, nextTab, true, null, view3d);
     },
   };
@@ -216,6 +224,8 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
     setDrawerOpen(false);
     document.getElementById("live")?.focus();
   };
+
+  const autoplay = arrival?.tab === tab;
 
   if (lookup.status === "idle" || (lookup.status === "error" && !data)) {
     if (tab === "how") {
@@ -296,10 +306,10 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
           {data && lookup.status === "ready" ? (
             <>
               {tab === "ahead" ? <AheadView key={data.address.matched} data={data} /> : null}
-              {tab === "story" ? <StoryView key={data.address.matched} data={data} /> : null}
-              {tab === "storm" ? <StormView key={`${data.address.matched}|${data.stormReplay?.nightId ?? ""}`} data={data} reduced={reduced} firstView={!seenTabs.has("storm")} onSeen={() => markSeen("storm")} onNight={(id) => switchNight(id, true)} view3d={view3d} onView3d={toggle3d} /> : null}
-              {tab === "heat" ? <HeatView key={data.address.matched} data={data} reduced={reduced} firstView={!seenTabs.has("heat")} onSeen={() => markSeen("heat")} /> : null}
-              {tab === "tornado" ? <TornadoView key={data.address.matched} data={data} reduced={reduced} firstView={!seenTabs.has("tornado")} onSeen={() => markSeen("tornado")} view3d={view3d} onView3d={toggle3d} /> : null}
+              {tab === "story" ? <StoryView key={data.address.matched} data={data} openEvent={autoplay ? (arrival?.event ?? null) : null} /> : null}
+              {tab === "storm" ? <StormView key={`${data.address.matched}|${data.stormReplay?.nightId ?? ""}`} data={data} reduced={reduced} firstView={!seenTabs.has("storm")} autoplay={autoplay} onSeen={() => markSeen("storm")} onNight={(id) => switchNight(id, true)} view3d={view3d} onView3d={toggle3d} /> : null}
+              {tab === "heat" ? <HeatView key={data.address.matched} data={data} reduced={reduced} firstView={!seenTabs.has("heat")} autoplay={autoplay} onSeen={() => markSeen("heat")} /> : null}
+              {tab === "tornado" ? <TornadoView key={data.address.matched} data={data} reduced={reduced} firstView={!seenTabs.has("tornado")} autoplay={autoplay} onSeen={() => markSeen("tornado")} view3d={view3d} onView3d={toggle3d} /> : null}
               {OPTIONAL_TAB_IDS.map((id) => {
                 const View = OPTIONAL_VIEWS[id];
                 return tab === id && View ? <View key={`${id}|${data.address.matched}`} data={data} /> : null;
