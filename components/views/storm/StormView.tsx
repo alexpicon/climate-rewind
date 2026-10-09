@@ -22,11 +22,10 @@ import { StormEmpty } from "./StormEmpty";
 import { StormLegend } from "./StormLegend";
 import { notRunSentence, StormPanel } from "./StormPanel";
 import { StormScene, type RadarStatus } from "./storm-scene";
-import { LightningLayer } from "./lightning-layer";
 import { satelliteName } from "@/lib/ui/lightning";
 import { useLightning } from "./use-lightning";
-import { SignatureLayer } from "./signature-layer";
 import { useSignatures } from "./use-signatures";
+import { useStormOverlays } from "./use-storm-overlays";
 
 interface Props {
   data: LookupPayload;
@@ -134,44 +133,11 @@ function StormReplayView({ data, reduced, firstView, autoplay = false, onSeen, o
     sceneRef.current?.setView3d(view3d);
   }, [view3d, sceneVersion]);
 
-  // The satellite's lightning for this night, when we have it: above the radar, on the replay's clock, only during the replay itself.
+  // The satellite's lightning (sample nights) and the radar's own hail and rotation flags (any address), on the replay's clock.
   const lightning = useLightning(data.address.lat, data.address.lon, replay.nightId);
-  const lightningRef = useRef<LightningLayer | null>(null);
-  const [lightningVersion, setLightningVersion] = useState(0);
-  useEffect(() => {
-    if (!api || !lightning) return;
-    const layer = new LightningLayer(api, lightning, reduced);
-    layer.enter();
-    lightningRef.current = layer;
-    setLightningVersion((v) => v + 1);
-    return () => {
-      layer.destroy();
-      lightningRef.current = null;
-    };
-  }, [api, lightning, reduced]);
-  useEffect(() => {
-    lightningRef.current?.update(model.startMs + p * (model.endMs - model.startMs), stage === 1);
-  }, [p, stage, model, lightningVersion]);
-
-  // What the radars' own algorithms flagged that night (hail and rotation), for any address.
   const signatures = useSignatures(replay.bounds, replay.startUtc, replay.endUtc);
-  const signatureRef = useRef<SignatureLayer | null>(null);
-  const [signatureVersion, setSignatureVersion] = useState(0);
   const flagged = signatures.status === "ready" ? signatures.signatures : null;
-  useEffect(() => {
-    if (!api || !flagged) return;
-    const layer = new SignatureLayer(api, flagged, reduced);
-    layer.enter();
-    signatureRef.current = layer;
-    setSignatureVersion((v) => v + 1);
-    return () => {
-      layer.destroy();
-      signatureRef.current = null;
-    };
-  }, [api, flagged, reduced]);
-  useEffect(() => {
-    signatureRef.current?.update(model.startMs + p * (model.endMs - model.startMs), stage === 1);
-  }, [p, stage, model, signatureVersion]);
+  useStormOverlays(api, lightning, flagged, reduced, model.startMs + p * (model.endMs - model.startMs), stage === 1);
 
   useEffect(() => {
     sceneRef.current?.setStage(stage);
