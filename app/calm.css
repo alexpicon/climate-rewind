@@ -794,9 +794,11 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .chunk-dots button.on{background:var(--accent);border-color:var(--accent)}
 .chunk-dots button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 @media (min-width:1200px){#landing{padding-left:max(48px,6vw)}#landing .landing-inner{margin:0}}
-@media (max-width:700px){.chunk-dots{display:none}.chunk{padding:40px 0}}
+@media (max-width:700px){.chunk-dots{display:none}.chunk{padding:40px 0}#landing{scroll-snap-type:none}}
 @media (prefers-reduced-motion: no-preference){
-  #landing.chunks-on .chunk:not(.chunk-hero) .chunk-body{opacity:0;transform:translateY(40px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  #landing.chunks-on .chunk:not(.chunk-hero):not(.chunk-tall) .chunk-body{opacity:0;transform:translateY(40px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  #landing.chunks-on .chunk-tall .rv{opacity:0;transform:translateY(32px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  #landing.chunks-on .chunk-tall .rv.rv-in{opacity:1;transform:none}
   #landing.chunks-on .chunk.in .chunk-body{opacity:1;transform:none}
   #landing.chunks-on .chunk-hero:not(.in) .chunk-body{opacity:0;transform:translateY(-30px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
   #landing.chunks-on .chunk-hero.in .chunk-body{opacity:1;transform:none;transition:opacity .6s var(--ease),transform .6s var(--ease)}
