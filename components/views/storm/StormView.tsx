@@ -25,6 +25,8 @@ import { StormScene, type RadarStatus } from "./storm-scene";
 import { LightningLayer } from "./lightning-layer";
 import { satelliteName } from "@/lib/ui/lightning";
 import { useLightning } from "./use-lightning";
+import { SignatureLayer } from "./signature-layer";
+import { useSignatures } from "./use-signatures";
 
 interface Props {
   data: LookupPayload;
@@ -151,6 +153,26 @@ function StormReplayView({ data, reduced, firstView, autoplay = false, onSeen, o
     lightningRef.current?.update(model.startMs + p * (model.endMs - model.startMs), stage === 1);
   }, [p, stage, model, lightningVersion]);
 
+  // What the radars' own algorithms flagged that night (hail and rotation), for any address.
+  const signatures = useSignatures(replay.bounds, replay.startUtc, replay.endUtc);
+  const signatureRef = useRef<SignatureLayer | null>(null);
+  const [signatureVersion, setSignatureVersion] = useState(0);
+  const flagged = signatures.status === "ready" ? signatures.signatures : null;
+  useEffect(() => {
+    if (!api || !flagged) return;
+    const layer = new SignatureLayer(api, flagged, reduced);
+    layer.enter();
+    signatureRef.current = layer;
+    setSignatureVersion((v) => v + 1);
+    return () => {
+      layer.destroy();
+      signatureRef.current = null;
+    };
+  }, [api, flagged, reduced]);
+  useEffect(() => {
+    signatureRef.current?.update(model.startMs + p * (model.endMs - model.startMs), stage === 1);
+  }, [p, stage, model, signatureVersion]);
+
   useEffect(() => {
     sceneRef.current?.setStage(stage);
   }, [stage, sceneVersion]);
@@ -241,6 +263,7 @@ function StormReplayView({ data, reduced, firstView, autoplay = false, onSeen, o
         onNight={onNight}
         rainOf={(report) => sceneRef.current?.rainFor(report) ?? null}
         lightning={lightning}
+        signatures={signatures}
       />
 
       <ModeBadge
@@ -325,7 +348,7 @@ function StormReplayView({ data, reduced, firstView, autoplay = false, onSeen, o
 
       {stage === 2 && current ? <ReportCard model={model} correction={model.corrections[current.index]} progress={current} origin={origin} /> : null}
 
-      {!card ? <StormLegend stage={stage} canCorrect={model.canCorrect} lightning={lightning ? satelliteName(lightning.source) : null} /> : null}
+      {!card ? <StormLegend stage={stage} canCorrect={model.canCorrect} lightning={lightning ? satelliteName(lightning.source) : null} radarFlags={flagged !== null && (flagged.hail.length > 0 || flagged.vortex.length > 0)} /> : null}
 
       {stage === 1 || model.canCorrect ? (
       <Dock

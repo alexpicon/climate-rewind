@@ -2,8 +2,8 @@ import { Legend } from "@/components/panel/Legend";
 
 const RAMP = "linear-gradient(90deg,#04e9e7,#019ff4,#0300f4,#02fd02,#01c501,#008e00,#fdf802,#e5bc00,#fd9500,#fd0000,#d40000,#bc0000,#f800fd,#9854c6)";
 
-/** `lightning` names the satellite when its flashes are on the map (else null). */
-export function StormLegend({ stage, canCorrect, lightning = null }: { stage: 1 | 2; canCorrect: boolean; lightning?: string | null }) {
+/** `lightning` names the satellite when its flashes are on the map (else null); `radarFlags` is true when hail or rotation flags are. */
+export function StormLegend({ stage, canCorrect, lightning = null, radarFlags = false }: { stage: 1 | 2; canCorrect: boolean; lightning?: string | null; radarFlags?: boolean }) {
   if (stage === 2 && !canCorrect) {
     return (
       <Legend>
@@ -53,6 +53,18 @@ export function StormLegend({ stage, canCorrect, lightning = null }: { stage: 1 
           <i className="sw-bolt" />
           <span><b className="lgb">Lightning flash</b> seen from space by {lightning}, at its minute. Bigger = more light.</span>
         </div>
+      ) : null}
+      {radarFlags ? (
+        <>
+          <div className="lg-row">
+            <i className="sw-hail" />
+            <span><b className="lgb">Radar hail detection</b>, bigger for bigger estimated hail</span>
+          </div>
+          <div className="lg-row">
+            <i className="sw-tvs" />
+            <span><b className="lgb">Radar rotation flag</b> (tornado vortex signature), not a confirmed tornado</span>
+          </div>
+        </>
       ) : null}
       <div className="lg-row lg-note">
         <span>Colors = rain at that minute. Pins = flood reports people filed. Floods follow the heavy bands.</span>

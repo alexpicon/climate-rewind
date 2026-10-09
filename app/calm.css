@@ -650,3 +650,8 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .bolt-ic{flex:none;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:rgba(185,198,255,.16);color:#DCE3FF;transform:translateY(4px)}
 .bolt-line .more{margin-top:6px}
 .sw-bolt{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#fff 0 30%,rgba(185,198,255,.7) 45%,rgba(185,198,255,0) 72%)}
+.sig-ic{flex:none;width:14px;height:14px;margin:0 4px;border-radius:50%;border:2.5px solid #FF5A6E;box-shadow:12px 0 0 -2px #9FE7FF;transform:translateY(2px)}
+.sig-line > p{padding-right:10px}
+.sig-note{margin:4px 0 0;font-size:14px}
+.sw-hail{width:12px;height:12px;border-radius:50%;background:#9FE7FF;border:1px solid #fff}
+.sw-tvs{width:14px;height:14px;border-radius:50%;border:2.5px solid #FF5A6E;background:radial-gradient(circle,#FF5A6E 0 22%,transparent 26%)}
