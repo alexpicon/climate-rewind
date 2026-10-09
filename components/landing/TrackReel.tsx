@@ -4,12 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { usePlayback } from "@/components/use-playback";
 import { useReducedMotion } from "@/components/use-reduced-motion";
 import { fitLower48, type Fit } from "@/lib/ui/albers";
+import { drawStateOutlines, type StateShapes } from "@/lib/ui/state-outlines";
 import { decodeReel, HOLD_MS, reelFrame, REEL_MS, type Reel, type Track, type TrackFile } from "@/lib/ui/track-reel";
-
-type Ring = Array<[number, number]>;
-interface StateShapes {
-  features: Array<{ geometry: { type: "Polygon"; coordinates: Ring[] } | { type: "MultiPolygon"; coordinates: Ring[][] } }>;
-}
 
 /** Wide screens put the text on the left and the map on the right; narrower ones centre the map under the text. */
 const WIDE = "(min-width: 1200px)";
@@ -23,28 +19,6 @@ const SETTLED_STYLE = {
 function styleOf(track: Track) {
   if (track.strong) return SETTLED_STYLE.strong;
   return track.ef === "EF2" ? SETTLED_STYLE.ef2 : SETTLED_STYLE.weak;
-}
-
-function drawStates(ctx: CanvasRenderingContext2D, fit: Fit, shapes: StateShapes | null) {
-  if (!shapes) return;
-  ctx.beginPath();
-  for (const feature of shapes.features) {
-    const polygons = feature.geometry.type === "Polygon" ? [feature.geometry.coordinates] : feature.geometry.coordinates;
-    for (const polygon of polygons) {
-      for (const ring of polygon) {
-        // Alaska and Hawaii fall outside the lower-48 frame; skip any ring whose first point does.
-        if (ring[0][1] > 50 || ring[0][1] < 24) continue;
-        ring.forEach(([lon, lat], i) => {
-          const [x, y] = fit.toScreen(lat, lon);
-          if (i === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        });
-      }
-    }
-  }
-  ctx.strokeStyle = "rgba(186,194,209,0.16)";
-  ctx.lineWidth = 1;
-  ctx.stroke();
 }
 
 function drawSettled(ctx: CanvasRenderingContext2D, fit: Fit, tracks: readonly Track[], from: number, to: number) {
@@ -171,7 +145,7 @@ export function TrackReel() {
     if (key !== drawn.current.key || frame.settled < drawn.current.settled) {
       base.setTransform(size.dpr, 0, 0, size.dpr, 0, 0);
       base.clearRect(0, 0, size.width, size.height);
-      drawStates(base, fit, shapes);
+      drawStateOutlines(base, fit, shapes);
       drawn.current = { settled: 0, key };
     }
     drawSettled(base, fit, reel.tracks, drawn.current.settled, frame.settled);

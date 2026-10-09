@@ -686,3 +686,26 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
   .feature{transition:border-color .25s,background .25s}
   .feature:hover{border-color:rgba(255,180,90,.45)}
 }
+
+/* ---------- landing: moments the records caught ---------- */
+.record-flash{margin:0 0 14px;border-radius:var(--r-lg,20px);border:1px solid var(--line-2);background:#060A13;overflow:hidden}
+.rf-stage{position:relative;width:100%;background:radial-gradient(80% 90% at 50% 60%,#0d1630 0,#060A13 75%)}
+.rf-stage canvas{position:absolute;left:0;top:0;display:block}
+.rf-hud{position:absolute;left:14px;top:12px;display:flex;flex-direction:column;gap:2px;font-variant-numeric:tabular-nums;pointer-events:none}
+.rf-clock{font-family:var(--serif);font-size:26px;line-height:1.1;color:#DCE3FF}
+.rf-span{font-size:14px;color:var(--muted)}
+.rf-span b{color:var(--ink)}
+.rf-play{position:absolute;right:12px;bottom:12px;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line-2);background:var(--glass);font-size:14px;font-weight:600}
+.rf-play:hover,.rf-play:focus-visible{border-color:#B9C6FF}
+.record-flash figcaption{padding:14px 18px 16px;background:var(--glass)}
+.rf-t{margin:0 0 6px;font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.2}
+.rf-b{margin:0;font-size:15px;line-height:1.5;color:var(--muted)}
+.rf-n{margin:8px 0 0;font-size:13.5px;line-height:1.45;color:var(--faint)}
+.moments{list-style:none;margin:0 0 8px;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.moment{display:flex;flex-direction:column;gap:4px;padding:16px 18px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--glass)}
+.mo-k{margin:0;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.mo-big{margin:2px 0 0;font-family:var(--serif);font-weight:300;font-size:46px;line-height:1;letter-spacing:-.02em;color:var(--ink)}
+.mo-big small{font-family:var(--sans);font-size:15px;font-weight:600;letter-spacing:0;color:var(--muted)}
+.mo-t{margin:4px 0 0;font-size:17px;font-weight:650;line-height:1.3}
+.mo-l{margin:0 0 6px;font-size:14.5px;line-height:1.45;color:var(--muted)}
+@media (max-width:720px){.moments{grid-template-columns:1fr}.rf-clock{font-size:20px}}

@@ -54,3 +54,28 @@ export function fitLower48(width: number, height: number, margin = 0.06, anchor 
     },
   };
 }
+
+/** Fits a lat/lon box (south, north, west, east) into a width by height area with a margin in pixels, centred. */
+export function fitBox(width: number, height: number, box: { south: number; north: number; west: number; east: number }, margin = 12): Fit {
+  const corners = [
+    albers(box.south, box.west),
+    albers(box.south, box.east),
+    albers(box.north, box.west),
+    albers(box.north, box.east),
+    albers(box.north, (box.west + box.east) / 2),
+  ];
+  const minX = Math.min(...corners.map((c) => c[0]));
+  const maxX = Math.max(...corners.map((c) => c[0]));
+  const minY = Math.min(...corners.map((c) => c[1]));
+  const maxY = Math.max(...corners.map((c) => c[1]));
+  const scale = Math.max(0, Math.min((width - 2 * margin) / (maxX - minX), (height - 2 * margin) / (maxY - minY)));
+  const offsetX = (width - (maxX - minX) * scale) / 2;
+  const offsetY = (height - (maxY - minY) * scale) / 2;
+  return {
+    scale,
+    toScreen: (lat, lon) => {
+      const [x, y] = albers(lat, lon);
+      return [offsetX + (x - minX) * scale, offsetY + (maxY - y) * scale];
+    },
+  };
+}

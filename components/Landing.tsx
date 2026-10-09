@@ -6,6 +6,8 @@ import { describeJobs } from "@/lib/ai-jobs";
 import { APP_NAME } from "@/lib/brand";
 import { landingLead } from "@/lib/ui/detective-copy";
 import { featureSample, LANDING_FEATURES, type FeatureIcon } from "@/lib/ui/landing-features";
+import { LANDING_MOMENTS, momentLookup } from "@/lib/ui/landing-moments";
+import { RecordFlash } from "./landing/RecordFlash";
 import { chooseSample, SAMPLE_ADDRESSES, viewUrl, type SampleAddress } from "@/lib/ui/tabs";
 import { TrackReel } from "./landing/TrackReel";
 
@@ -127,6 +129,36 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
             {error}
           </p>
         ) : null}
+
+        <h2 className="h3 landing-samples-h" id="moments-h">
+          Moments the records caught
+        </h2>
+        <RecordFlash />
+        <ul className="moments" aria-labelledby="moments-h">
+          {LANDING_MOMENTS.map((moment) => (
+            <li key={moment.id} className="moment">
+              <p className="mo-k">{moment.kicker}</p>
+              <p className="mo-big" aria-hidden="true">
+                {moment.big} <small>{moment.unit}</small>
+              </p>
+              <h3 className="mo-t">{moment.title}</h3>
+              <p className="mo-l">
+                <span className="sr">
+                  {moment.big} {moment.unit}.{" "}
+                </span>
+                {moment.line}
+              </p>
+              <button
+                type="button"
+                className="feat-go mo-go"
+                disabled={lookingUp}
+                onClick={() => chooseSample(momentLookup(moment), { fill: onInput, run: onSample, focusInput: () => inputRef.current?.focus() })}
+              >
+                {moment.action}
+              </button>
+            </li>
+          ))}
+        </ul>
 
         <h2 className="h3 landing-samples-h" id="features-h">
           What you’ll see
