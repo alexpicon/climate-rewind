@@ -79,7 +79,7 @@ describe("the files that ship in data/samples/ai", () => {
   const read = (name: string) => JSON.parse(readFileSync(path.join(SHIPPED, name), "utf8")) as SampleAiFile;
 
   it("are one per prepared address (the samples and the landing page's moments), for the address on the landing page", () => {
-    expect(files).toEqual(["asheville.json", "bellevue.json", "flushing.json", "fort-myers.json", "lahaina.json", "mayfield.json", "nashville.json", "rolling-fork.json", "san-antonio.json"]);
+    expect(files).toEqual(["asheville.json", "bellevue.json", "flushing.json", "fort-myers.json", "lahaina.json", "mayfield.json", "nashville.json", "portland.json", "rolling-fork.json", "san-antonio.json"]);
     expect(files.map((f) => read(f).address).sort()).toEqual(PREPARED_ADDRESSES.map((s) => s.address).sort());
     for (const f of files) expect(isSampleAiFile(read(f)), f).toBe(true);
   });

@@ -284,7 +284,7 @@ describe("the snapshots that ship in data/samples", () => {
   const read = (name: string) => JSON.parse(readFileSync(path.join(SHIPPED, name), "utf8")) as SampleSnapshot;
 
   it("there is one for each prepared address (the samples and the landing page's moments), and each is well formed", () => {
-    expect(files.sort()).toEqual(["asheville.json", "bellevue.json", "flushing.json", "fort-myers.json", "lahaina.json", "mayfield.json", "nashville.json", "rolling-fork.json", "san-antonio.json"]);
+    expect(files.sort()).toEqual(["asheville.json", "bellevue.json", "flushing.json", "fort-myers.json", "lahaina.json", "mayfield.json", "nashville.json", "portland.json", "rolling-fork.json", "san-antonio.json"]);
     expect(SAMPLE_ADDRESSES).toHaveLength(4);
     for (const file of files) expect(isSnapshot(read(file)), file).toBe(true);
   });

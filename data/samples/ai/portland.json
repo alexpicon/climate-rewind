@@ -1,0 +1,545 @@
+{
+ "slug": "portland",
+ "address": "1221 SW 4th Ave, Portland, OR",
+ "lat": 45.515054567773,
+ "lon": -122.678543697602,
+ "brief": {
+  "generatedAt": "2026-10-09T19:48:39.077Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The National Weather Service had no active alerts for this address when we checked on 2026-10-09 at 19:48 UTC.",
+    "cites": [
+     "alerts"
+    ]
+   },
+   {
+    "text": "No flood report within 5 km of this address is in our records, and the closest one we could place was 9.0 km away, in 2023; that means no report was filed close by, not that nothing happened here.",
+    "cites": [
+     "quiet"
+    ]
+   },
+   {
+    "text": "The most significant event the National Weather Service recorded in this zone was Excessive Heat on Jun 26, 2021, when Portland International recorded highs of 108, 112, and 116 F and 93 deaths were recorded.",
+    "cites": [
+     "SE-961302"
+    ]
+   },
+   {
+    "text": "The Weather Prediction Center's Excessive Rainfall Outlook shows no risk area at this address for Fri Oct 9, Sat Oct 10 or Sun Oct 11.",
+    "cites": [
+     "flood-outlook"
+    ]
+   },
+   {
+    "text": "The Storm Prediction Center shows no tornado risk area at this point for Fri Oct 9 and Sat Oct 10 (under 2%), and no severe-weather risk area for Sun Oct 11.",
+    "cites": [
+     "tornado-outlook"
+    ]
+   },
+   {
+    "text": "NWS HeatRisk is level 0 of 4, little to no risk, for all three days, with forecast feels-like highs of 63 F, 58 F and 64 F.",
+    "cites": [
+     "heatrisk",
+     "heat-forecast"
+    ]
+   },
+   {
+    "text": "Official alerts and outlooks are at weather.gov.",
+    "cites": [
+     "alerts"
+    ]
+   }
+  ],
+  "sources": {
+   "alerts": {
+    "id": "alerts",
+    "kind": "alert",
+    "chip": "Live alerts",
+    "title": "Active National Weather Service alerts",
+    "origin": "api.weather.gov alerts for this address",
+    "href": "https://www.weather.gov/",
+    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 19:48 UTC)."
+   },
+   "quiet": {
+    "id": "quiet",
+    "kind": "history",
+    "chip": "Why quiet",
+    "title": "Why this address's flood record is quiet",
+    "origin": "Our counts of NWS flood reports near this address and across sampled places",
+    "text": "No flood report within 5 km of this address is in our records. The closest flood report we could place was 9.0 km away, in 2023 (METZGER). We measured 25500 random places across the 51 states we have indexed: 71% had no flood report within 5 km, 29% had more than this address and 71% had the same number. A flood report exists only if someone filed one, and this is a count of reports we could place near an address. A quiet record means no report was filed close by. It does not mean nothing happened here, and it does not mean flooding is impossible.",
+    "quote": "Heavy rains around 1 inch in a half hour to an hour resulted in Ash Creek in southwest Portland to over flow. Around 14 homes had varying amounts of flooding.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1103368"
+   },
+   "SE-961302": {
+    "id": "SE-961302",
+    "kind": "event",
+    "chip": "Excessive Heat 2021",
+    "title": "Excessive Heat, Jun 26, 2021",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Excessive Heat on Jun 26, 2021 in Greater Portland Metro Area (forecast zone ORZ006, YOUR zone: the address is inside it). Deaths: 93. Injuries: 0. Recorded damage: $100,000.",
+    "quote": "Record breaking temperatures for 3 days in a row. Portland International recorded high temperatures of 108, 112, and 116 F (breaking its previous all time record of 107), and low temperatures of 70, 73, and 75 F. The Oregon State Police and Oregon Medical Examiner reported 67 deaths in Multnomah County from the heat, but it is suspected this fatality count is closer to 71. There were also reports of roads buckling due to heat. Cooling shelters were opened and many businesses closed and events postponed.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=961302"
+   },
+   "flood-outlook": {
+    "id": "flood-outlook",
+    "kind": "outlook",
+    "chip": "WPC outlook",
+    "title": "WPC Excessive Rainfall Outlook at this address",
+    "origin": "Weather Prediction Center (WPC) Excessive Rainfall Outlook, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Fri Oct 9): no risk area at this address.\nDay 2 (Sat Oct 10): no risk area at this address.\nDay 3 (Sun Oct 11): no risk area at this address.\nA day with no risk area means WPC drew no Marginal-or-higher area over this address. This is the Weather Prediction Center's own outlook, not ours.",
+    "href": "https://www.wpc.ncep.noaa.gov/qpf/excessive_rainfall_outlook_ero.php"
+   },
+   "tornado-outlook": {
+    "id": "tornado-outlook",
+    "kind": "outlook",
+    "chip": "SPC outlook",
+    "title": "SPC tornado outlook at this address",
+    "origin": "Storm Prediction Center (SPC) Day 1 to 3 outlooks, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Fri Oct 9): no tornado risk area at this point (under 2%).\nDay 2 (Sat Oct 10): no tornado risk area at this point (under 2%).\nDay 3 (Sun Oct 11): no severe-weather risk area at this point (Day 3 gives only a combined severe probability, not a tornado one).\nThis is the Storm Prediction Center's own outlook, not ours.",
+    "href": "https://www.spc.noaa.gov/products/outlook/"
+   },
+   "heatrisk": {
+    "id": "heatrisk",
+    "kind": "heat",
+    "chip": "HeatRisk",
+    "title": "NWS HeatRisk at this address",
+    "origin": "NWS HeatRisk (experimental), read at this point from the National Weather Service map service",
+    "text": "Day 1 (Fri Oct 9): level 0 of 4 (Little to no risk).\nDay 2 (Sat Oct 10): level 0 of 4 (Little to no risk).\nDay 3 (Sun Oct 11): level 0 of 4 (Little to no risk).\nHeatRisk runs from level 0 (little to no risk) to level 4 (extreme) and weighs how unusual the heat is for the time of year, how long it lasts and the health risk. It is experimental.",
+    "href": "https://www.wpc.ncep.noaa.gov/heatrisk/"
+   },
+   "heat-forecast": {
+    "id": "heat-forecast",
+    "kind": "heat",
+    "chip": "Feels-like",
+    "title": "Forecast feels-like highs, and where they rank here",
+    "origin": "National Weather Service gridpoint forecast (apparent temperature), ranked against this address's Open-Meteo/ERA5 daily highs since 2000",
+    "text": "Fri Oct 9: forecast feels-like high 63 F.\nSat Oct 10: forecast feels-like high 58 F.\nSun Oct 11: forecast feels-like high 64 F.\nThe forecast and the history come from different methods, so the ranking is a rough guide."
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T19:48:33.172Z"
+  }
+ },
+ "story": {
+  "county": "ORC051",
+  "eventIds": [
+   "SE-677250",
+   "SE-961302",
+   "SE-981003",
+   "SE-1046799",
+   "SE-1136290",
+   "SE-1158557",
+   "SE-1164391",
+   "SE-1204258",
+   "SE-1290018",
+   "SE-1290020"
+  ],
+  "impacts": [
+   {
+    "eventId": "SE-1158557",
+    "tag": "power_outage",
+    "evidence": "widespread and extended power outages"
+   },
+   {
+    "eventId": "SE-1164391",
+    "tag": "travel_disruption",
+    "evidence": "This resulted in travel disruptions, slip and fall injuries"
+   },
+   {
+    "eventId": "SE-1164391",
+    "tag": "power_outage",
+    "evidence": "travel disruptions, slip and fall injuries, and power outages"
+   },
+   {
+    "eventId": "SE-1164391",
+    "tag": "structure_damage",
+    "evidence": "resulting damage to some homes and businesses"
+   },
+   {
+    "eventId": "SE-1164391",
+    "tag": "trees_down",
+    "evidence": "a tree branch fell, due to ice accumulation"
+   }
+  ],
+  "impactLines": [
+   {
+    "tag": "power_outage",
+    "type": "Ice Storm",
+    "eventIds": [
+     "SE-1164391"
+    ],
+    "text": "1 ice storm event: the National Weather Service narrative describes power outages."
+   },
+   {
+    "tag": "structure_damage",
+    "type": "Ice Storm",
+    "eventIds": [
+     "SE-1164391"
+    ],
+    "text": "1 ice storm event: the National Weather Service narrative describes damage to homes or buildings."
+   },
+   {
+    "tag": "travel_disruption",
+    "type": "Ice Storm",
+    "eventIds": [
+     "SE-1164391"
+    ],
+    "text": "1 ice storm event: the National Weather Service narrative describes travel trouble."
+   },
+   {
+    "tag": "trees_down",
+    "type": "Ice Storm",
+    "eventIds": [
+     "SE-1164391"
+    ],
+    "text": "1 ice storm event: the National Weather Service narrative describes trees down."
+   },
+   {
+    "tag": "power_outage",
+    "type": "Winter Storm",
+    "eventIds": [
+     "SE-1158557"
+    ],
+    "text": "1 winter storm event: the National Weather Service narrative describes power outages."
+   }
+  ],
+  "totalsLine": "Across these 10 events the National Weather Service recorded 141 deaths, 16 injuries and $10.4 million in recorded damage.",
+  "droppedImpacts": 2,
+  "generatedAt": "2026-10-09T19:48:45.935Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The most significant event in the record for this area was the Excessive Heat of Jun 26, 2021, when Portland International recorded high temperatures of 108, 112, and 116 F, breaking its previous all time record of 107.",
+    "cites": [
+     "SE-961302"
+    ]
+   },
+   {
+    "text": "That event recorded 93 deaths, and the text notes reports of \"roads buckling due to heat\" as cooling shelters were opened.",
+    "cites": [
+     "SE-961302"
+    ]
+   },
+   {
+    "text": "Earlier, on Jan 1, 2017, Cold/Wind Chill in your zone claimed four lives; the victims were homeless and died of hypothermia from exposure.",
+    "cites": [
+     "SE-677250"
+    ]
+   },
+   {
+    "text": "In January 2024, a Winter Storm brought blizzard-like conditions, at least 500 downed trees in the Portland Metro area, and a peak of 165,000 Portland General Electric customers without power.",
+    "cites": [
+     "SE-1158557"
+    ]
+   },
+   {
+    "text": "Days later, an Ice Storm on Jan 16, 2024 left about one-half of an inch of ice, causing travel disruptions, power outages, and 4 known fatalities.",
+    "cites": [
+     "SE-1164391"
+    ]
+   },
+   {
+    "text": "Heat returned in summer 2022, when the Multnomah County Medical Examiner reported suspected heat deaths and 10 requests for Emergency/Urgent care on the 30th, against a typical summer day of zero to one.",
+    "cites": [
+     "SE-1046799"
+    ]
+   },
+   {
+    "text": "Heat events continued in 2023 and 2025, including Aug 14, 2023, when Multnomah County reported six suspected heat-related deaths, and Aug 10, 2025, when two fatalities were presumed heat related.",
+    "cites": [
+     "SE-1136290",
+     "SE-1290018"
+    ]
+   },
+   {
+    "text": "Across the county and nearby zones, the National Weather Service recorded 229 weather events since 2000, including 35 Heavy Snow, 35 Strong Wind and 16 Heat events.",
+    "cites": [
+     "area-counts"
+    ]
+   }
+  ],
+  "sources": {
+   "SE-961302": {
+    "id": "SE-961302",
+    "kind": "event",
+    "chip": "Excessive Heat 2021",
+    "title": "Excessive Heat, Jun 26, 2021",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Excessive Heat on Jun 26, 2021 in Greater Portland Metro Area (forecast zone ORZ006, YOUR zone: the address is inside it). Deaths: 93. Injuries: 0. Recorded damage: $100,000.",
+    "quote": "Record breaking temperatures for 3 days in a row. Portland International recorded high temperatures of 108, 112, and 116 F (breaking its previous all time record of 107), and low temperatures of 70, 73, and 75 F. The Oregon State Police and Oregon Medical Examiner reported 67 deaths in Multnomah County from the heat, but it is suspected this fatality count is closer to 71. There were also reports of roads buckling due to heat. Cooling shelters were opened and many businesses closed and events postponed.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=961302"
+   },
+   "SE-677250": {
+    "id": "SE-677250",
+    "kind": "event",
+    "chip": "Cold/Wind Chill 2017",
+    "title": "Cold/Wind Chill, Jan 1, 2017",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Cold/Wind Chill on Jan 1, 2017 in Greater Portland Metro Area (forecast zone ORZ006, YOUR zone: the address is inside it). Deaths: 4. Injuries: 0. No damage figure was recorded.",
+    "quote": "Cold temperatures claimed four lives in the Portland area. The victims were homeless and died of hypothermia from exposure to the cold temperatures.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=677250"
+   },
+   "SE-1158557": {
+    "id": "SE-1158557",
+    "kind": "event",
+    "chip": "Winter Storm 2024",
+    "title": "Winter Storm, Jan 12, 2024",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Winter Storm on Jan 12, 2024 in Greater Portland Metro Area (forecast zone ORZ006, YOUR zone: the address is inside it). Deaths: 9. Injuries: 16. Recorded damage: $10,250,000 (about $10.3 million).",
+    "quote": "Blizzard-like conditions were observed at the height of the storm with roughly 1 to 4 inches of a snow/sleet across the Portland and Vancouver metro area and widespread east wind gusts of 35-55 mph. This led to hundreds of downed trees and limbs, resulting in widespread and extended power outages. Multnomah County, the City of Portland, City of Lake Oswego declared a State of Emergency. Portland Parks and Recreation reported 380 downed trees or large branches, The City of Lake Oswego reported more than 100 downed trees. These reports along with trees downed on private property, at least 500 trees were downed in the Portland Metro area. Downed trees and power lines resulted in power outages. Portland General Electric had a peak count of 165,000 customers without power.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1158557"
+   },
+   "SE-1164391": {
+    "id": "SE-1164391",
+    "kind": "event",
+    "chip": "Ice Storm 2024",
+    "title": "Ice Storm, Jan 16, 2024",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Ice Storm on Jan 16, 2024 in Greater Portland Metro Area (forecast zone ORZ006, YOUR zone: the address is inside it). Deaths: 4. Injuries: 0. No damage figure was recorded.",
+    "quote": "About one-half of an inch of ice accumulation was inferred from the Portland ASOS, and across the Greater Portland Metro Area from the 16th to 17th. This resulted in travel disruptions, slip and fall injuries, and power outages. In addition to the ice, persistent freezing temperatures over several days led to frozen/burst water pipes and resulting damage to some homes and businesses. There were 4 known fatalities, 3 of which occurred when a tree branch fell, due to ice accumulation, on a power line which then fell on the car with 4 occupants. Three were electrocuted when they attempted to exit the vehicle. The fourth occupant was an 9 month old who survived.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1164391"
+   },
+   "SE-1046799": {
+    "id": "SE-1046799",
+    "kind": "event",
+    "chip": "Excessive Heat 2022",
+    "title": "Excessive Heat, Jul 25, 2022",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Excessive Heat on Jul 25, 2022 in Greater Portland Metro Area (forecast zone ORZ006, YOUR zone: the address is inside it). Deaths: 12. Injuries: 0. No damage figure was recorded.",
+    "quote": "The Multnomah County Medical Examiner reported suspected deaths associated with the heat wave. One each on July 25th, 26th, 27th; two each on the 28th and 30th, all in Portland. A man drowned on the Sandy River on the 27th while paddle boarding. During the heatwave there were elevated numbers of heat related illnesses. For example on the 30th, Multnomah County reported 10 requests for Emergency/Urgent care. A typical summer day is zero to one. There was a cumulative of 63 heat illness, more than half of a typical summer. In another incident on July 25th, a man drowned while swimming at Henry Hagg Lake in Washington County. Also in Washington County, a dog died from the heat when left in a car. Other suspected heat related deaths occurred July 28th and 29th in Clackamas County.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1046799"
+   },
+   "SE-1136290": {
+    "id": "SE-1136290",
+    "kind": "event",
+    "chip": "Excessive Heat 2023",
+    "title": "Excessive Heat, Aug 14, 2023",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Excessive Heat on Aug 14, 2023 in Greater Portland Metro Area (forecast zone ORZ006, YOUR zone: the address is inside it). Deaths: 5. Injuries: 0. No damage figure was recorded.",
+    "quote": "An extended period of hot weather lead to partner actions being taken and multiple heat related fatalities. High temperatures reached 101 to 108 in Portland between August 13 to 16. Low temperatures only fell to 68 to 73 on those days. Multnomah County reported six suspected heat-related deaths in Portland.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1136290"
+   },
+   "SE-1290018": {
+    "id": "SE-1290018",
+    "kind": "event",
+    "chip": "Excessive Heat 2025",
+    "title": "Excessive Heat, Aug 10, 2025",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Excessive Heat on Aug 10, 2025 in Inner Portland Metro (forecast zone ORZ111, YOUR zone: the address is inside it). Deaths: 2. Injuries: 0. No damage figure was recorded.",
+    "quote": "There were two fatalities presumed heat related of a Male, 59 in the 97233 zip code and a Female, 58 in 97214 zip code. Emergency managers and health officials reported elevated Multnomah County 911 calls due to the heat and higher than normal hospital/urgent care heat related visits.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1290018"
+   },
+   "area-counts": {
+    "id": "area-counts",
+    "kind": "history",
+    "chip": "Area totals",
+    "title": "Weather events recorded in this area",
+    "origin": "NCEI Storm Events, county and forecast-zone rows",
+    "text": "The National Weather Service recorded 229 weather events in Multnomah County (ORC051), the forecast zone the address is in and zones within 15 km of it since 2000. By type: Heavy Snow 35, Strong Wind 35, Heavy Rain 24, High Wind 24, Heat 16, Debris Flow 13, Flood 12, Winter Storm 12, Excessive Heat 10, Winter Weather 10, Thunderstorm Wind 9, Ice Storm 5. These are filed events, not every storm that happened."
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T19:48:33.172Z"
+  }
+ },
+ "ready": {
+  "generatedAt": "2026-10-09T19:48:46.317Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "items": [
+   {
+    "action": "Your area logged record heat in June 2021, with Portland International reaching 112 and 116 F, and 41 days feeling like 100°F or more at your address since 2000. Identify cooling places such as libraries or shopping malls ahead of time.",
+    "why": [
+     {
+      "id": "SE-961302",
+      "label": "Excessive Heat, Jun 26, 2021",
+      "hazard": "heat",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=961302"
+     },
+     {
+      "id": "local-heat",
+      "label": "Hottest day on record, Jun 28, 2021 (feels like 111.9°F)",
+      "hazard": "heat"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "heat-cool-places",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Identify places in your community where you can go to get cool such as libraries and shopping malls or contact your local health department to find cooling options in your area."
+     }
+    ]
+   },
+   {
+    "action": "The July 2024 heat in your area had overnight lows well into the 60s, with little cooling for those without air conditioning. Do not rely on a fan as your primary cooling device, and check on older adults and neighbors.",
+    "why": [
+     {
+      "id": "SE-1204258",
+      "label": "Heat, Jul 5, 2024",
+      "hazard": "heat",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1204258"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "heat-fan",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Do not rely on a fan as your primary cooling device. Fans create air flow and a false sense of comfort, but do not reduce body temperature or prevent heat-related illnesses."
+     },
+     {
+      "id": "heat-check-on",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Check on family members, older adults and neighbors."
+     }
+    ]
+   },
+   {
+    "action": "The January 2024 ice storm in your area left about one-half of an inch of ice, with travel disruptions and power outages. Stay off roads if at all possible, and if trapped in your car, stay inside.",
+    "why": [
+     {
+      "id": "SE-1164391",
+      "label": "Ice Storm, Jan 16, 2024",
+      "hazard": "winter",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1164391"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "winter-roads",
+      "hazard": "winter",
+      "source": "Ready.gov, Winter Weather",
+      "url": "https://www.ready.gov/winter-weather",
+      "text": "Stay off roads if at all possible. If trapped in your car, then stay inside."
+     }
+    ]
+   },
+   {
+    "action": "The January 2024 winter storm brought east wind gusts of 35-55 mph and widespread, extended power outages in your area. If you use a generator, run it only outdoors and away from windows, and keep freezers and refrigerators closed.",
+    "why": [
+     {
+      "id": "SE-1158557",
+      "label": "Winter Storm, Jan 12, 2024",
+      "hazard": "winter",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1158557"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "outage-generator",
+      "hazard": "outage",
+      "source": "Ready.gov, Power Outages",
+      "url": "https://www.ready.gov/power-outages",
+      "text": "Use a generator, but ONLY outdoors and away from windows."
+     },
+     {
+      "id": "outage-food",
+      "hazard": "outage",
+      "source": "Ready.gov, Power Outages",
+      "url": "https://www.ready.gov/power-outages",
+      "text": "Keep freezers and refrigerators closed."
+     }
+    ]
+   },
+   {
+    "action": "A December 2014 high wind event in your area downed several trees, closed roads and killed one person when a tree fell on a moving car. Cut down or trim trees that may be in danger of falling on your home.",
+    "why": [
+     {
+      "id": "SE-553043",
+      "label": "High Wind, Dec 11, 2014",
+      "hazard": "wind",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=553043"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "wind-trees",
+      "hazard": "wind",
+      "source": "Ready.gov, Thunderstorms & Lightning",
+      "url": "https://www.ready.gov/thunderstorms-lightning",
+      "text": "Cut down or trim trees that may be in danger of falling on your home."
+     }
+    ]
+   },
+   {
+    "action": "An EF0 tornado on Jul 1, 2019 passed 5.5 km from your address, uprooting trees and tearing shingles off roofs. Sign up for your community's warning system, and in a tornado warning go to a basement, safe room or interior room away from windows.",
+    "why": [
+     {
+      "id": "SE-835887",
+      "label": "EF0 tornado, Jul 1, 2019",
+      "hazard": "tornado",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=835887"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "tornado-alerts",
+      "hazard": "tornado",
+      "source": "Ready.gov, Tornadoes",
+      "url": "https://www.ready.gov/tornadoes",
+      "text": "Sign up for your community’s warning system. The Emergency Alert System (EAS) and NOAA Weather Radio also provide emergency alerts. If your community has sirens, become familiar with the warning tone."
+     },
+     {
+      "id": "tornado-nws-house",
+      "hazard": "tornado",
+      "source": "National Weather Service, What to do during a tornado",
+      "url": "https://www.weather.gov/safety/tornado-during",
+      "text": "At Your House: If you are in a tornado warning, go to your basement, safe room, or an interior room away from windows. Don't forget pets if time allows."
+     }
+    ]
+   }
+  ],
+  "hazards": [
+   {
+    "id": "flood",
+    "label": "Flooding",
+    "evidence": "24 Heavy Rain and 12 Flood events recorded for Multnomah since 2004 (NCEI Storm Events), latest Dec 3, 2023"
+   },
+   {
+    "id": "tornado",
+    "label": "Tornadoes",
+    "evidence": "2 tornado tracks within 10 km, latest Jul 1, 2019; 3 Tornado events recorded for Multnomah since 2018 (NCEI Storm Events), latest Sep 8, 2019"
+   },
+   {
+    "id": "heat",
+    "label": "Extreme heat",
+    "evidence": "41 days with a feels-like high of 100°F or more in 15 of 26 years (2000 to 2025); hottest 111.9°F on Jun 28, 2021; 16 Heat and 10 Excessive Heat events recorded for Inner Portland Metro since 2002 (NCEI Storm Events), latest Aug 22, 2025"
+   },
+   {
+    "id": "wind",
+    "label": "Damaging wind and storms",
+    "evidence": "35 Strong Wind and 24 High Wind events recorded for West Hills And Chehalem Mountains since 2000 (NCEI Storm Events), latest Feb 24, 2025"
+   },
+   {
+    "id": "winter",
+    "label": "Winter storms and cold",
+    "evidence": "35 Heavy Snow and 12 Winter Storm events recorded for Tualatin Valley since 2000 (NCEI Storm Events), latest Feb 13, 2025"
+   },
+   {
+    "id": "smoke",
+    "label": "Wildfire smoke",
+    "evidence": "1 Wildfire event recorded for Greater Portland Metro Area since 2022 (NCEI Storm Events), latest Sep 9, 2022"
+   }
+  ],
+  "dropped": 0,
+  "notices": [],
+  "precomputed": {
+   "at": "2026-10-09T19:48:33.172Z"
+  }
+ }
+}

@@ -30,6 +30,9 @@ export interface LandingMoment {
 /** The NWS event types of a tropical cyclone's landfall. */
 export const TROPICAL = ["Hurricane (Typhoon)", "Tropical Storm", "Tropical Depression", "Storm Surge/Tide"] as const;
 
+/** The NWS event types of a heat wave. */
+export const HEAT = ["Excessive Heat", "Heat"] as const;
+
 export const LANDING_MOMENTS: readonly LandingMoment[] = [
   {
     id: "mayfield",
@@ -93,6 +96,20 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     event: "SE-1058654",
     replayFrom: 2000,
     replayKinds: TROPICAL,
+    action: "Play the years",
+  },
+  {
+    id: "heat-dome",
+    kicker: "June 26–28, 2021 · Portland, Oregon",
+    big: "93",
+    unit: "deaths",
+    title: "The Pacific Northwest heat dome",
+    line: "Portland International hit 108, 112 and 116°F on three days in a row. Recorded for the zone that holds City Hall.",
+    address: "1221 SW 4th Ave, Portland, OR",
+    tab: "story",
+    event: "SE-961302",
+    replayFrom: 2000,
+    replayKinds: HEAT,
     action: "Play the years",
   },
 ];

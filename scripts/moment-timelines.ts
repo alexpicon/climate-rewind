@@ -29,7 +29,7 @@ register(
 const { loadStateIndex } = await import("../lib/index-store.ts");
 const { buildAreaReplay } = await import("../lib/area-replay.ts");
 const { selectReplayNight } = await import("../lib/lookup.ts");
-const { TROPICAL } = await import("../lib/ui/landing-moments.ts");
+const { HEAT, TROPICAL } = await import("../lib/ui/landing-moments.ts");
 
 const ROOT = process.cwd();
 const OUT = path.join(ROOT, "public", "data", "moments.json");
@@ -99,6 +99,7 @@ const moments = {
   ida: await stormNight("data/lightning/ida-queens/2021-09-02T0200.json", "NY", [40.758019717113, -73.829301134074], "2021-09-02T02:00", 10),
   lahaina: await areaYears(20.872265460535, -156.677377427357, "HI", "HIC009", "SE-1118193", ["Wildfire"], ["wildfire", "wildfires"]),
   ian: await areaYears(26.641921862769, -81.869795800037, "FL", "FLC071", "SE-1058654", TROPICAL, ["tropical storm record", "tropical storm records"]),
+  "heat-dome": await areaYears(45.515054567773, -122.678543697602, "OR", "ORC051", "SE-961302", HEAT, ["heat wave record", "heat wave records"]),
 };
 
 writeFileSync(OUT, JSON.stringify({ built: new Date().toISOString(), moments }));
