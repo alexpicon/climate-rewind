@@ -30,6 +30,8 @@ export interface SampleSnapshot {
    * A null value is a day the archive had no total for. Null part: not captured (or not needed: fewer than 3 flood dates).
    */
   rain: { byDate: Record<string, number | null>; source: string; seeded?: boolean } | null;
+  /** The wettest and windiest days (additive, optional): when present a sample address needs no archive call for them. */
+  extremes?: { wettest: { date: string; inches: number } | null; windiest: { date: string; mph: number; measure: "gust" | "wind" } | null; source: string } | null;
 }
 
 const samplesDir = () => process.env.MEMORIA_SAMPLES_DIR ?? path.join(process.cwd(), "data", "samples");

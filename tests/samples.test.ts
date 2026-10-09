@@ -243,7 +243,8 @@ describe("a lookup of a sample address", () => {
     expect(payload.heat?.worstWeek.start).toBe("2012-06-26");
     expect(payload.floodTrigger).toMatchObject({ status: "ready", triggerIn: 2 });
     expect(payload.notices.heat).toBeUndefined();
-    expect(calls.some((url) => url.includes("archive-api"))).toBe(false);
+    // The only archive call left is the wettest and windiest days (no snapshot part for them in this fixture).
+    expect(calls.some((url) => url.includes("archive-api") && !url.includes("wind_gusts_10m_max"))).toBe(false);
     expect(calls.some((url) => url.includes("hazards.fema.gov"))).toBe(true);
     expect(calls.some((url) => url.includes("api.weather.gov/alerts"))).toBe(true);
     expect(calls.some((url) => url.includes("api.weather.gov/points"))).toBe(true);
@@ -364,6 +365,7 @@ describe("the real /api/lookup route reading the shipped snapshots", () => {
     expect(body.floodTrigger).toMatchObject({ status: "insufficient", floodDays: 1 });
     expect(body.floods.reports).toHaveLength(2);
     expect(body.tornadoes).toEqual([]);
-    expect(urls.some((url) => url.includes("archive-api"))).toBe(false);
+    // Heat and rain come from the snapshot; only the wettest and windiest days are asked of the archive until the snapshot holds them.
+    expect(urls.some((url) => url.includes("archive-api") && !url.includes("wind_gusts_10m_max"))).toBe(false);
   });
 });

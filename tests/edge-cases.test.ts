@@ -21,6 +21,8 @@ interface Place {
 const NASHVILLE: Place = { matched: "100 JAMES ROBERTSON PKWY, NASHVILLE, TN, 37201", lat: 36.168175, lon: -86.777516, state: "TN", city: "NASHVILLE", county: "Davidson County" };
 const WHITE_HOUSE: Place = { matched: "1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500", lat: 38.8977, lon: -77.0365, state: "DC", city: "WASHINGTON", county: "District of Columbia" };
 const DENVER: Place = { matched: "200 E COLFAX AVE, DENVER, CO, 80203", lat: 39.7403, lon: -104.9858, state: "CO", city: "DENVER", county: "Denver County" };
+const SAN_JUAN: Place = { matched: "100 CALLE FORTALEZA, SAN JUAN, PR, 00901", lat: 18.4644, lon: -66.1185, state: "PR", city: "SAN JUAN", county: "San Juan Municipio" };
+const HAGATNA: Place = { matched: "1 W SOLEDAD AVE, HAGATNA, GU, 96910", lat: 13.4745, lon: 144.7504, state: "GU", city: "HAGATNA", county: "Guam" };
 const SPRINGERVILLE: Place = { matched: "101 W MAIN ST, SPRINGERVILLE, AZ, 85938", lat: 34.1342, lon: -109.2869, state: "AZ", city: "SPRINGERVILLE", county: "Apache County" };
 
 const census = (place: Place | null) => ({
@@ -86,8 +88,8 @@ afterEach(() => {
 
 describe("an address in a state we have not indexed", () => {
   it.each([
-    ["1600 Pennsylvania Ave NW, Washington, DC", WHITE_HOUSE],
-    ["200 E Colfax Ave, Denver, CO", DENVER],
+    ["100 Calle Fortaleza, San Juan, PR", SAN_JUAN],
+    ["1 W Soledad Ave, Hagatna, GU", HAGATNA],
   ])("%s: 200, honest 'not yet indexed', nothing invented, live sources still work", async (address, place) => {
     stubServices({ census: () => json(census(place)) });
     const response = await lookup(address);
@@ -210,8 +212,9 @@ describe("the list of indexed states shown to people", () => {
     const { INDEXED_STATE_NAMES } = await import("@/lib/constants");
     const files = readdirSync("data/index").filter((f) => f.endsWith(".json.gz"));
     expect(files).toHaveLength(INDEXED_STATE_NAMES.length);
-    expect(files.map((f) => f.slice(0, 2)).sort()).toEqual(["AZ", "GA", "MO", "NC", "TN", "TX", "WA"]);
-    expect([...INDEXED_STATE_NAMES].sort()).toEqual(["Arizona", "Georgia", "Missouri", "North Carolina", "Tennessee", "Texas", "Washington"]);
+    expect(files).toHaveLength(51);
+    for (const code of ["AZ", "CO", "DC", "GA", "MO", "NC", "TN", "TX", "WA", "WY"]) expect(files).toContain(`${code}.json.gz`);
+    expect(INDEXED_STATE_NAMES).toContain("District of Columbia");
   });
 });
 

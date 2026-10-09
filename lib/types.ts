@@ -190,6 +190,8 @@ export interface LookupAddress {
   county: string | null;
   /** City from the Census match (additive). */
   city: string | null;
+  /** 3-digit county FIPS from the Census match, like "033" (additive). Null if the Census did not give it. */
+  countyFips?: string | null;
 }
 
 /** One local date with flood reports within 5 km, and the rain at the address on it (additive). */
@@ -241,7 +243,7 @@ export interface FloodTrigger {
 
 export type Coverage = "indexed" | "fixture" | "not yet indexed";
 
-export type NoticeKey = "fema" | "live" | "heat" | "index";
+export type NoticeKey = "fema" | "live" | "heat" | "index" | "areaEvents" | "extremes";
 
 export interface LookupPayload {
   address: LookupAddress;
@@ -261,6 +263,107 @@ export interface LookupPayload {
   coverage: Coverage;
   /** Additive: plain-language reasons any source is null or empty. */
   notices: Partial<Record<NoticeKey, string>>;
+  /** Additive: what has happened in the address's county, its NWS forecast zone and the zones within 15 km since 2000, every event type. Null when unavailable. */
+  areaEvents?: AreaEventsSummary | null;
+  /** Additive: with no flood report within 5 km, the nearest placeable one up to 50 km away (null when there is none that close). */
+  nearestFlood?: NearbyFlood | null;
+  /** Additive: the wettest, windiest and hottest days on record at the address. */
+  extremes?: AddressExtremes | null;
+  /** Additive: how the address compares with the sampled points of its state. */
+  quiet?: QuietPlacement | null;
+}
+
+
+// ---------------------------------------------------------------- area events (additive; CONTRACT addendum, Oct 8)
+
+/**
+ * How an event relates to the address (lib/area-events.ts): filed for its county, for the forecast zone the address is inside
+ * ("your zone"), or for a zone whose edge is within 15 km ("nearby zone", always shown with the zone's name).
+ */
+export type AreaTier = "county" | "your zone" | "nearby zone";
+
+/** One NCEI Storm Events row for a county or NWS forecast zone (any event type), as stored in data/events/<ST>/<CODE>.json.gz. */
+export interface AreaEvent {
+  id: string;
+  episodeId: string | null;
+  /** EVENT_TYPE verbatim, like "High Wind". */
+  type: string;
+  /** Local time with UTC offset. */
+  start: string;
+  end: string | null;
+  area: { kind: "Z" | "C"; code: string; name: string };
+  deaths: number;
+  injuries: number;
+  damageUsd: number;
+  magnitude: number | null;
+  magnitudeType: string | null;
+  /** Verbatim EVENT_NARRATIVE; may be empty. */
+  narrative: string;
+  /** Verbatim EPISODE_NARRATIVE; may be empty. */
+  episodeNarrative: string;
+  /** Additive: how this event relates to the address. Set by selectAreaEvents; absent on a bare row. */
+  tier?: AreaTier;
+  /** Additive: the forecast zone's name for the two zone tiers (like "Bellevue and Vicinity"); null for a county row. */
+  zoneName?: string | null;
+}
+
+/** A zone that selectAreaEvents chose, for the story's fine print. */
+export interface AreaZoneInfo {
+  code: string;
+  name: string;
+  tier: Exclude<AreaTier, "county">;
+  /** 0 for your zone; else km from the address to the zone's edge (for an approximate zone, to its bounding box). */
+  distanceKm: number;
+  /** Events counted from this zone since the first year. */
+  events: number;
+}
+
+/** What happened in the address's county and the forecast zones over it since 2000: counts for all of it, the most severe events in full. */
+export interface AreaEventsSummary {
+  /** The address's county as an NCEI area code (state + "C" + county FIPS), like WAC033. */
+  county: string | null;
+  countyName: string | null;
+  /** The county code plus every forecast zone (including zones NWS has since renumbered) that contains the address or lies within 15 km of it. */
+  areaCodes: string[];
+  /** Additive: those zones, with their tier. Empty when the state has no zone outlines. */
+  zones?: AreaZoneInfo[];
+  /** First year counted. */
+  since: number;
+  /** Events for the zone and county since `since`. */
+  total: number;
+  /** Events by EVENT_TYPE. */
+  counts: Record<string, number>;
+  /** Events by calendar year of the start. */
+  byYear: Record<string, number>;
+  /** The most severe events (deaths, injuries, damage, magnitude, narrative), most severe first, with their narratives. */
+  top: AreaEvent[];
+  source: string;
+}
+
+/** The wettest, windiest and hottest days on record at the address (reanalysis, not a gauge). */
+export interface AddressExtremes {
+  wettest: { date: string; inches: number } | null;
+  /** `gust` is Open-Meteo's daily maximum 10 m gust; `wind` is NASA POWER's daily maximum 10 m wind speed (not a gust). */
+  windiest: { date: string; mph: number; measure: "gust" | "wind" } | null;
+  hottest: HeatDay | null;
+  /** Where the wettest and windiest days came from. */
+  source: "open-meteo" | "nasa-power" | "snapshot";
+}
+
+/** Where an address sits among the sample points of all indexed states, pooled (data/quiet-percentiles.json). */
+export interface QuietPlacement {
+  state: string;
+  /** Distinct flood reports within 5 km of the address (what the points were measured by). */
+  count: number;
+  /** Share of sampled points (0 to 100, rounded down) with MORE reports than this address. */
+  quieterThanPct: number;
+  /** Share with exactly as many. */
+  samePct: number;
+  /** Share with no report at all within 5 km. */
+  nonePct: number;
+  /** Points in the sample, and how many states they came from. */
+  sample: number;
+  states: number;
 }
 
 export interface LookupErrorBody {

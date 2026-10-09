@@ -5,7 +5,7 @@
  * checks every citation and every number before anything is shown. See lib/ai/verify.ts.
  */
 
-export type AiSourceKind = "outlook" | "record" | "report" | "history" | "tornado" | "damage" | "heat" | "trigger" | "alert" | "fema";
+export type AiSourceKind = "outlook" | "record" | "report" | "history" | "tornado" | "damage" | "heat" | "trigger" | "alert" | "fema" | "event";
 
 /** One thing the model may cite: a piece of real data with a stable id. */
 export interface AiSource {
@@ -105,3 +105,48 @@ export interface AiErrorBody {
 }
 
 export const MAX_QUESTION_CHARS = 300;
+
+// ---------------------------------------------------------------- "Your area's story"
+
+/** What an event's narrative can be tagged with. The model proposes; code keeps a tag only if the event's own words say it. */
+export const IMPACT_TAGS = ["power_outage", "trees_down", "roads_blocked", "flooding", "structure_damage", "travel_disruption"] as const;
+export type ImpactTag = (typeof IMPACT_TAGS)[number];
+
+/** An impact the narrative supports: the words that show it are copied from the event's own text. */
+export interface VerifiedImpact {
+  eventId: string;
+  tag: ImpactTag;
+  /** Words copied from the event's narrative that say it. */
+  evidence: string;
+}
+
+/** One line of the impact summary, written by code from the verified tags ("4 High Wind events: ... power outages"). */
+export interface ImpactLine {
+  tag: ImpactTag;
+  type: string;
+  eventIds: string[];
+  text: string;
+}
+
+export interface StoryAnswer {
+  /** ok: at least one sentence passed. no_answer: nothing to tell, or nothing could be verified. */
+  state: "ok" | "no_answer";
+  /** The county the story is for (it is cached by it). */
+  county: string | null;
+  /** Verified sentences; each cites event ids (or "area-counts"). */
+  sentences: VerifiedSentence[];
+  /** The cited sources by id. Events carry the verbatim narrative as `quote`. */
+  sources: Record<string, PublicSource>;
+  /** The events the story is about, oldest first. */
+  eventIds: string[];
+  impacts: VerifiedImpact[];
+  impactLines: ImpactLine[];
+  /** Deaths, injuries and damage across those events, added up by code from the records. Null when all are zero. */
+  totalsLine: string | null;
+  dropped: number;
+  droppedImpacts: number;
+  message: string | null;
+  generatedAt: string;
+  model: string;
+  cached: boolean;
+}

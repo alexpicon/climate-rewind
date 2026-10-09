@@ -15,6 +15,7 @@ const KIND_LABEL: Record<PublicSource["kind"], string> = {
   trigger: "Flood trigger",
   alert: "Live alert",
   fema: "FEMA",
+  event: "NWS Storm Events record",
 };
 
 /**

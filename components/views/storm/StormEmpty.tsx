@@ -3,6 +3,7 @@
 import { useRestOnAddress } from "@/components/map/use-rest-on-address";
 import { FemaCard } from "@/components/panel/FemaCard";
 import { More } from "@/components/panel/Disclosure";
+import { isQuiet, QuietCard } from "@/components/panel/QuietCard";
 import { INDEXED_STATES_TEXT } from "@/lib/constants";
 import type { LookupPayload } from "@/lib/types";
 
@@ -32,6 +33,7 @@ export function StormEmpty({ data }: { data: LookupPayload }) {
         <div className="big" aria-hidden="true"><span>0</span></div>
         <p className="lede">No flood reports within 15 km of this address in the records we have, so there is no storm night to replay.</p>
         <p className="note">Shows NWS reports we could place near you, not every flood. No reports here does not mean it never flooded.</p>
+        {isQuiet(data) ? <QuietCard data={data} /> : null}
         <More>
           <FemaCard fema={data.fema} notice={data.notices.fema} />
           {data.notices.index ? <p className="note">{data.notices.index}</p> : null}

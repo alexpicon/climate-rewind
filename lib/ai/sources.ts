@@ -23,6 +23,8 @@ import { stateName } from "../states";
 import { heatLabels, POWER_NAME } from "../ui/data-source";
 import { damageWhere } from "../ui/tornado-model";
 import { damageNear, type DamageRow } from "./damage";
+import { countsSource, eventSource, storyEvents } from "./event-sources";
+import { QUIET_BELOW_REPORTS } from "../constants";
 import type { AiSource } from "./types";
 
 /** How many flood reports and tornadoes the model gets to read in full. */
@@ -30,6 +32,11 @@ export const MAX_REPORT_SOURCES = 8;
 export const MAX_TORNADO_SOURCES = 4;
 
 export { dayName, FEW_DAYS, percentText };
+
+/** How many of the area's events the 72-hour brief may cite (the area story tab reads ten). */
+export const MAX_AREA_SOURCES = 4;
+/** The id of the source that explains a quiet address. The prompt looks for it. */
+export const QUIET_SOURCE_ID = "quiet";
 
 /** "2021-03-27T22:55:00-05:00" -> "March 27, 2021, 10:55 pm local time" (read as written, no time zone shifting) */
 export function localMoment(iso: string): string {
@@ -231,6 +238,44 @@ function alertsSource(lookup: LookupPayload): AiSource {
   return { ...base, text: `Active alerts for this address (checked ${checked} UTC): ${list.join(" | ")}.` };
 }
 
+// ---------------------------------------------------------------- a quiet address, and the wider area
+
+/**
+ * Why a quiet address is quiet: how few reports are within 5 km, how far the nearest one was, where that puts the address among the
+ * places we sampled, and what a quiet record does and does not mean. Only for an indexed state and only when reports are few; for a
+ * state we have not indexed the one honest statement is the coverage source's.
+ */
+function quietSource(lookup: LookupPayload): AiSource | null {
+  if (lookup.coverage !== "indexed") return null;
+  const count = lookup.floods.reports.length;
+  if (count >= QUIET_BELOW_REPORTS) return null;
+  const near = lookup.nearestFlood;
+  const q = lookup.quiet;
+  const parts = [
+    count === 0 ? "No flood report within 5 km of this address is in our records." : `Only ${count} flood ${count === 1 ? "report" : "reports"} within 5 km of this address ${count === 1 ? "is" : "are"} in our records.`,
+    near ? `The closest flood report we could place was ${near.distanceKm.toFixed(1)} km away, in ${near.start.slice(0, 4)}${near.city ? ` (${sanitize(near.city)})` : ""}.` : count === 0 ? "No placeable flood report is within 50 km." : "",
+    q ? `We measured ${q.sample} random places across the ${q.states} states we have indexed: ${q.nonePct}% had no flood report within 5 km, ${q.quieterThanPct}% had more than this address and ${q.samePct}% had the same number.` : "",
+    "A flood report exists only if someone filed one, and this is a count of reports we could place near an address. A quiet record means no report was filed close by. It does not mean nothing happened here, and it does not mean flooding is impossible.",
+  ].filter(Boolean);
+  return {
+    id: QUIET_SOURCE_ID,
+    kind: "history",
+    chip: "Why quiet",
+    title: "Why this address's flood record is quiet",
+    origin: "Our counts of NWS flood reports near this address and across sampled places",
+    text: parts.join(" "),
+    quote: near ? sanitize(near.quote) : undefined,
+    href: near ? ncdcLink(near.id) : undefined,
+  };
+}
+
+/** What the National Weather Service recorded in the address's forecast zone and county: the totals, and the few most significant events. */
+function areaSources(lookup: LookupPayload): AiSource[] {
+  const summary = lookup.areaEvents;
+  if (!summary || summary.total === 0) return [];
+  return [countsSource(summary), ...storyEvents(summary, MAX_AREA_SOURCES).map(eventSource)];
+}
+
 // ---------------------------------------------------------------- the past: reports and tornadoes
 
 const TIER_TEXT: Record<NearbyFlood["tier"], string> = {
@@ -385,6 +430,8 @@ export function buildSources({ lookup, outlook, damage }: SourceInputs): AiSourc
     heatHistorySource(lookup),
     triggerSource(lookup),
     femaSource(lookup),
+    quietSource(lookup),
+    ...(lookup.coverage === "indexed" ? areaSources(lookup) : []),
     coverageSource(lookup),
     floodHistorySource(lookup),
     ...(lookup.coverage === "indexed" ? pickReports(lookup.floods.reports).map((r, i) => reportSource(r, i + 1)) : []),

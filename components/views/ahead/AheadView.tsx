@@ -6,6 +6,7 @@ import { useRestOnAddress } from "@/components/map/use-rest-on-address";
 import type { OutlookPayload } from "@/lib/outlook-types";
 import { requestBrief, requestOutlook, type AiResult } from "@/lib/ui/ahead-client";
 import type { LookupPayload } from "@/lib/types";
+import { isQuiet, QuietCard } from "@/components/panel/QuietCard";
 import { AiAnswerView } from "./AiAnswerView";
 import { AiProblem } from "./AiProblem";
 import { AskBox } from "./AskBox";
@@ -91,6 +92,8 @@ export function AheadView({ data }: { data: LookupPayload }) {
             <AiProblem result={brief.result} onRetry={() => void loadBrief()} />
           )}
         </section>
+
+        {isQuiet(data) ? <QuietCard data={data} /> : null}
 
         {outlook.status === "loading" ? (
           <section className="outlooks" aria-labelledby="out-h">

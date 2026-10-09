@@ -2,7 +2,7 @@
  * The browser side of /api/outlook, /api/brief and /api/ask: one call each, a time limit, and a plain state for every way
  * it can end. The AI states ("resting", "unavailable", "rate limited") are honest answers, not page errors.
  */
-import type { AiAnswer, AiErrorBody, AiErrorState } from "../ai/types";
+import type { AiAnswer, AiErrorBody, AiErrorState, StoryAnswer } from "../ai/types";
 import type { OutlookPayload } from "../outlook-types";
 import { GENERIC_MESSAGE, NETWORK_MESSAGE, TIMEOUT_MESSAGE } from "./lookup-client";
 
@@ -66,4 +66,22 @@ export function requestBrief(address: string, fetchFn: FetchLike = defaultFetch,
 
 export function requestAsk(address: string, question: string, fetchFn: FetchLike = defaultFetch, timeoutMs = AI_TIMEOUT_MS): Promise<AiResult> {
   return postAi("/api/ask", { address, question }, fetchFn, timeoutMs);
+}
+
+export type StoryResult = { ok: true; story: StoryAnswer } | { ok: false; state: AiErrorState; message: string; retryAfter?: number };
+
+/** The area's AI story for an address (/api/story). The server caches it by county. */
+export async function requestStory(address: string, fetchFn: FetchLike = defaultFetch, timeoutMs = AI_TIMEOUT_MS): Promise<StoryResult> {
+  const got = await timedFetch(fetchFn, "/api/story", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ address }) }, timeoutMs);
+  if ("error" in got) return { ok: false, state: "error", message: got.error };
+  try {
+    const body = (await got.response.json()) as StoryAnswer | AiErrorBody;
+    if (!got.response.ok || !("sentences" in body)) {
+      const err = body as Partial<AiErrorBody>;
+      return { ok: false, state: err.state ?? "error", message: err.message ?? GENERIC_MESSAGE, ...(err.retryAfter ? { retryAfter: err.retryAfter } : {}) };
+    }
+    return { ok: true, story: body };
+  } catch {
+    return { ok: false, state: "error", message: GENERIC_MESSAGE };
+  }
 }

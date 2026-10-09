@@ -344,7 +344,9 @@ describe("lookupAddress", () => {
     expect(payload.tornadoes).toHaveLength(1);
     expect(payload.heat?.hottest.feelsF).toBe(108);
     expect(payload.coverage).toBe("indexed");
-    expect(payload.notices).toEqual({});
+    // This fake archive has no rain or wind columns, so the extremes say so; nothing else has a notice.
+    expect(payload.notices).toEqual({ extremes: expect.stringContaining("Open-Meteo") });
+    expect(payload.extremes).toMatchObject({ wettest: null, windiest: null, hottest: { feelsF: 108 } });
   });
 
   it("returns real alert details, motion and polygon when the NWS has an active alert", async () => {
@@ -594,9 +596,10 @@ describe("shipped data (data/index, from the pipeline)", () => {
     expect([placed, ran]).toEqual([110, 364]);
   });
 
-  it("has no index for states outside the six", async () => {
-    expect(await loadStateIndex("DC")).toBeNull();
-    expect(await loadStateIndex("CO")).toBeNull();
+  it("has no index for the territories (all 50 states and DC are indexed)", async () => {
+    expect(await loadStateIndex("PR")).toBeNull();
+    expect(await loadStateIndex("GU")).toBeNull();
+    expect(await loadStateIndex("CO")).not.toBeNull();
   });
 
   it("replays the Mar 27-28 2021 night for the Nashville sample with the same five city-point reports", async () => {

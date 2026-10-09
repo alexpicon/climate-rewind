@@ -17,7 +17,7 @@ import { DAMAGE_EVAL, describeJobs, type BriefEval } from "@/lib/ai-jobs";
 import { APP_NAME, APP_SLUG, APP_TITLE, APP_USER_AGENT, pageTitle } from "@/lib/brand";
 import { FORECAST_SPIKE } from "@/lib/forecast-spike";
 import { dayLabel, floodRecordLine, heatIsNotable, monthYear, percentText, tornadoRecordLine, tornadoKeyForPercent, worstLevel, worstTornadoPercent } from "@/lib/ui/ahead-text";
-import { DEFAULT_TAB, parseTab, TABS, viewUrl } from "@/lib/ui/tabs";
+import { DEFAULT_TAB, parseTab, TABS, VISIBLE_TABS, viewUrl } from "@/lib/ui/tabs";
 import type { AiAnswer } from "@/lib/ai/types";
 import { lookupFixture, outlookFixture } from "./ai-fixtures";
 import { buildSources } from "@/lib/ai/sources";
@@ -324,7 +324,10 @@ describe("tabs", () => {
     expect(parseTab(undefined)).toBe("ahead");
     expect(parseTab("nonsense")).toBe("ahead");
     expect(parseTab("storm")).toBe("storm");
-    expect(TABS).toEqual(["ahead", "storm", "heat", "tornado", "how"]);
+    expect(TABS).toEqual(["ahead", "story", "storm", "heat", "tornado", "future", "ready", "how"]);
+    // The story tab sits right after the 72 hours; "future" and "ready" show only when their view files exist.
+    expect(VISIBLE_TABS.slice(0, 2)).toEqual(["ahead", "story"]);
+    expect(parseTab("story")).toBe("story");
     expect(viewUrl("1 Main St", "ahead")).toBe("/?address=1+Main+St&tab=ahead");
     expect(viewUrl(null, "ahead")).toBe("/");
     expect(viewUrl(null, "how")).toBe("/?tab=how");

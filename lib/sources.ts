@@ -33,7 +33,7 @@ interface CensusResponse {
       matchedAddress: string;
       coordinates: { x: number; y: number };
       addressComponents?: { state?: string; city?: string };
-      geographies?: { Counties?: Array<{ NAME?: string }> };
+      geographies?: { Counties?: Array<{ NAME?: string; COUNTY?: string; GEOID?: string }> };
     }>;
   };
 }
@@ -79,6 +79,8 @@ export async function geocodeAddress(input: string, fetchFn: FetchLike): Promise
   }
 
   const county = match.geographies?.Counties?.[0]?.NAME ?? null;
+  const geoid = match.geographies?.Counties?.[0]?.GEOID;
+  const countyFips = match.geographies?.Counties?.[0]?.COUNTY ?? (geoid && /^\d{5}$/.test(geoid) ? geoid.slice(2) : null);
   return {
     input: address,
     matched: match.matchedAddress,
@@ -87,6 +89,7 @@ export async function geocodeAddress(input: string, fetchFn: FetchLike): Promise
     state: (match.addressComponents?.state ?? "").toUpperCase(),
     county: county ? county.replace(/ County$/, "") : null,
     city: match.addressComponents?.city ?? null,
+    countyFips: countyFips && /^\d{3}$/.test(countyFips) ? countyFips : null,
   };
 }
 

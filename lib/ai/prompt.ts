@@ -25,6 +25,10 @@ Rules:
 export const BRIEF_REQUEST =
   'Write the "Next 72 hours on your street" brief for this address, in at most 6 sentences. If an alert is active, start with it. Then cover flood, tornado and heat in that order: what the official outlooks say for the next 3 days at this address and, where a source gives it, how days like that have played out here. If all three show nothing, say so plainly in one sentence (that is about the official outlooks only, never about the past). If a source says we have not indexed the state, give its message as one sentence about the past. Do not add advice that no source gives.';
 
+/** Added to the brief request when the address is quiet (a source with the id "quiet" exists): the brief then says why, and what the area has seen. */
+export const QUIET_BRIEF_REQUEST =
+  ' This address has few or no flood reports of its own, so the source "quiet" is in the sources. After the alert (if any), write two sentences before the outlooks: first why this address\'s own record is quiet (cite "quiet"; say it means no report was filed close by, not that nothing happened), then the most significant thing the National Weather Service recorded in the wider area (cite one area event source). Then continue with the outlooks. You may write up to 8 sentences.';
+
 export const ASK_REQUEST =
   "Answer the QUESTION in at most 4 sentences. If it asks whether something WILL happen (tomorrow, tonight, this weekend), do not say yes or no: give what the official outlooks say for that day and, where a source gives it, how days like that have played out here.";
 
@@ -64,7 +68,8 @@ export const ANSWER_SCHEMA = {
 
 /** The user turn: sources first (as data), then the task. */
 export function buildUserMessage(context: string, question: string | null): string {
-  const task = question === null ? BRIEF_REQUEST : `${ASK_REQUEST}\n<question>${question}</question>`;
+  const quiet = context.includes('<source id="quiet"');
+  const task = question === null ? `${BRIEF_REQUEST}${quiet ? QUIET_BRIEF_REQUEST : ""}` : `${ASK_REQUEST}\n<question>${question}</question>`;
   return `<sources>\n${context}\n</sources>\n\n${task}`;
 }
 

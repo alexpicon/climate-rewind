@@ -8,6 +8,7 @@
 import {
   FLOOD_RADIUS_KM,
   FRAME_MINUTES,
+  NEAREST_FLOOD_MAX_KM,
   REPLAY_CLUSTER_HOURS,
   REPLAY_MAX_HOURS,
   REPLAY_NIGHT_RADIUS_KM,
@@ -18,11 +19,14 @@ import {
   TOP_NIGHTS,
   TORNADO_RADIUS_KM,
 } from "./constants";
+import { lookupAreaEvents, selectAreaEvents, type AreaSelection } from "./area-events";
+import { fetchDayExtremes, joinExtremes, type DayExtremes } from "./extremes";
 import { buildFloodTrigger } from "./flood-trigger";
 import { loadDamageRows } from "./ai/damage";
 import { damagePinsFor } from "./damage-pins";
 import { boxAround, haversineKm, segmentDistance } from "./geo";
 import { loadHeatGrid, loadStateIndex, slugify } from "./index-store";
+import { loadQuietFile, placeInQuiet, type QuietFile } from "./quiet";
 import type { FetchLike } from "./http";
 import { findSnapshot, loadSampleSnapshots, type SampleSnapshot } from "./samples";
 import {
@@ -34,6 +38,8 @@ import {
   type Sourced,
 } from "./sources";
 import type {
+  AddressExtremes,
+  AreaEventsSummary,
   DamagePin,
   Coord,
   Coverage,
@@ -48,6 +54,7 @@ import type {
   NearbyFlood,
   NearbyTornado,
   NoticeKey,
+  QuietPlacement,
   StateIndex,
   StormNight,
   StormReplay,
@@ -101,6 +108,24 @@ export function findNearbyFloods(
   const tierCounts: TierCounts = { mentioned: 0, about1km: 0, citywide: 0 };
   for (const report of reports) tierCounts[report.tier] += 1;
   return { reports, tierCounts };
+}
+
+/**
+ * The closest flood report out to `maxKm`, for an address with none within 5 km ("None on your street. The closest was 12 km away in 2019").
+ * Only reports with a real location count: a report filed at a city placeholder has no meaningful distance, so it is never "the closest".
+ */
+export function findNearestFlood(floods: FloodRow[], origin: Coord, maxKm: number = NEAREST_FLOOD_MAX_KM): NearbyFlood | null {
+  let best: NearbyFlood | null = null;
+  for (const flood of distinctFloods(floods)) {
+    const tier = tierOf(flood);
+    if (tier === "citywide") continue;
+    const point = reportPoint(flood);
+    if (!point) continue;
+    const distanceKm = haversineKm(origin, point);
+    if (distanceKm > maxKm) continue;
+    if (!best || distanceKm < best.distanceKm || (distanceKm === best.distanceKm && flood.start > best.start)) best = { ...flood, distanceKm: round(distanceKm, 2), tier };
+  }
+  return best;
 }
 
 // ---------------------------------------------------------------- storm replay
@@ -290,6 +315,10 @@ export interface LookupDeps {
   now: () => Date;
   /** Build-time snapshots of the slow data for the sample addresses (data/samples). Absent: every lookup is live. */
   loadSnapshots?: () => Promise<SampleSnapshot[]>;
+  /** NCEI Storm Events for the address's county, its forecast zone and zones within 15 km (data/events). Absent: no area events. */
+  loadEvents?: (lat: number, lon: number, state: string, countyCode: string) => Promise<AreaSelection | null>;
+  /** The state percentile file (data/quiet-percentiles.json). Absent: no comparison. */
+  loadQuiet?: () => Promise<QuietFile | null>;
 }
 
 export const defaultDeps: LookupDeps = {
@@ -299,6 +328,8 @@ export const defaultDeps: LookupDeps = {
   loadDamage: loadDamageRows,
   now: () => new Date(),
   loadSnapshots: loadSampleSnapshots,
+  loadEvents: selectAreaEvents,
+  loadQuiet: loadQuietFile,
 };
 
 function round(value: number, places: number): number {
@@ -339,6 +370,13 @@ async function summarizeAddressHeat(
   return { value: summary };
 }
 
+/** The wettest and windiest days at the address: a sample address's snapshot if it has them, else the archive (Open-Meteo, then NASA POWER). */
+async function readDayExtremes(address: LookupAddress, deps: LookupDeps, snapshot: SampleSnapshot | null): Promise<{ value: DayExtremes | null; notice?: string }> {
+  const saved = snapshot?.extremes;
+  if (saved && (saved.wettest || saved.windiest)) return { value: { wettest: saved.wettest, windiest: saved.windiest, source: "snapshot" } };
+  return fetchDayExtremes(address.lat, address.lon, deps.fetch, deps.now);
+}
+
 /**
  * Looks up everything we know about an address. Throws LookupError (with a
  * message safe to show) only when the address itself cannot be matched; every
@@ -356,13 +394,19 @@ export async function lookupAddress(input: string, deps: LookupDeps = defaultDep
   const triggerRead = nearbyRead.then((nearby) =>
     buildFloodTrigger(address, nearby?.reports ?? [], { fetch: deps.fetch, now: deps.now, knownRain: snapshot?.rain?.byDate }),
   );
-  const [index, fema, live, heat, nearby, floodTrigger] = await Promise.all([
+  const areaRead = deps.loadEvents
+    ? lookupAreaEvents(address, { fetch: deps.fetch, loadEvents: deps.loadEvents, now: deps.now }).catch(() => ({ value: null as AreaEventsSummary | null, notice: undefined }))
+    : Promise.resolve({ value: null as AreaEventsSummary | null, notice: undefined });
+  const [index, fema, live, heat, nearby, floodTrigger, area, dayExtremes, quietFile] = await Promise.all([
     indexRead,
     fetchFemaZone(address.lat, address.lon, deps.fetch),
     fetchActiveAlerts(address.lat, address.lon, deps.fetch, deps.now),
     summarizeAddressHeat(address, deps, snapshot),
     nearbyRead,
     triggerRead,
+    areaRead,
+    readDayExtremes(address, deps, snapshot).catch(() => ({ value: null as DayExtremes | null, notice: undefined as string | undefined })),
+    deps.loadQuiet ? deps.loadQuiet().catch(() => null) : Promise.resolve(null),
   ]);
 
   const tornadoes = index ? findNearbyTornadoes(index.tornadoes, origin) : [];
@@ -373,11 +417,19 @@ export async function lookupAddress(input: string, deps: LookupDeps = defaultDep
   if (fema.notice) notices.fema = fema.notice;
   if (live.notice) notices.live = live.notice;
   if (heat.notice) notices.heat = heat.notice;
+  if (area.notice) notices.areaEvents = area.notice;
+  if (dayExtremes.notice) notices.extremes = dayExtremes.notice;
   if (!index) {
     notices.index = `We have not indexed ${address.state || "this state"} yet, so flood reports and tornado paths are not shown.`;
   } else if (index.fixture) {
     notices.index = "This state has a small development sample, not the full record of reports.";
   }
+
+  // Nothing within 5 km: say how far the nearest placeable report was. A quiet address is also placed among its state's sample points.
+  const floodCount = nearby?.reports.length ?? 0;
+  const nearestFlood = index && floodCount === 0 ? findNearestFlood(index.floods, origin) : null;
+  const quiet: QuietPlacement | null = index ? placeInQuiet(quietFile, address.state, floodCount) : null;
+  const extremes: AddressExtremes | null = joinExtremes(dayExtremes.value, heat.value?.hottest ?? null);
 
   return {
     address,
@@ -392,6 +444,10 @@ export async function lookupAddress(input: string, deps: LookupDeps = defaultDep
     floodTrigger,
     coverage: coverageOf(index),
     notices,
+    areaEvents: area.value,
+    nearestFlood,
+    extremes,
+    quiet,
   };
 }
 

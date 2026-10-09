@@ -10,8 +10,9 @@ import { createHash } from "node:crypto";
 import { lookupAddress } from "../lookup";
 import { LruCache } from "../lru";
 import { buildOutlook } from "../outlooks";
+import { lookupAreaEvents, selectAreaEvents } from "../area-events";
 import { fetchActiveAlerts, geocodeAddress, LookupError } from "../sources";
-import type { LiveAlerts, LookupPayload } from "../types";
+import type { AreaEventsSummary, LiveAlerts, LookupPayload } from "../types";
 import type { OutlookPayload } from "../outlook-types";
 import { readEnv } from "../env";
 import { loadDamageRows, type DamageRow } from "./damage";
@@ -29,7 +30,7 @@ import {
   SYSTEM_PROMPT,
 } from "./prompt";
 import { buildSources, renderContext } from "./sources";
-import { MAX_QUESTION_CHARS, type AiAnswer, type AiErrorBody, type AiScope, type AiSource, type DroppedSentence, type VerifiedSentence } from "./types";
+import { MAX_QUESTION_CHARS, type StoryAnswer, type AiAnswer, type AiErrorBody, type AiScope, type AiSource, type DroppedSentence, type VerifiedSentence } from "./types";
 import { verifySentences } from "./verify";
 
 /** The slice of the Anthropic SDK we use, so tests can hand in a fake. */
@@ -60,6 +61,10 @@ export interface AiDeps {
    */
   alertsDigest?: (address: string) => Promise<string | null>;
   lookup: (address: string) => Promise<LookupPayload>;
+  /** What has happened in the address's county, its NWS forecast zone and zones within 15 km (no full lookup). Absent: no area story. */
+  areaEvents?: (address: string) => Promise<AreaEventsSummary | null>;
+  /** The area story, kept a day by county and zone set. Absent: no area story. */
+  storyCache?: AnswerCache<StoryAnswer>;
   outlook: (lat: number, lon: number) => Promise<OutlookPayload>;
   damage: (state: string) => Promise<DamageRow[]>;
   now: () => number;
@@ -93,7 +98,7 @@ export function cleanQuestion(text: string): string {
   return text.replace(CONTROL, " ").replace(/[<>]/g, " ").replace(/\s+/g, " ").trim();
 }
 
-const fail = (status: number, state: AiErrorBody["state"], message: string, extra: Partial<AiErrorBody> = {}, headers?: Record<string, string>): AiResult => ({
+export const fail = (status: number, state: AiErrorBody["state"], message: string, extra: Partial<AiErrorBody> = {}, headers?: Record<string, string>): AiResult => ({
   status,
   body: { state, message, ...extra },
   ...(headers ? { headers } : {}),
@@ -192,13 +197,13 @@ export function alertsDigestOf(live: LiveAlerts | null): string {
   return createHash("sha256").update(parts.join("\n")).digest("hex").slice(0, 16);
 }
 
-class Failure extends Error {
+export class Failure extends Error {
   constructor(readonly result: AiResult) {
     super("ai failure");
   }
 }
 
-function lookupFailure(error: unknown): Failure {
+export function lookupFailure(error: unknown): Failure {
   if (error instanceof LookupError) return new Failure(fail(error.status, "bad_request", error.message));
   return new Failure(fail(502, "error", "We could not read this address's records just now. Please try again."));
 }
@@ -307,6 +312,16 @@ export function createAiDeps(env: Record<string, string | undefined> = process.e
       lookups.set(key, payload, Date.now());
       return payload;
     },
+    areaEvents: async (address) => {
+      const key = address.toLowerCase();
+      let place = geocodes.get(key, Date.now());
+      if (!place) {
+        place = await geocodeAddress(address, fetchLike);
+        geocodes.set(key, place, Date.now());
+      }
+      return (await lookupAreaEvents(place, { fetch: fetchLike, loadEvents: selectAreaEvents })).value;
+    },
+    storyCache: new AnswerCache<StoryAnswer>(24 * 60 * 60_000),
     outlook: (lat, lon) => buildOutlook(lat, lon),
     damage: (state) => loadDamageRows(state),
     now: () => Date.now(),
