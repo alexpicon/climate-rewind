@@ -46,6 +46,23 @@ async function countyZones(state: string, county: string, dir: string): Promise<
   }
 }
 
+/**
+ * A county as people say it, from NCEI's upper-case name and the area code's state: "KING" in WA is "King County", a Louisiana one is a
+ * parish, an independent city ("BALTIMORE CITY", "ST. LOUIS (C)") stays a city, and Alaska's boroughs and census areas keep their own
+ * name. A zone keeps its name.
+ */
+export function areaName(name: string, kind: "C" | "Z", code: string = ""): string {
+  if (kind !== "C") return name;
+  const city = /\(c\)\s*$/i.test(name);
+  const titled = name
+    .replace(/\s*\(c\)\s*$/i, "")
+    .toLowerCase()
+    .replace(/\b([a-z])/g, (letter) => letter.toUpperCase());
+  if (city) return `${titled} City`;
+  if (/\b(county|parish|city|borough|census area|municipality)$/i.test(titled) || code.startsWith("AK")) return titled;
+  return `${titled} ${code.startsWith("LA") ? "Parish" : "County"}`;
+}
+
 const dayOf = (start: string, since: number) => Math.floor((Date.parse(start.slice(0, 10)) - Date.UTC(since, 0, 1)) / 86_400_000);
 
 /** The replay for a point, or null when the state has no area events. */
@@ -81,7 +98,7 @@ export async function buildAreaReplay(lat: number, lon: number, state: string, c
       types.push(event.type);
     }
     const tier = event.tier ?? (event.area.kind === "C" ? "county" : "your zone");
-    const area = areaFor(event.area.code, event.zoneName ?? event.area.name, event.area.kind, tier);
+    const area = areaFor(event.area.code, event.zoneName ?? areaName(event.area.name, event.area.kind, event.area.code), event.area.kind, tier);
     rows.push([day, typeIndex.get(event.type)!, area, event.deaths, event.injuries, event.damageUsd]);
   }
 

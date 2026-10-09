@@ -1,16 +1,19 @@
 /**
  * The area replay's frames: 26 years of a county's and its zones' recorded events, as a pure function of progress `p` (0 to 1), like
- * every animated view. An event lights its area in its hazard family's colour on its date and fades over LIGHT_DAYS; the totals by family
- * count up; the most recent deadly or costly event is named. At the end (and with reduced motion) each area keeps the colour of the
- * family filed most often there, stronger where more was filed.
+ * every animated view. An event flares its area in its hazard family's colour on its date and fades over LIGHT_DAYS, leaving a faint
+ * glow that grows with the events filed there so far, so the map fills in over the years (a quiet county is not dark between events);
+ * the totals by family count up; the most recent deadly or costly event is named. At the end (and with reduced motion) each area keeps
+ * the colour of the family filed most often there, stronger where more was filed.
  */
 import type { AreaReplay } from "../area-replay";
 import { familyOf, FAMILY_ORDER, type Family } from "./story-model";
 
 /** The whole replay at 1x: about a second a year. */
 export const AREA_REPLAY_MS = 28_000;
-/** How long an event keeps its area lit, in days of the replay's clock (about an eighth of a second on screen). */
-export const LIGHT_DAYS = 45;
+/** How long an event's flare takes to fade, in days of the replay's clock (about a quarter of a second on screen). */
+export const LIGHT_DAYS = 90;
+/** The faint glow an area keeps after its events: up to this strength, growing with the events filed there so far. */
+export const RESIDUE = 0.3;
 /** An event this costly (dollars of property and crop damage), or with any death or injury, is named as it happens. */
 export const NOTABLE_DAMAGE_USD = 1_000_000;
 
@@ -31,6 +34,8 @@ export interface ReplayModel {
   /** Running count by family: counts[f][i] = events of family f among the first i events. */
   counts: Record<Family, Int32Array>;
   deathsBefore: Int32Array;
+  /** The most events any one area has, for scaling the residue. */
+  busiest: number;
 }
 
 export function buildReplayModel(replay: AreaReplay): ReplayModel {
@@ -44,7 +49,9 @@ export function buildReplayModel(replay: AreaReplay): ReplayModel {
     deathsBefore[i + 1] = deathsBefore[i] + event.deaths;
   });
   const lastDay = events.length ? events[events.length - 1].day : 0;
-  return { since: replay.since, events, spanDays: lastDay + LIGHT_DAYS, counts, deathsBefore };
+  const perArea = new Map<number, number>();
+  for (const event of events) perArea.set(event.area, (perArea.get(event.area) ?? 0) + 1);
+  return { since: replay.since, events, spanDays: lastDay + LIGHT_DAYS, counts, deathsBefore, busiest: Math.max(1, ...perArea.values()) };
 }
 
 /** Events with day at or before `day` (events are sorted by day). */
@@ -68,7 +75,10 @@ export interface LitArea {
 
 export interface ReplayFrame {
   year: number;
-  /** Areas lit now: each area's most recent event in the last LIGHT_DAYS, by how fresh it is. */
+  /**
+   * Every area with an event so far, in the colour of its most recent one: as strong as that event's flare is fresh, and never weaker
+   * than its residue (RESIDUE scaled by the log of its events so far against the busiest area's total).
+   */
   lit: LitArea[];
   counts: Record<Family, number>;
   total: number;
@@ -84,10 +94,16 @@ export function replayFrame(model: ReplayModel, p: number): ReplayFrame {
   const day = clamped * model.spanDays;
   const started = upTo(model.events, day);
   const counts = Object.fromEntries(FAMILY_ORDER.map((f) => [f, model.counts[f][started]])) as Record<Family, number>;
-  const lit = new Map<number, LitArea>();
-  for (let i = started - 1; i >= 0 && day - model.events[i].day <= LIGHT_DAYS; i -= 1) {
+  const soFar = new Map<number, { count: number; latest: ReplayEvent }>();
+  for (let i = 0; i < started; i += 1) {
     const event = model.events[i];
-    if (!lit.has(event.area)) lit.set(event.area, { area: event.area, family: event.family, strength: 1 - (day - event.day) / LIGHT_DAYS });
+    soFar.set(event.area, { count: (soFar.get(event.area)?.count ?? 0) + 1, latest: event });
+  }
+  const lit: LitArea[] = [];
+  for (const [area, { count, latest }] of soFar) {
+    const flare = Math.max(0, 1 - (day - latest.day) / LIGHT_DAYS);
+    const residue = (RESIDUE * Math.log1p(count)) / Math.log1p(model.busiest);
+    lit.push({ area, family: latest.family, strength: Math.max(flare, residue) });
   }
   let notable: ReplayEvent | null = null;
   for (let i = started - 1; i >= 0 && day - model.events[i].day <= 365; i -= 1) {

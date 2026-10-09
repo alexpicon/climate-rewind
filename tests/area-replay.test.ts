@@ -5,7 +5,7 @@ import path from "node:path";
 import { gzipSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
 import { buildAreaReplay, type AreaReplay } from "@/lib/area-replay";
-import { buildReplayModel, finalTint, LIGHT_DAYS, replayDate, replayFrame } from "@/lib/ui/area-replay-model";
+import { buildReplayModel, finalTint, LIGHT_DAYS, replayDate, replayFrame, RESIDUE } from "@/lib/ui/area-replay-model";
 
 const HERE = { lat: 36.17, lon: -86.78 };
 const square = (west: number, south: number, east: number, north: number) => [[[[west, south], [east, south], [east, north], [west, north], [west, south]]]];
@@ -55,6 +55,16 @@ describe("buildAreaReplay", () => {
     expect(replay.events.map((e) => e[3])).toEqual([0, 3, 0]);
   });
 
+  it("names a county as people say it, and leaves a zone's name alone", async () => {
+    const { areaName } = await import("@/lib/area-replay");
+    expect(areaName("KING", "C", "WAC033")).toBe("King County");
+    expect(areaName("ORLEANS", "C", "LAC071")).toBe("Orleans Parish");
+    expect(areaName("ST. LOUIS (C)", "C", "MOC510")).toBe("St. Louis City");
+    expect(areaName("BALTIMORE CITY", "C", "MDC510")).toBe("Baltimore City");
+    expect(areaName("ANCHORAGE", "C", "AKC020")).toBe("Anchorage");
+    expect(areaName("Bellevue and Vicinity", "Z", "WAZ556")).toBe("Bellevue and Vicinity");
+  });
+
   it("refuses a county from another state, and a state with no events is null", async () => {
     expect(await buildAreaReplay(HERE.lat, HERE.lon, "TN", "KYC001", eventsDir())).toBeNull();
     expect(await buildAreaReplay(HERE.lat, HERE.lon, "TX", "TXC001", eventsDir())).toBeNull();
@@ -80,13 +90,19 @@ describe("the replay's frames", () => {
   const model = buildReplayModel(replay);
   const at = (day: number) => replayFrame(model, day / model.spanDays);
 
-  it("lights an area on its event's date and fades it over LIGHT_DAYS, the newest event's family winning", () => {
+  it("flares an area on its event's date, fading over LIGHT_DAYS to a glow that grows with its events so far", () => {
+    // Area 1 is the busiest, with 2 events: one event is worth RESIDUE * ln 2 / ln 3.
+    const oneEvent = (RESIDUE * Math.log(2)) / Math.log(3);
     expect(at(99).lit).toEqual([]);
     expect(at(110).lit).toEqual([
-      { area: 1, family: "heat", strength: 1 },
       { area: 0, family: "wind", strength: 1 - 10 / LIGHT_DAYS },
+      { area: 1, family: "heat", strength: 1 },
     ]);
-    expect(at(110 + LIGHT_DAYS + 1).lit).toEqual([]);
+    const after = at(110 + LIGHT_DAYS + 1).lit;
+    expect(after.map((a) => [a.area, a.family])).toEqual([[0, "wind"], [1, "heat"]]);
+    for (const a of after) expect(a.strength).toBeCloseTo(oneEvent, 6);
+    // The busiest area at the end of its events glows at RESIDUE.
+    expect(at(5000 + LIGHT_DAYS).lit.find((a) => a.area === 1)?.strength).toBeCloseTo(RESIDUE, 6);
   });
 
   it("counts by family and deaths so far, and names the latest notable event within a year", () => {
