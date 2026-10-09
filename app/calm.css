@@ -618,3 +618,27 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
   .reel-stat:nth-of-type(n+3){display:inline}
   .reel-src{max-width:34em;text-align:right}
 }
+
+/* ---------- the landing page's entrance: the column rises in, a beat at a time, then the four samples one by one ----------
+   Only for visitors who have not asked for less motion (a media query, so it holds before the page's script runs). */
+@keyframes landing-rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes landing-fade{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion: no-preference){
+  .landing-inner > *{animation:landing-rise .8s var(--ease) both}
+  .landing-inner > .eyebrow{animation-delay:.05s}
+  .landing-inner > h1{animation-delay:.15s}
+  .landing-inner > .landing-for{animation-delay:.3s}
+  .landing-inner > .landing-sub{animation-delay:.4s}
+  .landing-inner > .landing-samples-h{animation-delay:.5s}
+  .landing-inner > .samples{animation:none}
+  .samples.start li{animation:landing-rise .7s var(--ease) both}
+  .samples.start li:nth-child(1){animation-delay:.6s}
+  .samples.start li:nth-child(2){animation-delay:.7s}
+  .samples.start li:nth-child(3){animation-delay:.8s}
+  .samples.start li:nth-child(4){animation-delay:.9s}
+  .landing-inner > #own-address,.landing-inner > #own-address ~ *{animation-delay:1s}
+  .landing-inner > .reel{animation:landing-fade 1.8s ease both}
+  .samples.start .sample-btn{transition:background .25s,border-color .25s,transform .35s var(--ease),box-shadow .35s var(--ease)}
+  .samples.start .sample-btn:hover,.samples.start .sample-btn:focus-visible{transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,0,0,.45),0 0 0 1px rgba(255,180,90,.35),0 0 28px rgba(255,180,90,.16)}
+  .samples.start .sample-btn:active{transform:translateY(-1px)}
+}
