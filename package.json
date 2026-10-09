@@ -2,9 +2,9 @@
   "name": "climate-rewind",
   "private": true,
   "scripts": {
-    "predev": "node scripts/copy-maplibre-worker.mjs",
+    "predev": "node scripts/copy-maplibre-worker.mjs && node scripts/optional-views.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/copy-maplibre-worker.mjs",
+    "prebuild": "node scripts/copy-maplibre-worker.mjs && node scripts/optional-views.mjs",
     "build": "next build",
     "start": "next start",
     "test": "vitest run",
@@ -12,7 +12,9 @@
     "convert-heat": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/convert-heat.ts",
     "snapshot-samples": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/snapshot-samples.ts",
     "eval-brief": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/eval-brief.ts",
-    "outlook-record": "python3 scripts/outlook-record.py"
+    "outlook-record": "python3 scripts/outlook-record.py",
+    "quiet-percentiles": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/quiet-percentiles.ts",
+    "optional-views": "node scripts/optional-views.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.132.1",

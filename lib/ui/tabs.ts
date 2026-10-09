@@ -1,20 +1,36 @@
-export const TABS = ["ahead", "storm", "heat", "tornado", "how"] as const;
+import { AVAILABLE_OPTIONAL_TABS } from "./optional-tabs.generated";
+
+/** Every tab id. "future" and "ready" only show up in the bar when their view files exist (see scripts/optional-views.mjs). */
+export const TABS = ["ahead", "story", "storm", "heat", "tornado", "future", "ready", "how"] as const;
 export type Tab = (typeof TABS)[number];
+
+/** Tabs whose view lives in a file another person may not have written yet; they are hidden until the file exists. */
+export const OPTIONAL_TABS = ["future", "ready"] as const;
+export type OptionalTab = (typeof OPTIONAL_TABS)[number];
+
+/** The tabs shown in the bar and accepted from a link. */
+export const VISIBLE_TABS: readonly Tab[] = TABS.filter((tab) => !(OPTIONAL_TABS as readonly string[]).includes(tab) || (AVAILABLE_OPTIONAL_TABS as readonly string[]).includes(tab));
 
 export const TAB_LABEL: Record<Tab, string> = {
   ahead: "Next 72 hours",
+  story: "Your area’s story",
   storm: "Storm replay",
   heat: "Heat wave",
   tornado: "Tornadoes",
+  future: "What’s changing here",
+  ready: "Get ready",
   how: "How it works",
 };
 
 /** Short labels for the bottom tab bar on a phone (five tabs share 390 px). The full label stays the link's accessible name. */
 export const TAB_SHORT: Record<Tab, string> = {
   ahead: "72 hours",
+  story: "Story",
   storm: "Storm",
   heat: "Heat",
   tornado: "Tornadoes",
+  future: "Changing",
+  ready: "Ready",
   how: "How",
 };
 
@@ -22,7 +38,7 @@ export const TAB_SHORT: Record<Tab, string> = {
 export const DEFAULT_TAB: Tab = "ahead";
 
 export function parseTab(value: string | undefined | null): Tab {
-  return TABS.find((tab) => tab === value) ?? DEFAULT_TAB;
+  return VISIBLE_TABS.find((tab) => tab === value) ?? DEFAULT_TAB;
 }
 
 /** Tabs whose map has the optional 3D view. */

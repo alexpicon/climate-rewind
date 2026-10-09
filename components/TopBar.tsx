@@ -2,13 +2,19 @@
 
 import type { FormEvent, ReactNode } from "react";
 import { APP_NAME } from "@/lib/brand";
-import { TABS, TAB_LABEL, TAB_SHORT, viewUrl, type Tab } from "@/lib/ui/tabs";
+import { VISIBLE_TABS, TAB_LABEL, TAB_SHORT, viewUrl, type Tab } from "@/lib/ui/tabs";
 
 const TAB_ICON: Record<Tab, ReactNode> = {
   ahead: (
     <>
       <circle cx="12" cy="12" r="9" />
       <path d="M12 7v5l3.2 2" />
+    </>
+  ),
+  story: (
+    <>
+      <path d="M4 19V5" />
+      <path d="M4 12h5l2-5 3 10 2-5h4" />
     </>
   ),
   storm: <path d="M12 3c3.5 4.5 6 7.5 6 10.5a6 6 0 0 1-12 0C6 10.5 8.5 7.5 12 3z" />,
@@ -19,6 +25,18 @@ const TAB_ICON: Record<Tab, ReactNode> = {
     </>
   ),
   tornado: <path d="M3 5h18M5 9h14M8 13h9M10 17h5M12 21h1" />,
+  future: (
+    <>
+      <path d="M3 17l5-5 4 4 8-9" />
+      <path d="M15 7h5v5" />
+    </>
+  ),
+  ready: (
+    <>
+      <path d="M12 3l8 3v5c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6z" />
+      <path d="M9 12l2 2 4-4" />
+    </>
+  ),
   how: (
     <>
       <circle cx="12" cy="12" r="9" />
@@ -97,11 +115,12 @@ export function TopBar({ input, onInput, onSubmit, matched, lookingUp, tab, addr
       {live}
 
       <nav id="tabs" aria-label="Views">
-        {TABS.map((id) => (
+        {VISIBLE_TABS.map((id) => (
           <a
             key={id}
             href={viewUrl(address, id)}
             aria-label={TAB_LABEL[id]}
+            title={TAB_LABEL[id]}
             aria-current={tab === id ? "page" : undefined}
             onClick={(event) => {
               if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;

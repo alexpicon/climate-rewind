@@ -6,12 +6,17 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     // The page reads the AI test result, the damage map and (for the wording) the index at render time.
     "/": ["./data/ai-eval/**/*", "./data/damage/**/*", "./data/index/**/*"],
-    "/api/lookup": ["./data/index/**/*", "./data/heat/**/*", "./data/samples/**/*", "./data/damage/**/*"],
+    "/api/lookup": ["./data/index/**/*", "./data/heat/**/*", "./data/samples/**/*", "./data/damage/**/*", "./data/events/**/*", "./data/quiet-percentiles.json"],
     "/api/heat/[slug]": ["./data/heat/**/*"],
     // The outlook and AI routes read the record for the sample addresses (and the AI routes do a whole lookup plus the damage map).
     "/api/outlook": ["./data/outlook-record/**/*"],
-    "/api/brief": ["./data/index/**/*", "./data/heat/**/*", "./data/samples/**/*", "./data/outlook-record/**/*", "./data/damage/**/*"],
-    "/api/ask": ["./data/index/**/*", "./data/heat/**/*", "./data/samples/**/*", "./data/outlook-record/**/*", "./data/damage/**/*"],
+    "/api/brief": ["./data/index/**/*", "./data/heat/**/*", "./data/samples/**/*", "./data/outlook-record/**/*", "./data/damage/**/*", "./data/events/**/*", "./data/quiet-percentiles.json"],
+    "/api/ask": ["./data/index/**/*", "./data/heat/**/*", "./data/samples/**/*", "./data/outlook-record/**/*", "./data/damage/**/*", "./data/events/**/*", "./data/quiet-percentiles.json"],
+    // The area story reads only the events of the address's county and the zones over it.
+    "/api/story": ["./data/events/**/*"],
+    // The climate view reads the precomputed sample projections and snapshots; the preparedness plan reads the area events, the index and the official guidance lines.
+    "/api/future": ["./data/projections/**/*", "./data/samples/**/*"],
+    "/api/ready": ["./data/events/**/*", "./data/index/**/*", "./data/samples/**/*", "./data/guidance/**/*"],
   },
 };
 
