@@ -22,7 +22,7 @@ interface Props {
   onSample?: (address: string) => void;
 }
 
-/** First screen: one search box and the sample addresses. A sample card is a button: one click (or Enter or Space) looks that address up. */
+/** First screen: who it is for, four sample addresses to start with (one click each), then a search box for your own. */
 export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, detectiveRan, aiJobs = [], onSample }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const ai = landingLead(detectiveRan);
@@ -38,25 +38,36 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
       <div className="landing-inner">
         <p className="eyebrow">{APP_NAME}</p>
         <h1 id="landing-h">What the weather did to your street.</h1>
+        <p className="landing-for">For anyone renting, buying or living somewhere the climate is changing.</p>
         <p className="landing-sub">
-          Type a US street address. We replay the storm night, the heat wave and the tornadoes that the National Weather Service
-          recorded near it, and make its official outlook for the next 72 hours local. Anything that is not real data is tagged SAMPLE.
+          See what the National Weather Service recorded near an address, and what it expects in the next 72 hours. Anything that is not
+          real data is tagged SAMPLE.
         </p>
 
-        <p className="landing-ai">
-          <b>{ai.lead}</b> {ai.body}{" "}
-          <a
-            href={viewUrl(null, "how")}
-            onClick={(event) => {
-              if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
-              event.preventDefault();
-              onHow();
-            }}
-          >
-            How it works
-          </a>
-        </p>
+        <h2 className="h3 landing-samples-h" id="start-here">
+          Start here
+        </h2>
+        <ul className="samples start" aria-labelledby="start-here">
+          {SAMPLE_ADDRESSES.map((sample) => (
+            <li key={sample.address}>
+              <button
+                type="button"
+                className="sample-btn"
+                disabled={lookingUp}
+                onClick={() => chooseSample(sample.address, { fill: onInput, run: onSample, focusInput: () => inputRef.current?.focus() })}
+              >
+                <b>{sample.label}</b>
+                <span className="hook">{sample.hook}</span>
+                <span className="where">{sample.detail}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
 
+        <h2 className="h3 landing-samples-h" id="own-address">
+          Or your own address
+        </h2>
+        <p className="landing-own">The first look takes a few seconds while we read the records; the AI’s writing follows.</p>
         <form
           className="landing-form"
           role="search"
@@ -95,22 +106,20 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
           </p>
         ) : null}
 
-        <h2 className="h3 landing-samples-h">Or try a sample</h2>
-        <ul className="samples">
-          {SAMPLE_ADDRESSES.map((sample) => (
-            <li key={sample.address}>
-              <button
-                type="button"
-                className="sample-btn"
-                disabled={lookingUp}
-                onClick={() => chooseSample(sample.address, { fill: onInput, run: onSample, focusInput: () => inputRef.current?.focus() })}
-              >
-                <b>{sample.label}</b>
-                <span>{sample.detail}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
+        <p className="landing-ai">
+          <b>{ai.lead}</b> {ai.body}{" "}
+          <a
+            href={viewUrl(null, "how")}
+            onClick={(event) => {
+              if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+              event.preventDefault();
+              onHow();
+            }}
+          >
+            How it works
+          </a>
+        </p>
+
         <h2 className="h3 landing-samples-h">What the AI does here</h2>
         <ul className="ai-jobs">
           {jobs.map((job) => (

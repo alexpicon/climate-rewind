@@ -1,4 +1,5 @@
 import { NavLink } from "@/components/nav-context";
+import { Pending } from "./LoadSteps";
 import { QUIET_BELOW_REPORTS } from "@/lib/constants";
 import type { LookupPayload } from "@/lib/types";
 import { SAMPLE_ADDRESSES } from "@/lib/ui/tabs";
@@ -68,6 +69,7 @@ export function QuietCard({ data, showStoryLink = true }: { data: LookupPayload;
 
 /** The wettest, windiest and hottest days on record at the address. A modeled history, said so. */
 export function ExtremesCard({ data }: { data: LookupPayload }) {
+  if (data.pending?.includes("heat")) return <Pending label="Reading the wettest, windiest and hottest days since 2000…" />;
   const items = extremeItems(data.extremes);
   if (items.length === 0) {
     return data.notices.extremes ? <p className="note">{data.notices.extremes}</p> : null;

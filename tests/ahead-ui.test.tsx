@@ -325,8 +325,9 @@ describe("tabs", () => {
     expect(parseTab("nonsense")).toBe("ahead");
     expect(parseTab("storm")).toBe("storm");
     expect(TABS).toEqual(["ahead", "story", "storm", "heat", "tornado", "future", "ready", "how"]);
-    // The story tab sits right after the 72 hours; "future" and "ready" show only when their view files exist.
+    // The history views sit right after the 72 hours (they are one top tab now); "future" and "ready" show only when their view files exist.
     expect(VISIBLE_TABS.slice(0, 2)).toEqual(["ahead", "story"]);
+    expect(parseTab("history")).toBe("story");
     expect(parseTab("story")).toBe("story");
     expect(viewUrl("1 Main St", "ahead")).toBe("/?address=1+Main+St&tab=ahead");
     expect(viewUrl(null, "ahead")).toBe("/");

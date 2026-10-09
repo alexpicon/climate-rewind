@@ -13,6 +13,8 @@ export default defineConfig({
       MEMORIA_DAMAGE_DIR: path.resolve(import.meta.dirname, "tests", "no-samples"),
       // And the area events and the state percentiles (tests that want them name the folder or file).
       MEMORIA_EVENTS_DIR: path.resolve(import.meta.dirname, "tests", "no-samples"),
+      // And the AI answers made ahead of time for the samples.
+      MEMORIA_SAMPLE_AI_DIR: path.resolve(import.meta.dirname, "tests", "no-samples", "ai"),
       MEMORIA_QUIET_FILE: path.resolve(import.meta.dirname, "tests", "no-samples", "quiet-percentiles.json"),
     },
   },

@@ -1,7 +1,9 @@
 import type { FemaZone } from "@/lib/types";
+import { Pending } from "./LoadSteps";
 
 /** FEMA's flood zone for the address, or an honest line about why there isn't one. */
-export function FemaCard({ fema, notice }: { fema: FemaZone | null; notice?: string }) {
+export function FemaCard({ fema, notice, pending = false }: { fema: FemaZone | null; notice?: string; pending?: boolean }) {
+  if (pending) return <Pending label="Checking FEMA’s flood map…" />;
   if (!fema) {
     return (
       <div className="fema none">

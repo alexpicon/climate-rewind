@@ -5,11 +5,15 @@ import { APP_TITLE, pageTitle } from "@/lib/brand";
 import type { AiJob } from "@/lib/ai-jobs";
 import type { LookupPayload } from "@/lib/types";
 import { focusPanelHeading } from "@/lib/ui/focus";
-import { requestLookup, requestReplay, type ReplayResult } from "@/lib/ui/lookup-client";
+import { tidyAddress } from "@/lib/ui/text";
+import { prefetchAhead } from "@/lib/ui/ahead-client";
+import { applyPart } from "@/lib/lookup-parts";
+import { requestReplay, requestStagedLookup, type ReplayResult } from "@/lib/ui/lookup-client";
 import { DEFAULT_TAB, parseTab, viewUrl, TAB_LABEL, type Tab } from "@/lib/ui/tabs";
 import { AnnounceProvider } from "./announce";
 import { NavProvider, type AppNav } from "./nav-context";
 import { Landing } from "./Landing";
+import { LoadSteps, type Step } from "./panel/LoadSteps";
 import { LiveDrawer } from "./live/LiveDrawer";
 import { LiveStrip } from "./live/LiveStrip";
 import { useLive } from "./live/use-live";
@@ -39,17 +43,37 @@ interface Props {
 
 const OPTIONAL_TAB_IDS = ["future", "ready"] as const;
 
+/** What the loading panel knows so far: the matched address, and which of the first two reads are in. */
+interface Progress {
+  matched: string | null;
+  records: boolean;
+  area: boolean;
+}
+
 type Lookup =
   | { status: "idle" }
-  | { status: "loading"; address: string }
+  | { status: "loading"; address: string; progress: Progress }
   | { status: "ready"; data: LookupPayload }
   | { status: "error"; message: string };
+
+/** The loading panel's list. Each line turns done when its own request comes back; the last two are read by the first view. */
+function loadingSteps(progress: Progress): Step[] {
+  const found = progress.matched !== null;
+  const state = (done: boolean, ready: boolean): Step["state"] => (done ? "done" : ready ? "active" : "wait");
+  return [
+    { id: "address", label: "Finding your address", state: state(found, true), note: progress.matched ? tidyAddress(progress.matched) : undefined },
+    { id: "records", label: "Reading flood and tornado records", state: state(progress.records, found) },
+    { id: "area", label: "Reading events in your area since 2000", state: state(progress.area, found) },
+    { id: "outlooks", label: "Reading the official outlooks", state: "wait" },
+    { id: "brief", label: "Writing your brief", state: "wait" },
+  ];
+}
 
 /** App shell: owns the address, the tab and the lookup, and keeps the URL shareable. */
 export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJobs = [], initialNight = null, initialView3d = false }: Props) {
   const [input, setInput] = useState(initialAddress ?? "");
   const [tab, setTab] = useState<Tab>(initialTab);
-  const [lookup, setLookup] = useState<Lookup>(initialAddress ? { status: "loading", address: initialAddress } : { status: "idle" });
+  const [lookup, setLookup] = useState<Lookup>(initialAddress ? { status: "loading", address: initialAddress, progress: { matched: null, records: false, area: false } } : { status: "idle" });
   // The storm night chosen in the picker (or from the link); null means the busiest one.
   const [night, setNight] = useState<string | null>(initialNight);
   // The optional 3D map (terrain and buildings) for the storm replay and tornado tabs. 2D is the default.
@@ -71,26 +95,35 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
   }, [reduced]);
 
   const data = lookup.status === "ready" ? lookup.data : null;
-  const live = useLive(data ? { lat: data.address.lat, lon: data.address.lon } : null, data?.live ?? null, lookup.status === "loading");
+  const live = useLive(data ? { lat: data.address.lat, lon: data.address.lon } : null, data?.live ?? null, lookup.status === "loading" || Boolean(data?.pending?.includes("live")));
 
   const runLookup = useCallback(async (address: string, nextTab: Tab, push: boolean, nightId: string | null = null, wants3d = false) => {
     const id = ++requestId.current;
+    const current = () => id === requestId.current;
     if (push) pendingFocus.current = true;
-    setLookup({ status: "loading", address });
+    setLookup({ status: "loading", address, progress: { matched: null, records: false, area: false } });
     setDrawerOpen(false);
     setSeenTabs(new Set());
-    const result = await requestLookup(address, undefined, undefined, nightId);
-    if (id !== requestId.current) return;
-    if (!result.ok) {
-      setLookup({ status: "error", message: result.message });
-      return;
-    }
-    if (push) pendingFocus.current = true;
-    setLookup({ status: "ready", data: result.data });
-    setNight(nightId);
-    const url = viewUrl(address, nextTab, nightId, wants3d);
-    if (push) window.history.pushState(null, "", url);
-    document.title = pageTitle(TAB_LABEL[nextTab], result.data.address.matched);
+    // The address match, then the records and the area's events (the first view), then the slow sources one by one.
+    await requestStagedLookup(address, nightId, {
+      isCurrent: current,
+      onAddress: (found) => {
+        // The 72-hour tab is the opening one: its outlooks and brief start now, while the records load.
+        if (nextTab === "ahead") prefetchAhead(address, found.lat, found.lon);
+        setLookup((now) => (now.status === "loading" ? { ...now, progress: { ...now.progress, matched: found.matched } } : now));
+      },
+      onStep: (part) => setLookup((now) => (now.status === "loading" ? { ...now, progress: { ...now.progress, [part]: true } } : now)),
+      onFail: (message) => setLookup({ status: "error", message }),
+      onCore: (payload) => {
+        if (push) pendingFocus.current = true;
+        setLookup({ status: "ready", data: payload });
+        setNight(nightId);
+        const url = viewUrl(address, nextTab, nightId, wants3d);
+        if (push) window.history.pushState(null, "", url);
+        document.title = pageTitle(TAB_LABEL[nextTab], payload.address.matched);
+      },
+      onPart: (part, patch) => setLookup((now) => (now.status === "ready" ? { status: "ready", data: applyPart(now.data, part, patch) } : now)),
+    });
   }, []);
 
   // First load from a shared URL.
@@ -141,7 +174,8 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
     if (!wanted) return { ok: false, message: "No storm nights are listed for this address." };
     const result = await requestReplay({ state: data.address.state, lat: data.address.lat, lon: data.address.lon }, wanted);
     if (!result.ok) return result;
-    setLookup({ status: "ready", data: { ...data, stormReplay: result.stormReplay } });
+    // The slow parts may still be arriving: fold the night into whatever is on screen now, not into the copy this call started with.
+    setLookup((now) => (now.status === "ready" ? { status: "ready", data: { ...now.data, stormReplay: result.stormReplay } } : now));
     setNight(id);
     const url = viewUrl(data.address.input, tab, id, view3d);
     if (updateUrl) window.history.replaceState(null, "", url);
@@ -243,11 +277,12 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
       <MapCanvas address={data ? { lat: data.address.lat, lon: data.address.lon, matched: data.address.matched } : null} reducedMotion={reduced}>
         <main id="main-content" tabIndex={-1}>
           {lookup.status === "loading" ? (
-            <aside id="panel" className="glass" aria-label="Story" tabIndex={-1}>
+            <aside id="panel" className="glass ahead" aria-label="Story" tabIndex={-1}>
               <h1 className="sr">Looking up {lookup.address}</h1>
-              <p className="eyebrow" role="status">Looking up your address…</p>
+              <p className="eyebrow">Looking up {lookup.progress.matched ? "your street" : "your address"}</p>
+              <LoadSteps steps={loadingSteps(lookup.progress)} label="Looking up your address" />
               <div className="skeleton" aria-hidden="true" />
-              <p className="note">Matching the address, then checking FEMA, the National Weather Service and our records.</p>
+              <p className="note">We read the National Weather Service’s own records. The first view comes first; the rest fills in.</p>
             </aside>
           ) : null}
 
@@ -276,7 +311,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
       </MapCanvas>
 
       {drawerOpen && data ? (
-        <LiveDrawer live={live} lat={data.address.lat} lon={data.address.lon} notice={data.notices.live} trigger={data.floodTrigger} onClose={closeDrawer} />
+        <LiveDrawer live={live} lat={data.address.lat} lon={data.address.lon} notice={data.notices.live} trigger={data.pending?.includes("trigger") ? null : data.floodTrigger} onClose={closeDrawer} />
       ) : null}
       </NavProvider>
     </AnnounceProvider>

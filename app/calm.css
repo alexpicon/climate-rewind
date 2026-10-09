@@ -29,7 +29,6 @@
   .live .ls{display:none}
   .live[data-state="watch"],.live[data-state="warn"]{max-width:440px}
 }
-@media (max-width:1180px){#tabs a .lbl{display:none}#tabs a{padding:0 14px}}
 @media (max-width:900px){
   .live{max-width:136px}
   #tabs{position:fixed;left:12px;right:12px;bottom:12px;margin:0;justify-content:space-between;background:var(--glass);backdrop-filter:blur(20px);z-index:30}
@@ -441,15 +440,17 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .bars-sub{margin:0;font-size:13px;color:var(--muted)}
 
 /* ---------- 14. "Your area's story", the quiet-address cards, and a tab bar that fits up to eight tabs ---------- */
-/* Icons only from 901 to 1399 px; the short words from 1400 px; the full names from 1800 px. Nothing wraps or overlaps. */
-@media (min-width:901px) and (max-width:1399px){#tabs a .lbl{display:none!important}#tabs a{padding:0 12px}}
-@media (min-width:1400px) and (max-width:1799px){#tabs a .lbl-long{display:none!important}#tabs a .lbl-short{display:inline!important}}
+/* Four tabs: full names from 1360 px, short words from 901 to 1359 px, and the phone's bottom bar below that. "How it works" is a small link. */
+@media (min-width:901px) and (max-width:1359px){#tabs a .lbl-long{display:none!important}#tabs a .lbl-short{display:inline!important}#tabs a{padding:0 14px}}
+#how-link{flex:none;display:inline-flex;align-items:center;gap:7px;min-height:44px;min-width:44px;padding:0 10px;border-radius:999px;color:var(--muted);font-size:14.5px;font-weight:550;text-decoration:none;justify-content:center}
+#how-link:hover{color:var(--ink);background:rgba(255,255,255,.08)}
+#how-link[aria-current="page"]{color:var(--accent);box-shadow:inset 0 0 0 1px rgba(255,180,90,.5)}
+#how-link svg{flex:none}
+@media (max-width:1359px){#how-link .how-t{display:none}}
 @media (max-width:900px){
-  /* eight tabs do not fit 390 px: the bar scrolls sideways instead of squeezing the words */
-  #tabs{overflow-x:auto;scrollbar-width:none;gap:2px}
-  #tabs::-webkit-scrollbar{display:none}
-  #tabs a{flex:1 0 62px;font-size:11.5px;padding:0 4px}
-  #tabs a .lbl{font-size:11.5px}
+  #tabs{gap:2px}
+  #tabs a{flex:1 1 0;font-size:12px;padding:0 4px}
+  #tabs a .lbl{font-size:12px}
 }
 
 .story-big{font-size:clamp(64px,7vw,92px)}
@@ -498,3 +499,89 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .counts-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
 .counts-bar i{display:block;height:100%;border-radius:99px}
 .counts b{text-align:right;font-weight:650}
+
+/* ---------- Round 8: the segmented control inside "Your history" ---------- */
+.seg{display:flex;gap:2px;padding:3px;margin:0 0 14px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--line)}
+.seg a{flex:1 1 auto;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 8px;border-radius:999px;color:var(--muted);font-size:14px;font-weight:600;text-align:center;text-decoration:none;white-space:nowrap;transition:background .2s,color .2s}
+.seg a:hover{color:var(--ink);background:rgba(255,255,255,.08)}
+.seg a[aria-current="page"]{background:rgba(255,180,90,.16);color:#FFE2B0;box-shadow:inset 0 0 0 1.5px var(--accent)}
+@media (max-width:420px){.seg a{font-size:13px;padding:0 2px}}
+
+/* ---------- Round 8: landing, "Start here" first and the search second ---------- */
+.landing-for{margin:0 0 12px;font-size:clamp(19px,2.2vw,23px);line-height:1.35;font-weight:550;color:var(--ink);max-width:34em;text-wrap:balance}
+#landing .landing-sub{font-size:17px;margin-bottom:6px}
+.landing-own{margin:-4px 0 14px;font-size:16px;line-height:1.45;color:var(--muted);max-width:56ch}
+.samples.start{margin-bottom:6px}
+.samples.start .sample-btn{display:flex;flex-direction:column;justify-content:flex-start;gap:4px;min-height:132px;padding:18px 20px;border-radius:var(--r-lg,20px);background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.04));border-color:rgba(255,255,255,.22)}
+.samples.start .sample-btn:hover{background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.07));border-color:var(--accent)}
+.samples.start .sample-btn b{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.1;letter-spacing:-.01em}
+.samples.start .sample-btn .hook{margin-top:4px;font-size:16px;line-height:1.35;color:var(--ink)}
+.samples.start .sample-btn .where{margin-top:auto;padding-top:6px;font-size:13.5px;color:var(--muted)}
+.landing-form{margin-bottom:22px}
+#landing .landing-ai{margin-top:34px}
+
+/* ---------- Round 8: real progress while an address loads, and sections that fill in ---------- */
+.loadsteps{list-style:none;margin:6px 0 14px;padding:0;display:grid;gap:2px}
+.loadsteps li{display:flex;align-items:flex-start;gap:12px;padding:8px 0;font-size:16px;line-height:1.35;color:var(--muted)}
+.loadsteps .mark{flex:none;width:22px;height:22px;margin-top:1px;border-radius:50%;border:2px solid var(--line-2);display:grid;place-items:center;color:#0b1226}
+.loadsteps .st-t small{display:block;margin-top:2px;font-size:13.5px;color:var(--muted)}
+.loadsteps li[data-state="done"]{color:var(--ink)}
+.loadsteps li[data-state="done"] .mark{background:#8FE3A7;border-color:#8FE3A7}
+.loadsteps li[data-state="active"]{color:var(--ink);font-weight:600}
+.loadsteps li[data-state="active"] .mark{border-color:var(--accent);border-top-color:transparent;animation:spin 0.9s linear infinite}
+.loadsteps li[data-state="wait"]{opacity:.78}
+@keyframes spin{to{transform:rotate(360deg)}}
+.reduce .loadsteps li[data-state="active"] .mark{animation:none;border-top-color:var(--accent);background:rgba(255,180,90,.25)}
+.pending-part{margin:0 0 16px}
+.pending-part .skeleton{height:64px}
+
+/* ---------- Round 8: map overlays (outlook areas, zones, pins) and the small caption that names their source ---------- */
+.ovpin{width:34px;height:34px;padding:0;border-radius:50%;border:2.5px solid #fff;background:var(--c,#FFB45A);color:#0b1226;font-size:14px;font-weight:800;line-height:1;display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 1.5px rgba(6,10,19,.85),0 4px 12px rgba(0,0,0,.55);transition:transform .15s}
+.ovpin .ovtx{pointer-events:none}
+.ovpin.long{width:40px;height:40px;font-size:11.5px;letter-spacing:-.02em}
+.ovpin:hover,.ovpin.on{transform:scale(1.22);z-index:6}
+.ovpin.on{box-shadow:0 0 0 3px #FFE2B0,0 4px 14px rgba(0,0,0,.6)}
+.ovpin.dim{opacity:.55}
+.ovpin:focus-visible{outline:3px solid #FFE2B0;outline-offset:3px}
+.reduce .ovpin{transition:none}
+.mapcap{--cap-panel:460px;position:fixed;z-index:6;top:calc(var(--bar-h) + 14px);left:calc(var(--pad) + var(--cap-panel) + 20px);max-width:min(380px,calc(100vw - var(--pad) - var(--cap-panel) - 90px));padding:12px 14px 11px;border-radius:var(--r-md);font-size:13.5px;line-height:1.4;color:var(--muted);background:rgba(10,15,27,.9)}
+.mapcap:has(~ #panel.rd),.mapcap:has(~ #panel.fx){--cap-panel:500px}
+.mapcap h2{margin:0;font-size:13px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.mapcap p{margin:0 0 6px}
+.mapcap p:last-child{margin-bottom:0}
+.mapcap-body{margin-top:8px;max-height:min(70vh,520px);overflow:auto}
+.mapcap .src{font-size:12.5px;color:var(--faint)}
+.mapcap-keys{list-style:none;margin:6px 0 8px;padding:0;display:flex;flex-wrap:wrap;gap:4px 14px}
+.mapcap-keys li{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink)}
+.mapcap-keys i{flex:none;width:14px;height:14px;border-radius:4px;background:var(--c);border:1.5px solid var(--c);opacity:.95}
+.mapcap-keys i.ring{background:transparent;border-style:dashed}
+.mapcap-keys i.dot{border-radius:50%}
+.mapcap .seg{margin:4px 0 8px;padding:2px}
+.mapcap .seg button{flex:1 1 0;min-height:36px;padding:0 8px;border:0;border-radius:999px;background:none;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.mapcap .seg button:hover{color:var(--ink);background:rgba(255,255,255,.08)}
+.mapcap .seg button[aria-pressed="true"]{background:rgba(255,180,90,.16);color:#FFE2B0;box-shadow:inset 0 0 0 1.5px var(--accent)}
+.mapcap .seg button:focus-visible{outline:3px solid #FFE2B0;outline-offset:1px}
+.mapcap-toggle{display:flex;align-items:center;gap:8px;width:100%;min-height:36px;padding:0;border:0;background:none;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:left;cursor:pointer}
+.mapcap-toggle span{flex:1}
+.mapcap-toggle .chev{flex:none;transition:transform .2s}
+.mapcap.open .mapcap-toggle .chev{transform:rotate(180deg)}
+.mapcap-toggle:focus-visible{outline:3px solid #FFE2B0;outline-offset:3px;border-radius:8px}
+.mapcap [hidden]{display:none}
+.ovlabel{margin-top:6px;padding:3px 9px;border-radius:99px;background:rgba(10,15,27,.82);border:1px solid var(--line-2);font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;pointer-events:none}
+@media (max-width:900px){
+  .mapcap{left:12px;right:auto;max-width:calc(100vw - 24px - 60px);top:calc(var(--bar-h) + 8px);padding:4px 12px;font-size:13px}
+  .mapcap.open{right:60px;padding:6px 12px 10px}
+  .mapcap h2{font-size:12.5px}
+  /* the long panels become a bottom sheet, so the map above them is seen */
+  main #panel.ahead,main #panel.fx,main #panel.rd{top:auto;bottom:calc(12px + 70px + 10px);max-height:52vh}
+}
+.cite.map{border-color:var(--line-2);background:rgba(255,255,255,.06);color:var(--ink)}
+.cite.map:hover{background:rgba(255,255,255,.14)}
+.cite.map[aria-pressed="true"]{background:rgba(127,209,255,.22);border-color:#7FD1FF}
+@media print{.mapcap,.ovpin{display:none}}
+@media (max-width:720px){.samples.start .sample-btn{min-height:104px;padding:14px 18px}.samples.start .sample-btn b{font-size:24px}}
+.precomp{margin:0 0 10px;font-size:13.5px;line-height:1.4;color:var(--muted)}
+.precomp .tag{margin-right:4px}
+
+/* the map credits button on a phone: one icon, not a tiled one */
+#map-credits .maplibregl-ctrl-attrib-button{background-repeat:no-repeat;background-size:24px}

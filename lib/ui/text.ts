@@ -66,6 +66,15 @@ export function prettyPlace(match: string): string {
   return first.replace(/\b([a-z])([a-z']*)/g, (_, a: string, rest: string) => a.toUpperCase() + rest).replace(/\bI-(\d+)/gi, "I-$1").replace(/\b(Ne|Nw|Se|Sw)\b/g, (d) => d.toUpperCase());
 }
 
+/** "1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500" -> "1600 Pennsylvania Ave NW, Washington, DC, 20500": the Census's capitals made readable, the state kept as capitals. */
+export function tidyAddress(matched: string): string {
+  return matched
+    .split(",")
+    .map((part) => part.trim())
+    .map((part) => (/^[A-Za-z]{2}$/.test(part) ? part.toUpperCase() : /^\d{5}(-\d{4})?$/.test(part) ? part : part.toLowerCase().replace(/\b([a-z])([a-z']*)/g, (_, a: string, rest: string) => a.toUpperCase() + rest).replace(/\b(Ne|Nw|Se|Sw)\b/g, (d) => d.toUpperCase())))
+    .join(", ");
+}
+
 export type MarkKind = "place" | "support" | "vague";
 
 export interface TextSegment {
