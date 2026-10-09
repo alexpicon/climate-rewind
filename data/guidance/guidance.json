@@ -1,0 +1,202 @@
+{
+ "retrieved": "2026-10-08",
+ "note": "Each text is a verbatim excerpt from the official page at the URL, copied on the retrieved date. Nothing is paraphrased.",
+ "lines": [
+  {
+   "id": "flood-turn-around",
+   "hazard": "flood",
+   "source": "Ready.gov, Floods",
+   "url": "https://www.ready.gov/floods",
+   "text": "Do not walk, swim or drive through flood waters. Turn Around, Don’t Drown!"
+  },
+  {
+   "id": "flood-six-inches",
+   "hazard": "flood",
+   "source": "Ready.gov, Floods",
+   "url": "https://www.ready.gov/floods",
+   "text": "Remember, just six inches of moving water can knock you down, and one foot of moving water can sweep your vehicle away."
+  },
+  {
+   "id": "flood-insurance",
+   "hazard": "flood",
+   "source": "Ready.gov, Floods",
+   "url": "https://www.ready.gov/floods",
+   "text": "Purchase flood insurance or renew a flood insurance policy. Homeowner’s insurance policies do not cover flooding. It typically takes up to 30 days for a policy to go into effect, so the time to buy is well before a disaster. Get flood coverage under the National Flood Insurance Program (NFIP)."
+  },
+  {
+   "id": "flood-nws-cars",
+   "hazard": "flood",
+   "source": "National Weather Service, Turn Around Don't Drown",
+   "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+   "text": "The Centers for Disease Control and Prevention report that over half of all flood-related drownings occur when a vehicle is driven into hazardous flood water."
+  },
+  {
+   "id": "flood-nws-barriers",
+   "hazard": "flood",
+   "source": "National Weather Service, Turn Around Don't Drown",
+   "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+   "text": "Never drive around the barriers blocking a flooded road. The road may have collapsed under that water."
+  },
+  {
+   "id": "flood-nws-evacuate",
+   "hazard": "flood",
+   "source": "National Weather Service, Flood safety (during a flood)",
+   "url": "https://www.weather.gov/safety/flood-during",
+   "text": "Avoid flood waters at all costs and evacuate immediately when water starts to rise. Don't wait until it's too late!"
+  },
+  {
+   "id": "tornado-shelter",
+   "hazard": "tornado",
+   "source": "Ready.gov, Tornadoes",
+   "url": "https://www.ready.gov/tornadoes",
+   "text": "Identify and practice going to a safe shelter such as a safe room built using FEMA criteria or a storm shelter built to ICC 500 standards. The next best protection is a small, interior, windowless room or basement on the lowest level of a sturdy building."
+  },
+  {
+   "id": "tornado-alerts",
+   "hazard": "tornado",
+   "source": "Ready.gov, Tornadoes",
+   "url": "https://www.ready.gov/tornadoes",
+   "text": "Sign up for your community’s warning system. The Emergency Alert System (EAS) and NOAA Weather Radio also provide emergency alerts. If your community has sirens, become familiar with the warning tone."
+  },
+  {
+   "id": "tornado-windows",
+   "hazard": "tornado",
+   "source": "Ready.gov, Tornadoes",
+   "url": "https://www.ready.gov/tornadoes",
+   "text": "Stay away from windows, doors, and outside walls. Use your arms to protect your head and neck."
+  },
+  {
+   "id": "tornado-nws-house",
+   "hazard": "tornado",
+   "source": "National Weather Service, What to do during a tornado",
+   "url": "https://www.weather.gov/safety/tornado-during",
+   "text": "At Your House: If you are in a tornado warning, go to your basement, safe room, or an interior room away from windows. Don't forget pets if time allows."
+  },
+  {
+   "id": "heat-definition",
+   "hazard": "heat",
+   "source": "Ready.gov, Extreme Heat",
+   "url": "https://www.ready.gov/heat",
+   "text": "Extreme heat is a period of high heat and humidity with temperatures above 90 degrees for at least two to three days."
+  },
+  {
+   "id": "heat-vulnerable",
+   "hazard": "heat",
+   "source": "Ready.gov, Extreme Heat",
+   "url": "https://www.ready.gov/heat",
+   "text": "Older adults, children and people with certain illnesses and chronic conditions are at greater risk from extreme heat."
+  },
+  {
+   "id": "heat-cool-places",
+   "hazard": "heat",
+   "source": "Ready.gov, Extreme Heat",
+   "url": "https://www.ready.gov/heat",
+   "text": "Identify places in your community where you can go to get cool such as libraries and shopping malls or contact your local health department to find cooling options in your area."
+  },
+  {
+   "id": "heat-fan",
+   "hazard": "heat",
+   "source": "Ready.gov, Extreme Heat",
+   "url": "https://www.ready.gov/heat",
+   "text": "Do not rely on a fan as your primary cooling device. Fans create air flow and a false sense of comfort, but do not reduce body temperature or prevent heat-related illnesses."
+  },
+  {
+   "id": "heat-check-on",
+   "hazard": "heat",
+   "source": "Ready.gov, Extreme Heat",
+   "url": "https://www.ready.gov/heat",
+   "text": "Check on family members, older adults and neighbors."
+  },
+  {
+   "id": "heat-power",
+   "hazard": "heat",
+   "source": "Ready.gov, Extreme Heat",
+   "url": "https://www.ready.gov/heat",
+   "text": "Heat waves may cause you to lose power. Visit Power Outages to learn how to stay safe."
+  },
+  {
+   "id": "heat-nws-slow-down",
+   "hazard": "heat",
+   "source": "National Weather Service, Heat safety (during extreme heat)",
+   "url": "https://www.weather.gov/safety/heat-during",
+   "text": "Slow down. Reduce, eliminate or reschedule strenuous activities until the coolest time of the day."
+  },
+  {
+   "id": "smoke-clean-room",
+   "hazard": "smoke",
+   "source": "Ready.gov, Wildfires",
+   "url": "https://www.ready.gov/wildfires",
+   "text": "Designate a room that can be closed off from outside air. Close all doors and windows. Set up a portable air cleaner to keep indoor pollution levels low when smoky conditions exist."
+  },
+  {
+   "id": "smoke-n95",
+   "hazard": "smoke",
+   "source": "Ready.gov, Wildfires",
+   "url": "https://www.ready.gov/wildfires",
+   "text": "If available, store an N95 mask to protect yourself from smoke inhalation."
+  },
+  {
+   "id": "smoke-airnow",
+   "hazard": "smoke",
+   "source": "AirNow.gov, Air Quality and Health",
+   "url": "https://www.airnow.gov/air-quality-and-health/",
+   "text": "Every day the Air Quality Index (AQI) tells you how clean or polluted your outdoor air is, along with associated health effects that may be of concern."
+  },
+  {
+   "id": "winter-roads",
+   "hazard": "winter",
+   "source": "Ready.gov, Winter Weather",
+   "url": "https://www.ready.gov/winter-weather",
+   "text": "Stay off roads if at all possible. If trapped in your car, then stay inside."
+  },
+  {
+   "id": "winter-co",
+   "hazard": "winter",
+   "source": "Ready.gov, Winter Weather",
+   "url": "https://www.ready.gov/winter-weather",
+   "text": "Avoid carbon monoxide poisoning. Only use generators and grills outdoors and away from windows and never heat your home with a gas stovetop or oven."
+  },
+  {
+   "id": "outage-food",
+   "hazard": "outage",
+   "source": "Ready.gov, Power Outages",
+   "url": "https://www.ready.gov/power-outages",
+   "text": "Keep freezers and refrigerators closed."
+  },
+  {
+   "id": "outage-generator",
+   "hazard": "outage",
+   "source": "Ready.gov, Power Outages",
+   "url": "https://www.ready.gov/power-outages",
+   "text": "Use a generator, but ONLY outdoors and away from windows."
+  },
+  {
+   "id": "outage-medical",
+   "hazard": "outage",
+   "source": "Ready.gov, Power Outages",
+   "url": "https://www.ready.gov/power-outages",
+   "text": "Have alternate plans for refrigerating medicines or using power-dependent medical devices."
+  },
+  {
+   "id": "wind-trees",
+   "hazard": "wind",
+   "source": "Ready.gov, Thunderstorms & Lightning",
+   "url": "https://www.ready.gov/thunderstorms-lightning",
+   "text": "Cut down or trim trees that may be in danger of falling on your home."
+  },
+  {
+   "id": "wind-lines",
+   "hazard": "wind",
+   "source": "Ready.gov, Thunderstorms & Lightning",
+   "url": "https://www.ready.gov/thunderstorms-lightning",
+   "text": "Watch for fallen power lines and trees. Report them immediately."
+  },
+  {
+   "id": "wind-nws",
+   "hazard": "wind",
+   "source": "National Weather Service, High wind safety",
+   "url": "https://www.weather.gov/safety/wind",
+   "text": "High winds can blow objects around and pose a significant threat to your safety."
+  }
+ ]
+}
