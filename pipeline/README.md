@@ -160,3 +160,27 @@ near Houston into southeastern Mississippi; Peterson et al., BAMS 2022). NOAA's 
 flashes, so the file keeps the light itself: 8,795 groups from two files, spanning 803 km (other flashes in the same storm are lit in
 those seconds too, and the page says so). The 829 km record of 22 October 2017 cannot be drawn: GOES-16 data on AWS begins on
 13 February 2018.
+
+## The event replays for the landing page (`event_package.py`)
+
+Writes `public/data/events/<id>.json`, one self-contained file per event the landing page opens as an animated map:
+
+- **wind**: NOAA's HRRR weather model (3 km), hour by hour, from Open-Meteo's historical-forecast API (`models=gfs_hrrr`, keyless),
+  sampled on a regular grid inside the event's box: 10 m wind speed, direction and gust, in mph. It is a model's picture of the
+  wind, not measurements, and an hourly snapshot smooths the fastest gusts of a storm that passes in minutes.
+- **track** (hurricanes): the National Hurricane Center's best track (HURDAT2): position, peak wind, pressure, status, landfall
+  flag and the 34, 50 and 64 knot wind radii by quadrant.
+- **reports**: the National Weather Service's Local Storm Reports in the box and hours, through Iowa State's IEM, verbatim
+  (measured or estimated, with the remark).
+
+| Event | Hours (UTC) | Grid | Reports | Model peak, sustained / gust | Highest gust report |
+|---|---|---|---|---|---|
+| `ian` Hurricane Ian | Sep 28 00:00 to Sep 29 12:00, 2022 | 529 points, 0.25° | 156 | 131 / 180 mph | 110 mph measured, 1 SE Grove City |
+| `derecho` the Iowa derecho | Aug 10 12:00 to Aug 11 02:00, 2020 | 630 points, 0.25° | 498 | 41 / 59 mph | 126 mph measured, Atkins (130 estimated) |
+| `helene` Hurricane Helene | Sep 26 12:00 to Sep 27 18:00, 2024 | 768 points, 0.35° | 993 | 91 / 136 mph | 91 mph measured, 1 S Rutherwood |
+
+The derecho's gusts lasted minutes and the model's hourly snapshot misses them; the replay says so and lets the measured reports
+and the radar carry that event.
+
+    cd pipeline && .venv/bin/python event_package.py            # every event (a few hundred Open-Meteo calls each)
+    cd pipeline && .venv/bin/python event_package.py --only ian
