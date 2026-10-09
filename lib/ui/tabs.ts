@@ -107,6 +107,8 @@ export interface SampleAddress {
   tornado?: string;
   /** For the story: play the area replay from Jan 1 of this year, on arrival. */
   replayFrom?: number;
+  /** For the story: the area replay plays only these NWS event types (the visitor can show every kind). */
+  replayKinds?: readonly string[];
 }
 
 /**

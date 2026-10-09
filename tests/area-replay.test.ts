@@ -128,3 +128,19 @@ describe("the replay's frames", () => {
     expect(replayDate(model, 110)).toBe("Apr 20, 2000");
   });
 });
+
+describe("a replay narrowed to one hazard", () => {
+  it("keeps only the given NWS types, and an empty list keeps everything", async () => {
+    const { onlyKinds } = await import("@/lib/ui/area-replay-model");
+    const replay: AreaReplay = { source: "t", since: 2000, types: ["Wildfire", "Flood", "High Wind"], areas: [], shapes: {}, events: [[1, 0, 0, 0, 0, 0], [2, 1, 0, 0, 0, 0], [3, 2, 0, 0, 0, 0], [4, 0, 0, 102, 0, 0]] };
+    expect(onlyKinds(replay, ["Wildfire"]).events.map((e) => e[0])).toEqual([1, 4]);
+    expect(onlyKinds(replay, []).events).toHaveLength(4);
+    expect(onlyKinds(replay, null).events).toHaveLength(4);
+  });
+
+  it("names the kinds in words", async () => {
+    const { kindsLabel } = await import("@/lib/ui/area-replay-model");
+    expect(kindsLabel(["Wildfire"])).toBe("wildfire");
+    expect(kindsLabel(["Hurricane (Typhoon)", "Tropical Storm", "Tropical Depression", "Storm Surge/Tide"])).toBe("hurricane, tropical storm, tropical depression and storm surge");
+  });
+});

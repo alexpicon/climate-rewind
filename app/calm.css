@@ -734,3 +734,4 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 /* Near either end the label hangs inward, so it never runs past the card. */
 .mt-tag.end{transform:translateX(calc(-100% + 6px))}
 .mt-tag.start{transform:translateX(-6px)}
+.ar-filter{margin:6px 0 0;font-size:14px;color:var(--muted)}

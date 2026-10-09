@@ -6,7 +6,7 @@ import { useMapApi } from "@/components/map/map-context";
 import { usePlayback } from "@/components/use-playback";
 import { useReducedMotion } from "@/components/use-reduced-motion";
 import type { AreaReplay } from "@/lib/area-replay";
-import { AREA_REPLAY_MS, buildReplayModel, finalTint, replayDate, replayFrame } from "@/lib/ui/area-replay-model";
+import { AREA_REPLAY_MS, buildReplayModel, finalTint, kindsLabel, onlyKinds, replayDate, replayFrame } from "@/lib/ui/area-replay-model";
 import { FAMILIES, FAMILY_ORDER } from "@/lib/ui/story-model";
 import { AreaReplayLayer } from "./area-replay-layer";
 
@@ -17,6 +17,8 @@ interface Props {
   county: string;
   /** Arrived to watch: scroll the card into view and play from Jan 1 of this year (reduced motion: the finished picture). */
   playFrom?: number | null;
+  /** Play only these NWS event types at first (a moment card about one hazard); the visitor can show every kind. */
+  kinds?: readonly string[] | null;
 }
 
 /**
@@ -24,7 +26,7 @@ interface Props {
  * family's colour on its date, while the totals by family count up and the latest deadly or costly event is named. Ends on where it all
  * fell. A real button and a slider drive it; with reduced motion the button shows the finished picture instead of playing.
  */
-export function AreaReplayCard({ lat, lon, state, county, playFrom = null }: Props) {
+export function AreaReplayCard({ lat, lon, state, county, playFrom = null, kinds = null }: Props) {
   const api = useMapApi();
   const reduced = useReducedMotion();
   const say = useAnnounce();
@@ -46,7 +48,10 @@ export function AreaReplayCard({ lat, lon, state, county, playFrom = null }: Pro
     return () => controller.abort();
   }, [lat, lon, state, county]);
 
-  const model = useMemo(() => (replay ? buildReplayModel(replay) : null), [replay]);
+  // A moment about one hazard opens on that hazard alone; "Show every kind" lifts the filter.
+  const [narrowed, setNarrowed] = useState(Boolean(kinds?.length));
+  const shown = useMemo(() => (replay ? (narrowed ? onlyKinds(replay, kinds) : replay) : null), [replay, narrowed, kinds]);
+  const model = useMemo(() => (shown ? buildReplayModel(shown) : null), [shown]);
   const tint = useMemo(() => (model ? finalTint(model) : []), [model]);
   const playback = usePlayback({ durationMs: AREA_REPLAY_MS, initialP: 0, onEnd: () => say("Replay finished. The map shows where events were filed most.") });
   const { p, playing } = playback;
@@ -113,8 +118,24 @@ export function AreaReplayCard({ lat, lon, state, county, playFrom = null }: Pro
         Every event since {model.since}, replayed
       </h2>
       <p className="ai-sub">
-        Each of the {model.events.length.toLocaleString("en-US")} events the National Weather Service filed for this county and its forecast zones lights its area on the map, in its colour, on its date.
+        Each of the {model.events.length.toLocaleString("en-US")} {narrowed && kinds?.length ? `${kindsLabel(kinds)} events` : "events"} the National Weather Service filed for this county and its forecast zones lights its area on the map, in its colour, on its date.
       </p>
+      {kinds?.length && replay ? (
+        <p className="ar-filter">
+          {narrowed ? `Only ${kindsLabel(kinds)}: ${model.events.length.toLocaleString("en-US")} of ${replay.events.length.toLocaleString("en-US")} events.` : `Every kind: ${replay.events.length.toLocaleString("en-US")} events.`}{" "}
+          <button
+            type="button"
+            className="linkbtn"
+            onClick={() => {
+              playback.pause();
+              playback.setP(0);
+              setNarrowed((now) => !now);
+            }}
+          >
+            {narrowed ? "Show every kind" : `Only ${kindsLabel(kinds)}`}
+          </button>
+        </p>
+      ) : null}
       <div className="ar-controls">
         <button type="button" className="btn ar-play" onClick={start}>
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">

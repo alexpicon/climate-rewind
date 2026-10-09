@@ -138,3 +138,16 @@ export function finalTint(model: ReplayModel): LitArea[] {
 export function replayDate(model: ReplayModel, day: number): string {
   return new Date(Date.UTC(model.since, 0, 1) + day * 86_400_000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 }
+
+/** The replay with only the events of the given NWS types (an empty or absent list keeps them all). */
+export function onlyKinds(replay: AreaReplay, kinds: readonly string[] | null | undefined): AreaReplay {
+  if (!kinds?.length) return replay;
+  const wanted = new Set(kinds);
+  return { ...replay, events: replay.events.filter(([, type]) => wanted.has(replay.types[type] ?? "")) };
+}
+
+/** "wildfire" or "hurricane and tropical storm" for a short list of NWS types, in words for a sentence. */
+export function kindsLabel(kinds: readonly string[]): string {
+  const words = [...new Set(kinds.map((k) => k.replace(/\s*\(.*\)$/, "").replace(/\/.*$/, "").toLowerCase()))];
+  return words.length <= 2 ? words.join(" and ") : `${words.slice(0, -1).join(", ")} and ${words[words.length - 1]}`;
+}

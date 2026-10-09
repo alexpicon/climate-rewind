@@ -19,12 +19,16 @@ export interface LandingMoment {
   tab: Tab;
   night?: string;
   event?: string;
-  /** The tornado the tornado replay starts from, and the year the area replay plays from. */
+  /** The tornado the tornado replay starts from; the year the area replay plays from, and the NWS event types it plays. */
   tornado?: string;
   replayFrom?: number;
+  replayKinds?: readonly string[];
   /** What the button says. */
   action: string;
 }
+
+/** The NWS event types of a tropical cyclone's landfall. */
+export const TROPICAL = ["Hurricane (Typhoon)", "Tropical Storm", "Tropical Depression", "Storm Surge/Tide"] as const;
 
 export const LANDING_MOMENTS: readonly LandingMoment[] = [
   {
@@ -73,7 +77,8 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     address: "658 Front St, Lahaina, HI",
     tab: "story",
     event: "SE-1118193",
-    replayFrom: 2019,
+    replayFrom: 2000,
+    replayKinds: ["Wildfire"],
     action: "Play the years",
   },
   {
@@ -86,7 +91,8 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     address: "2115 2nd St, Fort Myers, FL",
     tab: "story",
     event: "SE-1058654",
-    replayFrom: 2018,
+    replayFrom: 2000,
+    replayKinds: TROPICAL,
     action: "Play the years",
   },
 ];
@@ -95,5 +101,5 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
 export function momentLookup(moment: LandingMoment): SampleAddress {
   // A story moment that plays the years lands on the replay, not on its record's card (both would pull the page to themselves).
   const event = moment.replayFrom === undefined ? moment.event : undefined;
-  return { label: moment.kicker.split(" · ")[1] ?? moment.kicker, detail: "", hook: moment.title, address: moment.address, tab: moment.tab, night: moment.night, event, tornado: moment.tornado, replayFrom: moment.replayFrom };
+  return { label: moment.kicker.split(" · ")[1] ?? moment.kicker, detail: "", hook: moment.title, address: moment.address, tab: moment.tab, night: moment.night, event, tornado: moment.tornado, replayFrom: moment.replayFrom, replayKinds: moment.replayKinds };
 }

@@ -28,6 +28,8 @@ export interface StormNightTimeline {
 export interface AreaYears {
   kind: "years";
   from: number;
+  /** What one counted event is called, singular and plural: "wildfire", "wildfires". A file from before it existed has none. */
+  noun?: [string, string];
   /** Events and deaths filed each year, from `from`. */
   counts: number[];
   deaths: number[];
@@ -56,6 +58,7 @@ export interface TimelineFrame {
   reached: number;
 }
 
+const EVENTS: [string, string] = ["event", "events"];
 const plural = (n: number, one: string, many: string) => `${n.toLocaleString("en-US")} ${n === 1 ? one : many}`;
 const clock = (ms: number, offsetMin: number) => formatAtOffset(ms, offsetMin, { hour: "numeric", minute: "2-digit" });
 
@@ -70,7 +73,7 @@ export function timelineFrame(timeline: MomentTimeline, p: number): TimelineFram
     const reached = Math.min(years, Math.floor(x * years) + 1);
     const events = timeline.counts.slice(0, reached).reduce((a, b) => a + b, 0);
     const deaths = timeline.deaths.slice(0, reached).reduce((a, b) => a + b, 0);
-    return { x, when: String(timeline.from + Math.max(0, reached - 1)), totals: `${plural(events, "event", "events")} so far · ${plural(deaths, "death", "deaths")}`, reached };
+    return { x, when: String(timeline.from + Math.max(0, reached - 1)), totals: `${plural(events, ...(timeline.noun ?? EVENTS))} so far · ${plural(deaths, "death", "deaths")}`, reached };
   }
   const now = timeline.startMs + x * (timeline.endMs - timeline.startMs);
   if (timeline.kind === "tornadoes") {
@@ -94,7 +97,7 @@ export function timelineEnds(timeline: MomentTimeline): [string, string] {
 export function timelineSummary(timeline: MomentTimeline): string {
   if (timeline.kind === "years") {
     const events = timeline.counts.reduce((a, b) => a + b, 0);
-    return `${plural(events, "event", "events")} filed since ${timeline.from}; ${timeline.highlightYear} stands out, with ${plural(timeline.highlightDeaths, "death", "deaths")} in one event.`;
+    return `${plural(events, ...(timeline.noun ?? EVENTS))} filed since ${timeline.from}; ${timeline.highlightYear} stands out, with ${plural(timeline.highlightDeaths, "death", "deaths")} in one event.`;
   }
   if (timeline.kind === "tornadoes") {
     const focus = timeline.marks.find((m) => m.focus);

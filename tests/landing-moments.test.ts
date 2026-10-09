@@ -30,6 +30,7 @@ describe("each moment opens a replay, playing", () => {
       expect(lookup.night).toBe(m.night);
       expect(lookup.tornado).toBe(m.tornado);
       expect(lookup.replayFrom).toBe(m.replayFrom);
+      expect(lookup.replayKinds).toBe(m.replayKinds);
       expect(m.action).toMatch(/^Play /);
     }
   });
@@ -39,9 +40,12 @@ describe("each moment opens a replay, playing", () => {
     expect(momentLookup(moment("rolling-fork")).tornado).toBe("SE-1102153");
     for (const id of ["lahaina", "ian"]) {
       const lookup = momentLookup(moment(id));
-      expect(lookup.replayFrom).toBeLessThan(Number(moment(id).kicker.match(/\d{4}/)![0]));
+      expect(lookup.replayFrom).toBeLessThanOrEqual(Number(moment(id).kicker.match(/\d{4}/)![0]));
       expect(lookup.event).toBeUndefined();
     }
+    // A card about one hazard plays that hazard's events, not everything filed for the area.
+    expect(momentLookup(moment("lahaina")).replayKinds).toEqual(["Wildfire"]);
+    expect(momentLookup(moment("ian")).replayKinds).toContain("Hurricane (Typhoon)");
   });
 });
 

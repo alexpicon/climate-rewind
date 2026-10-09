@@ -17,7 +17,7 @@ const night: TornadoNight = {
   ],
 };
 const storm: StormNightTimeline = { kind: "night", startMs: T0, endMs: T0 + 3_600_000, offsetMin: -240, binMinutes: 10, lightning: [5, 0, 10, 0, 0, 1], reports: [T0 + 15 * 60_000, T0 + 50 * 60_000] };
-const years: AreaYears = { kind: "years", from: 2000, counts: [3, 0, 5, 2], deaths: [0, 0, 7, 1], highlightYear: 2002, highlightDeaths: 7 };
+const years: AreaYears = { kind: "years", from: 2000, noun: ["event", "events"], counts: [3, 0, 5, 2], deaths: [0, 0, 7, 1], highlightYear: 2002, highlightDeaths: 7 };
 
 describe("timelineFrame", () => {
   it("a tornado night counts the tornadoes and deaths passed, with the local clock", () => {
@@ -68,5 +68,16 @@ describe("the shipped timelines", () => {
     expect(lahaina.deaths[2023 - lahaina.from]).toBeGreaterThanOrEqual(102);
     const ian = file.moments.ian as AreaYears;
     expect([ian.highlightYear, ian.highlightDeaths]).toEqual([2022, 60]);
+    // Each counts only its card's hazard: Lahaina's wildfires since 2000 are nine, all the deaths in 2023.
+    expect(lahaina.noun).toEqual(["wildfire", "wildfires"]);
+    expect(lahaina.counts.reduce((a, b) => a + b, 0)).toBe(9);
+    expect(lahaina.deaths.reduce((a, b) => a + b, 0)).toBe(102);
+  });
+});
+
+describe("an older timelines file", () => {
+  it("without a noun still reads, as events", () => {
+    const old = { kind: "years", from: 2000, counts: [1, 2], deaths: [0, 3], highlightYear: 2001, highlightDeaths: 3 } as AreaYears;
+    expect(timelineFrame(old, 1).totals).toBe("3 events so far · 3 deaths");
   });
 });
