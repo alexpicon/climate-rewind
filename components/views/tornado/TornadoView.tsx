@@ -16,6 +16,9 @@ import { niceDate } from "@/lib/ui/text";
 import { TornadoEmpty } from "./TornadoEmpty";
 import { TornadoPanel } from "./TornadoPanel";
 import { TornadoScene } from "./tornado-scene";
+import { TornadoFlagsLayer } from "./tornado-flags-layer";
+import { useTornadoFlags } from "./use-tornado-flags";
+import { flagsAt } from "@/lib/ui/tornado-signatures";
 
 interface Props {
   data: LookupPayload;
@@ -88,6 +91,26 @@ function TornadoPlayer({ data, reduced, firstView, autoplay = false, onSeen, vie
     sceneRef.current?.update(ms, playing);
   }, [ms, playing, sceneVersion]);
 
+  // The radar's rotation flags around each tornado, drawn as its track draws. Reduced motion: the closest tornado's, faint and still.
+  const flags = useTornadoFlags(data.tornadoes);
+  const flagsRef = useRef<TornadoFlagsLayer | null>(null);
+  const [flagsVersion, setFlagsVersion] = useState(0);
+  useEffect(() => {
+    if (!api || !flags.done || flags.byId.size === 0) return;
+    const layer = new TornadoFlagsLayer(api);
+    layer.enter();
+    flagsRef.current = layer;
+    setFlagsVersion((v) => v + 1);
+    return () => {
+      layer.destroy();
+      flagsRef.current = null;
+    };
+  }, [api, flags]);
+  useEffect(() => {
+    const shownFlags = reduced ? (flags.byId.get(closest.id) ?? []).map((flag) => ({ flag, fresh: 0.5 })) : flagsAt(timeline, flags.byId, ms);
+    flagsRef.current?.update(shownFlags);
+  }, [ms, timeline, flags, reduced, closest.id, flagsVersion]);
+
   // Read each NWS survey aloud once, as its card appears.
   const shown = cardTornado(timeline, ms);
   const saidRef = useRef<string | null>(null);
@@ -115,7 +138,7 @@ function TornadoPlayer({ data, reduced, firstView, autoplay = false, onSeen, vie
 
   return (
     <>
-      <TornadoPanel data={data} timeline={timeline} ms={ms} closest={closest} />
+      <TornadoPanel data={data} timeline={timeline} ms={ms} closest={closest} flags={flags} />
 
       <View3DToggle on={view3d} onToggle={onView3d} />
 

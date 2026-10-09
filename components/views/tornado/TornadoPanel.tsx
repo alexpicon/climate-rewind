@@ -6,15 +6,18 @@ import { excerpt, niceDate } from "@/lib/ui/text";
 import { DAMAGE_LABEL, cardTornado, casualtyParts, damageWhere, efColor, pinsOf, type TornadoTimeline } from "@/lib/ui/tornado-model";
 import { segmentDistance } from "@/lib/geo";
 import type { LookupPayload, NearbyTornado } from "@/lib/types";
+import type { TornadoFlags } from "./use-tornado-flags";
 
 interface Props {
   data: LookupPayload;
   timeline: TornadoTimeline;
   ms: number;
   closest: NearbyTornado;
+  /** The radar's rotation flags around each tornado, when asked for. */
+  flags?: TornadoFlags;
 }
 
-export function TornadoPanel({ data, timeline, ms, closest }: Props) {
+export function TornadoPanel({ data, timeline, ms, closest, flags }: Props) {
   const total = timeline.items.length;
   const drawn = timeline.items.filter((i) => ms - i.startMs > i.drawMs * 0.5).length;
   const finale = ms >= timeline.tracksMs + timeline.finaleMs * 0.55;
@@ -72,6 +75,7 @@ export function TornadoPanel({ data, timeline, ms, closest }: Props) {
                 Event {shown.id.replace(/^SE-/, "")}
               </a>
             </p>
+            {flags?.done && flags.byId.has(shown.id) ? <RadarRotation flags={flags.byId.get(shown.id) ?? []} /> : null}
             {shownPins.length ? (
               <details className="dmg-det">
                 <summary>
@@ -179,5 +183,22 @@ export function TornadoPanel({ data, timeline, ms, closest }: Props) {
         </More>
       </section>
     </aside>
+  );
+}
+
+/** "The KBNA radar flagged rotation 14 times around this path", or that it flagged none, with what a flag is. */
+function RadarRotation({ flags }: { flags: readonly { radar: string }[] }) {
+  const radars = [...new Set(flags.map((f) => f.radar).filter(Boolean))];
+  return (
+    <p className="tc-radar">
+      <span className="sw-tvs" aria-hidden="true" />
+      {flags.length === 0 ? (
+        <>The radars flagged no rotation around this path, from 20 minutes before touchdown.</>
+      ) : (
+        <>
+          The {radars.join(" and ")} {radars.length === 1 ? "radar" : "radars"} flagged rotation <b>{flags.length}</b> {flags.length === 1 ? "time" : "times"} around this path, from 20 minutes before touchdown (red rings: a tornado vortex signature is a computer flag on the radar, not a confirmed tornado).
+        </>
+      )}
+    </p>
   );
 }
