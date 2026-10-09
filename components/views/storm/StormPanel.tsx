@@ -1,6 +1,8 @@
 "use client";
 
+import { HistoryNav } from "@/components/panel/HistoryNav";
 import { FemaCard } from "@/components/panel/FemaCard";
+import { Pending } from "@/components/panel/LoadSteps";
 import { TriggerCard } from "@/components/panel/TriggerCard";
 import { More, TextVersion } from "@/components/panel/Disclosure";
 import { compassWord } from "@/lib/geo";
@@ -65,6 +67,7 @@ export function StormPanel({ data, model, stage, p, onStage, replayDate, zone, o
   return (
     <aside id="panel" className="glass" aria-label="Story" tabIndex={-1}>
       <section id="v-storm" className="view on" aria-labelledby="storm-h">
+        <HistoryNav current="storm" address={data.address.input} />
         <h1 className="sr" id="storm-h">
           Storm replay: flood reports on the night of {replayDate}
         </h1>
@@ -91,7 +94,7 @@ export function StormPanel({ data, model, stage, p, onStage, replayDate, zone, o
           {stage === 2 && tally.sample > 0 && atEnd ? <> <span className="tag sample">{tally.sample} Sample</span></> : null}
         </p>
 
-        <TriggerCard trigger={data.floodTrigger} />
+        {data.pending?.includes("trigger") ? <Pending label="Reading the rain on past flood days…" /> : <TriggerCard trigger={data.floodTrigger} />}
 
         <More>
           {stage === 1 ? (
@@ -170,7 +173,7 @@ export function StormPanel({ data, model, stage, p, onStage, replayDate, zone, o
               </p>
             </>
           )}
-          <FemaCard fema={data.fema} notice={data.notices.fema} />
+          <FemaCard fema={data.fema} notice={data.notices.fema} pending={data.pending?.includes("fema")} />
           {data.notices.index ? <p className="note">{data.notices.index}</p> : null}
 
           <TextVersion>

@@ -1,5 +1,6 @@
 "use client";
 
+import { HistoryNav } from "@/components/panel/HistoryNav";
 import { useRestOnAddress } from "@/components/map/use-rest-on-address";
 import { INDEXED_STATES_TEXT } from "@/lib/constants";
 import type { LookupPayload } from "@/lib/types";
@@ -11,6 +12,7 @@ export function TornadoEmpty({ data }: { data: LookupPayload }) {
     return (
       <aside id="panel" className="glass" aria-label="Story" tabIndex={-1}>
         <section id="v-tornado" className="view on" aria-labelledby="tor-h">
+          <HistoryNav current="tornado" address={data.address.input} />
           <h1 className="sr" id="tor-h">Tornado paths: not indexed yet</h1>
           <p className="eyebrow">Tornadoes · not indexed yet</p>
           <div className="big" aria-hidden="true"><span>–</span></div>
@@ -23,6 +25,7 @@ export function TornadoEmpty({ data }: { data: LookupPayload }) {
   return (
     <aside id="panel" className="glass" aria-label="Story" tabIndex={-1}>
       <section id="v-tornado" className="view on" aria-labelledby="tor-h">
+        <HistoryNav current="tornado" address={data.address.input} />
         <h1 className="sr" id="tor-h">Tornado paths within 10 kilometres</h1>
         <p className="eyebrow">Tornadoes · within 10 km</p>
         <div className="big" aria-hidden="true"><span>0</span></div>

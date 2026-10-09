@@ -1,5 +1,6 @@
 "use client";
 
+import { HistoryNav } from "@/components/panel/HistoryNav";
 import { More, TextVersion } from "@/components/panel/Disclosure";
 import { excerpt, niceDate } from "@/lib/ui/text";
 import { DAMAGE_LABEL, cardTornado, casualtyParts, damageWhere, efColor, pinsOf, type TornadoTimeline } from "@/lib/ui/tornado-model";
@@ -31,6 +32,7 @@ export function TornadoPanel({ data, timeline, ms, closest }: Props) {
   return (
     <aside id="panel" className="glass" aria-label="Story" tabIndex={-1}>
       <section id="v-tornado" className="view on" aria-labelledby="tor-h">
+        <HistoryNav current="tornado" address={data.address.input} />
         <h1 className="sr" id="tor-h">
           Tornado paths within 10 kilometres of {data.address.matched}
         </h1>

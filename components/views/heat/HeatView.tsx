@@ -1,5 +1,7 @@
 "use client";
 
+import { Pending } from "@/components/panel/LoadSteps";
+import { HistoryNav } from "@/components/panel/HistoryNav";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAnnounce } from "@/components/announce";
 import { useMapApi } from "@/components/map/map-context";
@@ -53,9 +55,24 @@ export function HeatView(props: Props) {
     return () => controller.abort();
   }, [slug]);
 
+  if (data.pending?.includes("heat")) return <HeatPending data={data} />;
   if (!data.heat) return <HeatEmpty data={data} />;
   if (!grid) return <HeatAddressOnly data={data} />;
   return <HeatRegional {...props} firstView={firstView} grid={grid} />;
+}
+
+function HeatPending({ data }: { data: LookupPayload }) {
+  useRestOnAddress(data.address.lat, data.address.lon);
+  return (
+    <aside id="panel" className="glass" aria-label="Story" tabIndex={-1}>
+      <section id="v-heat" className="view on" aria-labelledby="heat-h">
+        <HistoryNav current="heat" address={data.address.input} />
+        <h1 className="sr" id="heat-h">Heat at this address</h1>
+        <p className="eyebrow">Heat at your address</p>
+        <Pending label="Reading 26 years of heat for this address…" />
+      </section>
+    </aside>
+  );
 }
 
 function HeatEmpty({ data }: { data: LookupPayload }) {
@@ -63,6 +80,7 @@ function HeatEmpty({ data }: { data: LookupPayload }) {
   return (
     <aside id="panel" className="glass" aria-label="Story" tabIndex={-1}>
       <section id="v-heat" className="view on" aria-labelledby="heat-h">
+        <HistoryNav current="heat" address={data.address.input} />
         <h1 className="sr" id="heat-h">Heat at this address</h1>
         <p className="eyebrow">Heat at your address</p>
         <div className="big" aria-hidden="true"><span>–</span></div>

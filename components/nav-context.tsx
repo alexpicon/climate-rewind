@@ -9,7 +9,7 @@ export interface AppNav {
   openAddress: (address: string, tab: Tab) => void;
 }
 
-const NavContext = createContext<AppNav | null>(null);
+export const NavContext = createContext<AppNav | null>(null);
 export const NavProvider = NavContext.Provider;
 
 /**

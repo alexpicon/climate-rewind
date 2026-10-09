@@ -1,5 +1,6 @@
 "use client";
 
+import { HistoryNav } from "@/components/panel/HistoryNav";
 import { More, TextVersion } from "@/components/panel/Disclosure";
 import { WEEKDAYS_LONG, streakAt, weekdayOf, type GridSummary } from "@/lib/ui/heat-model";
 import { heatLabels } from "@/lib/ui/data-source";
@@ -57,6 +58,7 @@ export function HeatPanel({ data, regional }: Props) {
   return (
     <aside id="panel" className="glass" aria-label="Story" tabIndex={-1}>
       <section id="v-heat" className="view on" aria-labelledby="heat-h">
+        <HistoryNav current="heat" address={data.address.input} />
         <h1 className="sr" id="heat-h">
           Heat at {data.address.matched}
         </h1>

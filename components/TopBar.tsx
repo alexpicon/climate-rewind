@@ -2,29 +2,21 @@
 
 import type { FormEvent, ReactNode } from "react";
 import { APP_NAME } from "@/lib/brand";
-import { VISIBLE_TABS, TAB_LABEL, TAB_SHORT, viewUrl, type Tab } from "@/lib/ui/tabs";
+import { TOP_LABEL, TOP_SHORT, TOP_TAB_VIEW, topTabOf, viewUrl, VISIBLE_TOP_TABS, type Tab, type TopTab } from "@/lib/ui/tabs";
 
-const TAB_ICON: Record<Tab, ReactNode> = {
+const TAB_ICON: Record<TopTab, ReactNode> = {
   ahead: (
     <>
       <circle cx="12" cy="12" r="9" />
       <path d="M12 7v5l3.2 2" />
     </>
   ),
-  story: (
+  history: (
     <>
       <path d="M4 19V5" />
       <path d="M4 12h5l2-5 3 10 2-5h4" />
     </>
   ),
-  storm: <path d="M12 3c3.5 4.5 6 7.5 6 10.5a6 6 0 0 1-12 0C6 10.5 8.5 7.5 12 3z" />,
-  heat: (
-    <>
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M5 5l1.8 1.8M17.2 17.2L19 19M19 5l-1.8 1.8M6.8 17.2L5 19" />
-    </>
-  ),
-  tornado: <path d="M3 5h18M5 9h14M8 13h9M10 17h5M12 21h1" />,
   future: (
     <>
       <path d="M3 17l5-5 4 4 8-9" />
@@ -35,12 +27,6 @@ const TAB_ICON: Record<Tab, ReactNode> = {
     <>
       <path d="M12 3l8 3v5c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6z" />
       <path d="M9 12l2 2 4-4" />
-    </>
-  ),
-  how: (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 11v5M12 7.5v.1" />
     </>
   ),
 };
@@ -115,29 +101,52 @@ export function TopBar({ input, onInput, onSubmit, matched, lookingUp, tab, addr
       {live}
 
       <nav id="tabs" aria-label="Views">
-        {VISIBLE_TABS.map((id) => (
-          <a
-            key={id}
-            href={viewUrl(address, id)}
-            aria-label={TAB_LABEL[id]}
-            title={TAB_LABEL[id]}
-            aria-current={tab === id ? "page" : undefined}
-            onClick={(event) => {
-              if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
-              event.preventDefault();
-              onTab(id);
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
-              {TAB_ICON[id]}
-            </svg>
-            <span className="lbl lbl-long">{TAB_LABEL[id]}</span>
-            <span className="lbl lbl-short" aria-hidden="true">
-              {TAB_SHORT[id]}
-            </span>
-          </a>
-        ))}
+        {VISIBLE_TOP_TABS.map((id) => {
+          const target: Tab = TOP_TAB_VIEW[id];
+          return (
+            <a
+              key={id}
+              href={viewUrl(address, target)}
+              aria-label={TOP_LABEL[id]}
+              title={TOP_LABEL[id]}
+              aria-current={topTabOf(tab) === id ? "page" : undefined}
+              onClick={(event) => {
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+                event.preventDefault();
+                // Already inside "Your history": the tab keeps the view you are on.
+                if (topTabOf(tab) !== id) onTab(target);
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+                {TAB_ICON[id]}
+              </svg>
+              <span className="lbl lbl-long">{TOP_LABEL[id]}</span>
+              <span className="lbl lbl-short" aria-hidden="true">
+                {TOP_SHORT[id]}
+              </span>
+            </a>
+          );
+        })}
       </nav>
+
+      <a
+        id="how-link"
+        href={viewUrl(address, "how")}
+        aria-label="How it works"
+        title="How it works"
+        aria-current={tab === "how" ? "page" : undefined}
+        onClick={(event) => {
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+          event.preventDefault();
+          onTab("how");
+        }}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v5M12 7.5v.1" />
+        </svg>
+        <span className="how-t" aria-hidden="true">How it works</span>
+      </a>
     </header>
   );
 }
