@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { AiJob } from "@/lib/ai-jobs";
 import { describeJobs } from "@/lib/ai-jobs";
 import { APP_NAME } from "@/lib/brand";
 import { landingLead } from "@/lib/ui/detective-copy";
 import { featureSample, LANDING_FEATURES, type FeatureIcon } from "@/lib/ui/landing-features";
 import { LANDING_MOMENTS, momentLookup } from "@/lib/ui/landing-moments";
+import type { MomentsFile } from "@/lib/ui/moment-timeline";
+import { MomentTimeline } from "./landing/MomentTimeline";
 import { RecordFlash } from "./landing/RecordFlash";
 import { chooseSample, SAMPLE_ADDRESSES, viewUrl, type SampleAddress } from "@/lib/ui/tabs";
 import { TrackReel } from "./landing/TrackReel";
@@ -48,6 +50,16 @@ function FeatureGlyph({ icon }: { icon: FeatureIcon }) {
 export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, detectiveRan, aiJobs = [], onSample }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const ai = landingLead(detectiveRan);
+  // The moment cards' timelines: a small file, read after the page is up. Without it the cards still work, just without timelines.
+  const [moments, setMoments] = useState<MomentsFile | null>(null);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/data/moments.json", { signal: controller.signal })
+      .then((r) => (r.ok ? (r.json() as Promise<MomentsFile>) : null))
+      .then((file) => file && setMoments(file))
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, []);
   // After a lookup that failed the page comes back to this form: put the keyboard where the problem and the fix are.
   useEffect(() => {
     if (error) inputRef.current?.focus();
@@ -148,6 +160,7 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
                 </span>
                 {moment.line}
               </p>
+              {moments?.moments[moment.id] ? <MomentTimeline timeline={moments.moments[moment.id]} /> : null}
               <button
                 type="button"
                 className="feat-go mo-go"

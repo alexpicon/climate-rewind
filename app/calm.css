@@ -709,3 +709,28 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .mo-t{margin:4px 0 0;font-size:17px;font-weight:650;line-height:1.3}
 .mo-l{margin:0 0 6px;font-size:14.5px;line-height:1.45;color:var(--muted)}
 @media (max-width:720px){.moments{grid-template-columns:1fr}.rf-clock{font-size:20px}}
+
+/* ---------- landing: a moment card's timeline ---------- */
+.mt{margin:6px 0 10px;padding:10px 12px 8px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+.mt-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.mt-play{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1px solid var(--line-2);background:var(--accent);color:var(--accent-ink)}
+.mt-play:hover,.mt-play:focus-visible{background:#FFC67E}
+.mt-now{margin:0;font-size:13px;line-height:1.3;color:var(--muted);font-variant-numeric:tabular-nums}
+.mt-now b{color:var(--ink);font-weight:650;margin-right:4px}
+.mt-svg{display:block;width:100%;height:56px;overflow:visible}
+.mt-bar,.mt-tor,.mt-bolt,.mt-report{opacity:.22;transition:opacity .25s}
+.mt-bar.lit,.mt-tor.lit,.mt-bolt.lit,.mt-report.lit{opacity:1}
+.mt-bar{fill:#6FA8FF}
+.mt-bar.hi{fill:var(--accent)}
+.mt-tor.hi.lit{filter:drop-shadow(0 0 4px #FF4FA3)}
+.mt-bolt{fill:#C9D3FF}
+.mt-report{fill:#5FE3D8}
+.mt-head-line{stroke:var(--accent);stroke-width:2;vector-effect:non-scaling-stroke}
+.mt-ends{display:flex;justify-content:space-between;margin-top:4px;font-size:11.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion: reduce){.mt-bar,.mt-tor,.mt-bolt,.mt-report{transition:none}}
+.mt-strip{position:relative;padding-top:20px}
+.mt-tag{position:absolute;top:0;transform:translateX(-50%);padding:1px 7px;border-radius:999px;font-size:11px;font-weight:650;white-space:nowrap;color:var(--muted);border:1px solid var(--line-2);background:rgba(6,10,19,.9);transition:color .25s,border-color .25s}
+.mt-tag.lit{color:var(--accent-ink);background:var(--accent);border-color:var(--accent)}
+/* Near either end the label hangs inward, so it never runs past the card. */
+.mt-tag.end{transform:translateX(calc(-100% + 6px))}
+.mt-tag.start{transform:translateX(-6px)}
