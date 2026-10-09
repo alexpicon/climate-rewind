@@ -1,0 +1,430 @@
+{
+ "slug": "fort-myers",
+ "lat": 26.641921862769,
+ "lon": -81.869795800037,
+ "built": "2026-10-09T12:03:06.196Z",
+ "observed": {
+  "firstYear": 2000,
+  "lastYear": 2025,
+  "source": "Open-Meteo historical weather archive (ERA5 reanalysis), daily, 2000 to 2025",
+  "measures": [
+   {
+    "id": "feels90",
+    "title": "Days with a feels-like high of 90°F or more",
+    "byYear": {
+     "2000": 146,
+     "2001": 134,
+     "2002": 181,
+     "2003": 172,
+     "2004": 145,
+     "2005": 152,
+     "2006": 161,
+     "2007": 161,
+     "2008": 145,
+     "2009": 178,
+     "2010": 163,
+     "2011": 173,
+     "2012": 152,
+     "2013": 161,
+     "2014": 157,
+     "2015": 194,
+     "2016": 160,
+     "2017": 165,
+     "2018": 177,
+     "2019": 199,
+     "2020": 199,
+     "2021": 184,
+     "2022": 192,
+     "2023": 202,
+     "2024": 173,
+     "2025": 198
+    },
+    "decades": [
+     {
+      "label": "2000s",
+      "startYear": 2000,
+      "endYear": 2009,
+      "years": 10,
+      "total": 1575,
+      "perYear": 157.5
+     },
+     {
+      "label": "2010s",
+      "startYear": 2010,
+      "endYear": 2019,
+      "years": 10,
+      "total": 1701,
+      "perYear": 170.1
+     },
+     {
+      "label": "2020 to 2025",
+      "startYear": 2020,
+      "endYear": 2025,
+      "years": 6,
+      "total": 1148,
+      "perYear": 191.3
+     }
+    ],
+    "trend": {
+     "n": 26,
+     "s": 162,
+     "z": 3.5553170862632157,
+     "p": 0.00037752354621076525,
+     "slope": 1.7857142857142858,
+     "verdict": "increasing",
+     "perDecade": 17.857142857142858
+    }
+   },
+   {
+    "id": "feels100",
+    "title": "Days with a feels-like high of 100°F or more",
+    "byYear": {
+     "2000": 15,
+     "2001": 24,
+     "2002": 20,
+     "2003": 16,
+     "2004": 33,
+     "2005": 45,
+     "2006": 30,
+     "2007": 50,
+     "2008": 25,
+     "2009": 44,
+     "2010": 61,
+     "2011": 41,
+     "2012": 20,
+     "2013": 15,
+     "2014": 40,
+     "2015": 46,
+     "2016": 53,
+     "2017": 38,
+     "2018": 28,
+     "2019": 30,
+     "2020": 54,
+     "2021": 24,
+     "2022": 66,
+     "2023": 83,
+     "2024": 85,
+     "2025": 73
+    },
+    "decades": [
+     {
+      "label": "2000s",
+      "startYear": 2000,
+      "endYear": 2009,
+      "years": 10,
+      "total": 302,
+      "perYear": 30.2
+     },
+     {
+      "label": "2010s",
+      "startYear": 2010,
+      "endYear": 2019,
+      "years": 10,
+      "total": 372,
+      "perYear": 37.2
+     },
+     {
+      "label": "2020 to 2025",
+      "startYear": 2020,
+      "endYear": 2025,
+      "years": 6,
+      "total": 385,
+      "perYear": 64.2
+     }
+    ],
+    "trend": {
+     "n": 26,
+     "s": 139,
+     "z": 3.044693849314553,
+     "p": 0.0023291728308846567,
+     "slope": 1.8125,
+     "verdict": "increasing",
+     "perDecade": 18.125
+    }
+   },
+   {
+    "id": "rain1",
+    "title": "Days with 1 inch of rain or more",
+    "byYear": {
+     "2000": 2,
+     "2001": 9,
+     "2002": 4,
+     "2003": 2,
+     "2004": 4,
+     "2005": 6,
+     "2006": 5,
+     "2007": 2,
+     "2008": 3,
+     "2009": 6,
+     "2010": 5,
+     "2011": 3,
+     "2012": 3,
+     "2013": 4,
+     "2014": 4,
+     "2015": 2,
+     "2016": 6,
+     "2017": 17,
+     "2018": 3,
+     "2019": 10,
+     "2020": 8,
+     "2021": 5,
+     "2022": 6,
+     "2023": 7,
+     "2024": 14,
+     "2025": 5
+    },
+    "decades": [
+     {
+      "label": "2000s",
+      "startYear": 2000,
+      "endYear": 2009,
+      "years": 10,
+      "total": 43,
+      "perYear": 4.3
+     },
+     {
+      "label": "2010s",
+      "startYear": 2010,
+      "endYear": 2019,
+      "years": 10,
+      "total": 57,
+      "perYear": 5.7
+     },
+     {
+      "label": "2020 to 2025",
+      "startYear": 2020,
+      "endYear": 2025,
+      "years": 6,
+      "total": 45,
+      "perYear": 7.5
+     }
+    ],
+    "trend": {
+     "n": 26,
+     "s": 97,
+     "z": 2.1386204128997424,
+     "p": 0.03246641989744406,
+     "slope": 0.14285714285714285,
+     "verdict": "increasing",
+     "perDecade": 1.4285714285714284
+    }
+   },
+   {
+    "id": "air90",
+    "title": "Days with an air temperature high of 90°F or more",
+    "byYear": {
+     "2000": 21,
+     "2001": 10,
+     "2002": 9,
+     "2003": 7,
+     "2004": 21,
+     "2005": 42,
+     "2006": 27,
+     "2007": 63,
+     "2008": 30,
+     "2009": 38,
+     "2010": 63,
+     "2011": 52,
+     "2012": 20,
+     "2013": 8,
+     "2014": 44,
+     "2015": 49,
+     "2016": 23,
+     "2017": 37,
+     "2018": 11,
+     "2019": 68,
+     "2020": 81,
+     "2021": 49,
+     "2022": 66,
+     "2023": 113,
+     "2024": 72,
+     "2025": 90
+    },
+    "decades": [
+     {
+      "label": "2000s",
+      "startYear": 2000,
+      "endYear": 2009,
+      "years": 10,
+      "total": 268,
+      "perYear": 26.8
+     },
+     {
+      "label": "2010s",
+      "startYear": 2010,
+      "endYear": 2019,
+      "years": 10,
+      "total": 375,
+      "perYear": 37.5
+     },
+     {
+      "label": "2020 to 2025",
+      "startYear": 2020,
+      "endYear": 2025,
+      "years": 6,
+      "total": 471,
+      "perYear": 78.5
+     }
+    ],
+    "trend": {
+     "n": 26,
+     "s": 162,
+     "z": 3.551278590906421,
+     "p": 0.00038336442535873367,
+     "slope": 2.6,
+     "verdict": "increasing",
+     "perDecade": 26
+    }
+   }
+  ]
+ },
+ "projected": {
+  "thresholdF": 90,
+  "baselinePeriod": [
+   2001,
+   2020
+  ],
+  "futurePeriod": [
+   2041,
+   2050
+  ],
+  "models": [
+   {
+    "model": "CMCC_CM2_VHR4",
+    "baseline": 40.5,
+    "future": 96
+   },
+   {
+    "model": "FGOALS_f3_H",
+    "baseline": 54.3,
+    "future": 94.8
+   },
+   {
+    "model": "HiRAM_SIT_HR",
+    "baseline": 47.4,
+    "future": 89.1
+   },
+   {
+    "model": "MRI_AGCM3_2_S",
+    "baseline": 38.3,
+    "future": 81.9
+   },
+   {
+    "model": "EC_Earth3P_HR",
+    "baseline": 44.3,
+    "future": 92.9
+   },
+   {
+    "model": "MPI_ESM1_2_XR",
+    "baseline": 54.1,
+    "future": 81.4
+   },
+   {
+    "model": "NICAM16_8S",
+    "baseline": 65.9,
+    "future": 103.9
+   }
+  ],
+  "baseline": {
+   "min": 38.3,
+   "median": 47.4,
+   "max": 65.9
+  },
+  "future": {
+   "min": 81.4,
+   "median": 92.9,
+   "max": 103.9
+  },
+  "source": "Open-Meteo Climate API (CMIP6 HighResMIP models), daily temperature_2m_max"
+ },
+ "notices": {},
+ "explanation": {
+  "generatedAt": "2026-10-09T12:03:12.387Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "At this address, days with a feels-like high of 90°F or more averaged 157.5 days a year in the 2000s and 191.3 days a year from 2020 to 2025, and the record shows a clear trend up.",
+    "cites": [
+     "past-hot-days"
+    ]
+   },
+   {
+    "text": "Days with a feels-like high of 100°F or more rose from 30.2 days a year in the 2000s to 64.2 days a year from 2020 to 2025, also a clear trend up.",
+    "cites": [
+     "past-very-hot-days"
+    ]
+   },
+   {
+    "text": "Days with 1 inch of rain or more averaged 4.3 days a year in the 2000s and 7.5 days a year from 2020 to 2025, which is likewise a clear trend up.",
+    "cites": [
+     "past-heavy-rain"
+    ]
+   },
+   {
+    "text": "Climate models project that days at or above 90°F air temperature will reach 81.4 to 103.9 a year in 2041 to 2050, with the middle model at 92.9, compared with a range of 38.3 to 65.9 for 2001 to 2020.",
+    "cites": [
+     "future-hot-days"
+    ]
+   },
+   {
+    "text": "These are projections for a typical year in 2041 to 2050, on a grid about 25 km wide, and not a forecast of any single year or day.",
+    "cites": [
+     "caveat"
+    ]
+   },
+   {
+    "text": "The models disagree with each other, so we show the range, and they follow a high-emissions path.",
+    "cites": [
+     "caveat",
+     "future-hot-days"
+    ]
+   }
+  ],
+  "sources": {
+   "past-hot-days": {
+    "id": "past-hot-days",
+    "kind": "history",
+    "chip": "Past: 90°F days",
+    "title": "Days with a feels-like high of 90°F or more",
+    "origin": "Open-Meteo historical weather archive (ERA5 reanalysis), daily, 2000 to 2025. Counted from the daily record at this address.",
+    "text": "Days with a feels-like high of 90°F or more, 2000 to 2025. 2000s: 157.5 days a year on average (1575 days in 10 years); 2010s: 170.1 days a year on average (1701 days in 10 years); 2020 to 2025: 191.3 days a year on average (1148 days in 6 years). Trend test (Mann-Kendall with Sen slope, one value per year; a trend counts only if p is under 0.05). Result: clear trend up, about 17.9 more days a year each decade."
+   },
+   "past-very-hot-days": {
+    "id": "past-very-hot-days",
+    "kind": "history",
+    "chip": "Past: 100°F days",
+    "title": "Days with a feels-like high of 100°F or more",
+    "origin": "Open-Meteo historical weather archive (ERA5 reanalysis), daily, 2000 to 2025. Counted from the daily record at this address.",
+    "text": "Days with a feels-like high of 100°F or more, 2000 to 2025. 2000s: 30.2 days a year on average (302 days in 10 years); 2010s: 37.2 days a year on average (372 days in 10 years); 2020 to 2025: 64.2 days a year on average (385 days in 6 years). Trend test (Mann-Kendall with Sen slope, one value per year; a trend counts only if p is under 0.05). Result: clear trend up, about 18.1 more days a year each decade."
+   },
+   "past-heavy-rain": {
+    "id": "past-heavy-rain",
+    "kind": "history",
+    "chip": "Past: heavy rain",
+    "title": "Days with 1 inch of rain or more",
+    "origin": "Open-Meteo historical weather archive (ERA5 reanalysis), daily, 2000 to 2025. Counted from the daily record at this address.",
+    "text": "Days with 1 inch of rain or more, 2000 to 2025. 2000s: 4.3 days a year on average (43 days in 10 years); 2010s: 5.7 days a year on average (57 days in 10 years); 2020 to 2025: 7.5 days a year on average (45 days in 6 years). Trend test (Mann-Kendall with Sen slope, one value per year; a trend counts only if p is under 0.05). Result: clear trend up, about 1.4 more days a year each decade."
+   },
+   "future-hot-days": {
+    "id": "future-hot-days",
+    "kind": "heat",
+    "chip": "Climate models",
+    "title": "Days per year with an air-temperature high of 90°F or more, in climate models",
+    "origin": "Open-Meteo Climate API (CMIP6 HighResMIP models), daily temperature_2m_max. 7 of 7 CMIP6 HighResMIP models had data for this point.",
+    "text": "Average days a year at or above 90°F (air temperature, not feels-like) in the climate models, 7 models. 2001 to 2020: the middle model has 47.4 days a year; models range from 38.3 to 65.9. 2041 to 2050: the middle model has 92.9 days a year; models range from 81.4 to 103.9. The middle model changes by 45.5 days a year between the two periods. For comparison, the weather archive counted an average of 35.2 days a year at or above 90°F over 2001 to 2020."
+   },
+   "caveat": {
+    "id": "caveat",
+    "kind": "history",
+    "chip": "How sure?",
+    "title": "What the projections are, and are not",
+    "origin": "Open-Meteo Climate API; CMIP6 HighResMIP climate models",
+    "text": "Climate-model projections (CMIP6), not a forecast; ~25 km grid; models disagree, so we show the range. These models follow a high-emissions path (as close to RCP8.5 as CMIP6 gets), and Open-Meteo adjusts them to match the past record at this spot, which does not change the size of the warming they show. They describe how often hot days could occur in a typical year of 2041 to 2050, not what any single year or day will do. A trend in the past record is reported only when a statistical test gives p under 0.05; otherwise the record says \"no clear trend yet\", which means the 26 years are too few or too variable to tell."
+   }
+  },
+  "dropped": 0,
+  "message": null
+ }
+}
