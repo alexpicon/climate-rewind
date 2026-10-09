@@ -13,6 +13,8 @@ import type { MomentsFile } from "@/lib/ui/moment-timeline";
 import { MomentTimeline } from "./landing/MomentTimeline";
 import { EventCards } from "./landing/EventCards";
 import { RecordFlash } from "./landing/RecordFlash";
+import { SampleBackdrop } from "./landing/SampleBackdrop";
+import { PREVIEW_OF_ADDRESS, type SamplePreviewsFile } from "@/lib/ui/sample-preview";
 import { chooseSample, SAMPLE_ADDRESSES, viewUrl, type SampleAddress } from "@/lib/ui/tabs";
 import { TrackReel } from "./landing/TrackReel";
 
@@ -79,6 +81,17 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
       .catch(() => undefined);
     return () => controller.abort();
   }, []);
+  // The moving maps behind the "Start here" cards: a small file; without it the cards are plain.
+  const [previews, setPreviews] = useState<SamplePreviewsFile | null>(null);
+  const [previewsPaused, setPreviewsPaused] = useState(false);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/data/sample-previews.json", { signal: controller.signal })
+      .then((r) => (r.ok ? (r.json() as Promise<SamplePreviewsFile>) : null))
+      .then((file) => file && setPreviews(file))
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, []);
   // After a lookup that failed the page comes back to this form: put the keyboard where the problem and the fix are.
   useEffect(() => {
     if (error) inputRef.current?.focus();
@@ -101,9 +114,16 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
           lightning, replayed on real radar. Anything that is not real data is tagged SAMPLE.
         </p>
 
-        <h2 className="h3 landing-samples-h" id="start-here">
-          Start here
-        </h2>
+        <div className="sp-head">
+          <h2 className="h3 landing-samples-h" id="start-here">
+            Start here
+          </h2>
+          {previews ? (
+            <button type="button" className="sp-pause" aria-pressed={previewsPaused} onClick={() => setPreviewsPaused((v) => !v)}>
+              {previewsPaused ? "Play the maps" : "Pause the maps"}
+            </button>
+          ) : null}
+        </div>
         <ul className="samples start" aria-labelledby="start-here">
           {SAMPLE_ADDRESSES.map((sample) => (
             <li key={sample.address}>
@@ -113,6 +133,7 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
                 disabled={lookingUp}
                 onClick={() => chooseSample(sample, { fill: onInput, run: onSample, focusInput: () => inputRef.current?.focus() })}
               >
+                <SampleBackdrop preview={previews?.previews[PREVIEW_OF_ADDRESS[sample.address]]} paused={previewsPaused} />
                 <b>{sample.label}</b>
                 <span className="hook">{sample.hook}</span>
                 <span className="where">{sample.detail}</span>

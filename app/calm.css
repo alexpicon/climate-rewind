@@ -878,3 +878,15 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
   .moments-five .mt-svg{height:52px}
   .moments-five .mo-go{min-height:36px;padding:0 14px;font-size:14px}
 }
+
+/* The "Start here" cards: a moving map of each card's hook behind its words, the words kept readable by a scrim on the left. */
+.samples.start .sample-btn{position:relative;overflow:hidden;isolation:isolate}
+.samples.start .sample-btn > :not(.sp-back){position:relative;z-index:1;max-width:62%}
+.sp-back{position:absolute;inset:0;z-index:0;pointer-events:none}
+.sp-back canvas{display:block;-webkit-mask-image:linear-gradient(90deg,transparent 30%,#000 62%);mask-image:linear-gradient(90deg,transparent 30%,#000 62%)}
+.sp-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,20,34,.55) 0%,rgba(14,20,34,.35) 45%,rgba(14,20,34,0) 70%)}
+.sp-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.sp-pause{font:inherit;font-size:13px;font-weight:600;color:var(--muted);background:none;border:1px solid var(--line-2);border-radius:99px;padding:4px 12px;min-height:30px;cursor:pointer}
+.sp-pause:hover{color:var(--ink);border-color:var(--accent)}
+.sp-pause:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.sp-pause{display:none}}
