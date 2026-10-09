@@ -7,6 +7,7 @@ import { useShown } from "./use-shown";
 import type { Fit } from "@/lib/ui/albers";
 import { buildRecordModel, recordFrame, type RecordFlashFile, type RecordModel } from "@/lib/ui/record-flash-model";
 import type { StateShapes } from "@/lib/ui/state-outlines";
+import { fetchJson } from "./fetch-json";
 import { drawLocator, drawRecordMap, recordFit } from "./record-flash-map";
 
 /** The ten seconds play over this long: two and a half times slower than they happened. */
@@ -71,14 +72,15 @@ export function RecordFlash() {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+  // Each file has its own request: one arriving must not cancel the other (the map would lose its land and state lines).
   useEffect(() => {
     if (!visible || file) return;
-    const controller = new AbortController();
-    const get = <T,>(url: string) => fetch(url, { signal: controller.signal }).then((r) => (r.ok ? (r.json() as Promise<T>) : null));
-    get<RecordFlashFile>("/data/lightning/record-2020-04-29.json").then((f) => f && setFile(f)).catch(() => undefined);
-    get<StateShapes>("/data/us-states.json").then((s) => s && setShapes(s)).catch(() => undefined);
-    return () => controller.abort();
+    return fetchJson<RecordFlashFile>("/data/lightning/record-2020-04-29.json", setFile);
   }, [visible, file]);
+  useEffect(() => {
+    if (!visible || shapes) return;
+    return fetchJson<StateShapes>("/data/us-states.json", setShapes);
+  }, [visible, shapes]);
   // The data loads when the card is near; the replay starts only once the card is really on screen.
   const shown = useShown(wrapRef);
   useEffect(() => {
@@ -121,6 +123,11 @@ export function RecordFlash() {
 
   const record = file?.record;
   const atEnd = p >= 0.9995;
+  // With reduced motion the replay opens on its last frame without having played: that is "Play", not "Watch it again".
+  const [played, setPlayed] = useState(false);
+  useEffect(() => {
+    if (playing) setPlayed(true);
+  }, [playing]);
   return (
     <figure className="record-flash" aria-labelledby="rf-h">
       <div className="rf-stage" ref={wrapRef} style={{ height: HEIGHT }}>
@@ -149,7 +156,7 @@ export function RecordFlash() {
             <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               {playing ? <path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor" /> : <path d="M8 5.5v13l11-6.5z" fill="currentColor" />}
             </svg>
-            <span>{playing ? "Pause" : atEnd ? "Watch it again" : "Play"} the record flash</span>
+            <span>{playing ? "Pause" : atEnd && played ? "Watch it again" : "Play"} the record flash</span>
           </button>
         ) : null}
       </div>

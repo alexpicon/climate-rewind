@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion } from "@/components/use-reduced-motion";
+import { fetchJson } from "./fetch-json";
 import { useShown } from "./use-shown";
 import type { Fit } from "@/lib/ui/albers";
 import { buildEventModel, keyMomentP, stormAt, timeAt, hourAt, windAt, type EventModel, type EventPackage } from "@/lib/ui/event-model";
@@ -132,14 +133,15 @@ export function EventPreview({ id }: { id: string }) {
     };
   }, []);
 
+  // Each file has its own request: one arriving must not cancel the other (the map would lose its state lines).
   useEffect(() => {
     if (!visible || pkg) return;
-    const controller = new AbortController();
-    const get = <T,>(url: string) => fetch(url, { signal: controller.signal }).then((r) => (r.ok ? (r.json() as Promise<T>) : null));
-    get<EventPackage>(`/data/events/${id}.json`).then((p) => p && setPkg(p)).catch(() => undefined);
-    get<StateShapes>("/data/us-states.json").then((s) => s && setShapes(s)).catch(() => undefined);
-    return () => controller.abort();
+    return fetchJson<EventPackage>(`/data/events/${id}.json`, setPkg);
   }, [visible, pkg, id]);
+  useEffect(() => {
+    if (!visible || shapes) return;
+    return fetchJson<StateShapes>("/data/us-states.json", setShapes);
+  }, [visible, shapes]);
 
   // The loop starts once the card is really on screen, so its first pass is seen.
   const shown = useShown(wrapRef, 0.2);
