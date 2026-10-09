@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion } from "@/components/use-reduced-motion";
+import { useShown } from "./use-shown";
 import type { Fit } from "@/lib/ui/albers";
 import { buildEventModel, keyMomentP, stormAt, timeAt, hourAt, windAt, type EventModel, type EventPackage } from "@/lib/ui/event-model";
 import { drawStateOutlines, fillStates, type StateShapes } from "@/lib/ui/state-outlines";
@@ -140,15 +141,17 @@ export function EventPreview({ id }: { id: string }) {
     return () => controller.abort();
   }, [visible, pkg, id]);
 
+  // The loop starts once the card is really on screen, so its first pass is seen.
+  const shown = useShown(wrapRef, 0.2);
   const still = reduced || paused;
   useEffect(() => {
     const ctx = canvasRef.current?.getContext("2d");
     if (!ctx || !model || !width || !height) return;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    if (still || !visible) {
+    if (still || !shown) {
       draw(ctx, model, shapes, width, height, reduced ? keyMomentP(model) : (pRef.current ?? keyMomentP(model)));
-      if (still) return;
+      return;
     }
     let raf = 0;
     let last = performance.now();
@@ -159,9 +162,9 @@ export function EventPreview({ id }: { id: string }) {
       pRef.current = p;
       draw(ctx, model, shapes, width, height, p);
     };
-    if (visible) raf = requestAnimationFrame(tick);
+    raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [model, shapes, width, height, still, visible, reduced]);
+  }, [model, shapes, width, height, still, shown, reduced]);
 
   const dpr = typeof window === "undefined" ? 1 : Math.min(2, window.devicePixelRatio || 1);
   return (

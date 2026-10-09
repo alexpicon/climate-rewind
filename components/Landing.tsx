@@ -61,7 +61,8 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
     const form = heroFormRef.current;
     const root = document.getElementById("landing");
     if (!form || !root) return;
-    const observer = new IntersectionObserver(([entry]) => setBarOn(!entry.isIntersecting), { root, threshold: 0 });
+    // Only once the search box has gone up past the top: on a phone it starts below the fold, and the bar must not cover the page's top.
+    const observer = new IntersectionObserver(([entry]) => setBarOn(!entry.isIntersecting && entry.boundingClientRect.top < (entry.rootBounds?.top ?? 0)), { root, threshold: 0 });
     observer.observe(form);
     return () => observer.disconnect();
   }, []);

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { usePlayback } from "@/components/use-playback";
 import { useReducedMotion } from "@/components/use-reduced-motion";
+import { useShown } from "./use-shown";
 import { nightX, TIMELINE_MS, timelineEnds, timelineFrame, timelineHighlight, timelineSummary, type MomentTimeline as Timeline } from "@/lib/ui/moment-timeline";
 
 const W = 600;
@@ -67,21 +68,14 @@ export function MomentTimeline({ timeline }: { timeline: Timeline }) {
   const [startLabel, endLabel] = timelineEnds(timeline);
   const highlight = timelineHighlight(timeline);
 
+  // Plays once, the first time its card is really on screen.
+  const shown = useShown(ref, 0.6);
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (started.current || !entries.some((e) => e.isIntersecting)) return;
-        started.current = true;
-        if (reduced) setP(1);
-        else play();
-      },
-      { threshold: 0.6 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [reduced, play, setP]);
+    if (!shown || started.current) return;
+    started.current = true;
+    if (reduced) setP(1);
+    else play();
+  }, [shown, reduced, play, setP]);
 
   const atEnd = p >= 0.9995;
   return (

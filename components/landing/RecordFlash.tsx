@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePlayback } from "@/components/use-playback";
 import { useReducedMotion } from "@/components/use-reduced-motion";
+import { useShown } from "./use-shown";
 import type { Fit } from "@/lib/ui/albers";
 import { buildRecordModel, recordFrame, type RecordFlashFile, type RecordModel } from "@/lib/ui/record-flash-model";
 import type { StateShapes } from "@/lib/ui/state-outlines";
@@ -78,12 +79,14 @@ export function RecordFlash() {
     get<StateShapes>("/data/us-states.json").then((s) => s && setShapes(s)).catch(() => undefined);
     return () => controller.abort();
   }, [visible, file]);
+  // The data loads when the card is near; the replay starts only once the card is really on screen.
+  const shown = useShown(wrapRef);
   useEffect(() => {
-    if (!model || !visible || started.current) return;
+    if (!model || !shown || started.current) return;
     started.current = true;
     if (reduced) setP(1);
     else play();
-  }, [model, visible, reduced, play, setP]);
+  }, [model, shown, reduced, play, setP]);
 
   useEffect(() => {
     const el = wrapRef.current;
