@@ -23,7 +23,7 @@ export async function aiRoute(request: Request, mode: "brief" | "ask", deps: AiD
   const bad = (status: number, message: string) => Response.json({ state: "bad_request", message } satisfies AiErrorBody, { status });
   if (!sameOrigin(request)) return bad(403, "That request did not come from this site.");
 
-  let body: { address?: unknown; question?: unknown } = {};
+  let body: { address?: unknown; question?: unknown; fresh?: unknown } = {};
   try {
     const text = await request.text();
     if (text.length > MAX_BODY_BYTES) return bad(413, "That request is too large.");
@@ -35,7 +35,7 @@ export async function aiRoute(request: Request, mode: "brief" | "ask", deps: AiD
   if (mode === "ask" && typeof body.question !== "string") return bad(400, "A question is required.");
 
   const result = await handleAi(
-    { address: body.address, question: mode === "ask" ? (body.question as string) : null, ip: clientIp(request.headers) },
+    { address: body.address, question: mode === "ask" ? (body.question as string) : null, ip: clientIp(request.headers), fresh: body.fresh === true },
     deps,
   );
   return Response.json(result.body, { status: result.status, headers: { "Cache-Control": "no-store", ...(("headers" in result && result.headers) || {}) } });

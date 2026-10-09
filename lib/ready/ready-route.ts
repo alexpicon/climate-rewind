@@ -6,6 +6,7 @@
  * real local fact and a line of official guidance. One answer per address is kept for six hours. Server only.
  */
 import { AnswerCache } from "../ai/guard";
+import { sampleAiForPoint } from "../ai/precomputed";
 import { getAiDeps, guardAiRequest, serverError } from "../climate/model";
 import { parsePoint } from "../climate/future-route";
 import type { FetchLike } from "../http";
@@ -39,6 +40,8 @@ export interface ReadyDeps {
   snapshots: () => Promise<SampleSnapshot[]>;
   heat: (lat: number, lon: number) => Promise<HeatSummary | null>;
   ai: () => AiDeps;
+  /** A plan made ahead of time for a sample address (data/samples/ai), or null. Absent: every request is live. */
+  samplePlan?: (lat: number, lon: number) => Promise<ReadyPayload | null>;
 }
 
 export function defaultReadyDeps(): ReadyDeps {
@@ -60,6 +63,7 @@ export function defaultReadyDeps(): ReadyDeps {
       return daily.value ? summarizeHeat(daily.value) : null;
     },
     ai: getAiDeps,
+    samplePlan: async (lat, lon) => (await sampleAiForPoint(lat, lon))?.ready ?? null,
   };
 }
 
@@ -111,6 +115,9 @@ export async function readyRoute(request: Request, deps: ReadyDeps = defaultRead
   const state = (params.get("state") ?? "").toUpperCase();
   if (!point || !STATE.test(state)) return Response.json({ error: "lat, lon and a two-letter state are required, and must be in the United States." }, { status: 400 });
   const headers = { "Cache-Control": "no-store" };
+  // A sample address's plan made ahead of time (it is built from history): shown at once, no model call.
+  const early = await deps.samplePlan?.(point.lat, point.lon).catch(() => null);
+  if (early) return Response.json(early, { headers });
   const ai = deps.ai();
   const key = `${point.lat.toFixed(3)},${point.lon.toFixed(3)},${state}`;
 

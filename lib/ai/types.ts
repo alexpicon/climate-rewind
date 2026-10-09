@@ -92,6 +92,8 @@ export interface AiAnswer {
   model: string;
   /** True if it came from the in-memory cache (no model call). */
   cached: boolean;
+  /** Set when this is a real answer made ahead of time for a sample address (data/samples/ai), not one made for this visit. `at` is when. */
+  precomputed?: { at: string };
 }
 
 /** The error states a request can end in. `resting` and `unavailable` are honest "AI is not answering" states, not failures of the page. */
@@ -149,4 +151,6 @@ export interface StoryAnswer {
   generatedAt: string;
   model: string;
   cached: boolean;
+  /** Set when this is a real story made ahead of time for a sample address (data/samples/ai). `at` is when. */
+  precomputed?: { at: string };
 }

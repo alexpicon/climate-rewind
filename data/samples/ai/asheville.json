@@ -1,0 +1,579 @@
+{
+ "slug": "asheville",
+ "address": "350 Riverside Dr, Asheville, NC",
+ "lat": 35.59175950072,
+ "lon": -82.571739541063,
+ "brief": {
+  "generatedAt": "2026-10-09T01:41:01.225Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The National Weather Service had no active alerts for this address when we checked, and official alerts are at weather.gov.",
+    "cites": [
+     "alerts"
+    ]
+   },
+   {
+    "text": "The Weather Prediction Center's Excessive Rainfall Outlook shows no risk area here on Thursday Oct 8 or Friday Oct 9, and rates Saturday Oct 10 as Slight.",
+    "cites": [
+     "flood-outlook"
+    ]
+   },
+   {
+    "text": "On 2 of 111 past days rated Slight, a flood was reported within 10 km of this address, and since Feb 10, 2022 it was 1 of 45 days; these are counts of past days, not chances for Saturday.",
+    "cites": [
+     "flood-record"
+    ]
+   },
+   {
+    "text": "The National Weather Service rain forecast for Saturday Oct 10 is 0.83 in, below the 1.1 in typical rain on days with flood reports here, which is a history-based signal and not a flood forecast.",
+    "cites": [
+     "trigger"
+    ]
+   },
+   {
+    "text": "The Storm Prediction Center shows no tornado risk area at this point for Oct 8 and Oct 9, and no severe-weather risk area for Oct 10.",
+    "cites": [
+     "tornado-outlook"
+    ]
+   },
+   {
+    "text": "NWS HeatRisk is level 0 of 4, \"Little to no risk\", for both Fri Oct 9 and Sat Oct 10, and is experimental.",
+    "cites": [
+     "heatrisk"
+    ]
+   }
+  ],
+  "sources": {
+   "alerts": {
+    "id": "alerts",
+    "kind": "alert",
+    "chip": "Live alerts",
+    "title": "Active National Weather Service alerts",
+    "origin": "api.weather.gov alerts for this address",
+    "href": "https://www.weather.gov/",
+    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 01:40 UTC)."
+   },
+   "flood-outlook": {
+    "id": "flood-outlook",
+    "kind": "outlook",
+    "chip": "WPC outlook",
+    "title": "WPC Excessive Rainfall Outlook at this address",
+    "origin": "Weather Prediction Center (WPC) Excessive Rainfall Outlook, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no risk area at this address.\nDay 2 (Fri Oct 9): no risk area at this address.\nDay 3 (Sat Oct 10): Slight risk.\nWhat the level means, per WPC: Slight is at least a 15% chance that rain exceeds flash flood guidance within 25 miles. This is the Weather Prediction Center's own outlook, not ours.",
+    "href": "https://www.wpc.ncep.noaa.gov/qpf/excessive_rainfall_outlook_ero.php"
+   },
+   "flood-record": {
+    "id": "flood-record",
+    "kind": "record",
+    "chip": "Local record",
+    "title": "How WPC's flood outlooks have played out at this address",
+    "origin": "Our count of past days: WPC morning Day 1 outlooks (Iowa Environmental Mesonet archive) against NWS flood reports with a known location",
+    "text": "This is a count of past days, not a forecast. From Oct 1, 2016 to Dec 31, 2025, 3,369 days had a WPC morning Day 1 outlook here. A flood report with a known location within 10 km of this address was filed on 11 of those days.\nDays with no risk area: a flood was reported within 10 km on 1 of 2,831 days (0%).\nDays rated Marginal: a flood was reported within 10 km on 4 of 414 days (1%).\nDays rated Slight: a flood was reported within 10 km on 2 of 111 days (1.8%).\nDays rated Moderate: a flood was reported within 10 km on 3 of 11 days (27%).\nDays rated High: a flood was reported within 10 km on 1 of 2 days (50%), too few days to say anything firm.\nWPC changed what its categories mean on Feb 10, 2022. Counting only days since then:\nDays with no risk area: a flood was reported within 10 km on 0 of 1,151 days (0%).\nDays rated Marginal: a flood was reported within 10 km on 0 of 211 days (0%).\nDays rated Slight: a flood was reported within 10 km on 1 of 45 days (2.2%).\nDays rated Moderate: a flood was reported within 10 km on 1 of 2 days (50%), too few days to say anything firm.\nDays rated High: a flood was reported within 10 km on 1 of 2 days (50%), too few days to say anything firm.\nOnly reports with a usable location are counted, so these are floods that were reported, not every flood."
+   },
+   "trigger": {
+    "id": "trigger",
+    "kind": "trigger",
+    "chip": "Flood trigger",
+    "title": "Your street's flood trigger",
+    "origin": "NWS flood reports within 5 km, ERA5 rainfall at the address (Open-Meteo), and the NWS rain forecast",
+    "text": "11 dates had flood reports within 5 km of this address. The next 3 days’ forecast (up to 0.8 in a day) is below the typical rain on days with flood reports here. On days with flood reports here, the typical rain was 1.1 in. The National Weather Service rain forecast by day: Thu Oct 8 0.00 in, Fri Oct 9 0.00 in, Sat Oct 10 0.83 in. This compares past rain with forecast rain. It is a history-based signal, not a flood forecast."
+   },
+   "tornado-outlook": {
+    "id": "tornado-outlook",
+    "kind": "outlook",
+    "chip": "SPC outlook",
+    "title": "SPC tornado outlook at this address",
+    "origin": "Storm Prediction Center (SPC) Day 1 to 3 outlooks, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no tornado risk area at this point (under 2%).\nDay 2 (Fri Oct 9): no tornado risk area at this point (under 2%).\nDay 3 (Sat Oct 10): no severe-weather risk area at this point (Day 3 gives only a combined severe probability, not a tornado one).\nThis is the Storm Prediction Center's own outlook, not ours.",
+    "href": "https://www.spc.noaa.gov/products/outlook/"
+   },
+   "heatrisk": {
+    "id": "heatrisk",
+    "kind": "heat",
+    "chip": "HeatRisk",
+    "title": "NWS HeatRisk at this address",
+    "origin": "NWS HeatRisk (experimental), read at this point from the National Weather Service map service",
+    "text": "Day 1 (Thu Oct 8): no value.\nDay 2 (Fri Oct 9): level 0 of 4 (Little to no risk).\nDay 3 (Sat Oct 10): level 0 of 4 (Little to no risk).\nHeatRisk runs from level 0 (little to no risk) to level 4 (extreme) and weighs how unusual the heat is for the time of year, how long it lasts and the health risk. It is experimental.",
+    "href": "https://www.wpc.ncep.noaa.gov/heatrisk/"
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T01:40:55.271Z"
+  }
+ },
+ "story": {
+  "county": "NCC021",
+  "eventIds": [
+   "SE-5423045",
+   "SE-5423315",
+   "SE-5524347",
+   "SE-29616",
+   "SE-29361",
+   "SE-185050",
+   "SE-470386",
+   "SE-1036690",
+   "SE-1096614",
+   "SE-1218197"
+  ],
+  "impacts": [
+   {
+    "eventId": "SE-1218197",
+    "tag": "flooding",
+    "evidence": "Numerous structures and roads were inundated"
+   },
+   {
+    "eventId": "SE-1218197",
+    "tag": "structure_damage",
+    "evidence": "multiple homes and businesses and numerous roads destroyed"
+   },
+   {
+    "eventId": "SE-5423045",
+    "tag": "flooding",
+    "evidence": "Most valley communities across the county were affected by severe flooding"
+   },
+   {
+    "eventId": "SE-5423045",
+    "tag": "structure_damage",
+    "evidence": "Numerous businesses and residences were damaged or destroyed by flood waters"
+   },
+   {
+    "eventId": "SE-5423315",
+    "tag": "flooding",
+    "evidence": "Hundreds of roads were flooded"
+   },
+   {
+    "eventId": "SE-5423315",
+    "tag": "structure_damage",
+    "evidence": "Numerous homes were destroyed or severely damaged by flood water"
+   },
+   {
+    "eventId": "SE-29361",
+    "tag": "trees_down",
+    "evidence": "Thousands of trees and numerous power lines fell"
+   },
+   {
+    "eventId": "SE-29361",
+    "tag": "power_outage",
+    "evidence": "about 30,000 customers were without power in Henderson County"
+   },
+   {
+    "eventId": "SE-470386",
+    "tag": "roads_blocked",
+    "evidence": "Numerous roads were closed by flooding, landslides and fallen trees"
+   },
+   {
+    "eventId": "SE-470386",
+    "tag": "flooding",
+    "evidence": "Several streets were flooded from the Biltmore Forest area"
+   },
+   {
+    "eventId": "SE-1036690",
+    "tag": "trees_down",
+    "evidence": "blew down a tree onto a vehicle at Biltmore Estate"
+   }
+  ],
+  "impactLines": [
+   {
+    "tag": "flooding",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-1218197",
+     "SE-470386"
+    ],
+    "text": "2 flash flood events: the National Weather Service narrative describes flooding."
+   },
+   {
+    "tag": "flooding",
+    "type": "Flood",
+    "eventIds": [
+     "SE-5423045",
+     "SE-5423315"
+    ],
+    "text": "2 flood events: the National Weather Service narrative describes flooding."
+   },
+   {
+    "tag": "structure_damage",
+    "type": "Flood",
+    "eventIds": [
+     "SE-5423045",
+     "SE-5423315"
+    ],
+    "text": "2 flood events: the National Weather Service narrative describes damage to homes or buildings."
+   },
+   {
+    "tag": "roads_blocked",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-470386"
+    ],
+    "text": "1 flash flood event: the National Weather Service narrative describes roads closed or blocked."
+   },
+   {
+    "tag": "structure_damage",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-1218197"
+    ],
+    "text": "1 flash flood event: the National Weather Service narrative describes damage to homes or buildings."
+   },
+   {
+    "tag": "power_outage",
+    "type": "High Wind",
+    "eventIds": [
+     "SE-29361"
+    ],
+    "text": "1 high wind event: the National Weather Service narrative describes power outages."
+   },
+   {
+    "tag": "trees_down",
+    "type": "High Wind",
+    "eventIds": [
+     "SE-29361"
+    ],
+    "text": "1 high wind event: the National Weather Service narrative describes trees down."
+   },
+   {
+    "tag": "trees_down",
+    "type": "Thunderstorm Wind",
+    "eventIds": [
+     "SE-1036690"
+    ],
+    "text": "1 thunderstorm wind event: the National Weather Service narrative describes trees down."
+   }
+  ],
+  "totalsLine": "Across these 10 events the National Weather Service recorded 20 deaths, 4 injuries and $394.5 million in recorded damage.",
+  "droppedImpacts": 2,
+  "generatedAt": "2026-10-09T01:41:09.138Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The most significant event in the record is the Sep 27, 2024 flash flood in Buncombe County, which the National Weather Service recorded as \"Historic and catastrophic flash flooding\" along the Swannanoa River basin, with 15 deaths and $300,000,000 in damage.",
+    "cites": [
+     "SE-1218197"
+    ]
+   },
+   {
+    "text": "At Biltmore Village, the stream gauge on the Swannanoa River crested at just over 26 feet, more than 5 feet higher than the crest during the Great Flood of 1916.",
+    "cites": [
+     "SE-1218197"
+    ]
+   },
+   {
+    "text": "On Apr 16, 2007, high wind in your zone brought down \"Thousands of trees and numerous power lines,\" and a 59-year-old man was killed near Mills River when a fallen tree crushed his vehicle.",
+    "cites": [
+     "SE-29361"
+    ]
+   },
+   {
+    "text": "A hard freeze on Apr 8, 2007 caused \"massive agricultural losses,\" with an estimated 90 percent of the apple and peach crop destroyed.",
+    "cites": [
+     "SE-29616"
+    ]
+   },
+   {
+    "text": "On Jul 4, 2013, a flash flood closed numerous roads from the Biltmore Forest area northward to Asheville, and a debris flow took out part of Vance Gap Road.",
+    "cites": [
+     "SE-470386"
+    ]
+   },
+   {
+    "text": "Trees falling in gusty winds at Biltmore Estate killed a person on Jun 17, 2022, and a 65-year-old employee on Apr 1, 2023.",
+    "cites": [
+     "SE-1036690",
+     "SE-1096614"
+    ]
+   },
+   {
+    "text": "Since 2000, the National Weather Service has recorded 323 weather events in the area, including 152 thunderstorm wind events and 33 flash floods.",
+    "cites": [
+     "area-counts"
+    ]
+   }
+  ],
+  "sources": {
+   "SE-1218197": {
+    "id": "SE-1218197",
+    "kind": "event",
+    "chip": "Flash Flood 2024",
+    "title": "Flash Flood, Sep 27, 2024",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Flash Flood on Sep 27, 2024 in BUNCOMBE (county NCC021). Deaths: 15. Injuries: 0. Recorded damage: $300,000,000 (about $300 million).",
+    "quote": "Historic and catastrophic flash flooding developed along the Swannanoa River basin during the early morning hours as rainfall rates began to intensify as tropical rainbands near the center of Helene swept across the area. Numerous structures and roads were inundated in the city of Black Mountain, the Swannanoa community and surrounding areas, with multiple homes and businesses and numerous roads destroyed. The most devastating flooding occurred in the Asheville area, as numerous businesses were damaged and some completely destroyed or swept away in Biltmore Village. The stream gauge on the Swannanoa River at Biltmore Village crested at just over 26 feet, which was more than 5 feet higher than the crest during the Great Flood of 1916. Multiple landslides occurred throughout the Swannanoa Valley, with some of those damaging or destroying homes.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1218197"
+   },
+   "SE-29361": {
+    "id": "SE-29361",
+    "kind": "event",
+    "chip": "High Wind 2007",
+    "title": "High Wind, Apr 16, 2007",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "High Wind on Apr 16, 2007 in Buncombe (forecast zone NCZ053, YOUR zone: the address is inside it). Deaths: 0. Injuries: 0. Recorded damage: $1,000,000 (about $1 million). Recorded magnitude: 65 (EG).",
+    "quote": "After abating somewhat in the early morning hours, there was a resurgence in damaging winds across the Blue Ridge Mountains and surrounding areas during the daylight hours. Thousands of trees and numerous power lines fell across the area, with many trees falling on roads and damaging homes and vehicles. A 59-year-old man was killed when the vehicle he was driving on Turnpike Rd near Mills River was crushed by a fallen tree. In Saluda, a 75-year-old man was critically injured when a tree fell on his car. He died several days later. A utility worker was also seriously injured in in the Hickory Grove area of Polk County, when a falling tree pinned him to his vehicle. At the height of the event, about 30,000 customers were without power in Henderson County alone, with power outages numbering in the hundreds of thousands across the area as a whole.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=29361"
+   },
+   "SE-29616": {
+    "id": "SE-29616",
+    "kind": "event",
+    "chip": "Frost/Freeze 2007",
+    "title": "Frost/Freeze, Apr 8, 2007",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Frost/Freeze on Apr 8, 2007 in Buncombe (forecast zone NCZ053, YOUR zone: the address is inside it). Deaths: 0. Injuries: 0. Recorded damage: $10,000,000 (about $10 million).",
+    "quote": "An early spring hard freeze saw temperatures fall to the upper teens and lower 20s across much of the western Carolinas and northeast Georgia on the morning of the 8th. This resulted in massive agricultural losses across the region. It was estimated that 90 percent of the apple and peach crop across the area was destroyed. As much as 50 percent of the berry crop was lost, while more than 50 percent of the grape crop across western North Carolina was damaged.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=29616"
+   },
+   "SE-470386": {
+    "id": "SE-470386",
+    "kind": "event",
+    "chip": "Flash Flood 2013",
+    "title": "Flash Flood, Jul 4, 2013",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Flash Flood on Jul 4, 2013 in BUNCOMBE (county NCC021). Deaths: 0. Injuries: 0. Recorded damage: $2,500,000 (about $2.5 million).",
+    "quote": "Several streets were flooded from the Biltmore Forest area northward to Asheville. Numerous roads were closed by flooding, landslides and fallen trees. Around 9 pm EDT a large debris flow took out part of Vance Gap Road, isolating several homes. Around a dozen residences had to be evacuated as a result of the slide.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=470386"
+   },
+   "SE-1036690": {
+    "id": "SE-1036690",
+    "kind": "event",
+    "chip": "Thunderstorm Wind 2022",
+    "title": "Thunderstorm Wind, Jun 17, 2022",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Thunderstorm Wind on Jun 17, 2022 in BUNCOMBE (county NCC021). Deaths: 1. Injuries: 0. Recorded damage: $5,000. Recorded magnitude: 40 (EG).",
+    "quote": "Media reported gusty winds associated with a weakening line of showers and thunderstorms blew down a tree onto a vehicle at Biltmore Estate, killing an occupant.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1036690"
+   },
+   "SE-1096614": {
+    "id": "SE-1096614",
+    "kind": "event",
+    "chip": "Strong Wind 2023",
+    "title": "Strong Wind, Apr 1, 2023",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Strong Wind on Apr 1, 2023 in Buncombe (forecast zone NCZ053, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. No damage figure was recorded. Recorded magnitude: 40 (EG).",
+    "quote": "Gusty winds developed across western North Carolina in the wake of a cold front, causing a tree to fall on a 65-year-old employee on Approach Rd at Biltmore Estate.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1096614"
+   },
+   "area-counts": {
+    "id": "area-counts",
+    "kind": "history",
+    "chip": "Area totals",
+    "title": "Weather events recorded in this area",
+    "origin": "NCEI Storm Events, county and forecast-zone rows",
+    "text": "The National Weather Service recorded 323 weather events in Buncombe County (NCC021), the forecast zone the address is in and zones within 15 km of it since 2000. By type: Thunderstorm Wind 152, Hail 79, Flash Flood 33, High Wind 17, Flood 10, Lightning 8, Heavy Rain 7, Debris Flow 5, Strong Wind 5, Dense Fog 1, Frost/Freeze 1, Heavy Snow 1. These are filed events, not every storm that happened."
+   }
+  },
+  "dropped": 1,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T01:40:55.271Z"
+  }
+ },
+ "ready": {
+  "generatedAt": "2026-10-09T01:41:09.306Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "items": [
+   {
+    "action": "Your area saw historic flash flooding on September 27, 2024, with 15 deaths recorded for the county. Ready.gov says homeowner's insurance does not cover flooding and a flood policy typically takes up to 30 days to start, so buy or renew NFIP coverage well ahead.",
+    "why": [
+     {
+      "id": "SE-1218197",
+      "label": "Flash Flood, Sep 27, 2024",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1218197"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-insurance",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Purchase flood insurance or renew a flood insurance policy. Homeowner’s insurance policies do not cover flooding. It typically takes up to 30 days for a policy to go into effect, so the time to buy is well before a disaster. Get flood coverage under the National Flood Insurance Program (NFIP)."
+     }
+    ]
+   },
+   {
+    "action": "NWS reported significant road flooding on Sweeten Creek Rd on September 29, 2015, and Lodge Street flooding on February 3, 2016. Never drive around barriers on a flooded road, since it may have collapsed under the water.",
+    "why": [
+     {
+      "id": "LSR-GSP-201509291330-0",
+      "label": "Flood report, Sep 29, 2015",
+      "hazard": "flood"
+     },
+     {
+      "id": "LSR-GSP-201602031443-2",
+      "label": "Flood report, Feb 3, 2016",
+      "hazard": "flood"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-nws-barriers",
+      "hazard": "flood",
+      "source": "National Weather Service, Turn Around Don't Drown",
+      "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+      "text": "Never drive around the barriers blocking a flooded road. The road may have collapsed under that water."
+     },
+     {
+      "id": "flood-turn-around",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Do not walk, swim or drive through flood waters. Turn Around, Don’t Drown!"
+     }
+    ]
+   },
+   {
+    "action": "There are 14 written NWS flood reports within 5 km of your address, on 11 different days. Remember that six inches of moving water can knock you down and one foot can sweep a vehicle away; avoid flood waters and evacuate immediately when water starts to rise.",
+    "why": [
+     {
+      "id": "local-flood-count",
+      "label": "14 flood reports within 5 km, Sep 29, 2015 to Sep 26, 2024",
+      "hazard": "flood"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-six-inches",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Remember, just six inches of moving water can knock you down, and one foot of moving water can sweep your vehicle away."
+     },
+     {
+      "id": "flood-nws-evacuate",
+      "hazard": "flood",
+      "source": "National Weather Service, Flood safety (during a flood)",
+      "url": "https://www.weather.gov/safety/flood-during",
+      "text": "Avoid flood waters at all costs and evacuate immediately when water starts to rise. Don't wait until it's too late!"
+     }
+    ]
+   },
+   {
+    "action": "Wind blew a tree onto a vehicle at Biltmore Estate on June 17, 2022, killing an occupant, and another tree fell there on April 1, 2023. Cut down or trim trees that may be in danger of falling on your home, and watch for fallen lines.",
+    "why": [
+     {
+      "id": "SE-1036690",
+      "label": "Thunderstorm Wind, Jun 17, 2022",
+      "hazard": "wind",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1036690"
+     },
+     {
+      "id": "SE-1096614",
+      "label": "Strong Wind, Apr 1, 2023",
+      "hazard": "wind",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1096614"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "wind-trees",
+      "hazard": "wind",
+      "source": "Ready.gov, Thunderstorms & Lightning",
+      "url": "https://www.ready.gov/thunderstorms-lightning",
+      "text": "Cut down or trim trees that may be in danger of falling on your home."
+     },
+     {
+      "id": "wind-lines",
+      "hazard": "wind",
+      "source": "Ready.gov, Thunderstorms & Lightning",
+      "url": "https://www.ready.gov/thunderstorms-lightning",
+      "text": "Watch for fallen power lines and trees. Report them immediately."
+     }
+    ]
+   },
+   {
+    "action": "On December 15, 2005, an ice storm in your area brought down thousands of trees and caused widespread power outages. Keep freezers and refrigerators closed during an outage, and run any generator only outdoors and away from windows.",
+    "why": [
+     {
+      "id": "SE-5488724",
+      "label": "Ice Storm, Dec 15, 2005",
+      "hazard": "winter",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5488724"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "outage-food",
+      "hazard": "outage",
+      "source": "Ready.gov, Power Outages",
+      "url": "https://www.ready.gov/power-outages",
+      "text": "Keep freezers and refrigerators closed."
+     },
+     {
+      "id": "outage-generator",
+      "hazard": "outage",
+      "source": "Ready.gov, Power Outages",
+      "url": "https://www.ready.gov/power-outages",
+      "text": "Use a generator, but ONLY outdoors and away from windows."
+     }
+    ]
+   },
+   {
+    "action": "Your address has had 11 days feeling like 100°F or more since 2000, the hottest on Jun 30, 2012 at 104.4°F. Identify places such as libraries and shopping malls where you can cool off, and do not rely on a fan as your main cooling.",
+    "why": [
+     {
+      "id": "local-heat",
+      "label": "Hottest day on record, Jun 30, 2012 (feels like 104.4°F)",
+      "hazard": "heat"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "heat-cool-places",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Identify places in your community where you can go to get cool such as libraries and shopping malls or contact your local health department to find cooling options in your area."
+     },
+     {
+      "id": "heat-fan",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Do not rely on a fan as your primary cooling device. Fans create air flow and a false sense of comfort, but do not reduce body temperature or prevent heat-related illnesses."
+     }
+    ]
+   }
+  ],
+  "hazards": [
+   {
+    "id": "flood",
+    "label": "Flooding",
+    "evidence": "14 written NWS flood reports within 5 km on 11 different days, latest Sep 26, 2024; 33 Flash Flood and 10 Flood events recorded for Buncombe since 2001 (NCEI Storm Events), latest Sep 27, 2024"
+   },
+   {
+    "id": "tornado",
+    "label": "Tornadoes",
+    "evidence": "1 Tornado event recorded for Buncombe since 2024 (NCEI Storm Events), latest May 9, 2024"
+   },
+   {
+    "id": "heat",
+    "label": "Extreme heat",
+    "evidence": "11 days with a feels-like high of 100°F or more in 7 of 26 years (2000 to 2025); hottest 104.4°F on Jun 30, 2012"
+   },
+   {
+    "id": "wind",
+    "label": "Damaging wind and storms",
+    "evidence": "152 Thunderstorm Wind and 79 Hail events recorded for Buncombe since 2000 (NCEI Storm Events), latest Sep 4, 2025"
+   },
+   {
+    "id": "winter",
+    "label": "Winter storms and cold",
+    "evidence": "1 Heavy Snow and 1 Winter Weather events recorded for Buncombe since 2001 (NCEI Storm Events), latest Apr 8, 2007"
+   }
+  ],
+  "dropped": 0,
+  "notices": [],
+  "precomputed": {
+   "at": "2026-10-09T01:40:55.271Z"
+  }
+ }
+}

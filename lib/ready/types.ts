@@ -65,4 +65,6 @@ export interface ReadyPayload {
   generatedAt: string;
   model: string;
   cached: boolean;
+  /** Set when this is a real plan made ahead of time for a sample address (data/samples/ai). `at` is when. */
+  precomputed?: { at: string };
 }

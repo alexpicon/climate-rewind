@@ -206,6 +206,12 @@ export async function handleStory(request: StoryRequest, deps: AiDeps): Promise<
   if (!address) return fail(400, "bad_request", "Type a street address first.");
   if (address.length > MAX_ADDRESS_CHARS) return fail(400, "bad_request", "That address is too long.");
 
+  // A sample address's story made ahead of time (history does not go stale): shown at once, no model call.
+  if (deps.sampleAi) {
+    const early = (await deps.sampleAi(address).catch(() => null))?.story;
+    if (early) return { status: 200, body: early };
+  }
+
   const now = deps.now();
   const limit = deps.limiter.check(request.ip, now);
   if (!limit.ok) {

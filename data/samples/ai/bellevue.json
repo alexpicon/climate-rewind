@@ -1,0 +1,508 @@
+{
+ "slug": "bellevue",
+ "address": "450 110th Ave NE, Bellevue, WA",
+ "lat": 47.614205361757,
+ "lon": -122.193517524226,
+ "brief": {
+  "generatedAt": "2026-10-09T01:41:19.721Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 01:41 UTC); official alerts are at weather.gov.",
+    "cites": [
+     "alerts"
+    ]
+   },
+   {
+    "text": "Only 2 flood reports within 5 km of this address are in our records, and a quiet record means no report was filed close by, not that nothing happened here.",
+    "cites": [
+     "quiet"
+    ]
+   },
+   {
+    "text": "In the wider area, the National Weather Service recorded a High Wind event on Dec 14, 2006 in this address's forecast zone, with 16 injuries and recorded damage of $10,000,000.",
+    "cites": [
+     "SE-7254"
+    ]
+   },
+   {
+    "text": "The Weather Prediction Center shows no excessive rainfall risk area at this address for Day 1, Day 2 or Day 3.",
+    "cites": [
+     "flood-outlook"
+    ]
+   },
+   {
+    "text": "The Storm Prediction Center shows no tornado risk area at this point for Day 1 and Day 2, and no severe-weather risk area for Day 3.",
+    "cites": [
+     "tornado-outlook"
+    ]
+   },
+   {
+    "text": "NWS HeatRisk is level 0 of 4 (Little to no risk) for Day 2 and Day 3, with no value for Day 1.",
+    "cites": [
+     "heatrisk"
+    ]
+   },
+   {
+    "text": "The National Weather Service forecasts feels-like highs of 71 F on Thu Oct 8, 61 F on Fri Oct 9 and 60 F on Sat Oct 10.",
+    "cites": [
+     "heat-forecast"
+    ]
+   }
+  ],
+  "sources": {
+   "alerts": {
+    "id": "alerts",
+    "kind": "alert",
+    "chip": "Live alerts",
+    "title": "Active National Weather Service alerts",
+    "origin": "api.weather.gov alerts for this address",
+    "href": "https://www.weather.gov/",
+    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 01:41 UTC)."
+   },
+   "quiet": {
+    "id": "quiet",
+    "kind": "history",
+    "chip": "Why quiet",
+    "title": "Why this address's flood record is quiet",
+    "origin": "Our counts of NWS flood reports near this address and across sampled places",
+    "text": "Only 2 flood reports within 5 km of this address are in our records. We measured 25500 random places across the 51 states we have indexed: 71% had no flood report within 5 km, 12% had more than this address and 5% had the same number. A flood report exists only if someone filed one, and this is a count of reports we could place near an address. A quiet record means no report was filed close by. It does not mean nothing happened here, and it does not mean flooding is impossible."
+   },
+   "SE-7254": {
+    "id": "SE-7254",
+    "kind": "event",
+    "chip": "High Wind 2006",
+    "title": "High Wind, Dec 14, 2006",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "High Wind on Dec 14, 2006 in East Puget Sound Lowlands (forecast zone WAZ505, YOUR zone: the address is inside it). Deaths: 0. Injuries: 16. Recorded damage: $10,000,000 (about $10 million). Recorded magnitude: 59 (MG).",
+    "quote": "A person, near Eatonville was injured when a tree struck his car. 17 other people were injured directly from the wind storm as well.|",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=7254"
+   },
+   "flood-outlook": {
+    "id": "flood-outlook",
+    "kind": "outlook",
+    "chip": "WPC outlook",
+    "title": "WPC Excessive Rainfall Outlook at this address",
+    "origin": "Weather Prediction Center (WPC) Excessive Rainfall Outlook, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no risk area at this address.\nDay 2 (Fri Oct 9): no risk area at this address.\nDay 3 (Sat Oct 10): no risk area at this address.\nA day with no risk area means WPC drew no Marginal-or-higher area over this address. This is the Weather Prediction Center's own outlook, not ours.",
+    "href": "https://www.wpc.ncep.noaa.gov/qpf/excessive_rainfall_outlook_ero.php"
+   },
+   "tornado-outlook": {
+    "id": "tornado-outlook",
+    "kind": "outlook",
+    "chip": "SPC outlook",
+    "title": "SPC tornado outlook at this address",
+    "origin": "Storm Prediction Center (SPC) Day 1 to 3 outlooks, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no tornado risk area at this point (under 2%).\nDay 2 (Fri Oct 9): no tornado risk area at this point (under 2%).\nDay 3 (Sat Oct 10): no severe-weather risk area at this point (Day 3 gives only a combined severe probability, not a tornado one).\nThis is the Storm Prediction Center's own outlook, not ours.",
+    "href": "https://www.spc.noaa.gov/products/outlook/"
+   },
+   "heatrisk": {
+    "id": "heatrisk",
+    "kind": "heat",
+    "chip": "HeatRisk",
+    "title": "NWS HeatRisk at this address",
+    "origin": "NWS HeatRisk (experimental), read at this point from the National Weather Service map service",
+    "text": "Day 1 (Thu Oct 8): no value.\nDay 2 (Fri Oct 9): level 0 of 4 (Little to no risk).\nDay 3 (Sat Oct 10): level 0 of 4 (Little to no risk).\nHeatRisk runs from level 0 (little to no risk) to level 4 (extreme) and weighs how unusual the heat is for the time of year, how long it lasts and the health risk. It is experimental.",
+    "href": "https://www.wpc.ncep.noaa.gov/heatrisk/"
+   },
+   "heat-forecast": {
+    "id": "heat-forecast",
+    "kind": "heat",
+    "chip": "Feels-like",
+    "title": "Forecast feels-like highs, and where they rank here",
+    "origin": "National Weather Service gridpoint forecast (apparent temperature), ranked against this address's Open-Meteo/ERA5 daily highs since 2000",
+    "text": "Thu Oct 8: forecast feels-like high 71 F.\nFri Oct 9: forecast feels-like high 61 F.\nSat Oct 10: forecast feels-like high 60 F.\nThe forecast and the history come from different methods, so the ranking is a rough guide."
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T01:41:14.682Z"
+  }
+ },
+ "story": {
+  "county": "WAC033",
+  "eventIds": [
+   "SE-5127493",
+   "SE-5326117",
+   "SE-7254",
+   "SE-107013",
+   "SE-141127",
+   "SE-277809",
+   "SE-361916",
+   "SE-602412",
+   "SE-994392",
+   "SE-1226565"
+  ],
+  "impacts": [
+   {
+    "eventId": "SE-5326117",
+    "tag": "roads_blocked",
+    "evidence": "others blocked roadways"
+   },
+   {
+    "eventId": "SE-277809",
+    "tag": "trees_down",
+    "evidence": "a tree fell on Highway 203"
+   },
+   {
+    "eventId": "SE-361916",
+    "tag": "travel_disruption",
+    "evidence": "another was injured in an icy crash on I-405"
+   },
+   {
+    "eventId": "SE-1226565",
+    "tag": "trees_down",
+    "evidence": "a tree fell on her home"
+   }
+  ],
+  "impactLines": [
+   {
+    "tag": "roads_blocked",
+    "type": "High Wind",
+    "eventIds": [
+     "SE-5326117"
+    ],
+    "text": "1 high wind event: the National Weather Service narrative describes roads closed or blocked."
+   },
+   {
+    "tag": "trees_down",
+    "type": "High Wind",
+    "eventIds": [
+     "SE-1226565"
+    ],
+    "text": "1 high wind event: the National Weather Service narrative describes trees down."
+   },
+   {
+    "tag": "travel_disruption",
+    "type": "Ice Storm",
+    "eventIds": [
+     "SE-361916"
+    ],
+    "text": "1 ice storm event: the National Weather Service narrative describes travel trouble."
+   },
+   {
+    "tag": "trees_down",
+    "type": "Strong Wind",
+    "eventIds": [
+     "SE-277809"
+    ],
+    "text": "1 strong wind event: the National Weather Service narrative describes trees down."
+   }
+  ],
+  "totalsLine": "Across these 10 events the National Weather Service recorded 7 deaths, 49 injuries and $16.1 million in recorded damage.",
+  "droppedImpacts": 8,
+  "generatedAt": "2026-10-09T01:41:26.352Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The most damaging event in the record for your zone is the High Wind of Dec 27, 2002, with recorded damage of $3,300,000 and a recorded magnitude of 45.",
+    "cites": [
+     "SE-5326117"
+    ]
+   },
+   {
+    "text": "The National Weather Service recorded that those winds \"knocked out power to around 300,000 homes\" and that \"Dozens of trees were downed\" across western Washington.",
+    "cites": [
+     "SE-5326117"
+    ]
+   },
+   {
+    "text": "On Dec 14, 2006, another High Wind in your zone injured 16 people, and the record puts damage at $10,000,000.",
+    "cites": [
+     "SE-7254"
+    ]
+   },
+   {
+    "text": "Heavy snow of 4-12 inches fell on Dec 21, 2008, and in Bellevue a tent weighted by snow collapsed at a temporary ice rink.",
+    "cites": [
+     "SE-141127"
+    ]
+   },
+   {
+    "text": "A Strong Wind on Jan 16, 2011 killed a state DOT worker when a tree fell on Highway 203 south of Carnation.",
+    "cites": [
+     "SE-277809"
+    ]
+   },
+   {
+    "text": "An Ice Storm on Jan 19, 2012 left \"Downed trees\" at Northwest Trek and damaged power infrastructure, with $800,000 in recorded damage.",
+    "cites": [
+     "SE-361916"
+    ]
+   },
+   {
+    "text": "Most recently, a High Wind on Nov 19, 2024 killed a woman when \"a tree fell on her home\" southeast of Kirkland.",
+    "cites": [
+     "SE-1226565"
+    ]
+   },
+   {
+    "text": "Across King County and the zones near your address, the National Weather Service has recorded 268 weather events since 2000, including 47 High Wind and 45 Heavy Snow events.",
+    "cites": [
+     "area-counts"
+    ]
+   }
+  ],
+  "sources": {
+   "SE-5326117": {
+    "id": "SE-5326117",
+    "kind": "event",
+    "chip": "High Wind 2002",
+    "title": "High Wind, Dec 27, 2002",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "High Wind on Dec 27, 2002 in Seattle Metropolitan Area (forecast zone WAZ007, YOUR zone: the address is inside it). Deaths: 0. Injuries: 1. Recorded damage: $3,300,000 (about $3.3 million). Recorded magnitude: 45 (M).",
+    "quote": "High winds knocked out power to around 300,000 homes throughout western Washington. Dozens of trees were downed, some fell on houses and others blocked roadways. Two barges broke free from their moorings in Elliot bay, and the Tacoma Narrows bridge was closed when a trucks semi trailer was blown over. The storm also contributed to the death of a 10 year old boy, in Thurston county, who became entangled in a downed power line and was electrocuted. In downtown Seattle, a man was knocked unconscious by a flying truck canopy.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5326117"
+   },
+   "SE-7254": {
+    "id": "SE-7254",
+    "kind": "event",
+    "chip": "High Wind 2006",
+    "title": "High Wind, Dec 14, 2006",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "High Wind on Dec 14, 2006 in East Puget Sound Lowlands (forecast zone WAZ505, YOUR zone: the address is inside it). Deaths: 0. Injuries: 16. Recorded damage: $10,000,000 (about $10 million). Recorded magnitude: 59 (MG).",
+    "quote": "A person, near Eatonville was injured when a tree struck his car. 17 other people were injured directly from the wind storm as well.|",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=7254"
+   },
+   "SE-141127": {
+    "id": "SE-141127",
+    "kind": "event",
+    "chip": "Heavy Snow 2008",
+    "title": "Heavy Snow, Dec 21, 2008",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Heavy Snow on Dec 21, 2008 in East Puget Sound Lowlands (forecast zone WAZ505, YOUR zone: the address is inside it). Deaths: 0. Injuries: 1. Recorded damage: $2,000,000 (about $2 million).",
+    "quote": "Heavy snow of 4-12 inches fell. In Bellevue, a large tent weighted by heavy snow, collapsed at a temporary ice rink, briefly trapping a few people. One girl had minor injuries.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=141127"
+   },
+   "SE-277809": {
+    "id": "SE-277809",
+    "kind": "event",
+    "chip": "Strong Wind 2011",
+    "title": "Strong Wind, Jan 16, 2011",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Strong Wind on Jan 16, 2011 in East Puget Sound Lowlands (forecast zone WAZ505, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. No damage figure was recorded. Recorded magnitude: 35 (MG).",
+    "quote": "A 66 year old state DOT worker was killed when a tree fell on Highway 203 south of Carnation, hitting him and his truck.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=277809"
+   },
+   "SE-361916": {
+    "id": "SE-361916",
+    "kind": "event",
+    "chip": "Ice Storm 2012",
+    "title": "Ice Storm, Jan 19, 2012",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Ice Storm on Jan 19, 2012 in East Puget Sound Lowlands (forecast zone WAZ505, YOUR zone: the address is inside it). Deaths: 1. Injuries: 2. Recorded damage: $800,000.",
+    "quote": "Downed trees and damaged exhibits and fences totaled about 200,000 at Northwest Trek in Eatonville. A WSDOT employee was injured by an ice coated tree limb, and another was injured in an icy crash on I-405. Power infrastructure was also damaged.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=361916"
+   },
+   "SE-1226565": {
+    "id": "SE-1226565",
+    "kind": "event",
+    "chip": "High Wind 2024",
+    "title": "High Wind, Nov 19, 2024",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "High Wind on Nov 19, 2024 in Bellevue and Vicinity (forecast zone WAZ556, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. No damage figure was recorded. Recorded magnitude: 50 (EG).",
+    "quote": "A woman died when a tree fell on her home 3 miles southeast of Kirkland.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1226565"
+   },
+   "area-counts": {
+    "id": "area-counts",
+    "kind": "history",
+    "chip": "Area totals",
+    "title": "Weather events recorded in this area",
+    "origin": "NCEI Storm Events, county and forecast-zone rows",
+    "text": "The National Weather Service recorded 268 weather events in King County (WAC033), the forecast zone the address is in and zones within 15 km of it since 2000. By type: High Wind 47, Heavy Snow 45, Strong Wind 45, Heat 28, Heavy Rain 18, Debris Flow 12, Winter Weather 11, Ice Storm 10, Lightning 10, Excessive Heat 8, Flood 7, Funnel Cloud 7. These are filed events, not every storm that happened."
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T01:41:14.682Z"
+  }
+ },
+ "ready": {
+  "generatedAt": "2026-10-09T01:41:26.550Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "items": [
+   {
+    "action": "On Dec 20, 2019, Eastgate Elementary School in Bellevue, 0.7 km from your address, was closed due to flooding. Do not walk, swim or drive through flood waters, and turn around instead.",
+    "why": [
+     {
+      "id": "LSR-SEW-201912201558-0",
+      "label": "Flood report, Dec 20, 2019",
+      "hazard": "flood"
+     },
+     {
+      "id": "local-flood-count",
+      "label": "2 flood reports within 5 km, on Dec 20, 2019",
+      "hazard": "flood"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-turn-around",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Do not walk, swim or drive through flood waters. Turn Around, Don’t Drown!"
+     }
+    ]
+   },
+   {
+    "action": "On Dec 20, 2019, Bellevue reported 136th Place NE closed because of flooding. If you meet barriers across a flooded road, never drive around them, because the road may have collapsed under the water.",
+    "why": [
+     {
+      "id": "LSR-SEW-201912201657-0",
+      "label": "Flood report, Dec 20, 2019",
+      "hazard": "flood"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-nws-barriers",
+      "hazard": "flood",
+      "source": "National Weather Service, Turn Around Don't Drown",
+      "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+      "text": "Never drive around the barriers blocking a flooded road. The road may have collapsed under that water."
+     }
+    ]
+   },
+   {
+    "action": "The Dec 14, 2006 windstorm in your area left eight people dead from carbon monoxide poisoning after improper or indoor use of barbeques or power generators. Use generators only outdoors and away from windows.",
+    "why": [
+     {
+      "id": "SE-7245",
+      "label": "High Wind, Dec 14, 2006",
+      "hazard": "wind",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=7245"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "outage-generator",
+      "hazard": "outage",
+      "source": "Ready.gov, Power Outages",
+      "url": "https://www.ready.gov/power-outages",
+      "text": "Use a generator, but ONLY outdoors and away from windows."
+     },
+     {
+      "id": "winter-co",
+      "hazard": "winter",
+      "source": "Ready.gov, Winter Weather",
+      "url": "https://www.ready.gov/winter-weather",
+      "text": "Avoid carbon monoxide poisoning. Only use generators and grills outdoors and away from windows and never heat your home with a gas stovetop or oven."
+     }
+    ]
+   },
+   {
+    "action": "Your address has had 5 days feeling like 100°F or more since 2000, and Jun 28, 2021 felt like 114.7°F. Identify cool places such as libraries or shopping malls, and do not rely on a fan as your main cooling.",
+    "why": [
+     {
+      "id": "local-heat",
+      "label": "Hottest day on record, Jun 28, 2021 (feels like 114.7°F)",
+      "hazard": "heat"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "heat-cool-places",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Identify places in your community where you can go to get cool such as libraries and shopping malls or contact your local health department to find cooling options in your area."
+     },
+     {
+      "id": "heat-fan",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Do not rely on a fan as your primary cooling device. Fans create air flow and a false sense of comfort, but do not reduce body temperature or prevent heat-related illnesses."
+     }
+    ]
+   },
+   {
+    "action": "In Jan 2024, at least five people in your area died from hypothermia in the cold. Check on family members, older adults and neighbors when it turns cold or hot.",
+    "why": [
+     {
+      "id": "SE-1160372",
+      "label": "Cold/Wind Chill, Jan 12, 2024",
+      "hazard": "winter",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1160372"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "heat-check-on",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Check on family members, older adults and neighbors."
+     }
+    ]
+   },
+   {
+    "action": "A Jan 19, 2012 ice storm in your area caused an icy crash on I-405 and damaged power infrastructure. In winter weather, stay off roads if at all possible, and if trapped in your car, stay inside.",
+    "why": [
+     {
+      "id": "SE-361916",
+      "label": "Ice Storm, Jan 19, 2012",
+      "hazard": "winter",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=361916"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "winter-roads",
+      "hazard": "winter",
+      "source": "Ready.gov, Winter Weather",
+      "url": "https://www.ready.gov/winter-weather",
+      "text": "Stay off roads if at all possible. If trapped in your car, then stay inside."
+     }
+    ]
+   }
+  ],
+  "hazards": [
+   {
+    "id": "flood",
+    "label": "Flooding",
+    "evidence": "2 written NWS flood reports within 5 km on 1 day, latest Dec 20, 2019; 18 Heavy Rain and 7 Flood events recorded for King since 2000 (NCEI Storm Events), latest Dec 5, 2023"
+   },
+   {
+    "id": "tornado",
+    "label": "Tornadoes",
+    "evidence": "1 Tornado event recorded for King since 2001 (NCEI Storm Events), latest Jun 11, 2001"
+   },
+   {
+    "id": "heat",
+    "label": "Extreme heat",
+    "evidence": "5 days with a feels-like high of 100°F or more in 2 of 26 years (2000 to 2025); hottest 114.7°F on Jun 28, 2021; 28 Heat and 8 Excessive Heat events recorded for City Of Seattle since 2008 (NCEI Storm Events), latest Aug 12, 2025"
+   },
+   {
+    "id": "wind",
+    "label": "Damaging wind and storms",
+    "evidence": "47 High Wind and 45 Strong Wind events recorded for Seattle And Vicinity since 2000 (NCEI Storm Events), latest Feb 25, 2025"
+   },
+   {
+    "id": "winter",
+    "label": "Winter storms and cold",
+    "evidence": "45 Heavy Snow and 11 Winter Weather events recorded for East Puget Sound Lowlands since 2001 (NCEI Storm Events), latest Feb 5, 2025"
+   },
+   {
+    "id": "smoke",
+    "label": "Wildfire smoke",
+    "evidence": "1 Dense Smoke event recorded for Seattle And Vicinity since 2020 (NCEI Storm Events), latest Sep 11, 2020"
+   }
+  ],
+  "dropped": 0,
+  "notices": [],
+  "precomputed": {
+   "at": "2026-10-09T01:41:14.682Z"
+  }
+ }
+}

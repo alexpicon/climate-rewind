@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "convert-heat": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/convert-heat.ts",
     "snapshot-samples": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/snapshot-samples.ts",
+    "precompute-ai": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/precompute-ai.ts",
     "eval-brief": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/eval-brief.ts",
     "outlook-record": "python3 scripts/outlook-record.py",
     "quiet-percentiles": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/quiet-percentiles.ts",

@@ -1,0 +1,507 @@
+{
+ "slug": "san-antonio",
+ "address": "100 Military Plaza, San Antonio, TX",
+ "lat": 29.424796286769,
+ "lon": -98.494678611909,
+ "brief": {
+  "generatedAt": "2026-10-09T01:40:43.000Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 01:40 UTC); official alerts are at weather.gov.",
+    "cites": [
+     "alerts"
+    ]
+   },
+   {
+    "text": "The Weather Prediction Center shows no excessive rainfall risk area at this address for Thu Oct 8, Fri Oct 9 or Sat Oct 10.",
+    "cites": [
+     "flood-outlook"
+    ]
+   },
+   {
+    "text": "On past days with no risk area, a flood was reported within 10 km on 2 of 3,088 days; these are counts of past days, not a forecast.",
+    "cites": [
+     "flood-record"
+    ]
+   },
+   {
+    "text": "The National Weather Service forecasts 0.00 in of rain on each of the next 3 days, while the typical rain on days with flood reports here was 0.8 in.",
+    "cites": [
+     "trigger"
+    ]
+   },
+   {
+    "text": "The Storm Prediction Center shows no tornado risk area at this point for Day 1 and Day 2, and no severe-weather risk area for Day 3.",
+    "cites": [
+     "tornado-outlook"
+    ]
+   },
+   {
+    "text": "The National Weather Service HeatRisk is level 1 of 4 (Minor) for Fri Oct 9 and Sat Oct 10, with a forecast feels-like high of 90 F on both days.",
+    "cites": [
+     "heatrisk",
+     "heat-forecast"
+    ]
+   }
+  ],
+  "sources": {
+   "alerts": {
+    "id": "alerts",
+    "kind": "alert",
+    "chip": "Live alerts",
+    "title": "Active National Weather Service alerts",
+    "origin": "api.weather.gov alerts for this address",
+    "href": "https://www.weather.gov/",
+    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 01:40 UTC)."
+   },
+   "flood-outlook": {
+    "id": "flood-outlook",
+    "kind": "outlook",
+    "chip": "WPC outlook",
+    "title": "WPC Excessive Rainfall Outlook at this address",
+    "origin": "Weather Prediction Center (WPC) Excessive Rainfall Outlook, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no risk area at this address.\nDay 2 (Fri Oct 9): no risk area at this address.\nDay 3 (Sat Oct 10): no risk area at this address.\nA day with no risk area means WPC drew no Marginal-or-higher area over this address. This is the Weather Prediction Center's own outlook, not ours.",
+    "href": "https://www.wpc.ncep.noaa.gov/qpf/excessive_rainfall_outlook_ero.php"
+   },
+   "flood-record": {
+    "id": "flood-record",
+    "kind": "record",
+    "chip": "Local record",
+    "title": "How WPC's flood outlooks have played out at this address",
+    "origin": "Our count of past days: WPC morning Day 1 outlooks (Iowa Environmental Mesonet archive) against NWS flood reports with a known location",
+    "text": "This is a count of past days, not a forecast. From Oct 1, 2016 to Dec 31, 2025, 3,369 days had a WPC morning Day 1 outlook here. A flood report with a known location within 10 km of this address was filed on 25 of those days.\nDays with no risk area: a flood was reported within 10 km on 2 of 3,088 days (0.1%).\nDays rated Marginal: a flood was reported within 10 km on 14 of 213 days (6.6%).\nDays rated Slight: a flood was reported within 10 km on 9 of 64 days (14%).\nDays rated Moderate: a flood was reported within 10 km on 0 of 4 days (0%), too few days to say anything firm.\nDays rated High: 0 such days.\nWPC changed what its categories mean on Feb 10, 2022. Counting only days since then:\nDays with no risk area: a flood was reported within 10 km on 1 of 1,277 days (0.1%).\nDays rated Marginal: a flood was reported within 10 km on 8 of 104 days (7.7%).\nDays rated Slight: a flood was reported within 10 km on 4 of 30 days (13%).\nOnly reports with a usable location are counted, so these are floods that were reported, not every flood."
+   },
+   "trigger": {
+    "id": "trigger",
+    "kind": "trigger",
+    "chip": "Flood trigger",
+    "title": "Your street's flood trigger",
+    "origin": "NWS flood reports within 5 km, ERA5 rainfall at the address (Open-Meteo), and the NWS rain forecast",
+    "text": "20 dates had flood reports within 5 km of this address. The next 3 days’ forecast (no measurable rain) is well below the typical rain on days with flood reports here. On days with flood reports here, the typical rain was 0.8 in. The National Weather Service rain forecast by day: Thu Oct 8 0.00 in, Fri Oct 9 0.00 in, Sat Oct 10 0.00 in. This compares past rain with forecast rain. It is a history-based signal, not a flood forecast."
+   },
+   "tornado-outlook": {
+    "id": "tornado-outlook",
+    "kind": "outlook",
+    "chip": "SPC outlook",
+    "title": "SPC tornado outlook at this address",
+    "origin": "Storm Prediction Center (SPC) Day 1 to 3 outlooks, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no tornado risk area at this point (under 2%).\nDay 2 (Fri Oct 9): no tornado risk area at this point (under 2%).\nDay 3 (Sat Oct 10): no severe-weather risk area at this point (Day 3 gives only a combined severe probability, not a tornado one).\nThis is the Storm Prediction Center's own outlook, not ours.",
+    "href": "https://www.spc.noaa.gov/products/outlook/"
+   },
+   "heatrisk": {
+    "id": "heatrisk",
+    "kind": "heat",
+    "chip": "HeatRisk",
+    "title": "NWS HeatRisk at this address",
+    "origin": "NWS HeatRisk (experimental), read at this point from the National Weather Service map service",
+    "text": "Day 1 (Thu Oct 8): no value.\nDay 2 (Fri Oct 9): level 1 of 4 (Minor).\nDay 3 (Sat Oct 10): level 1 of 4 (Minor).\nHeatRisk runs from level 0 (little to no risk) to level 4 (extreme) and weighs how unusual the heat is for the time of year, how long it lasts and the health risk. It is experimental.",
+    "href": "https://www.wpc.ncep.noaa.gov/heatrisk/"
+   },
+   "heat-forecast": {
+    "id": "heat-forecast",
+    "kind": "heat",
+    "chip": "Feels-like",
+    "title": "Forecast feels-like highs, and where they rank here",
+    "origin": "National Weather Service gridpoint forecast (apparent temperature), ranked against this address's Open-Meteo/ERA5 daily highs since 2000",
+    "text": "Fri Oct 9: forecast feels-like high 90 F. At this address 3,656 of 9,497 days since 2000 were that hot or hotter (38% of all days); for days within a week of Oct 9 in any year, 143 of 390 (37%).\nSat Oct 10: forecast feels-like high 90 F. At this address 3,656 of 9,497 days since 2000 were that hot or hotter (38% of all days); for days within a week of Oct 10 in any year, 135 of 390 (35%).\nThe forecast and the history come from different methods, so the ranking is a rough guide."
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T01:40:37.571Z"
+  }
+ },
+ "story": {
+  "county": "TXC029",
+  "eventIds": [
+   "SE-5285553",
+   "SE-5311543",
+   "SE-51439",
+   "SE-453032",
+   "SE-713949",
+   "SE-943791",
+   "SE-980123",
+   "SE-1039790",
+   "SE-1272324",
+   "SE-1290922"
+  ],
+  "impacts": [
+   {
+    "eventId": "SE-5285553",
+    "tag": "structure_damage",
+    "evidence": "completely destroyed four mobile homes and damaged several others"
+   },
+   {
+    "eventId": "SE-5311543",
+    "tag": "flooding",
+    "evidence": "Flash flooding developed very quickly and was countywide in its coverage"
+   },
+   {
+    "eventId": "SE-51439",
+    "tag": "roads_blocked",
+    "evidence": "most roads in the northwest part of the county were closed"
+   },
+   {
+    "eventId": "SE-453032",
+    "tag": "flooding",
+    "evidence": "This led to massive flooding in the Olmos Basin/Creek"
+   }
+  ],
+  "impactLines": [
+   {
+    "tag": "flooding",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-5311543",
+     "SE-453032"
+    ],
+    "text": "2 flash flood events: the National Weather Service narrative describes flooding."
+   },
+   {
+    "tag": "roads_blocked",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-51439"
+    ],
+    "text": "1 flash flood event: the National Weather Service narrative describes roads closed or blocked."
+   },
+   {
+    "tag": "structure_damage",
+    "type": "Tornado",
+    "eventIds": [
+     "SE-5285553"
+    ],
+    "text": "1 tornado event: the National Weather Service narrative describes damage to homes or buildings."
+   }
+  ],
+  "totalsLine": "Across these 10 events the National Weather Service recorded 90 deaths, 59 injuries and $40 million in recorded damage.",
+  "droppedImpacts": 4,
+  "generatedAt": "2026-10-09T01:40:49.508Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The deadliest event in the record for your zone was on Jun 27, 2022, when the National Weather Service recorded 53 deaths from heat after 67 people were found in a tractor-trailer on San Antonio's southwest side.",
+    "cites": [
+     "SE-1039790"
+    ]
+   },
+   {
+    "text": "Another heat event in your zone, on Jul 22, 2017, involved 39 people discovered in a hot semi-trailer, with 10 deaths and 29 people treated for heat related illnesses.",
+    "cites": [
+     "SE-713949"
+    ]
+   },
+   {
+    "text": "On Feb 14, 2021, the record for your zone describes wind chill values of -5 to -10 degrees F and 4 deaths, one direct from hypothermia and three indirect.",
+    "cites": [
+     "SE-943791"
+    ]
+   },
+   {
+    "text": "A Mar 19, 2002 tornado in Bexar County injured 30 people and, in the record's words, \"completely destroyed four mobile homes\".",
+    "cites": [
+     "SE-5285553"
+    ]
+   },
+   {
+    "text": "Flash flooding on Jul 1, 2002 was countywide, with 4 deaths and officials reporting more than 230 high water rescues in San Antonio.",
+    "cites": [
+     "SE-5311543"
+    ]
+   },
+   {
+    "text": "The remains of Tropical Storm Erin brought a general 4 to 5 inch rain on Aug 16, 2007, and the record lists $15,000,000 in damage.",
+    "cites": [
+     "SE-51439"
+    ]
+   },
+   {
+    "text": "On May 25, 2013, San Antonio International Airport recorded 9.87 inches of rain, the 2nd highest 24 hr total on record, and the event caused 2 deaths.",
+    "cites": [
+     "SE-453032"
+    ]
+   },
+   {
+    "text": "The record shows 1,037 weather events in the area since 2000, including 375 Flash Flood events and 293 Hail events.",
+    "cites": [
+     "area-counts"
+    ]
+   }
+  ],
+  "sources": {
+   "SE-1039790": {
+    "id": "SE-1039790",
+    "kind": "event",
+    "chip": "Heat 2022",
+    "title": "Heat, Jun 27, 2022",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Heat on Jun 27, 2022 in Bexar (forecast zone TXZ205, YOUR zone: the address is inside it). Deaths: 53. Injuries: 0. No damage figure was recorded.",
+    "quote": "Temperatures were unusually hot on the 27th with high temperatures in the San Antonio area ranging from 100-103 degrees (the normal high is 93). Sixty-seven people were found in a tractor-trailer on the southwest side of San Antonio. Fifty-three people died of heat related illnesses. Forty-eight people died at the scene and five others died after being taken to hospitals. Forty of the victims were male and 13 were female. Their ages were not released.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1039790"
+   },
+   "SE-713949": {
+    "id": "SE-713949",
+    "kind": "event",
+    "chip": "Heat 2017",
+    "title": "Heat, Jul 22, 2017",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Heat on Jul 22, 2017 in Bexar (forecast zone TXZ205, YOUR zone: the address is inside it). Deaths: 10. Injuries: 29. No damage figure was recorded.",
+    "quote": "Thirty-nine people were discovered in a hot semi-trailer just after��midnight��on Sunday, July 23rd in southwestern San Antonio. The San Antonio Fire Department reported that 8 people died at the scene. Two others died after being taken to hospitals. Twenty-nine others were treated for heat related illnesses. High temperatures ranged from 100-104 degrees across the San Antonio metro area on Saturday, July 22nd. Peak heat index values were estimated to have been around 101-105 degrees.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=713949"
+   },
+   "SE-943791": {
+    "id": "SE-943791",
+    "kind": "event",
+    "chip": "Extreme Cold/Wind Chill 2021",
+    "title": "Extreme Cold/Wind Chill, Feb 14, 2021",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Extreme Cold/Wind Chill on Feb 14, 2021 in Bexar (forecast zone TXZ205, YOUR zone: the address is inside it). Deaths: 4. Injuries: 0. No damage figure was recorded.",
+    "quote": "Extreme cold temperatures and breezy winds combined to produce wind chill values of -5 to -10 degrees F. According to a FOIA (Freedom of Information Act request) to the Texas Department of State Health Services made in April 2021, information released showed one direct death from hypothermia and three indirect deaths from other causes. Detailed information was not provided on exact date, sex of the fatalities, age, or in the case of the indirect deaths, the exact cause of death. Detailed information will not be made public until 25 years after date of death.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=943791"
+   },
+   "SE-5285553": {
+    "id": "SE-5285553",
+    "kind": "event",
+    "chip": "Tornado 2002",
+    "title": "Tornado, Mar 19, 2002",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Tornado on Mar 19, 2002 in BEXAR (county TXC029). Deaths: 0. Injuries: 30. Recorded damage: $2,000,000 (about $2 million).",
+    "quote": "Tornado number five, strongest of the six and rated as a minimal F2 tornado on the Fujita Scale, formed about 3.5 miles southwest of the intersection of Loop 1604 and I35. It struck near 720 pm along near Silver Street and Bravo Street and moved toward the north for 1.5 miles. It apparently weakened periodically, producing a hit-and-miss damage path. It completely destroyed four mobile homes and damaged several others.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5285553"
+   },
+   "SE-5311543": {
+    "id": "SE-5311543",
+    "kind": "event",
+    "chip": "Flash Flood 2002",
+    "title": "Flash Flood, Jul 1, 2002",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Flash Flood on Jul 1, 2002 in BEXAR (county TXC029). Deaths: 4. Injuries: 0. No damage figure was recorded.",
+    "quote": "Additional 2 to 3 inch totals fell across Bexar County with isolated totals of up to 6 inches in the north central part of the city of San Antonio. Flash flooding developed very quickly and was countywide in its coverage. Small streams and creeks were also flash flooding. Officials reported more than 230 high water rescues in San Antonio from the night of July 1 through noon on July 2. Damage was reported to numerous roads and bridges across the county. An elderly couple apparently attempted to drive home from a restaurant during the severe flash flooding late Monday evening, despite the pleas of the restaurant patrons. Their bodies were recovered near 0930CST on July 4 in their submerged automobile in Olmos Creek. A young man and his friend were playing near swollen Apache Creek when both were swept into the creek on the afternoon of July 1.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5311543"
+   },
+   "SE-51439": {
+    "id": "SE-51439",
+    "kind": "event",
+    "chip": "Flash Flood 2007",
+    "title": "Flash Flood, Aug 16, 2007",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Flash Flood on Aug 16, 2007 in BEXAR (county TXC029). Deaths: 2. Injuries: 0. Recorded damage: $15,000,000 (about $15 million).",
+    "quote": "The area of extremely heavy rainfall associated with the remains of Tropical Storm Erin continued to spread northwestward across Bexar County, with a general 4 to 5 inch rain over the county. Totals of up to 8 inches were reported at several locations in the south and west parts of San Antonio as well as between Helotes and Leon Springs. By 1400 CST, most roads in the northwest part of the county were closed. By 1530 CST that afternoon, more than 39 high water rescues were reportedly underway in San Antonio. Water was almost waist-deep at Southcross Boulevard in San Antonio. Floodwaters were so deep and running so swiftly at the San Antonio High School West Campus that they collapsed a masonry wall and filled the school with almost five feet of muddy water. Hallways were flooded, and desks, computers and boxes were tossed and thrown together.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=51439"
+   },
+   "SE-453032": {
+    "id": "SE-453032",
+    "kind": "event",
+    "chip": "Flash Flood 2013",
+    "title": "Flash Flood, May 25, 2013",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Flash Flood on May 25, 2013 in BEXAR (county TXC029). Deaths: 2. Injuries: 0. No damage figure was recorded.",
+    "quote": "Thunderstorms produced heavy rain that caused flash flooding in and around San Antonio and Bexar County. There was record rainfall in the San Antonio area with the San Antonio International Airport recording 9.87 inches of rain (2nd highest 24 hr total on record) and CoCoRAHS observers reporting over 11 inches. Most of the rain fell in about six hours with four inches in one hour between 6 and 7 AM. A USGS stream and rain gauge on Olmos Creek and Dresden Drive reported 2.58 inches in 15 min between 615 and 630 am. The gauge reported 6.13 inches in one hour, 9.46 inches in 2 hours, and totaled 15.31 inches in 5 hours. A 24hr total at this gauge was 17 inches of rain. This led to massive flooding in the Olmos Basin/Creek just inside Loop 410 near the Quarry. Most of the flooding across the city was in north central and northwest San Antonio along and just side Loop 410.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=453032"
+   },
+   "area-counts": {
+    "id": "area-counts",
+    "kind": "history",
+    "chip": "Area totals",
+    "title": "Weather events recorded in this area",
+    "origin": "NCEI Storm Events, county and forecast-zone rows",
+    "text": "The National Weather Service recorded 1,037 weather events in Bexar County (TXC029), the forecast zone the address is in and zones within 15 km of it since 2000. By type: Flash Flood 375, Hail 293, Thunderstorm Wind 171, Drought 64, Flood 37, Tornado 27, Winter Weather 18, Winter Storm 9, Excessive Heat 8, Heat 7, Lightning 7, Cold/Wind Chill 4. These are filed events, not every storm that happened."
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T01:40:37.571Z"
+  }
+ },
+ "ready": {
+  "generatedAt": "2026-10-09T01:40:49.725Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "items": [
+   {
+    "action": "The NWS report for May 29, 2023 describes a car stranded in flood water near the St. Mary's St. bridge over the San Antonio River, 0.4 km from this address. Do not drive through flood waters, and never drive around barriers blocking a flooded road.",
+    "why": [
+     {
+      "id": "SE-1102954",
+      "label": "Flash Flood report, May 29, 2023",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1102954"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-turn-around",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Do not walk, swim or drive through flood waters. Turn Around, Don’t Drown!"
+     },
+     {
+      "id": "flood-nws-barriers",
+      "hazard": "flood",
+      "source": "National Weather Service, Turn Around Don't Drown",
+      "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+      "text": "Never drive around the barriers blocking a flooded road. The road may have collapsed under that water."
+     }
+    ]
+   },
+   {
+    "action": "On March 28, 2018, flash flooding closed the lower level of I-35 between Alamo St. and Guadalupe St., 0.7 km away, and on May 30, 2025 multiple vehicles were stranded. Remember that one foot of moving water can sweep a vehicle away.",
+    "why": [
+     {
+      "id": "SE-745469",
+      "label": "Flash Flood report, Mar 28, 2018",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=745469"
+     },
+     {
+      "id": "SE-1265274",
+      "label": "Flash Flood report, May 30, 2025",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1265274"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-six-inches",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Remember, just six inches of moving water can knock you down, and one foot of moving water can sweep your vehicle away."
+     },
+     {
+      "id": "flood-nws-cars",
+      "hazard": "flood",
+      "source": "National Weather Service, Turn Around Don't Drown",
+      "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+      "text": "The Centers for Disease Control and Prevention report that over half of all flood-related drownings occur when a vehicle is driven into hazardous flood water."
+     }
+    ]
+   },
+   {
+    "action": "The NWS recorded 27 flood reports within 5 km of this address, on 20 different days, and in your area flash flooding on June 12, 2025 caused 11 deaths. Buy or renew flood insurance well before a storm, since homeowner's policies do not cover flooding.",
+    "why": [
+     {
+      "id": "local-flood-count",
+      "label": "27 flood reports within 5 km, Mar 21, 2015 to May 30, 2025",
+      "hazard": "flood"
+     },
+     {
+      "id": "SE-1272324",
+      "label": "Flash Flood, Jun 12, 2025",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1272324"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-insurance",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Purchase flood insurance or renew a flood insurance policy. Homeowner’s insurance policies do not cover flooding. It typically takes up to 30 days for a policy to go into effect, so the time to buy is well before a disaster. Get flood coverage under the National Flood Insurance Program (NFIP)."
+     }
+    ]
+   },
+   {
+    "action": "An EF0 tornado on Oct 26, 2023 passed 2.5 km from this address, damaging trees in the Masonic Cemetery. Sign up for your community's warning system, and in a tornado warning go to an interior room away from windows.",
+    "why": [
+     {
+      "id": "SE-1144582",
+      "label": "EF0 tornado, Oct 26, 2023",
+      "hazard": "tornado",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1144582"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "tornado-alerts",
+      "hazard": "tornado",
+      "source": "Ready.gov, Tornadoes",
+      "url": "https://www.ready.gov/tornadoes",
+      "text": "Sign up for your community’s warning system. The Emergency Alert System (EAS) and NOAA Weather Radio also provide emergency alerts. If your community has sirens, become familiar with the warning tone."
+     },
+     {
+      "id": "tornado-nws-house",
+      "hazard": "tornado",
+      "source": "National Weather Service, What to do during a tornado",
+      "url": "https://www.weather.gov/safety/tornado-during",
+      "text": "At Your House: If you are in a tornado warning, go to your basement, safe room, or an interior room away from windows. Don't forget pets if time allows."
+     }
+    ]
+   },
+   {
+    "action": "In your area on June 27, 2022, heat with highs of 100-103 degrees was recorded and 53 people died of heat related illnesses. Check on family members, older adults and neighbors, who are at greater risk from extreme heat.",
+    "why": [
+     {
+      "id": "SE-1039790",
+      "label": "Heat, Jun 27, 2022",
+      "hazard": "heat",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1039790"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "heat-check-on",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Check on family members, older adults and neighbors."
+     },
+     {
+      "id": "heat-vulnerable",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Older adults, children and people with certain illnesses and chronic conditions are at greater risk from extreme heat."
+     }
+    ]
+   }
+  ],
+  "hazards": [
+   {
+    "id": "flood",
+    "label": "Flooding",
+    "evidence": "27 written NWS flood reports within 5 km on 20 different days, latest May 30, 2025; 375 Flash Flood and 37 Flood events recorded for Bexar since 2000 (NCEI Storm Events), latest Aug 31, 2025"
+   },
+   {
+    "id": "tornado",
+    "label": "Tornadoes",
+    "evidence": "3 tornado tracks within 10 km, latest Oct 26, 2023; 27 Tornado events recorded for Bexar since 2000 (NCEI Storm Events), latest Oct 26, 2023"
+   },
+   {
+    "id": "heat",
+    "label": "Extreme heat",
+    "evidence": "1382 days with a feels-like high of 100°F or more in 26 of 26 years (2000 to 2025); hottest 114.6°F on Jun 21, 2023; 8 Excessive Heat and 7 Heat events recorded for Bexar since 2000 (NCEI Storm Events), latest Jul 9, 2025"
+   },
+   {
+    "id": "wind",
+    "label": "Damaging wind and storms",
+    "evidence": "293 Hail and 171 Thunderstorm Wind events recorded for Bexar since 2000 (NCEI Storm Events), latest Aug 31, 2025"
+   },
+   {
+    "id": "winter",
+    "label": "Winter storms and cold",
+    "evidence": "18 Winter Weather and 9 Winter Storm events recorded for Bexar since 2003 (NCEI Storm Events), latest Feb 22, 2025"
+   },
+   {
+    "id": "smoke",
+    "label": "Wildfire smoke",
+    "evidence": "4 Wildfire events recorded for Bexar since 2011 (NCEI Storm Events), latest Apr 9, 2022"
+   }
+  ],
+  "dropped": 1,
+  "notices": [],
+  "precomputed": {
+   "at": "2026-10-09T01:40:37.571Z"
+  }
+ }
+}

@@ -1,0 +1,600 @@
+{
+ "slug": "nashville",
+ "address": "100 James Robertson Pkwy, Nashville, TN",
+ "lat": 36.168175092703,
+ "lon": -86.777515855134,
+ "brief": {
+  "generatedAt": "2026-10-09T01:40:23.850Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The National Weather Service in Nashville has a Flood Watch in effect for this address, issued October 8 at 11:25AM CDT and running until October 11 at 7:00AM CDT.",
+    "cites": [
+     "alerts"
+    ]
+   },
+   {
+    "text": "The Weather Prediction Center rates Saturday, Oct 10 as a Slight risk of excessive rainfall here, with no risk area on Thursday or Friday.",
+    "cites": [
+     "flood-outlook"
+    ]
+   },
+   {
+    "text": "On 10 of 118 past days rated Slight, a flood was reported within 10 km of this address; that is a count of past days, not a chance for tomorrow.",
+    "cites": [
+     "flood-record"
+    ]
+   },
+   {
+    "text": "The Storm Prediction Center shows no tornado risk area at this point on Thursday or Friday, and no severe-weather risk area on Saturday.",
+    "cites": [
+     "tornado-outlook"
+    ]
+   },
+   {
+    "text": "On 5 of 3,067 past days with no SPC tornado risk area, a tornado track passed within 25 miles of this address.",
+    "cites": [
+     "tornado-record"
+    ]
+   },
+   {
+    "text": "NWS HeatRisk is level 1 of 4 (Minor) for both Friday and Saturday, with no value for Thursday; official alerts are at weather.gov.",
+    "cites": [
+     "heatrisk"
+    ]
+   }
+  ],
+  "sources": {
+   "alerts": {
+    "id": "alerts",
+    "kind": "alert",
+    "chip": "Live alerts",
+    "title": "Active National Weather Service alerts",
+    "origin": "api.weather.gov alerts for this address",
+    "href": "https://www.weather.gov/",
+    "text": "Active alerts for this address (checked 2026-10-09 01:40 UTC): Flood Watch: Flood Watch issued October 8 at 11:25AM CDT until October 11 at 7:00AM CDT by NWS Nashville TN (ends 2026-10-11 07:00)."
+   },
+   "flood-outlook": {
+    "id": "flood-outlook",
+    "kind": "outlook",
+    "chip": "WPC outlook",
+    "title": "WPC Excessive Rainfall Outlook at this address",
+    "origin": "Weather Prediction Center (WPC) Excessive Rainfall Outlook, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no risk area at this address.\nDay 2 (Fri Oct 9): no risk area at this address.\nDay 3 (Sat Oct 10): Slight risk.\nWhat the level means, per WPC: Slight is at least a 15% chance that rain exceeds flash flood guidance within 25 miles. This is the Weather Prediction Center's own outlook, not ours.",
+    "href": "https://www.wpc.ncep.noaa.gov/qpf/excessive_rainfall_outlook_ero.php"
+   },
+   "flood-record": {
+    "id": "flood-record",
+    "kind": "record",
+    "chip": "Local record",
+    "title": "How WPC's flood outlooks have played out at this address",
+    "origin": "Our count of past days: WPC morning Day 1 outlooks (Iowa Environmental Mesonet archive) against NWS flood reports with a known location",
+    "text": "This is a count of past days, not a forecast. From Oct 1, 2016 to Dec 31, 2025, 3,369 days had a WPC morning Day 1 outlook here. A flood report with a known location within 10 km of this address was filed on 33 of those days.\nDays with no risk area: a flood was reported within 10 km on 6 of 2,863 days (0.2%).\nDays rated Marginal: a flood was reported within 10 km on 10 of 375 days (2.7%).\nDays rated Slight: a flood was reported within 10 km on 10 of 118 days (8.5%).\nDays rated Moderate: a flood was reported within 10 km on 7 of 13 days (54%).\nDays rated High: 0 such days.\nWPC changed what its categories mean on Feb 10, 2022. Counting only days since then:\nDays with no risk area: a flood was reported within 10 km on 2 of 1,167 days (0.2%).\nDays rated Marginal: a flood was reported within 10 km on 2 of 186 days (1.1%).\nDays rated Slight: a flood was reported within 10 km on 2 of 53 days (3.8%).\nDays rated Moderate: a flood was reported within 10 km on 4 of 5 days (80%), too few days to say anything firm.\nOnly reports with a usable location are counted, so these are floods that were reported, not every flood."
+   },
+   "tornado-outlook": {
+    "id": "tornado-outlook",
+    "kind": "outlook",
+    "chip": "SPC outlook",
+    "title": "SPC tornado outlook at this address",
+    "origin": "Storm Prediction Center (SPC) Day 1 to 3 outlooks, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no tornado risk area at this point (under 2%).\nDay 2 (Fri Oct 9): no tornado risk area at this point (under 2%).\nDay 3 (Sat Oct 10): no severe-weather risk area at this point (Day 3 gives only a combined severe probability, not a tornado one).\nThis is the Storm Prediction Center's own outlook, not ours.",
+    "href": "https://www.spc.noaa.gov/products/outlook/"
+   },
+   "tornado-record": {
+    "id": "tornado-record",
+    "kind": "record",
+    "chip": "Local record",
+    "title": "How SPC's tornado outlooks have played out at this address",
+    "origin": "Our count of past days: SPC 06Z Day 1 tornado probabilities against NCEI Storm Events tornado tracks",
+    "text": "This is a count of past days, not a forecast. From Oct 1, 2016 to Jun 30, 2025, 3,194 days had an SPC morning Day 1 outlook here. A tornado track passed within 25 miles of this address (SPC's own distance) on 14 of those days.\nDays with no SPC tornado risk area: a tornado track passed within 25 miles on 5 of 3,067 days (0.2%).\nDays when SPC gave this point 2%: a tornado track passed within 25 miles on 4 of 73 days (5.5%).\nDays when SPC gave this point 5%: a tornado track passed within 25 miles on 3 of 37 days (8.1%).\nDays when SPC gave this point 10% or more: a tornado track passed within 25 miles on 2 of 17 days (12%)."
+   },
+   "heatrisk": {
+    "id": "heatrisk",
+    "kind": "heat",
+    "chip": "HeatRisk",
+    "title": "NWS HeatRisk at this address",
+    "origin": "NWS HeatRisk (experimental), read at this point from the National Weather Service map service",
+    "text": "Day 1 (Thu Oct 8): no value.\nDay 2 (Fri Oct 9): level 1 of 4 (Minor).\nDay 3 (Sat Oct 10): level 1 of 4 (Minor).\nHeatRisk runs from level 0 (little to no risk) to level 4 (extreme) and weighs how unusual the heat is for the time of year, how long it lasts and the health risk. It is experimental.",
+    "href": "https://www.wpc.ncep.noaa.gov/heatrisk/"
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T01:40:16.964Z"
+  }
+ },
+ "story": {
+  "county": "TNC037",
+  "eventIds": [
+   "SE-5524709",
+   "SE-226199",
+   "SE-257487",
+   "SE-282698",
+   "SE-431647",
+   "SE-480287",
+   "SE-882999",
+   "SE-951956",
+   "SE-1050590",
+   "SE-1144554"
+  ],
+  "impacts": [
+   {
+    "eventId": "SE-5524709",
+    "tag": "power_outage",
+    "evidence": "Over 25,000 people were without power in Davidson County"
+   },
+   {
+    "eventId": "SE-5524709",
+    "tag": "trees_down",
+    "evidence": "a tree limb from a rotted tree fell on a vehicle"
+   },
+   {
+    "eventId": "SE-226199",
+    "tag": "flooding",
+    "evidence": "water was overflowing its banks, resulting in flooding of low lying areas"
+   },
+   {
+    "eventId": "SE-226199",
+    "tag": "roads_blocked",
+    "evidence": "closing of Bluff Road due to water covering the road"
+   },
+   {
+    "eventId": "SE-431647",
+    "tag": "trees_down",
+    "evidence": "a tree fell onto a shed"
+   },
+   {
+    "eventId": "SE-480287",
+    "tag": "trees_down",
+    "evidence": "Numerous trees and power lines were blown down across Davidson County"
+   },
+   {
+    "eventId": "SE-480287",
+    "tag": "roads_blocked",
+    "evidence": "Trees were blown down and blocked roads such as Robertson Avenue"
+   },
+   {
+    "eventId": "SE-882999",
+    "tag": "trees_down",
+    "evidence": "destroying a barn and blowing down numerous trees"
+   },
+   {
+    "eventId": "SE-951956",
+    "tag": "flooding",
+    "evidence": "Hundreds of homes and businesses were flooded"
+   },
+   {
+    "eventId": "SE-951956",
+    "tag": "roads_blocked",
+    "evidence": "numerous roadways were flooded and closed including I-24, I-40, and I-440"
+   },
+   {
+    "eventId": "SE-951956",
+    "tag": "travel_disruption",
+    "evidence": "people stranded in flooded vehicles and homes"
+   },
+   {
+    "eventId": "SE-1144554",
+    "tag": "structure_damage",
+    "evidence": "Multiple mobile homes were destroyed on Nesbitt Lane"
+   },
+   {
+    "eventId": "SE-1144554",
+    "tag": "trees_down",
+    "evidence": "There were a few trees down and shingle damage to several homes"
+   }
+  ],
+  "impactLines": [
+   {
+    "tag": "trees_down",
+    "type": "Thunderstorm Wind",
+    "eventIds": [
+     "SE-5524709",
+     "SE-431647"
+    ],
+    "text": "2 thunderstorm wind events: the National Weather Service narrative describes trees down."
+   },
+   {
+    "tag": "trees_down",
+    "type": "Tornado",
+    "eventIds": [
+     "SE-882999",
+     "SE-1144554"
+    ],
+    "text": "2 tornado events: the National Weather Service narrative describes trees down."
+   },
+   {
+    "tag": "flooding",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-951956"
+    ],
+    "text": "1 flash flood event: the National Weather Service narrative describes flooding."
+   },
+   {
+    "tag": "roads_blocked",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-951956"
+    ],
+    "text": "1 flash flood event: the National Weather Service narrative describes roads closed or blocked."
+   },
+   {
+    "tag": "travel_disruption",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-951956"
+    ],
+    "text": "1 flash flood event: the National Weather Service narrative describes travel trouble."
+   },
+   {
+    "tag": "flooding",
+    "type": "Flood",
+    "eventIds": [
+     "SE-226199"
+    ],
+    "text": "1 flood event: the National Weather Service narrative describes flooding."
+   },
+   {
+    "tag": "roads_blocked",
+    "type": "Flood",
+    "eventIds": [
+     "SE-226199"
+    ],
+    "text": "1 flood event: the National Weather Service narrative describes roads closed or blocked."
+   },
+   {
+    "tag": "roads_blocked",
+    "type": "High Wind",
+    "eventIds": [
+     "SE-480287"
+    ],
+    "text": "1 high wind event: the National Weather Service narrative describes roads closed or blocked."
+   },
+   {
+    "tag": "trees_down",
+    "type": "High Wind",
+    "eventIds": [
+     "SE-480287"
+    ],
+    "text": "1 high wind event: the National Weather Service narrative describes trees down."
+   },
+   {
+    "tag": "power_outage",
+    "type": "Thunderstorm Wind",
+    "eventIds": [
+     "SE-5524709"
+    ],
+    "text": "1 thunderstorm wind event: the National Weather Service narrative describes power outages."
+   },
+   {
+    "tag": "structure_damage",
+    "type": "Tornado",
+    "eventIds": [
+     "SE-1144554"
+    ],
+    "text": "1 tornado event: the National Weather Service narrative describes damage to homes or buildings."
+   }
+  ],
+  "totalsLine": "Across these 10 events the National Weather Service recorded 23 deaths, 282 injuries and $2620.2 million in recorded damage.",
+  "droppedImpacts": 2,
+  "generatedAt": "2026-10-09T01:40:31.687Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The National Weather Service recorded an \"historic, long-track, strong EF-3 tornado\" that began in western Davidson County on Mar 3, 2020, with $1,090,000,000 in recorded damage.",
+    "cites": [
+     "SE-882999"
+    ]
+   },
+   {
+    "text": "On May 1, 2010, a flood in Davidson County recorded 10 deaths, with Bluff Road closed because of water covering the road.",
+    "cites": [
+     "SE-226199"
+    ]
+   },
+   {
+    "text": "On Aug 4, 2010, in your zone, heat index values between 110 and 115 degrees left a couple dozen people hospitalized around Metro Nashville.",
+    "cites": [
+     "SE-257487"
+    ]
+   },
+   {
+    "text": "A snowfall of two and one half inches on Feb 9, 2011 in your zone led to a combined 272 accidents, including 48 with injuries.",
+    "cites": [
+     "SE-282698"
+    ]
+   },
+   {
+    "text": "On Oct 31, 2013, in your zone, numerous trees and power lines were blown down across Davidson County, and a 9 year old boy was killed by electrocution.",
+    "cites": [
+     "SE-480287"
+    ]
+   },
+   {
+    "text": "Major and historic flash flooding on Mar 27, 2021 flooded hundreds of homes and businesses, closed I-24, I-40, and I-440, and brought over 130 water rescues.",
+    "cites": [
+     "SE-951956"
+    ]
+   },
+   {
+    "text": "On Dec 9, 2023, a strong EF-2 tornado struck the Madison area, destroying multiple mobile homes on Nesbitt Lane, where three fatalities occurred.",
+    "cites": [
+     "SE-1144554"
+    ]
+   },
+   {
+    "text": "Overall, the National Weather Service recorded 1,417 weather events in this area since 2000, including 777 Thunderstorm Wind and 121 Flash Flood events.",
+    "cites": [
+     "area-counts"
+    ]
+   }
+  ],
+  "sources": {
+   "SE-882999": {
+    "id": "SE-882999",
+    "kind": "event",
+    "chip": "Tornado 2020",
+    "title": "Tornado, Mar 3, 2020",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Tornado on Mar 3, 2020 in DAVIDSON (county TNC037). Deaths: 2. Injuries: 170. Recorded damage: $1,090,000,000 (about $1090 million).",
+    "quote": "An historic, long-track, strong EF-3 tornado began in western Davidson County then tracked eastward for over 60 miles through Wilson County into Smith County before lifting, causing 5 deaths and 220 injuries. This tornado touched down west of River Road Pike then moved eastward across Bells Bend, destroying a barn and blowing down numerous trees. The tornado strengthened significantly and widened to 0.65 miles wide as it crossed the Cumberland River into the John C. Tune Airport area, causing strong EF-2 damage to numerous planes, hangers, warehouses, and other buildings from Cockrill Bend Way to Briley Parkway. Around $200 million in damage was reported at John C. Tune Airport alone.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=882999"
+   },
+   "SE-226199": {
+    "id": "SE-226199",
+    "kind": "event",
+    "chip": "Flood 2010",
+    "title": "Flood, May 1, 2010",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Flood on May 1, 2010 in DAVIDSON (county TNC037). Deaths: 10. Injuries: 0. Recorded damage: $1,500,001,000 (about $1500 million).",
+    "quote": "At U.S. Highway 431 near the Robertson/Davidson County Line at Sycamore Creek, water was overflowing its banks, resulting in flooding of low lying areas. At least one home and farm was reported to be covered with flood waters. At the time of this report, U.S. Highway 431 was still open, although the water level near the base of the road and bridge was rising fast. No additional information was provided concerning any damage to the road or bridge. Also, flooding was reported along Charlotte Road just west of downtown Nashville by the public. Emergency Manager reported closing of Bluff Road due to water covering the road. Water was reported over Culbertson Road along Mill Creek near Nolensville. This made the road impassible to traffic. On Estes Road, approximately one mile west of Green Hills, a creek was flowing over the road. Depth was estimated at three to six inches.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=226199"
+   },
+   "SE-257487": {
+    "id": "SE-257487",
+    "kind": "event",
+    "chip": "Excessive Heat 2010",
+    "title": "Excessive Heat, Aug 4, 2010",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Excessive Heat on Aug 4, 2010 in Davidson (forecast zone TNZ027, YOUR zone: the address is inside it). Deaths: 0. Injuries: 25. Recorded damage: $100,000.",
+    "quote": "Afternoon temperatures around 100 degrees and unusually high humidity led to heat index values between 110 and 115 degrees on August 4th. Around Metro Nashville, a couple dozen people were hospitalized suffering from heat exhaustion. Several others were hospitalized suffering from burnt feet. There were no known fatalities. There were numerous reports of damage from the heat including exploding tires on automobiles.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=257487"
+   },
+   "SE-282698": {
+    "id": "SE-282698",
+    "kind": "event",
+    "chip": "Winter Weather 2011",
+    "title": "Winter Weather, Feb 9, 2011",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Winter Weather on Feb 9, 2011 in Davidson (forecast zone TNZ027, YOUR zone: the address is inside it). Deaths: 0. Injuries: 48. No damage figure was recorded.",
+    "quote": "Two and one half inches of total snowfall accumulation occurred across the county. A newspaper reported that the Nashville Metro Police Department Officers reported 100 accident as roads quickly became snow covered across the area during the first couple hours of snowfall. In total, the Nashville Metro Police Deaprtment and the Tennessee Highway Patrol reported a combined 272 accidents, including 48 with injuries. Details concerning damage to individual vehicles and damage costs were unknown. This total snowfall accumulation also resulted in closures or postponement of civic engagements across the county for the remainder of that day and night on Wednesday, February 9th, as travel across roads throughout the county became hazardous due to the accumulating snowfall.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=282698"
+   },
+   "SE-480287": {
+    "id": "SE-480287",
+    "kind": "event",
+    "chip": "High Wind 2013",
+    "title": "High Wind, Oct 31, 2013",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "High Wind on Oct 31, 2013 in Davidson (forecast zone TNZ027, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. Recorded damage: $50,000. Recorded magnitude: 52 (EG).",
+    "quote": "Numerous trees and power lines were blown down across Davidson County, especially during the evening hours, with many blocked roads. The KBNA ASOS measured a peak wind gust of 52 mph around 830 PM CDT. One 9 year old boy was killed by electrocution around 930 PM CDT when he rode his bicycle over a live power line that had been knocked down by a fallen large tree limb. This death occurred in the 500 block of Charles E Davis Boulevard around 1.5 miles southeast of downtown Nashville. Trees were reportedly blown down in Old Hickory, a large tree limb was blown down on power lines in the Charlotte Park area of west Nashville, and a large tree limb was blown down in Sevier Park. Trees were blown down and blocked roads such as Robertson Avenue in west Nashville, Towry Street at Paragon Mills Road in Antioch, and Carter Avenue in east Nashville.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=480287"
+   },
+   "SE-951956": {
+    "id": "SE-951956",
+    "kind": "event",
+    "chip": "Flash Flood 2021",
+    "title": "Flash Flood, Mar 27, 2021",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Flash Flood on Mar 27, 2021 in DAVIDSON (county TNC037). Deaths: 5. Injuries: 0. Recorded damage: $20,000,000 (about $20 million).",
+    "quote": "Major and historic flash flooding affected southern and eastern Davidson County, with the worst flooding affecting areas along and near Sevenmile Creek and Mill Creek in south Nashville. Hundreds of homes and businesses were flooded, numerous roadways were flooded and closed including I-24, I-40, and I-440, and over 130 water rescues were conducted from people stranded in flooded vehicles and homes. Homes and businesses that were flooded included a hotel at 95 Wallace Road near I-24 at Harding Place, the South Brooke Apartments on Linbar Drive, many homes around Edmondson Pike at Blackman Road, the Walmart on Nolensville Pike at Harding Place with vehicles in the parking lot submerged up to their windows, a home on Truxton Court in Donelson, and the Kroger on Old Hickory Blvd in Hermitage which also had cars stalled in flood waters in the parking lot.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=951956"
+   },
+   "SE-1144554": {
+    "id": "SE-1144554",
+    "kind": "event",
+    "chip": "Tornado 2023",
+    "title": "Tornado, Dec 9, 2023",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Tornado on Dec 9, 2023 in DAVIDSON (county TNC037). Deaths: 3. Injuries: 21. Recorded damage: $10,000,000 (about $10 million).",
+    "quote": "This strong EF-2 tornado touched down just to the east of I-24 on Brick Church Lane in Davidson County. There were a few trees down and shingle damage to several homes in this area. The tornado strengthened in the Madison area causing EF-2 damage with winds up to 120-125 mph. The heaviest damage was confined to two areas, off of East Campbell Road as well as Nesbitt Lane. Multiple mobile homes were destroyed on Nesbitt Lane, and this is where three fatalities occurred. Multiple single family homes and a church off of East Campbell Road were missing large sections of their roofs with some exterior walls collapsed. Several metal power poles in the area were bent as well. Nearby, an apartment complex off Palmer Avenue sustained damage. As the tornado moved further northeast, substantial damage was found to houses in a cul-de-sac on Stoney River Lane.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1144554"
+   },
+   "area-counts": {
+    "id": "area-counts",
+    "kind": "history",
+    "chip": "Area totals",
+    "title": "Weather events recorded in this area",
+    "origin": "NCEI Storm Events, county and forecast-zone rows",
+    "text": "The National Weather Service recorded 1,417 weather events in Davidson County (TNC037), the forecast zone the address is in and zones within 15 km of it since 2000. By type: Thunderstorm Wind 777, Hail 148, Flash Flood 121, Winter Weather 90, Strong Wind 51, Lightning 45, Tornado 35, Flood 28, Drought 27, Winter Storm 25, High Wind 17, Heavy Rain 16. These are filed events, not every storm that happened."
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T01:40:16.964Z"
+  }
+ },
+ "ready": {
+  "generatedAt": "2026-10-09T01:40:31.879Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "items": [
+   {
+    "action": "The April 5, 2025 flash flood report described road flooding at Decatur St and Willow St with the road closed to through traffic. Never drive around barriers on a flooded road, because the road may have collapsed under the water.",
+    "why": [
+     {
+      "id": "LSR-OHX-202504052303-0",
+      "label": "Flash Flood report, Apr 5, 2025",
+      "hazard": "flood"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-nws-barriers",
+      "hazard": "flood",
+      "source": "National Weather Service, Turn Around Don't Drown",
+      "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+      "text": "Never drive around the barriers blocking a flooded road. The road may have collapsed under that water."
+     }
+    ]
+   },
+   {
+    "action": "The Aug 31, 2017 report showed cars partially submerged at Vantage Way and Rosa Parks Blvd, and 42 NWS flood reports sit within 5 km of this address. Do not drive into flood water, since over half of flood-related drownings happen in vehicles.",
+    "why": [
+     {
+      "id": "LSR-OHX-201709010000-0",
+      "label": "Flash Flood report, Aug 31, 2017",
+      "hazard": "flood"
+     },
+     {
+      "id": "local-flood-count",
+      "label": "42 flood reports within 5 km, Jun 8, 2015 to May 20, 2025",
+      "hazard": "flood"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-nws-cars",
+      "hazard": "flood",
+      "source": "National Weather Service, Turn Around Don't Drown",
+      "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+      "text": "The Centers for Disease Control and Prevention report that over half of all flood-related drownings occur when a vehicle is driven into hazardous flood water."
+     },
+     {
+      "id": "flood-turn-around",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Do not walk, swim or drive through flood waters. Turn Around, Don’t Drown!"
+     }
+    ]
+   },
+   {
+    "action": "The Mar 27, 2021 flash flood in your area affected southern and eastern Davidson County, with 5 deaths recorded. Homeowner's policies do not cover flooding and coverage takes up to 30 days to start, so buy or renew flood insurance well ahead of time.",
+    "why": [
+     {
+      "id": "SE-951956",
+      "label": "Flash Flood, Mar 27, 2021",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=951956"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-insurance",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Purchase flood insurance or renew a flood insurance policy. Homeowner’s insurance policies do not cover flooding. It typically takes up to 30 days for a policy to go into effect, so the time to buy is well before a disaster. Get flood coverage under the National Flood Insurance Program (NFIP)."
+     }
+    ]
+   },
+   {
+    "action": "An EF3 tornado on Mar 3, 2020 passed 0.7 km from this address. Pick your shelter now: a safe room or storm shelter, or otherwise a small interior windowless room or basement on the lowest level, and practice going there.",
+    "why": [
+     {
+      "id": "SE-882999",
+      "label": "EF3 tornado, Mar 3, 2020",
+      "hazard": "tornado",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=882999"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "tornado-shelter",
+      "hazard": "tornado",
+      "source": "Ready.gov, Tornadoes",
+      "url": "https://www.ready.gov/tornadoes",
+      "text": "Identify and practice going to a safe shelter such as a safe room built using FEMA criteria or a storm shelter built to ICC 500 standards. The next best protection is a small, interior, windowless room or basement on the lowest level of a sturdy building."
+     }
+    ]
+   },
+   {
+    "action": "A strong EF-2 tornado touched down in Davidson County on Dec 9, 2023, a December event, with 3 deaths recorded in your area. Sign up for your community's warning system and keep NOAA Weather Radio on so alerts reach you at any season.",
+    "why": [
+     {
+      "id": "SE-1144554",
+      "label": "Tornado, Dec 9, 2023",
+      "hazard": "tornado",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1144554"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "tornado-alerts",
+      "hazard": "tornado",
+      "source": "Ready.gov, Tornadoes",
+      "url": "https://www.ready.gov/tornadoes",
+      "text": "Sign up for your community’s warning system. The Emergency Alert System (EAS) and NOAA Weather Radio also provide emergency alerts. If your community has sirens, become familiar with the warning tone."
+     }
+    ]
+   },
+   {
+    "action": "Your address has had 531 days with a feels-like high of 100°F or more since 2000, including 33 days in 2025. Identify cool places such as libraries or shopping malls, and check on family members, older adults and neighbors.",
+    "why": [
+     {
+      "id": "local-heat",
+      "label": "Hottest day on record, Jun 29, 2012 (feels like 113.1°F)",
+      "hazard": "heat"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "heat-cool-places",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Identify places in your community where you can go to get cool such as libraries and shopping malls or contact your local health department to find cooling options in your area."
+     },
+     {
+      "id": "heat-check-on",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Check on family members, older adults and neighbors."
+     }
+    ]
+   }
+  ],
+  "hazards": [
+   {
+    "id": "flood",
+    "label": "Flooding",
+    "evidence": "42 written NWS flood reports within 5 km on 22 different days, latest May 20, 2025; 121 Flash Flood and 28 Flood events recorded for Davidson since 2000 (NCEI Storm Events), latest Jul 14, 2025"
+   },
+   {
+    "id": "tornado",
+    "label": "Tornadoes",
+    "evidence": "5 tornado tracks within 10 km, latest Dec 9, 2023; 35 Tornado events recorded for Davidson since 2000 (NCEI Storm Events), latest Dec 9, 2023"
+   },
+   {
+    "id": "heat",
+    "label": "Extreme heat",
+    "evidence": "531 days with a feels-like high of 100°F or more in 26 of 26 years (2000 to 2025); hottest 113.1°F on Jun 29, 2012; 8 Excessive Heat and 4 Heat events recorded for Williamson since 2010 (NCEI Storm Events), latest Jul 30, 2025"
+   },
+   {
+    "id": "wind",
+    "label": "Damaging wind and storms",
+    "evidence": "777 Thunderstorm Wind and 148 Hail events recorded for Davidson since 2000 (NCEI Storm Events), latest Dec 18, 2025"
+   },
+   {
+    "id": "winter",
+    "label": "Winter storms and cold",
+    "evidence": "90 Winter Weather and 25 Winter Storm events recorded for Davidson since 2008 (NCEI Storm Events), latest Feb 18, 2025"
+   }
+  ],
+  "dropped": 0,
+  "notices": [],
+  "precomputed": {
+   "at": "2026-10-09T01:40:16.964Z"
+  }
+ }
+}

@@ -16,6 +16,7 @@ import type { AreaEventsSummary, LiveAlerts, LookupPayload } from "../types";
 import type { OutlookPayload } from "../outlook-types";
 import { readEnv } from "../env";
 import { loadDamageRows, type DamageRow } from "./damage";
+import { sampleAiForAddress } from "./precomputed";
 import { AnswerCache, BRIEF_CACHE_MS, RateLimiter, readDailyBudget, TokenBudget } from "./guard";
 import {
   AI_MODEL,
@@ -68,6 +69,8 @@ export interface AiDeps {
   outlook: (lat: number, lon: number) => Promise<OutlookPayload>;
   damage: (state: string) => Promise<DamageRow[]>;
   now: () => number;
+  /** A brief or story made ahead of time for a sample address (data/samples/ai), or null. Absent: every request is live. */
+  sampleAi?: (address: string) => Promise<{ brief: AiAnswer | null; story: StoryAnswer | null } | null>;
   /** Called once per model answer with what was written and what the checks did with it (the 20-question test uses it). Never needed in production. */
   audit?: (event: AuditEvent) => void;
 }
@@ -86,6 +89,8 @@ export interface AiRequest {
   /** Null for the 72-hour brief. */
   question: string | null;
   ip: string;
+  /** True to skip the answer made ahead of time and get a live one (the page asks for this right after showing the early one). */
+  fresh?: boolean;
 }
 
 export type AiResult = { status: 200; body: AiAnswer } | { status: number; body: AiErrorBody; headers?: Record<string, string> };
@@ -144,6 +149,12 @@ export async function handleAi(request: AiRequest, deps: AiDeps): Promise<AiResu
     question = cleanQuestion(request.question);
     if (!question) return fail(400, "bad_request", "Type a question first.");
     if (question.length > MAX_QUESTION_CHARS) return fail(400, "bad_request", `Keep the question under ${MAX_QUESTION_CHARS} characters.`);
+  }
+
+  // A sample address's brief made ahead of time is shown at once (no model call, nothing to rate limit); `fresh` asks for a live one.
+  if (question === null && !request.fresh && deps.sampleAi) {
+    const early = (await deps.sampleAi(address).catch(() => null))?.brief;
+    if (early) return { status: 200, body: early };
   }
 
   const now = deps.now();
@@ -322,6 +333,10 @@ export function createAiDeps(env: Record<string, string | undefined> = process.e
       return (await lookupAreaEvents(place, { fetch: fetchLike, loadEvents: selectAreaEvents })).value;
     },
     storyCache: new AnswerCache<StoryAnswer>(24 * 60 * 60_000),
+    sampleAi: async (address) => {
+      const file = await sampleAiForAddress(address);
+      return file ? { brief: file.brief, story: file.story } : null;
+    },
     outlook: (lat, lon) => buildOutlook(lat, lon),
     damage: (state) => loadDamageRows(state),
     now: () => Date.now(),
