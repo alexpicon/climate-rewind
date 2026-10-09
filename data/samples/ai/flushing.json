@@ -1,0 +1,543 @@
+{
+ "slug": "flushing",
+ "address": "4105 Main St, Flushing, NY",
+ "lat": 40.758019717113,
+ "lon": -73.829301134074,
+ "brief": {
+  "generatedAt": "2026-10-09T11:56:40.892Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The National Weather Service had no active alerts for this address when we checked on 2026-10-09 at 11:56 UTC; official alerts are at weather.gov.",
+    "cites": [
+     "alerts"
+    ]
+   },
+   {
+    "text": "The Weather Prediction Center's excessive rainfall outlook shows no risk area at this address for Oct 8 and Oct 9, and a Marginal risk for Sat Oct 10, which it defines as at least a 5% chance that rain exceeds flash flood guidance within 25 miles.",
+    "cites": [
+     "flood-outlook"
+    ]
+   },
+   {
+    "text": "The National Weather Service rain forecast by day is 0.00 in on Fri Oct 9, 0.00 in on Sat Oct 10 and 0.77 in on Sun Oct 11, while typical rain on past days with flood reports here was 1.9 in; this is a history-based signal, not a flood forecast.",
+    "cites": [
+     "trigger"
+    ]
+   },
+   {
+    "text": "The Storm Prediction Center shows no tornado risk area at this point (under 2%) for Oct 8 and Oct 9, and no severe-weather risk area for Sat Oct 10.",
+    "cites": [
+     "tornado-outlook"
+    ]
+   },
+   {
+    "text": "NWS HeatRisk is level 0 of 4 (Little to no risk) for both Fri Oct 9 and Sat Oct 10, with forecast feels-like highs of 71 F and 69 F.",
+    "cites": [
+     "heatrisk",
+     "heat-forecast"
+    ]
+   }
+  ],
+  "sources": {
+   "alerts": {
+    "id": "alerts",
+    "kind": "alert",
+    "chip": "Live alerts",
+    "title": "Active National Weather Service alerts",
+    "origin": "api.weather.gov alerts for this address",
+    "href": "https://www.weather.gov/",
+    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 11:56 UTC)."
+   },
+   "flood-outlook": {
+    "id": "flood-outlook",
+    "kind": "outlook",
+    "chip": "WPC outlook",
+    "title": "WPC Excessive Rainfall Outlook at this address",
+    "origin": "Weather Prediction Center (WPC) Excessive Rainfall Outlook, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no risk area at this address.\nDay 2 (Fri Oct 9): no risk area at this address.\nDay 3 (Sat Oct 10): Marginal risk.\nWhat the level means, per WPC: Marginal is at least a 5% chance that rain exceeds flash flood guidance within 25 miles. This is the Weather Prediction Center's own outlook, not ours.",
+    "href": "https://www.wpc.ncep.noaa.gov/qpf/excessive_rainfall_outlook_ero.php"
+   },
+   "trigger": {
+    "id": "trigger",
+    "kind": "trigger",
+    "chip": "Flood trigger",
+    "title": "Your street's flood trigger",
+    "origin": "NWS flood reports within 5 km, NOAA rain gauge measurements, and the NWS rain forecast",
+    "text": "13 dates had flood reports within 5 km of this address. The next 3 days’ forecast (up to 0.8 in a day) is well below the typical rain on days with flood reports here. On days with flood reports here, the typical rain was 1.9 in. The National Weather Service rain forecast by day: Fri Oct 9 0.00 in, Sat Oct 10 0.00 in, Sun Oct 11 0.77 in. This compares past rain with forecast rain. It is a history-based signal, not a flood forecast."
+   },
+   "tornado-outlook": {
+    "id": "tornado-outlook",
+    "kind": "outlook",
+    "chip": "SPC outlook",
+    "title": "SPC tornado outlook at this address",
+    "origin": "Storm Prediction Center (SPC) Day 1 to 3 outlooks, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no tornado risk area at this point (under 2%).\nDay 2 (Fri Oct 9): no tornado risk area at this point (under 2%).\nDay 3 (Sat Oct 10): no severe-weather risk area at this point (Day 3 gives only a combined severe probability, not a tornado one).\nThis is the Storm Prediction Center's own outlook, not ours.",
+    "href": "https://www.spc.noaa.gov/products/outlook/"
+   },
+   "heatrisk": {
+    "id": "heatrisk",
+    "kind": "heat",
+    "chip": "HeatRisk",
+    "title": "NWS HeatRisk at this address",
+    "origin": "NWS HeatRisk (experimental), read at this point from the National Weather Service map service",
+    "text": "Day 1 (Thu Oct 8): no value.\nDay 2 (Fri Oct 9): level 0 of 4 (Little to no risk).\nDay 3 (Sat Oct 10): level 0 of 4 (Little to no risk).\nHeatRisk runs from level 0 (little to no risk) to level 4 (extreme) and weighs how unusual the heat is for the time of year, how long it lasts and the health risk. It is experimental.",
+    "href": "https://www.wpc.ncep.noaa.gov/heatrisk/"
+   },
+   "heat-forecast": {
+    "id": "heat-forecast",
+    "kind": "heat",
+    "chip": "Feels-like",
+    "title": "Forecast feels-like highs, and where they rank here",
+    "origin": "National Weather Service gridpoint forecast (apparent temperature), ranked against this address's Open-Meteo/ERA5 daily highs since 2000",
+    "text": "Fri Oct 9: forecast feels-like high 71 F.\nSat Oct 10: forecast feels-like high 69 F.\nSun Oct 11: forecast feels-like high 65 F.\nThe forecast and the history come from different methods, so the ranking is a rough guide."
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T11:56:31.749Z"
+  }
+ },
+ "story": {
+  "county": "NYC081",
+  "eventIds": [
+   "SE-5127569",
+   "SE-5259358",
+   "SE-5418908",
+   "SE-5531650",
+   "SE-14175",
+   "SE-249841",
+   "SE-262537",
+   "SE-413125",
+   "SE-621181",
+   "SE-987588"
+  ],
+  "impacts": [
+   {
+    "eventId": "SE-262537",
+    "tag": "structure_damage",
+    "evidence": "third floor of a residential brick building was severely damaged structurally"
+   },
+   {
+    "eventId": "SE-5418908",
+    "tag": "flooding",
+    "evidence": "Flash flooding of roads occurred at College Point"
+   },
+   {
+    "eventId": "SE-5531650",
+    "tag": "power_outage",
+    "evidence": "scattered power outages that lead to business losses"
+   },
+   {
+    "eventId": "SE-413125",
+    "tag": "trees_down",
+    "evidence": "a tree fell onto his house"
+   },
+   {
+    "eventId": "SE-987588",
+    "tag": "flooding",
+    "evidence": "their basement apartment flooded on Peck Avenue"
+   }
+  ],
+  "impactLines": [
+   {
+    "tag": "flooding",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-5418908",
+     "SE-987588"
+    ],
+    "text": "2 flash flood events: the National Weather Service narrative describes flooding."
+   },
+   {
+    "tag": "power_outage",
+    "type": "Heat",
+    "eventIds": [
+     "SE-5531650"
+    ],
+    "text": "1 heat event: the National Weather Service narrative describes power outages."
+   },
+   {
+    "tag": "trees_down",
+    "type": "High Wind",
+    "eventIds": [
+     "SE-413125"
+    ],
+    "text": "1 high wind event: the National Weather Service narrative describes trees down."
+   },
+   {
+    "tag": "structure_damage",
+    "type": "Tornado",
+    "eventIds": [
+     "SE-262537"
+    ],
+    "text": "1 tornado event: the National Weather Service narrative describes damage to homes or buildings."
+   }
+  ],
+  "totalsLine": "Across these 10 events the National Weather Service recorded 37 deaths, 1 injury and $18.2 million in recorded damage.",
+  "droppedImpacts": 1,
+  "generatedAt": "2026-10-09T11:56:47.873Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The most significant event in the record for this area was the September 16, 2010 tornado, which the National Weather Service Storm Survey Team confirmed in Queens, impacting Flushing and Bayside with recorded damage of $17,200,000 and 2 deaths.",
+    "cites": [
+     "SE-262537"
+    ]
+   },
+   {
+    "text": "In Flushing, the survey found the third floor of a residential brick building \"severely damaged structurally,\" and a Pennsylvania woman was killed in her car by a falling tree on Grand Central Parkway.",
+    "cites": [
+     "SE-262537"
+    ]
+   },
+   {
+    "text": "Heat has been deadly here: in August 2006, the record notes excessive heat resulted in 42 deaths, 14 of them in Queens, and a four-day run of 90-plus temperatures in July 2010 was filed with 4 deaths.",
+    "cites": [
+     "SE-5531650",
+     "SE-249841"
+    ]
+   },
+   {
+    "text": "Cold also left its mark, with an arctic air mass in February 2007 bringing subfreezing temperatures for 5 consecutive days, and a January 2000 cold front producing wind chills as low as 30 degrees below 0 at LaGuardia Airport.",
+    "cites": [
+     "SE-14175",
+     "SE-5127569"
+    ]
+   },
+   {
+    "text": "On October 29, 2012, a wind gust up to 79 mph was reported near Jackson Heights, and in Flatbush a 30 year old male was killed when a tree fell onto his house.",
+    "cites": [
+     "SE-413125"
+    ]
+   },
+   {
+    "text": "On January 22, 2016, LaGuardia Airport reported an all time record storm total snowfall of 28.2 inches.",
+    "cites": [
+     "SE-621181"
+    ]
+   },
+   {
+    "text": "Flooding has proved deadly too: in 2004 flash flooding of roads at College Point involved a fallen power line, and in 2021 a basement apartment on Peck Avenue in Flushing flooded.",
+    "cites": [
+     "SE-5418908",
+     "SE-987588"
+    ]
+   },
+   {
+    "text": "Altogether, the National Weather Service recorded 1,232 weather events in this area since 2000, led by High Wind with 174 and Strong Wind with 153.",
+    "cites": [
+     "area-counts"
+    ]
+   }
+  ],
+  "sources": {
+   "SE-262537": {
+    "id": "SE-262537",
+    "kind": "event",
+    "chip": "Tornado 2010",
+    "title": "Tornado, Sep 16, 2010",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Tornado on Sep 16, 2010 in QUEENS (county NYC081). Deaths: 2. Injuries: 1. Recorded damage: $17,200,000 (about $17.2 million).",
+    "quote": "A National Weather Service Storm Survey Team confirmed a tornado in Queens.||The tornado impacted Flushing and Bayside. In Flushing, on Browne Street between Roosevelt and 38th Avenues, the third floor of a residential brick building was severely damaged structurally. Large tree tops were lying on top of buildings and shot like projectiles between buildings. Sides of houses were peeled back. There was clear evidence of twisted metal along the side of the building. On Warren Street near the intersection of Roosevelt Avenue, a steel framed water tower was blown over on the roof. There was a partial roof collapse on another residential building.||A Pennsylvania woman was killed in her car by a falling tree on Grand Central Parkway. Her passenger was injured. A man trying to assist the woman suffered a brain aneurysm and died.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=262537"
+   },
+   "SE-5531650": {
+    "id": "SE-5531650",
+    "kind": "event",
+    "chip": "Heat 2006",
+    "title": "Heat, Aug 1, 2006",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Heat on Aug 1, 2006 in Queens (forecast zone NYZ076, YOUR zone: the address is inside it). Deaths: 14. Injuries: 0. No damage figure was recorded.",
+    "quote": "An oppressive air mass moved slowly east across the region from August 1 to August 3. This was preceded by a hot dry air mass, when temperatures reached at least 90 degrees for 5 consecutive days at LaGuardia Airport, from July 27 to July 31.Excessive heat occurred mainly from noon to midnight each day for 3 consecutive days. High temperatures ranged mainly from the upper 90s to around 100 degrees. With surface dew point temperatures in the mid 70s, heat indices ranged from 105 to 115 degrees.Excessive heat resulted in 42 deaths and scattered power outages that lead to business losses.In Southeast NY, excessive heat was responsible for 42 deaths; 40 in New York City; as follows: 14 in Queens, 14 in Brooklyn, 9 in Manhattan, and 3 in the Bronx. This information was provided by the NYC Office of Chief Medical Examiner.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5531650"
+   },
+   "SE-249841": {
+    "id": "SE-249841",
+    "kind": "event",
+    "chip": "Excessive Heat 2010",
+    "title": "Excessive Heat, Jul 4, 2010",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Excessive Heat on Jul 4, 2010 in Queens (forecast zone NYZ076, YOUR zone: the address is inside it). Deaths: 4. Injuries: 0. No damage figure was recorded.",
+    "quote": "Hot temperatures in excess of 90 degrees began July 4th and continued through July 7th. The temperature eclipsed 100 degrees at several locations during this time.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=249841"
+   },
+   "SE-14175": {
+    "id": "SE-14175",
+    "kind": "event",
+    "chip": "Extreme Cold/Wind Chill 2007",
+    "title": "Extreme Cold/Wind Chill, Feb 4, 2007",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Extreme Cold/Wind Chill on Feb 4, 2007 in Queens (forecast zone NYZ076, YOUR zone: the address is inside it). Deaths: 4. Injuries: 0. No damage figure was recorded.",
+    "quote": "An arctic air mass caused subfreezing temperatures across the local area for 5 consecutive days; from February 4th through February 8th.|During this time, the daily mean temperature averaged nearly 15 degrees below normal.|Based on a report by the NYC Medical Examiner's Office, hypothermia, was a direct cause of at least 11 fatalities during and after this period of extreme cold in New York City.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=14175"
+   },
+   "SE-5127569": {
+    "id": "SE-5127569",
+    "kind": "event",
+    "chip": "Extreme Cold/Wind Chill 2000",
+    "title": "Extreme Cold/Wind Chill, Jan 17, 2000",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Extreme Cold/Wind Chill on Jan 17, 2000 in Queens (forecast zone NYZ076, YOUR zone: the address is inside it). Deaths: 2. Injuries: 0. No damage figure was recorded.",
+    "quote": "An arctic cold front swept across the region during Sunday afternoon, January 16th. Strong and gusty northwest winds combined with well below normal temperatures and produced extremely low wind chill values mainly from midnight to 10 am on January 17th and from 1 am to noon on January 18th.On January 17th, wind speeds from 15 to 20 mph combined with temperatures from 5 to 10 degrees above 0, produced wind chill values from 15 to around 20 degrees below 0 in New York City and from 20 to 30 degrees below 0 across the Lower Hudson Valley.On January 18th, wind speeds averaging 15 mph combined with temperatures from 0 to 5 above zero, produced wind chill values from 20 degrees below 0 at Central Park to 30 degrees below 0 at LaGuardia Airport.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5127569"
+   },
+   "SE-413125": {
+    "id": "SE-413125",
+    "kind": "event",
+    "chip": "High Wind 2012",
+    "title": "High Wind, Oct 29, 2012",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "High Wind on Oct 29, 2012 in Northern Queens (forecast zone NYZ176, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. Recorded damage: $1,000,000 (about $1 million). Recorded magnitude: 69 (EG).",
+    "quote": "A wind gust up to 79 mph was reported near Jackson Heights at 802 pm. In addition, a wind gust up to 74 mph was measured at LaGuardia Airport at 655 pm. In Flatbush, a 30 year old male was killed when a tree fell onto his house.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=413125"
+   },
+   "SE-621181": {
+    "id": "SE-621181",
+    "kind": "event",
+    "chip": "Winter Storm 2016",
+    "title": "Winter Storm, Jan 22, 2016",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Winter Storm on Jan 22, 2016 in Northern Queens (forecast zone NYZ176, YOUR zone: the address is inside it). Deaths: 2. Injuries: 0. No damage figure was recorded.",
+    "quote": "LaGuardia Airport reported an all time record storm total snowfall of 28.2 inches. Elsewhere, the public and trained spotters reported snowfall of 20 to 27 inches. Also, winds gusted to 48 mph at 9:00 AM at LaGuardia on Saturday January 23rd.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=621181"
+   },
+   "SE-5418908": {
+    "id": "SE-5418908",
+    "kind": "event",
+    "chip": "Flash Flood 2004",
+    "title": "Flash Flood, Aug 11, 2004",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Flash Flood on Aug 11, 2004 in QUEENS (county NYC081). Deaths: 2. Injuries: 0. No damage figure was recorded.",
+    "quote": "Flash flooding of roads occurred at College Point. Two occupants of a vehicle were electrocuted by a fallen power line when they apparently stepped out of their vehicle into several feet of water.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5418908"
+   },
+   "SE-987588": {
+    "id": "SE-987588",
+    "kind": "event",
+    "chip": "Flash Flood 2021",
+    "title": "Flash Flood, Sep 1, 2021",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Flash Flood on Sep 1, 2021 in QUEENS (county NYC081). Deaths: 3. Injuries: 0. No damage figure was recorded.",
+    "quote": "Two women and a man died when their basement apartment flooded on Peck Avenue near Kissena Boulevard in Flushing, Queens.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=987588"
+   },
+   "area-counts": {
+    "id": "area-counts",
+    "kind": "history",
+    "chip": "Area totals",
+    "title": "Weather events recorded in this area",
+    "origin": "NCEI Storm Events, county and forecast-zone rows",
+    "text": "The National Weather Service recorded 1,232 weather events in Queens County (NYC081), the forecast zone the address is in and zones within 15 km of it since 2000. By type: High Wind 174, Strong Wind 153, Winter Weather 147, Flash Flood 134, Coastal Flood 127, Winter Storm 100, Thunderstorm Wind 92, Heavy Snow 89, Excessive Heat 40, Rip Current 31, Tropical Storm 25, Heat 18. These are filed events, not every storm that happened."
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T11:56:31.749Z"
+  }
+ },
+ "ready": {
+  "generatedAt": "2026-10-09T11:56:48.219Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "items": [
+   {
+    "action": "On July 2, 2021, NWS recorded standing water up to the bumpers of cars in Flushing, about 1.3 km from you. If a road is flooded, do not drive through it. Turn Around, Don't Drown.",
+    "why": [
+     {
+      "id": "SE-976295",
+      "label": "Flash Flood report, Jul 2, 2021",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=976295"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-turn-around",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Do not walk, swim or drive through flood waters. Turn Around, Don’t Drown!"
+     },
+     {
+      "id": "flood-nws-cars",
+      "hazard": "flood",
+      "source": "National Weather Service, Turn Around Don't Drown",
+      "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+      "text": "The Centers for Disease Control and Prevention report that over half of all flood-related drownings occur when a vehicle is driven into hazardous flood water."
+     }
+    ]
+   },
+   {
+    "action": "A July 17, 2019 NWS report describes a vehicle stuck in high water at 137th Street and 31st Road in Flushing, with the intersection closed. Never drive around barriers blocking a flooded road, because the road may have collapsed under the water.",
+    "why": [
+     {
+      "id": "SE-847286",
+      "label": "Flash Flood report, Jul 17, 2019",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=847286"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-nws-barriers",
+      "hazard": "flood",
+      "source": "National Weather Service, Turn Around Don't Drown",
+      "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+      "text": "Never drive around the barriers blocking a flooded road. The road may have collapsed under that water."
+     }
+    ]
+   },
+   {
+    "action": "Basements flooded on 28th Road in Flushing on August 11, 2018, and 29 NWS flood reports sit within 5 km of your address. Homeowner's insurance does not cover flooding. Ready.gov says to buy flood insurance well before a disaster, since a policy can take up to 30 days to take effect.",
+    "why": [
+     {
+      "id": "SE-779619",
+      "label": "Flash Flood report, Aug 11, 2018",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=779619"
+     },
+     {
+      "id": "local-flood-count",
+      "label": "29 flood reports within 5 km, May 31, 2015 to Jul 31, 2025",
+      "hazard": "flood"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-insurance",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Purchase flood insurance or renew a flood insurance policy. Homeowner’s insurance policies do not cover flooding. It typically takes up to 30 days for a policy to go into effect, so the time to buy is well before a disaster. Get flood coverage under the National Flood Insurance Program (NFIP)."
+     }
+    ]
+   },
+   {
+    "action": "An EF0 tornado touched down near Saint Fidelis Catholic Church in College Point on Aug 2, 2018, 3.2 km from you, knocking down trees and power lines. Sign up for your community's warning system, and in a warning go to an interior room away from windows.",
+    "why": [
+     {
+      "id": "SE-781373",
+      "label": "EF0 tornado, Aug 2, 2018",
+      "hazard": "tornado",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=781373"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "tornado-alerts",
+      "hazard": "tornado",
+      "source": "Ready.gov, Tornadoes",
+      "url": "https://www.ready.gov/tornadoes",
+      "text": "Sign up for your community’s warning system. The Emergency Alert System (EAS) and NOAA Weather Radio also provide emergency alerts. If your community has sirens, become familiar with the warning tone."
+     },
+     {
+      "id": "tornado-nws-house",
+      "hazard": "tornado",
+      "source": "National Weather Service, What to do during a tornado",
+      "url": "https://www.weather.gov/safety/tornado-during",
+      "text": "At Your House: If you are in a tornado warning, go to your basement, safe room, or an interior room away from windows. Don't forget pets if time allows."
+     }
+    ]
+   },
+   {
+    "action": "Your address has had 71 days with a feels-like high of 100°F or more since 2000, and heat in your area from August 1 to 3, 2006 was recorded with 14 deaths. Identify cool places such as libraries or malls, and check on older adults and neighbors.",
+    "why": [
+     {
+      "id": "local-heat",
+      "label": "Hottest day on record, Jul 22, 2011 (feels like 111.5°F)",
+      "hazard": "heat"
+     },
+     {
+      "id": "SE-5531650",
+      "label": "Heat, Aug 1, 2006",
+      "hazard": "heat",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5531650"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "heat-cool-places",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Identify places in your community where you can go to get cool such as libraries and shopping malls or contact your local health department to find cooling options in your area."
+     },
+     {
+      "id": "heat-check-on",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Check on family members, older adults and neighbors."
+     }
+    ]
+   },
+   {
+    "action": "On October 29, 2012, a wind gust of 85 mph was reported at JFK International Airport, in your area. Trim trees that may be in danger of falling on your home, and watch for fallen power lines and trees, reporting them immediately.",
+    "why": [
+     {
+      "id": "SE-413126",
+      "label": "High Wind, Oct 29, 2012",
+      "hazard": "wind",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=413126"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "wind-trees",
+      "hazard": "wind",
+      "source": "Ready.gov, Thunderstorms & Lightning",
+      "url": "https://www.ready.gov/thunderstorms-lightning",
+      "text": "Cut down or trim trees that may be in danger of falling on your home."
+     },
+     {
+      "id": "wind-lines",
+      "hazard": "wind",
+      "source": "Ready.gov, Thunderstorms & Lightning",
+      "url": "https://www.ready.gov/thunderstorms-lightning",
+      "text": "Watch for fallen power lines and trees. Report them immediately."
+     }
+    ]
+   }
+  ],
+  "hazards": [
+   {
+    "id": "flood",
+    "label": "Flooding",
+    "evidence": "29 written NWS flood reports within 5 km on 13 different days, latest Jul 31, 2025; 134 Flash Flood and 127 Coastal Flood events recorded for Queens since 2002 (NCEI Storm Events), latest Oct 30, 2025"
+   },
+   {
+    "id": "tornado",
+    "label": "Tornadoes",
+    "evidence": "1 tornado track within 10 km, latest Aug 2, 2018; 4 Tornado events recorded for Queens since 2010 (NCEI Storm Events), latest Aug 2, 2018"
+   },
+   {
+    "id": "heat",
+    "label": "Extreme heat",
+    "evidence": "71 days with a feels-like high of 100°F or more in 20 of 26 years (2000 to 2025); hottest 111.5°F on Jul 22, 2011; 40 Excessive Heat and 18 Heat events recorded for Southern Westchester since 2001 (NCEI Storm Events), latest Jul 21, 2019"
+   },
+   {
+    "id": "wind",
+    "label": "Damaging wind and storms",
+    "evidence": "174 High Wind and 153 Strong Wind events recorded for Southern Westchester since 2000 (NCEI Storm Events), latest Dec 19, 2025"
+   },
+   {
+    "id": "winter",
+    "label": "Winter storms and cold",
+    "evidence": "147 Winter Weather and 100 Winter Storm events recorded for New York (Manhattan) since 2000 (NCEI Storm Events), latest Dec 26, 2025"
+   }
+  ],
+  "dropped": 0,
+  "notices": [],
+  "precomputed": {
+   "at": "2026-10-09T11:56:31.749Z"
+  }
+ }
+}

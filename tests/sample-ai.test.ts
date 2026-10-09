@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { clearSampleAiCache, isSampleAiFile, sampleAiForAddress, sampleAiForPoint, type SampleAiFile } from "@/lib/ai/precomputed";
 import { handleAi, type AiDeps } from "@/lib/ai/service";
 import { handleStory } from "@/lib/ai/story";
-import { SAMPLE_ADDRESSES } from "@/lib/ui/tabs";
+import { PREPARED_ADDRESSES } from "@/lib/ui/prepared";
 import { formatPrecomputed } from "@/lib/ui/precomputed-text";
 
 const SHIPPED = path.join(process.cwd(), "data", "samples", "ai");
@@ -78,9 +78,9 @@ describe("the files that ship in data/samples/ai", () => {
   const files = readdirSync(SHIPPED).filter((f) => f.endsWith(".json")).sort();
   const read = (name: string) => JSON.parse(readFileSync(path.join(SHIPPED, name), "utf8")) as SampleAiFile;
 
-  it("are one per sample address, for the address on the landing page", () => {
-    expect(files).toEqual(["asheville.json", "bellevue.json", "nashville.json", "san-antonio.json"]);
-    expect(files.map((f) => read(f).address).sort()).toEqual(SAMPLE_ADDRESSES.map((s) => s.address).sort());
+  it("are one per prepared address (the samples and the landing page's moments), for the address on the landing page", () => {
+    expect(files).toEqual(["asheville.json", "bellevue.json", "flushing.json", "fort-myers.json", "lahaina.json", "mayfield.json", "nashville.json", "rolling-fork.json", "san-antonio.json"]);
+    expect(files.map((f) => read(f).address).sort()).toEqual(PREPARED_ADDRESSES.map((s) => s.address).sort());
     for (const f of files) expect(isSampleAiFile(read(f)), f).toBe(true);
   });
 

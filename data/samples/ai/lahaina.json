@@ -1,0 +1,550 @@
+{
+ "slug": "lahaina",
+ "address": "658 Front St, Lahaina, HI",
+ "lat": 20.872265460535,
+ "lon": -156.677377427357,
+ "brief": {
+  "generatedAt": "2026-10-09T11:57:01.880Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The National Weather Service had no active alerts for this address when we checked, and official alerts are posted at weather.gov.",
+    "cites": [
+     "alerts"
+    ]
+   },
+   {
+    "text": "Only 2 flood reports within 5 km of this address are in our records, and a quiet record means no report was filed close by, not that nothing happened here.",
+    "cites": [
+     "quiet"
+    ]
+   },
+   {
+    "text": "The most significant event the National Weather Service recorded in your forecast zone was the Aug 8, 2023 wildfire near Lahaina, with 102 deaths and recorded damage of $5,500,000,000.",
+    "cites": [
+     "SE-1118193"
+    ]
+   },
+   {
+    "text": "The Weather Prediction Center's Excessive Rainfall Outlook shows no risk area at this address for Thu Oct 8, Fri Oct 9 or Sat Oct 10.",
+    "cites": [
+     "flood-outlook"
+    ]
+   },
+   {
+    "text": "The Storm Prediction Center shows no tornado risk area at this point for Day 1 and Day 2, and no severe-weather risk area for Day 3.",
+    "cites": [
+     "tornado-outlook"
+    ]
+   },
+   {
+    "text": "NWS HeatRisk could not be read just now, so it has no value for this address.",
+    "cites": [
+     "heatrisk"
+    ]
+   },
+   {
+    "text": "The National Weather Service forecasts feels-like highs of 92 F on Fri Oct 9, 88 F on Sat Oct 10 and 87 F on Sun Oct 11.",
+    "cites": [
+     "heat-forecast"
+    ]
+   },
+   {
+    "text": "Since 2000, this address has had 16 days with a feels-like high of 100 F or more, and 1 of them was in 2025.",
+    "cites": [
+     "heat-history"
+    ]
+   }
+  ],
+  "sources": {
+   "alerts": {
+    "id": "alerts",
+    "kind": "alert",
+    "chip": "Live alerts",
+    "title": "Active National Weather Service alerts",
+    "origin": "api.weather.gov alerts for this address",
+    "href": "https://www.weather.gov/",
+    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 11:56 UTC)."
+   },
+   "quiet": {
+    "id": "quiet",
+    "kind": "history",
+    "chip": "Why quiet",
+    "title": "Why this address's flood record is quiet",
+    "origin": "Our counts of NWS flood reports near this address and across sampled places",
+    "text": "Only 2 flood reports within 5 km of this address are in our records. We measured 25500 random places across the 51 states we have indexed: 71% had no flood report within 5 km, 11% had more than this address and 5% had the same number. A flood report exists only if someone filed one, and this is a count of reports we could place near an address. A quiet record means no report was filed close by. It does not mean nothing happened here, and it does not mean flooding is impossible."
+   },
+   "SE-1118193": {
+    "id": "SE-1118193",
+    "kind": "event",
+    "chip": "Wildfire 2023",
+    "title": "Wildfire, Aug 8, 2023",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Wildfire on Aug 8, 2023 in Maui Leeward West (forecast zone HIZ018, YOUR zone: the address is inside it). Deaths: 102. Injuries: 32. Recorded damage: $5,500,000,000 (about $5500 million).",
+    "quote": "A wildfire near Lahaina was reported at 6:40 am HST and was contained within 3 hours. Another fire was reported around 3:30pm and prompted evacuation orders by 4:30 pm. However, power lines downed by the damaging winds closed roads and restricted evacuation routes. Wildfire continued to spread rapidly and quickly became out of control. The Coast Guard rescued people entering the Pacific Ocean who were escaping the fire. They rescued seventeen people including two children and assisted forty survivors on shore. At around 11:52 pm the Hawaii National guard was deployed on Maui as wildfires continued to burn out of control. At 1:20 AM on August 9, over 14,000 customers were without power, and at 5:03 AM, the fire damaged much of the historic banyan tree that was imported to Maui in 1873 from India.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1118193"
+   },
+   "flood-outlook": {
+    "id": "flood-outlook",
+    "kind": "outlook",
+    "chip": "WPC outlook",
+    "title": "WPC Excessive Rainfall Outlook at this address",
+    "origin": "Weather Prediction Center (WPC) Excessive Rainfall Outlook, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no risk area at this address.\nDay 2 (Fri Oct 9): no risk area at this address.\nDay 3 (Sat Oct 10): no risk area at this address.\nA day with no risk area means WPC drew no Marginal-or-higher area over this address. This is the Weather Prediction Center's own outlook, not ours.",
+    "href": "https://www.wpc.ncep.noaa.gov/qpf/excessive_rainfall_outlook_ero.php"
+   },
+   "tornado-outlook": {
+    "id": "tornado-outlook",
+    "kind": "outlook",
+    "chip": "SPC outlook",
+    "title": "SPC tornado outlook at this address",
+    "origin": "Storm Prediction Center (SPC) Day 1 to 3 outlooks, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no tornado risk area at this point (under 2%).\nDay 2 (Fri Oct 9): no tornado risk area at this point (under 2%).\nDay 3 (Sat Oct 10): no severe-weather risk area at this point (Day 3 gives only a combined severe probability, not a tornado one).\nThis is the Storm Prediction Center's own outlook, not ours.",
+    "href": "https://www.spc.noaa.gov/products/outlook/"
+   },
+   "heatrisk": {
+    "id": "heatrisk",
+    "kind": "heat",
+    "chip": "HeatRisk",
+    "title": "NWS HeatRisk",
+    "origin": "NWS HeatRisk (experimental), read at this point from the National Weather Service map service",
+    "text": "HeatRisk could not be read just now. The NWS HeatRisk service has no value at this address.",
+    "href": "https://www.wpc.ncep.noaa.gov/heatrisk/"
+   },
+   "heat-forecast": {
+    "id": "heat-forecast",
+    "kind": "heat",
+    "chip": "Feels-like",
+    "title": "Forecast feels-like highs, and where they rank here",
+    "origin": "National Weather Service gridpoint forecast (apparent temperature), ranked against this address's Open-Meteo/ERA5 daily highs since 2000",
+    "text": "Fri Oct 9: forecast feels-like high 92 F.\nSat Oct 10: forecast feels-like high 88 F.\nSun Oct 11: forecast feels-like high 87 F.\nThe forecast and the history come from different methods, so the ranking is a rough guide."
+   },
+   "heat-history": {
+    "id": "heat-history",
+    "kind": "heat",
+    "chip": "Heat history",
+    "title": "Hot days at this address since 2000",
+    "origin": "Open-Meteo archive (ERA5 reanalysis), daily feels-like high, at this address",
+    "text": "Days with a feels-like high of 100 F or more: 2021: 0, 2022: 0, 2023: 0, 2024: 0, 2025: 1; 16 in all since 2000. The hottest day since 2000 was Jul 17, 2015, with a feels-like high of 101.8 F. This is a model of past weather, not a thermometer at the address, and it shows no trend."
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T11:56:55.579Z"
+  }
+ },
+ "story": {
+  "county": "HIC009",
+  "eventIds": [
+   "SE-5227611",
+   "SE-5278605",
+   "SE-5327476",
+   "SE-5327714",
+   "SE-199743",
+   "SE-936331",
+   "SE-936389",
+   "SE-938300",
+   "SE-1072875",
+   "SE-1118193"
+  ],
+  "impacts": [
+   {
+    "eventId": "SE-1118193",
+    "tag": "roads_blocked",
+    "evidence": "power lines downed by the damaging winds closed roads"
+   },
+   {
+    "eventId": "SE-1118193",
+    "tag": "power_outage",
+    "evidence": "over 14,000 customers were without power"
+   },
+   {
+    "eventId": "SE-5227611",
+    "tag": "roads_blocked",
+    "evidence": "The highway had to be closed for 7 hours"
+   },
+   {
+    "eventId": "SE-5278605",
+    "tag": "flooding",
+    "evidence": "flood waters entered the basement of the Lahaina Hongwanji Mission"
+   },
+   {
+    "eventId": "SE-5278605",
+    "tag": "structure_damage",
+    "evidence": "Some homes on Molokai and West Maui were also damaged"
+   },
+   {
+    "eventId": "SE-938300",
+    "tag": "roads_blocked",
+    "evidence": "Hana Highway was closed from Peahi Road near Haiku to Keanae"
+   },
+   {
+    "eventId": "SE-938300",
+    "tag": "flooding",
+    "evidence": "closed from Peahi Road near Haiku to Keanae in windward East Maui due to flooding"
+   },
+   {
+    "eventId": "SE-1072875",
+    "tag": "roads_blocked",
+    "evidence": "Flash flooding closed Pulehu Road"
+   }
+  ],
+  "impactLines": [
+   {
+    "tag": "flooding",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-5278605",
+     "SE-938300"
+    ],
+    "text": "2 flash flood events: the National Weather Service narrative describes flooding."
+   },
+   {
+    "tag": "roads_blocked",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-938300",
+     "SE-1072875"
+    ],
+    "text": "2 flash flood events: the National Weather Service narrative describes roads closed or blocked."
+   },
+   {
+    "tag": "roads_blocked",
+    "type": "Wildfire",
+    "eventIds": [
+     "SE-1118193",
+     "SE-5227611"
+    ],
+    "text": "2 wildfire events: the National Weather Service narrative describes roads closed or blocked."
+   },
+   {
+    "tag": "structure_damage",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-5278605"
+    ],
+    "text": "1 flash flood event: the National Weather Service narrative describes damage to homes or buildings."
+   },
+   {
+    "tag": "power_outage",
+    "type": "Wildfire",
+    "eventIds": [
+     "SE-1118193"
+    ],
+    "text": "1 wildfire event: the National Weather Service narrative describes power outages."
+   }
+  ],
+  "totalsLine": "Across these 10 events the National Weather Service recorded 110 deaths, 39 injuries and $5516.8 million in recorded damage.",
+  "droppedImpacts": 2,
+  "generatedAt": "2026-10-09T11:57:09.247Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The most significant event on record for your area is the Aug 8, 2023 wildfire near Lahaina, which the record lists with 102 deaths, 32 injuries and $5,500,000,000 in damage.",
+    "cites": [
+     "SE-1118193"
+    ]
+   },
+   {
+    "text": "The record says power lines downed by the damaging winds closed roads and restricted evacuation routes, and the Coast Guard rescued seventeen people who were escaping the fire in the Pacific Ocean.",
+    "cites": [
+     "SE-1118193"
+    ]
+   },
+   {
+    "text": "Earlier, on Jan 22, 2001, a brush fire scorched 800 acres of West Maui, and the highway had to be closed for 7 hours, causing a severe traffic jam.",
+    "cites": [
+     "SE-5227611"
+    ]
+   },
+   {
+    "text": "On Aug 12, 2003, a brush fire scorched about 3000 acres on Molokai, threatening two dozen homes in Hoolehua and destroying a storage shed and a house under construction.",
+    "cites": [
+     "SE-5327714"
+    ]
+   },
+   {
+    "text": "Flooding has also marked the county's history: on Jan 29, 2002, flood waters entered the basement of the Lahaina Hongwanji Mission, with recorded damage of $2,500,000.",
+    "cites": [
+     "SE-5278605"
+    ]
+   },
+   {
+    "text": "On Mar 8, 2021, Hana Highway was closed from Peahi Road near Haiku to Keanae due to flooding, with recorded damage of $14,300,000.",
+    "cites": [
+     "SE-938300"
+    ]
+   },
+   {
+    "text": "On Jan 27, 2023, flash flooding closed Pulehu Road, South Kihei Road and Piilani Highway, and a firefighter helping to clear flood waters was swept into a storm drain.",
+    "cites": [
+     "SE-1072875"
+    ]
+   },
+   {
+    "text": "Overall, the National Weather Service recorded 200 weather events in Maui County since 2000, including 98 flash floods, 33 heavy rain events and 9 wildfires.",
+    "cites": [
+     "area-counts"
+    ]
+   }
+  ],
+  "sources": {
+   "SE-1118193": {
+    "id": "SE-1118193",
+    "kind": "event",
+    "chip": "Wildfire 2023",
+    "title": "Wildfire, Aug 8, 2023",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Wildfire on Aug 8, 2023 in Maui Leeward West (forecast zone HIZ018, YOUR zone: the address is inside it). Deaths: 102. Injuries: 32. Recorded damage: $5,500,000,000 (about $5500 million).",
+    "quote": "A wildfire near Lahaina was reported at 6:40 am HST and was contained within 3 hours. Another fire was reported around 3:30pm and prompted evacuation orders by 4:30 pm. However, power lines downed by the damaging winds closed roads and restricted evacuation routes. Wildfire continued to spread rapidly and quickly became out of control. The Coast Guard rescued people entering the Pacific Ocean who were escaping the fire. They rescued seventeen people including two children and assisted forty survivors on shore. At around 11:52 pm the Hawaii National guard was deployed on Maui as wildfires continued to burn out of control. At 1:20 AM on August 9, over 14,000 customers were without power, and at 5:03 AM, the fire damaged much of the historic banyan tree that was imported to Maui in 1873 from India.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1118193"
+   },
+   "SE-5227611": {
+    "id": "SE-5227611",
+    "kind": "event",
+    "chip": "Wildfire 2001",
+    "title": "Wildfire, Jan 22, 2001",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Wildfire on Jan 22, 2001 in MAUI (county HIC009). Deaths: 0. Injuries: 3. No damage figure was recorded.",
+    "quote": "A fire burned an 800-acre area of brush in the Cut Mountain section of West Maui between Olowalu and Launiupoko. The fire, spread by strong trade winds, scorched that part of the isle from the 1200-foot level of the mountain down to Honoapiilani Highway that runs along the coast. The highway had to be closed for 7 hours, 1038 to 1740, on the 22nd, causing a severe traffic jam.The blaze had threatened two homes and a piggery, but no damage was reported to these structures. A shed burned to the ground, with a loss of the building and tools, including a few generators, inside the shed. No estimated cost of the loss was available.Many firefighters took part in dousing the flames, with three receiving minor injuries. Four water-bucket carrying helicopters were used in containing the fire as well. The cause of the brush fire was unknown.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5227611"
+   },
+   "SE-5327714": {
+    "id": "SE-5327714",
+    "kind": "event",
+    "chip": "Wildfire 2003",
+    "title": "Wildfire, Aug 12, 2003",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Wildfire on Aug 12, 2003 in MAUI (county HIC009). Deaths: 0. Injuries: 4. Recorded damage: $10,000.",
+    "quote": "A brush fire scorched about 3000 acres on the isle of Molokai, at one time threatening two dozen homes in the town of Hoolehua. The fire, however, did destroy a family's storage shed with its contents. It also destroyed a house under construction and killed a calf trapped in a corral. The dollar cost of damages was a least $10 thousand. Firefighters from Molokai and Maui fought the blaze over a six-day period, utilizing standard methods and four water-carrying helicopters. Four firemen sustained minor injuries--smoke inhalation and strained backs. The cause of the fire was unknown.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5327714"
+   },
+   "SE-5278605": {
+    "id": "SE-5278605",
+    "kind": "event",
+    "chip": "Flash Flood 2002",
+    "title": "Flash Flood, Jan 29, 2002",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Flash Flood on Jan 29, 2002 in MAUI (county HIC009). Deaths: 0. Injuries: 0. Recorded damage: $2,500,000 (about $2.5 million).",
+    "quote": "Heavy showers and isolated thunderstorms resulted in nine or ten luxury apartments being flooded near the Manele Golf Course on Lanai. In Maui, flood waters entered the basement of the Lahaina Hongwanji Mission. Some homes on Molokai and West Maui were also damaged. However, there were no reports of serious injuries.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5278605"
+   },
+   "SE-938300": {
+    "id": "SE-938300",
+    "kind": "event",
+    "chip": "Flash Flood 2021",
+    "title": "Flash Flood, Mar 8, 2021",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Flash Flood on Mar 8, 2021 in MAUI (county HIC009). Deaths: 0. Injuries: 0. Recorded damage: $14,300,000 (about $14.3 million).",
+    "quote": "Hana Highway was closed from Peahi Road near Haiku to Keanae in windward East Maui due to flooding. A dam failure in the same area was a possibility as water topped the Kaupakulua Dam upstream from the Haiku and Pauwela communities. The dam survived the downpours, however.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=938300"
+   },
+   "SE-1072875": {
+    "id": "SE-1072875",
+    "kind": "event",
+    "chip": "Flash Flood 2023",
+    "title": "Flash Flood, Jan 27, 2023",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Flash Flood on Jan 27, 2023 in MAUI (county HIC009). Deaths: 1. Injuries: 0. No damage figure was recorded.",
+    "quote": "Flash flooding closed Pulehu Road was above the landfill, South Kihei Road near Kulanihakoi Gulch, and Piilani Highway near Nuu. A firefighter helping to clear flood waters was swept into a storm drain and carried about 800 yards to the ocean at around 1 pm HST. He succumbed to injuries on February 4, 2023.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1072875"
+   },
+   "area-counts": {
+    "id": "area-counts",
+    "kind": "history",
+    "chip": "Area totals",
+    "title": "Weather events recorded in this area",
+    "origin": "NCEI Storm Events, county and forecast-zone rows",
+    "text": "The National Weather Service recorded 200 weather events in Maui County (HIC009), the forecast zone the address is in and zones within 15 km of it since 2000. By type: Flash Flood 98, Heavy Rain 33, Drought 22, Wildfire 9, Thunderstorm Wind 8, Flood 7, High Surf 5, Lightning 5, High Wind 3, Tornado 3, Debris Flow 2, Hail 2. These are filed events, not every storm that happened."
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T11:56:55.579Z"
+  }
+ },
+ "ready": {
+  "generatedAt": "2026-10-09T11:57:09.679Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "items": [
+   {
+    "action": "On September 27, 2018, an NWS report says heavy rain water got into some businesses along Front Street in Lahaina, 0.1 km from your address. Do not walk, swim or drive through flood waters; turn around, don't drown.",
+    "why": [
+     {
+      "id": "SE-778928",
+      "label": "Flash Flood report, Sep 27, 2018",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=778928"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-turn-around",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Do not walk, swim or drive through flood waters. Turn Around, Don’t Drown!"
+     }
+    ]
+   },
+   {
+    "action": "A January 9, 2024 NWS report describes standing water 6 to 8 inches deep on Keawe St, 1.7 km away. The guidance says just six inches of moving water can knock you down and one foot can sweep a vehicle away.",
+    "why": [
+     {
+      "id": "SE-1152347",
+      "label": "Flood report, Jan 9, 2024",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1152347"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-six-inches",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Remember, just six inches of moving water can knock you down, and one foot of moving water can sweep your vehicle away."
+     }
+    ]
+   },
+   {
+    "action": "Two written NWS flood reports sit within 5 km of your address, and a home on Lahainaluna Road was inundated in 2018. Homeowner's insurance does not cover flooding, and a flood policy can take up to 30 days to start, so consider buying well ahead.",
+    "why": [
+     {
+      "id": "local-flood-count",
+      "label": "2 flood reports within 5 km, Sep 27, 2018 to Jan 9, 2024",
+      "hazard": "flood"
+     },
+     {
+      "id": "SE-778928",
+      "label": "Flash Flood report, Sep 27, 2018",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=778928"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-insurance",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Purchase flood insurance or renew a flood insurance policy. Homeowner’s insurance policies do not cover flooding. It typically takes up to 30 days for a policy to go into effect, so the time to buy is well before a disaster. Get flood coverage under the National Flood Insurance Program (NFIP)."
+     }
+    ]
+   },
+   {
+    "action": "On August 8, 2023 in your area, downed power lines closed roads and restricted evacuation routes as a fire spread. Designate a room that can be closed off from outside air, and store an N95 mask if available, for smoky conditions.",
+    "why": [
+     {
+      "id": "SE-1118193",
+      "label": "Wildfire, Aug 8, 2023",
+      "hazard": "smoke",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1118193"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "smoke-clean-room",
+      "hazard": "smoke",
+      "source": "Ready.gov, Wildfires",
+      "url": "https://www.ready.gov/wildfires",
+      "text": "Designate a room that can be closed off from outside air. Close all doors and windows. Set up a portable air cleaner to keep indoor pollution levels low when smoky conditions exist."
+     },
+     {
+      "id": "smoke-n95",
+      "hazard": "smoke",
+      "source": "Ready.gov, Wildfires",
+      "url": "https://www.ready.gov/wildfires",
+      "text": "If available, store an N95 mask to protect yourself from smoke inhalation."
+     }
+    ]
+   },
+   {
+    "action": "A January 22, 2001 brush fire in your area burned 800 acres of West Maui between Olowalu and Launiupoko, spread by strong trade winds. Check the Air Quality Index each day for how clean or polluted your outdoor air is.",
+    "why": [
+     {
+      "id": "SE-5227611",
+      "label": "Wildfire, Jan 22, 2001",
+      "hazard": "smoke",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5227611"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "smoke-airnow",
+      "hazard": "smoke",
+      "source": "AirNow.gov, Air Quality and Health",
+      "url": "https://www.airnow.gov/air-quality-and-health/",
+      "text": "Every day the Air Quality Index (AQI) tells you how clean or polluted your outdoor air is, along with associated health effects that may be of concern."
+     }
+    ]
+   },
+   {
+    "action": "Your address has had 16 days with a feels-like high of 100°F or more since 2000, the hottest on Jul 17, 2015 at 101.8°F. Identify places such as libraries and shopping malls where you can go to get cool, and check on neighbors and older adults.",
+    "why": [
+     {
+      "id": "local-heat",
+      "label": "Hottest day on record, Jul 17, 2015 (feels like 101.8°F)",
+      "hazard": "heat"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "heat-cool-places",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Identify places in your community where you can go to get cool such as libraries and shopping malls or contact your local health department to find cooling options in your area."
+     },
+     {
+      "id": "heat-check-on",
+      "hazard": "heat",
+      "source": "Ready.gov, Extreme Heat",
+      "url": "https://www.ready.gov/heat",
+      "text": "Check on family members, older adults and neighbors."
+     }
+    ]
+   }
+  ],
+  "hazards": [
+   {
+    "id": "flood",
+    "label": "Flooding",
+    "evidence": "2 written NWS flood reports within 5 km on 2 different days, latest Jan 9, 2024; 98 Flash Flood and 33 Heavy Rain events recorded for Maui since 2002 (NCEI Storm Events), latest Jan 31, 2025"
+   },
+   {
+    "id": "tornado",
+    "label": "Tornadoes",
+    "evidence": "3 Tornado events recorded for Maui since 2006 (NCEI Storm Events), latest Feb 11, 2011"
+   },
+   {
+    "id": "heat",
+    "label": "Extreme heat",
+    "evidence": "16 days with a feels-like high of 100°F or more in 7 of 26 years (2000 to 2025); hottest 101.8°F on Jul 17, 2015"
+   },
+   {
+    "id": "wind",
+    "label": "Damaging wind and storms",
+    "evidence": "8 Thunderstorm Wind and 5 Lightning events recorded for Maui since 2006 (NCEI Storm Events), latest Jan 10, 2025"
+   },
+   {
+    "id": "smoke",
+    "label": "Wildfire smoke",
+    "evidence": "9 Wildfire events recorded for Maui Leeward West since 2001 (NCEI Storm Events), latest Aug 8, 2023"
+   }
+  ],
+  "dropped": 0,
+  "notices": [],
+  "precomputed": {
+   "at": "2026-10-09T11:56:55.579Z"
+  }
+ }
+}

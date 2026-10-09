@@ -1,0 +1,388 @@
+{
+ "slug": "rolling-fork",
+ "address": "100 Walnut St, Rolling Fork, MS",
+ "lat": 32.908372685663,
+ "lon": -90.876237438021,
+ "brief": {
+  "generatedAt": "2026-10-09T11:56:19.867Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "An active alert for this address is a Tropical Cyclone Local Statement, issued October 9 at 4:19AM CDT by NWS Jackson MS; official alerts are at weather.gov.",
+    "cites": [
+     "alerts"
+    ]
+   },
+   {
+    "text": "The Weather Prediction Center's Excessive Rainfall Outlook shows no risk area at this address for Day 1, Day 2 or Day 3.",
+    "cites": [
+     "flood-outlook"
+    ]
+   },
+   {
+    "text": "The National Weather Service rain forecast is 0.00 in on Fri Oct 9, 0.22 in on Sat Oct 10 and 0.00 in on Sun Oct 11, below the typical 0.9 in on days with flood reports here, which is a history-based signal and not a flood forecast.",
+    "cites": [
+     "trigger"
+    ]
+   },
+   {
+    "text": "The Storm Prediction Center shows no tornado risk area at this point on Day 1 and Day 2, and no severe-weather risk area on Day 3.",
+    "cites": [
+     "tornado-outlook"
+    ]
+   },
+   {
+    "text": "NWS HeatRisk is level 1 of 4 (Minor) on Fri Oct 9 and level 0 of 4 (Little to no risk) on Sat Oct 10, with no value for Day 1.",
+    "cites": [
+     "heatrisk"
+    ]
+   },
+   {
+    "text": "The National Weather Service forecasts feels-like highs of 89 F on Fri Oct 9, 73 F on Sat Oct 10 and 89 F on Sun Oct 11.",
+    "cites": [
+     "heat-forecast"
+    ]
+   }
+  ],
+  "sources": {
+   "alerts": {
+    "id": "alerts",
+    "kind": "alert",
+    "chip": "Live alerts",
+    "title": "Active National Weather Service alerts",
+    "origin": "api.weather.gov alerts for this address",
+    "href": "https://www.weather.gov/",
+    "text": "Active alerts for this address (checked 2026-10-09 11:56 UTC): Tropical Cyclone Local Statement: Tropical Cyclone Local Statement issued October 9 at 4:19AM CDT by NWS Jackson MS (ends 2026-10-09 12:30)."
+   },
+   "flood-outlook": {
+    "id": "flood-outlook",
+    "kind": "outlook",
+    "chip": "WPC outlook",
+    "title": "WPC Excessive Rainfall Outlook at this address",
+    "origin": "Weather Prediction Center (WPC) Excessive Rainfall Outlook, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no risk area at this address.\nDay 2 (Fri Oct 9): no risk area at this address.\nDay 3 (Sat Oct 10): no risk area at this address.\nA day with no risk area means WPC drew no Marginal-or-higher area over this address. This is the Weather Prediction Center's own outlook, not ours.",
+    "href": "https://www.wpc.ncep.noaa.gov/qpf/excessive_rainfall_outlook_ero.php"
+   },
+   "trigger": {
+    "id": "trigger",
+    "kind": "trigger",
+    "chip": "Flood trigger",
+    "title": "Your street's flood trigger",
+    "origin": "NWS flood reports within 5 km, ERA5 rainfall, and the NWS rain forecast",
+    "text": "4 dates had flood reports within 5 km of this address. The next 3 days’ forecast (up to 0.2 in a day) is well below the typical rain on days with flood reports here. On days with flood reports here, the typical rain was 0.9 in. The National Weather Service rain forecast by day: Fri Oct 9 0.00 in, Sat Oct 10 0.22 in, Sun Oct 11 0.00 in. This compares past rain with forecast rain. It is a history-based signal, not a flood forecast."
+   },
+   "tornado-outlook": {
+    "id": "tornado-outlook",
+    "kind": "outlook",
+    "chip": "SPC outlook",
+    "title": "SPC tornado outlook at this address",
+    "origin": "Storm Prediction Center (SPC) Day 1 to 3 outlooks, read at this point through the Iowa Environmental Mesonet",
+    "text": "Day 1 (Thu Oct 8): no tornado risk area at this point (under 2%).\nDay 2 (Fri Oct 9): no tornado risk area at this point (under 2%).\nDay 3 (Sat Oct 10): no severe-weather risk area at this point (Day 3 gives only a combined severe probability, not a tornado one).\nThis is the Storm Prediction Center's own outlook, not ours.",
+    "href": "https://www.spc.noaa.gov/products/outlook/"
+   },
+   "heatrisk": {
+    "id": "heatrisk",
+    "kind": "heat",
+    "chip": "HeatRisk",
+    "title": "NWS HeatRisk at this address",
+    "origin": "NWS HeatRisk (experimental), read at this point from the National Weather Service map service",
+    "text": "Day 1 (Thu Oct 8): no value.\nDay 2 (Fri Oct 9): level 1 of 4 (Minor).\nDay 3 (Sat Oct 10): level 0 of 4 (Little to no risk).\nHeatRisk runs from level 0 (little to no risk) to level 4 (extreme) and weighs how unusual the heat is for the time of year, how long it lasts and the health risk. It is experimental.",
+    "href": "https://www.wpc.ncep.noaa.gov/heatrisk/"
+   },
+   "heat-forecast": {
+    "id": "heat-forecast",
+    "kind": "heat",
+    "chip": "Feels-like",
+    "title": "Forecast feels-like highs, and where they rank here",
+    "origin": "National Weather Service gridpoint forecast (apparent temperature), ranked against this address's Open-Meteo/ERA5 daily highs since 2000",
+    "text": "Fri Oct 9: forecast feels-like high 89 F.\nSat Oct 10: forecast feels-like high 73 F.\nSun Oct 11: forecast feels-like high 89 F.\nThe forecast and the history come from different methods, so the ranking is a rough guide."
+   }
+  },
+  "dropped": 0,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T11:56:11.916Z"
+  }
+ },
+ "story": {
+  "county": "MSC125",
+  "eventIds": [
+   "SE-5471471",
+   "SE-5505502",
+   "SE-1387",
+   "SE-103872",
+   "SE-139229",
+   "SE-224550",
+   "SE-413060",
+   "SE-1077241",
+   "SE-1102153",
+   "SE-1159861"
+  ],
+  "impacts": [
+   {
+    "eventId": "SE-5505502",
+    "tag": "structure_damage",
+    "evidence": "portion of its roof blown off"
+   },
+   {
+    "eventId": "SE-5505502",
+    "tag": "trees_down",
+    "evidence": "many trees blown down and numerous large limbs broken"
+   },
+   {
+    "eventId": "SE-103872",
+    "tag": "flooding",
+    "evidence": "Several homes were flooded around Rolling Fork"
+   },
+   {
+    "eventId": "SE-139229",
+    "tag": "flooding",
+    "evidence": "Many roads were flooded"
+   },
+   {
+    "eventId": "SE-413060",
+    "tag": "structure_damage",
+    "evidence": "Several mobile homes were heavily damaged or destroyed"
+   },
+   {
+    "eventId": "SE-1077241",
+    "tag": "structure_damage",
+    "evidence": "several mobile homes were rolled and destroyed"
+   }
+  ],
+  "impactLines": [
+   {
+    "tag": "flooding",
+    "type": "Flash Flood",
+    "eventIds": [
+     "SE-103872",
+     "SE-139229"
+    ],
+    "text": "2 flash flood events: the National Weather Service narrative describes flooding."
+   },
+   {
+    "tag": "structure_damage",
+    "type": "Tornado",
+    "eventIds": [
+     "SE-413060",
+     "SE-1077241"
+    ],
+    "text": "2 tornado events: the National Weather Service narrative describes damage to homes or buildings."
+   },
+   {
+    "tag": "structure_damage",
+    "type": "Thunderstorm Wind",
+    "eventIds": [
+     "SE-5505502"
+    ],
+    "text": "1 thunderstorm wind event: the National Weather Service narrative describes damage to homes or buildings."
+   },
+   {
+    "tag": "trees_down",
+    "type": "Thunderstorm Wind",
+    "eventIds": [
+     "SE-5505502"
+    ],
+    "text": "1 thunderstorm wind event: the National Weather Service narrative describes trees down."
+   }
+  ],
+  "totalsLine": "Across these 10 events the National Weather Service recorded 15 deaths, 157 injuries and $113.1 million in recorded damage.",
+  "droppedImpacts": 4,
+  "generatedAt": "2026-10-09T11:56:27.832Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "sentences": [
+   {
+    "text": "The most significant event in the record for this area is the Sharkey County tornado of Mar 24, 2023, which the National Weather Service recorded with 14 deaths, 150 injuries and $83,136,000 in damage.",
+    "cites": [
+     "SE-1102153"
+    ]
+   },
+   {
+    "text": "On Aug 29, 2005, Hurricane Katrina affected your zone, MSZ041, with $15,400,000 in recorded damage and no deaths or injuries.",
+    "cites": [
+     "SE-5471471"
+    ]
+   },
+   {
+    "text": "A Thunderstorm Wind event on May 4, 2006 blew part of the roof off South Delta Middle School in Anguilla, and several homes and businesses in Rolling Fork \"sustained damage.\"",
+    "cites": [
+     "SE-5505502"
+    ]
+   },
+   {
+    "text": "Tornadoes struck the county on Apr 24, 2010, Oct 17, 2012 and Dec 13, 2022; the 2012 tornado injured 4 people and the 2022 tornado injured 3, with several mobile homes rolled and destroyed.",
+    "cites": [
+     "SE-224550",
+     "SE-413060",
+     "SE-1077241"
+    ]
+   },
+   {
+    "text": "On Jan 14, 2024, a winter storm covered area roads with sleet and ice, and the record says a 32-year old man walking home was later found to have died from hypothermia.",
+    "cites": [
+     "SE-1159861"
+    ]
+   },
+   {
+    "text": "Altogether, the National Weather Service recorded 312 weather events in this area since 2000, including 68 Thunderstorm Wind and 21 Tornado events.",
+    "cites": [
+     "area-counts"
+    ]
+   }
+  ],
+  "sources": {
+   "SE-1102153": {
+    "id": "SE-1102153",
+    "kind": "event",
+    "chip": "Tornado 2023",
+    "title": "Tornado, Mar 24, 2023",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Tornado on Mar 24, 2023 in SHARKEY (county MSC125). Deaths: 14. Injuries: 150. Recorded damage: $83,136,000 (about $83.1 million).",
+    "quote": "This long track, violent tornado began over northern |Issaquena County near Grant Rd, downing multiple trees and damaging |two older outbuildings. It tracked northeastward, producing tree |damage as it crossed the Steele Bayou Canal before crossing into |Sharkey County. At this point, the tornado began to substantially |increase in size and intensity. A very high percentage of trees were |snapped along the path through a wooded area south of Bear Lake Rd. |It was in this wooded area where the first indications of EF3 to EF4 |damage were noted, with at least one tree and root ball and several |more large tree pieces fully displaced into the downstream field. |From this point along the path in Sharkey County, there was a well |defined confluence zone in damage along the center of the tornado |track.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1102153"
+   },
+   "SE-5471471": {
+    "id": "SE-5471471",
+    "kind": "event",
+    "chip": "Hurricane (Typhoon) 2005",
+    "title": "Hurricane (Typhoon), Aug 29, 2005",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Hurricane (Typhoon) on Aug 29, 2005 in Sharkey (forecast zone MSZ041, YOUR zone: the address is inside it). Deaths: 0. Injuries: 0. Recorded damage: $15,400,000 (about $15.4 million).",
+    "quote": "Hurricane Katrina will likely go down as the worst and costliest natural disaster in United States history. The amount of destruction, the cost of damaged property/agriculture and the large loss of life across the affected region has been overwhelming. Catastrophic damage was widespread across a large portion of the Gulf Coast region. The devastation was not only confined to the coastal region, widespread and significant damage occurred well inland up to the Hattiesburg area and northward past Interstate 20. This hurricane has changed life as we know it across the Gulf Coast region which will take many years to return to normal.Hurricane Katrina was a very large and powerful storm which set several unfortunate records. This storm began as Tropical Depression 12 during the late afternoon and evening of August 23rd.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5471471"
+   },
+   "SE-5505502": {
+    "id": "SE-5505502",
+    "kind": "event",
+    "chip": "Thunderstorm Wind 2006",
+    "title": "Thunderstorm Wind, May 4, 2006",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Thunderstorm Wind on May 4, 2006 in SHARKEY (county MSC125). Deaths: 0. Injuries: 0. Recorded damage: $700,000. Recorded magnitude: 60 (EG).",
+    "quote": "South Delta Middle School, in Anguilla, had a portion of its roof blown off along with many trees blown down and numerous large limbs broken and laid in area lawns and streets. Additionally, the damaging winds extended southward into Rolling Fork where several homes and businesses sustained damage.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5505502"
+   },
+   "SE-224550": {
+    "id": "SE-224550",
+    "kind": "event",
+    "chip": "Tornado 2010",
+    "title": "Tornado, Apr 24, 2010",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Tornado on Apr 24, 2010 in SHARKEY (county MSC125). Deaths: 0. Injuries: 0. Recorded damage: $2,000,000 (about $2 million).",
+    "quote": "The path of the tornado clipped the far southeast corner of Sharkey County in the Delta National Forest. Considerable damage occurred to the timber along the path as it moved into western Yazoo County. The tornado reached EF2 intensity before moving into western Yazoo County with peak winds around 130 mph.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=224550"
+   },
+   "SE-413060": {
+    "id": "SE-413060",
+    "kind": "event",
+    "chip": "Tornado 2012",
+    "title": "Tornado, Oct 17, 2012",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Tornado on Oct 17, 2012 in SHARKEY (county MSC125). Deaths: 0. Injuries: 4. Recorded damage: $200,000.",
+    "quote": "Several mobile homes were heavily damaged or destroyed, and dozens of power poles were snapped. Maximum winds were estimated at 125 mph. The tornado continued into Humphreys County.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=413060"
+   },
+   "SE-1077241": {
+    "id": "SE-1077241",
+    "kind": "event",
+    "chip": "Tornado 2022",
+    "title": "Tornado, Dec 13, 2022",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Tornado on Dec 13, 2022 in SHARKEY (county MSC125). Deaths: 0. Injuries: 3. Recorded damage: $1,000,000 (about $1 million).",
+    "quote": "A tornado touched down north of Rolling Fork Road where a few trees had limbs damaged. The tornado intensified quickly as it traveled northeast across Garfield Rd. and destroyed numerous outbuildings. The tornado reached its maximum intensity as it crossed Rolling Fork Rd. and destroyed a well-constructed outbuilding after pulling out concrete anchors weighing several hundred pounds. The concrete was lofted and carried about 50 yards before landing on the pavement. The tornado continued northeastward, with some fluctuation in strength as it damaged numerous trees and caused primarily roof damage to homes. As the tornado crossed US Highway 61, several mobile homes were rolled and destroyed. In this group of homes, three injuries were reported. The tornado weakened and lifted shortly after over farmland. The maximum width was 250 yards. The maximum wind speed was 125 mph.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1077241"
+   },
+   "SE-1159861": {
+    "id": "SE-1159861",
+    "kind": "event",
+    "chip": "Winter Storm 2024",
+    "title": "Winter Storm, Jan 14, 2024",
+    "origin": "NCEI Storm Events, as filed by the National Weather Service",
+    "text": "Winter Storm on Jan 14, 2024 in Sharkey (forecast zone MSZ041, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. No damage figure was recorded.",
+    "quote": "Accumulations of about one half inch of sleet fell across the county, but light snow and freezing rain also fell. Area roads were covered by the sleet and glaze of ice. A 32-year old man who was walking home during the winter storm was later found to have died from hypothermia near South Delta Elementary School. Temperatures below freezing and wind chills as low as -10 degrees Fahrenheit occurred during and after the winter storm.",
+    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1159861"
+   },
+   "area-counts": {
+    "id": "area-counts",
+    "kind": "history",
+    "chip": "Area totals",
+    "title": "Weather events recorded in this area",
+    "origin": "NCEI Storm Events, county and forecast-zone rows",
+    "text": "The National Weather Service recorded 312 weather events in Sharkey County (MSC125), the forecast zone the address is in and zones within 15 km of it since 2000. By type: Thunderstorm Wind 68, Drought 54, Ice Storm 25, Heavy Snow 23, Tornado 21, Strong Wind 19, Winter Weather 19, Flash Flood 17, Hail 16, Hurricane (Typhoon) 10, Sleet 8, Winter Storm 8. These are filed events, not every storm that happened."
+   }
+  },
+  "dropped": 2,
+  "message": null,
+  "precomputed": {
+   "at": "2026-10-09T11:56:11.916Z"
+  }
+ },
+ "ready": {
+  "generatedAt": "2026-10-09T11:56:28.071Z",
+  "model": "claude-sonnet-5-5",
+  "cached": false,
+  "state": "ok",
+  "items": [
+   {
+    "action": "The NWS wrote up flooding 0.4 km from your address on January 14, 2020, when water surrounded several buildings and multiple roads flooded. Do not walk, swim or drive through flood waters; Turn Around, Don't Drown.",
+    "why": [
+     {
+      "id": "SE-873639",
+      "label": "Flash Flood report, Jan 14, 2020",
+      "hazard": "flood",
+      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=873639"
+     },
+     {
+      "id": "local-flood-count",
+      "label": "4 flood reports within 5 km, Feb 22, 2018 to Sep 17, 2021",
+      "hazard": "flood"
+     }
+    ],
+    "guidance": [
+     {
+      "id": "flood-turn-around",
+      "hazard": "flood",
+      "source": "Ready.gov, Floods",
+      "url": "https://www.ready.gov/floods",
+      "text": "Do not walk, swim or drive through flood waters. Turn Around, Don’t Drown!"
+     }
+    ]
+   }
+  ],
+  "hazards": [
+   {
+    "id": "flood",
+    "label": "Flooding",
+    "evidence": "4 written NWS flood reports within 5 km on 4 different days, latest Sep 17, 2021; 17 Flash Flood and 2 Flood events recorded for Sharkey since 2000 (NCEI Storm Events), latest Aug 23, 2022"
+   },
+   {
+    "id": "tornado",
+    "label": "Tornadoes",
+    "evidence": "6 tornado tracks within 10 km, latest Mar 23, 2025; 21 Tornado events recorded for Sharkey since 2003 (NCEI Storm Events), latest Mar 23, 2025"
+   },
+   {
+    "id": "heat",
+    "label": "Extreme heat",
+    "evidence": "1148 days with a feels-like high of 100°F or more in 26 of 26 years (2000 to 2025); hottest 114.6°F on Aug 2, 2010; 3 Heat and 1 Excessive Heat events recorded for Yazoo since 2000 (NCEI Storm Events), latest Jul 19, 2017"
+   },
+   {
+    "id": "wind",
+    "label": "Damaging wind and storms",
+    "evidence": "68 Thunderstorm Wind and 19 Strong Wind events recorded for Sharkey since 2000 (NCEI Storm Events), latest Sep 16, 2025"
+   },
+   {
+    "id": "winter",
+    "label": "Winter storms and cold",
+    "evidence": "25 Ice Storm and 23 Heavy Snow events recorded for Washington since 2000 (NCEI Storm Events), latest Feb 19, 2025"
+   }
+  ],
+  "dropped": 0,
+  "notices": [],
+  "precomputed": {
+   "at": "2026-10-09T11:56:11.916Z"
+  }
+ }
+}
