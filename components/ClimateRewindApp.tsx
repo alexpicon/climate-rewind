@@ -170,7 +170,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
     setInput(sample.address);
     setTab(sample.tab);
     setArrival({ tab: sample.tab, event: sample.event ?? null });
-    void runLookup(sample.address, sample.tab, true, null, false);
+    void runLookup(sample.address, sample.tab, true, sample.night ?? null, false);
   };
 
   /** Swap in another storm night without looking the address up again. null goes back to the busiest night. */

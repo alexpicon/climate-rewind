@@ -101,17 +101,20 @@ export interface SampleAddress {
   tab: Tab;
   /** For the story: the NWS record the hook names, opened on arrival. */
   event?: string;
+  /** For the storm replay: the night the hook is about, when it is not the busiest one. */
+  night?: string;
 }
 
 /**
  * The four samples on the landing page. Each hook is checked against the data we ship (tests/samples.test.ts reads the snapshots,
- * and the numbers below come from a lookup of that address): Nashville's EF3 of Mar 3, 2020 passed 0.65 km away; San Antonio's
- * busiest flood night has 7 reports downtown; Buncombe County's Sept 27, 2024 flash flood (SE-1218197) is Helene's; Bellevue's
- * hottest feels-like day is 114.7 F on June 28, 2021.
+ * and the numbers below come from a lookup of that address): Nashville's EF3 of Mar 3, 2020 passed 0.65 km away; on San
+ * Antonio's flood night of May 1, 2021, I-35 flooded under Nogalitos St with water rescues across the city (and GOES-16 saw
+ * its lightning); Buncombe County's Sept 27, 2024 flash flood (SE-1218197) is Helene's; Bellevue's hottest feels-like day is
+ * 114.7 F on June 28, 2021.
  */
 export const SAMPLE_ADDRESSES: readonly SampleAddress[] = [
   { label: "Nashville, TN", detail: "Downtown, near the Cumberland River", hook: "An EF3 tornado passed 0.65 km away", address: "100 James Robertson Pkwy, Nashville, TN", tab: "tornado" },
-  { label: "San Antonio, TX", detail: "Downtown, Military Plaza", hook: "Flash floods on downtown streets", address: "100 Military Plaza, San Antonio, TX", tab: "storm" },
+  { label: "San Antonio, TX", detail: "Downtown, Military Plaza", hook: "Flash floods on downtown streets", address: "100 Military Plaza, San Antonio, TX", tab: "storm", night: "2021-05-01T18:05" },
   { label: "Asheville, NC", detail: "River Arts District", hook: "Hurricane Helene’s floods", address: "350 Riverside Dr, Asheville, NC", tab: "story", event: "SE-1218197" },
   { label: "Bellevue, WA", detail: "Downtown, City Hall area", hook: "The 2021 heat dome, 115°F feels-like", address: "450 110th Ave NE, Bellevue, WA", tab: "heat" },
 ];

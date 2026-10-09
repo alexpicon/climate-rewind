@@ -147,5 +147,6 @@ until Apr 7, 2025 (then 19), GOES-17 for the West until Jan 4, 2023 (then 18).
 | Nashville | 2021-03-28T03:55 | GOES-16 | 1,277 | 21,839 |
 | Asheville | 2024-09-25T23:00 (Helene) | GOES-16 | 602 | 1,657 |
 | Bellevue | 2019-12-20T15:58 | GOES-17 | 735 | 0 |
+| San Antonio | 2021-05-01T18:05 | GOES-16 | 677 | 1,309 |
 
-San Antonio's replay night (June 2, 2016) is before GLM began, so it has no lightning file.
+San Antonio's busiest night (June 2, 2016) is before GLM began; its sample card opens on May 1, 2021 instead.

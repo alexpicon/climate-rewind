@@ -286,13 +286,13 @@ describe("a sample card on the landing page", () => {
     expect(events).toEqual(["fill 1 Main St", "focus"]);
   });
 
-  it("each card lands on the view its hook is about, and only the story names a record", async () => {
+  it("each card lands on the view its hook is about; the story names a record and San Antonio a night", async () => {
     const { SAMPLE_ADDRESSES, VISIBLE_TABS } = await import("@/lib/ui/tabs");
-    expect(SAMPLE_ADDRESSES.map((s) => [s.label, s.tab, s.event ?? null])).toEqual([
-      ["Nashville, TN", "tornado", null],
-      ["San Antonio, TX", "storm", null],
-      ["Asheville, NC", "story", "SE-1218197"],
-      ["Bellevue, WA", "heat", null],
+    expect(SAMPLE_ADDRESSES.map((s) => [s.label, s.tab, s.event ?? null, s.night ?? null])).toEqual([
+      ["Nashville, TN", "tornado", null, null],
+      ["San Antonio, TX", "storm", null, "2021-05-01T18:05"],
+      ["Asheville, NC", "story", "SE-1218197", null],
+      ["Bellevue, WA", "heat", null, null],
     ]);
     for (const sample of SAMPLE_ADDRESSES) expect(VISIBLE_TABS).toContain(sample.tab);
   });

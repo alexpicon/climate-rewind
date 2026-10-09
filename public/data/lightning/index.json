@@ -23,6 +23,14 @@
    "lon": -86.777515855134,
    "file": "data/lightning/nashville/2021-03-28T0355.json",
    "flashes": 21839
+  },
+  {
+   "slug": "san-antonio",
+   "nightId": "2021-05-01T18:05",
+   "lat": 29.424796286769,
+   "lon": -98.494678611909,
+   "file": "data/lightning/san-antonio/2021-05-01T1805.json",
+   "flashes": 1309
   }
  ]
 }
