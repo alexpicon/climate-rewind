@@ -9,6 +9,7 @@ import { featureSample, LANDING_FEATURES, type FeatureIcon } from "@/lib/ui/land
 import { LANDING_MOMENTS, momentLookup } from "@/lib/ui/landing-moments";
 import type { MomentsFile } from "@/lib/ui/moment-timeline";
 import { MomentTimeline } from "./landing/MomentTimeline";
+import { EventCards } from "./landing/EventCards";
 import { RecordFlash } from "./landing/RecordFlash";
 import { chooseSample, SAMPLE_ADDRESSES, viewUrl, type SampleAddress } from "@/lib/ui/tabs";
 import { TrackReel } from "./landing/TrackReel";
@@ -141,6 +142,12 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
             {error}
           </p>
         ) : null}
+
+        <h2 className="h3 landing-samples-h" id="storms-h">
+          Watch the storms move
+        </h2>
+        <p className="ev-cards-lede">Every hour of the wind across the whole storm, the hurricane on its official track, and each storm report the moment it was filed.</p>
+        <EventCards />
 
         <h2 className="h3 landing-samples-h" id="moments-h">
           Moments the records caught
