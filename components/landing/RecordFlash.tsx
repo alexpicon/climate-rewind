@@ -3,15 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePlayback } from "@/components/use-playback";
 import { useReducedMotion } from "@/components/use-reduced-motion";
-import { fitBox, type Fit } from "@/lib/ui/albers";
+import type { Fit } from "@/lib/ui/albers";
 import { buildRecordModel, recordFrame, type RecordFlashFile, type RecordModel } from "@/lib/ui/record-flash-model";
-import { drawStateOutlines, type StateShapes } from "@/lib/ui/state-outlines";
+import type { StateShapes } from "@/lib/ui/state-outlines";
+import { drawLocator, drawRecordMap, recordFit } from "./record-flash-map";
 
 /** The ten seconds play over this long: two and a half times slower than they happened. */
 const REPLAY_MS = 25_000;
 const HEIGHT = 380;
-/** The map frame: the Gulf coast the flash crossed, a little tighter than the box the light was read from. */
-const VIEW = { south: 26.4, north: 32.4, west: -98.0, east: -86.8 };
 
 const radiusOf = (energy: number) => 1.5 + Math.min(6, Math.log1p(energy) * 0.8);
 
@@ -99,12 +98,13 @@ export function RecordFlash() {
     const trace = traceRef.current?.getContext("2d");
     const live = liveRef.current?.getContext("2d");
     if (!model || !frame || !trace || !live || !width) return;
-    const fit = fitBox(width, HEIGHT, VIEW, 10);
+    const fit = recordFit(width, HEIGHT);
     const key = `${width}|${dpr}|${shapes ? 1 : 0}`;
     if (key !== drawn.current.key || frame.glowFrom < drawn.current.upTo) {
       trace.setTransform(dpr, 0, 0, dpr, 0, 0);
       trace.clearRect(0, 0, width, HEIGHT);
-      drawStateOutlines(trace, fit, shapes, "rgba(186,194,209,0.28)", [20, 50]);
+      drawRecordMap(trace, fit, shapes, width);
+      if (width >= 420) drawLocator(trace, shapes, width - 142, 12, 130, 82);
       drawn.current = { upTo: 0, key };
     }
     // Reduced motion and the end: every group, faint. Otherwise the light that has faded joins the trace as it goes.

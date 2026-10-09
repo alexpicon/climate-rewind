@@ -689,7 +689,7 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 
 /* ---------- landing: moments the records caught ---------- */
 .record-flash{margin:0 0 14px;border-radius:var(--r-lg,20px);border:1px solid var(--line-2);background:#060A13;overflow:hidden}
-.rf-stage{position:relative;width:100%;background:radial-gradient(80% 90% at 50% 60%,#0d1630 0,#060A13 75%)}
+.rf-stage{position:relative;width:100%;background:#05080F}
 .rf-stage canvas{position:absolute;left:0;top:0;display:block}
 .rf-hud{position:absolute;left:14px;top:12px;display:flex;flex-direction:column;gap:2px;font-variant-numeric:tabular-nums;pointer-events:none}
 .rf-clock{font-family:var(--serif);font-size:26px;line-height:1.1;color:#DCE3FF}
