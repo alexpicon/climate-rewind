@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Chunk, LandingChunks } from "./landing/LandingChunks";
+import { LandingSearchBar } from "./landing/LandingSearchBar";
 import type { AiJob } from "@/lib/ai-jobs";
 import { describeJobs } from "@/lib/ai-jobs";
 import { APP_NAME } from "@/lib/brand";
@@ -50,6 +52,22 @@ function FeatureGlyph({ icon }: { icon: FeatureIcon }) {
 /** First screen: who it is for, four sample addresses to start with (one click each), a search box for your own, then what it shows. */
 export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, detectiveRan, aiJobs = [], onSample }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const heroFormRef = useRef<HTMLFormElement>(null);
+  // The slim bar at the top: shown once the first screen's search box has scrolled out of view.
+  const [barOn, setBarOn] = useState(false);
+  useEffect(() => {
+    const form = heroFormRef.current;
+    const root = document.getElementById("landing");
+    if (!form || !root) return;
+    const observer = new IntersectionObserver(([entry]) => setBarOn(!entry.isIntersecting), { root, threshold: 0 });
+    observer.observe(form);
+    return () => observer.disconnect();
+  }, []);
+  const backToSearch = () => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.getElementById("ch-start")?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), reduce ? 0 : 600);
+  };
   const ai = landingLead(detectiveRan);
   // The moment cards' timelines: a small file, read after the page is up. Without it the cards still work, just without timelines.
   const [moments, setMoments] = useState<MomentsFile | null>(null);
@@ -70,15 +88,17 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
 
   return (
     <main id="landing" aria-labelledby="landing-h">
+      <LandingSearchBar visible={barOn} input={input} onInput={onInput} onSubmit={onSubmit} lookingUp={lookingUp} />
+      <LandingChunks>
       <div className="landing-inner">
         <TrackReel />
+        <Chunk id="ch-start" label="Start" className="chunk-hero">
         <p className="eyebrow">{APP_NAME}</p>
         <h1 id="landing-h">What the weather did to your street.</h1>
         <p className="landing-for">For anyone renting, buying or living somewhere the climate is changing.</p>
         <p className="landing-sub">
-          See what the National Weather Service recorded at an address since 2000, from floods and tornadoes to heat, wind, ice and
-          lightning, replayed on the map with real radar, and what it expects in the next 72 hours. Anything that is not real data is
-          tagged SAMPLE.
+          Everything the National Weather Service recorded at an address since 2000, from floods and tornadoes to heat, wind, ice and
+          lightning, replayed on real radar. Anything that is not real data is tagged SAMPLE.
         </p>
 
         <h2 className="h3 landing-samples-h" id="start-here">
@@ -100,12 +120,12 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
             </li>
           ))}
         </ul>
-
         <h2 className="h3 landing-samples-h" id="own-address">
           Or your own address
         </h2>
         <p className="landing-own">The first look takes a few seconds while we read the records; the AI’s writing follows.</p>
         <form
+          ref={heroFormRef}
           className="landing-form"
           role="search"
           aria-label="Address"
@@ -142,18 +162,28 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
             {error}
           </p>
         ) : null}
+        </Chunk>
+
+        <Chunk className="chunk-wide" id="ch-storms" label="Watch the storms move">
 
         <h2 className="h3 landing-samples-h" id="storms-h">
           Watch the storms move
         </h2>
         <p className="ev-cards-lede">Every hour of the wind across the whole storm, the hurricane on its official track, and each storm report the moment it was filed.</p>
         <EventCards />
+        </Chunk>
+
+        <Chunk className="chunk-wide" id="ch-record" label="The record lightning flash">
 
         <h2 className="h3 landing-samples-h" id="moments-h">
           Moments the records caught
         </h2>
         <RecordFlash />
-        <ul className="moments" aria-labelledby="moments-h">
+        </Chunk>
+
+        <Chunk className="chunk-wide" id="ch-moments" label="Moments the records caught">
+        <h2 className="h3 landing-samples-h">Moments the records caught</h2>
+        <ul className="moments moments-five" aria-labelledby="moments-h">
           {LANDING_MOMENTS.map((moment) => (
             <li key={moment.id} className="moment">
               <p className="mo-k">{moment.kicker}</p>
@@ -179,6 +209,10 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
             </li>
           ))}
         </ul>
+        </Chunk>
+
+
+        <Chunk className="chunk-wide" id="ch-features" label="What you’ll see">
 
         <h2 className="h3 landing-samples-h" id="features-h">
           What you’ll see
@@ -205,7 +239,9 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
             );
           })}
         </ul>
+        </Chunk>
 
+        <Chunk id="ch-ai" label="What the AI does">
         <h2 className="h3 landing-samples-h">What the AI does here</h2>
         <p className="landing-ai">
           <b>{ai.lead}</b> {ai.body}{" "}
@@ -229,6 +265,15 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
             </li>
           ))}
         </ul>
+        </Chunk>
+
+        <Chunk id="ch-own" label="Try your own address" className="chunk-close">
+
+        <h2 className="chunk-close-h">What did the weather do to your street?</h2>
+        <p className="landing-own">Type any US address in the bar at the top, or start from one of the four samples.</p>
+        <button type="button" className="btn chunk-close-btn" onClick={backToSearch}>
+          Look up an address
+        </button>
         {detectiveRan ? null : (
           <p className="fine landing-fine">
             The Nashville storm replay includes a correction demo with hand-made placements. They are labelled <span className="tag sample">Sample</span> everywhere they appear.
@@ -238,7 +283,10 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
           These are the records the National Weather Service filed and the reports we could place near you: not every storm, and not every flood.
           We make no forecast of our own: the outlooks are the National Weather Service’s, and the AI only explains them.
         </p>
+        </Chunk>
+
       </div>
+      </LandingChunks>
     </main>
   );
 }

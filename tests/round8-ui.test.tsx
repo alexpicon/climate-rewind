@@ -20,7 +20,7 @@ describe("landing: who it is for, then four samples to start with, then your own
 
   it("puts the four samples, each with its one-line hook, above the search", () => {
     const start = html.indexOf("Start here");
-    const search = html.indexOf('role="search"');
+    const search = html.indexOf('id="landing-address"');
     expect(start).toBeGreaterThan(-1);
     expect(start).toBeLessThan(search);
     for (const sample of SAMPLE_ADDRESSES) {

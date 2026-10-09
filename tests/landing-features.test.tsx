@@ -27,11 +27,13 @@ describe("the feature tiles", () => {
     expect(lightningFileFor(index, snapshot.lat, snapshot.lon, sample.night)).not.toBeNull();
   });
 
-  it("the landing page shows every tile with its example button, after the search", () => {
+  it("the landing page shows every tile with its example button, in its own chunk after the first screen's search, with a sticky search bar", () => {
     const html = renderToStaticMarkup(<Landing input="" onInput={() => undefined} onSubmit={() => undefined} lookingUp={false} error={null} onHow={() => undefined} detectiveRan />);
     for (const feature of LANDING_FEATURES) expect(html).toContain(feature.title);
     expect(html.match(/class="feat-go"/g)).toHaveLength(LANDING_FEATURES.length);
-    expect(html.indexOf("What you’ll see")).toBeGreaterThan(html.indexOf('role="search"'));
+    expect(html.indexOf("What you’ll see")).toBeGreaterThan(html.indexOf('id="landing-address"'));
+    expect(html).toContain('id="lbar-address"');
+    expect(html.match(/<section id="ch-/g)?.length).toBe(7);
     expect(html).toContain("from floods and tornadoes to heat, wind, ice and");
   });
 });

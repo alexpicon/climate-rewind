@@ -624,19 +624,19 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 @keyframes landing-rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 @keyframes landing-fade{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion: no-preference){
-  .landing-inner > *{animation:landing-rise .8s var(--ease) both}
-  .landing-inner > .eyebrow{animation-delay:.05s}
-  .landing-inner > h1{animation-delay:.15s}
-  .landing-inner > .landing-for{animation-delay:.3s}
-  .landing-inner > .landing-sub{animation-delay:.4s}
-  .landing-inner > .landing-samples-h{animation-delay:.5s}
-  .landing-inner > .samples{animation:none}
+  .chunk-hero .chunk-body > *{animation:landing-rise .8s var(--ease) both}
+  .chunk-hero .chunk-body > .eyebrow{animation-delay:.05s}
+  .chunk-hero .chunk-body > h1{animation-delay:.15s}
+  .chunk-hero .chunk-body > .landing-for{animation-delay:.3s}
+  .chunk-hero .chunk-body > .landing-sub{animation-delay:.4s}
+  .chunk-hero .chunk-body > .landing-samples-h{animation-delay:.5s}
+  .chunk-hero .chunk-body > .samples{animation:none}
   .samples.start li{animation:landing-rise .7s var(--ease) both}
   .samples.start li:nth-child(1){animation-delay:.6s}
   .samples.start li:nth-child(2){animation-delay:.7s}
   .samples.start li:nth-child(3){animation-delay:.8s}
   .samples.start li:nth-child(4){animation-delay:.9s}
-  .landing-inner > #own-address,.landing-inner > #own-address ~ *{animation-delay:1s}
+  .chunk-hero .chunk-body > #own-address,.chunk-hero .chunk-body > #own-address ~ *{animation-delay:1s}
   .landing-inner > .reel{animation:landing-fade 1.8s ease both}
   .samples.start .sample-btn{transition:background .25s,border-color .25s,transform .35s var(--ease),box-shadow .35s var(--ease)}
   .samples.start .sample-btn:hover,.samples.start .sample-btn:focus-visible{transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,0,0,.45),0 0 0 1px rgba(255,180,90,.35),0 0 28px rgba(255,180,90,.16)}
@@ -780,3 +780,99 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .ev-prev-pause{position:absolute;right:8px;bottom:8px;font:inherit;font-size:12.5px;font-weight:600;color:var(--ink);background:rgba(6,10,19,.78);border:1px solid var(--line-2);border-radius:99px;padding:6px 12px;min-height:32px;cursor:pointer}
 .ev-prev-pause:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 @media (max-width:600px){.ev-card{grid-template-columns:1fr}.ev-prev{border-right:0;border-bottom:1px solid var(--line)}}
+
+/* ---------- the landing page in chunks: one idea per screen, snapping into place, each fading in as it arrives ---------- */
+#landing{scroll-snap-type:y mandatory;scroll-behavior:smooth;display:block;padding-top:0;padding-bottom:0}
+#landing .landing-inner{margin:0 auto}
+.chunk{min-height:100vh;min-height:100dvh;display:flex;align-items:center;scroll-snap-align:start;padding:56px 0}
+.chunk-body{width:100%}
+.chunk-hero{padding-top:40px}
+.chunk-jump{margin:20px 0 0;font-size:15px}
+.chunk-jump a{color:var(--accent);text-underline-offset:3px}
+.chunk-dots{position:fixed;z-index:4;right:22px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px}
+.chunk-dots button{width:12px;height:12px;padding:0;border-radius:50%;border:1.5px solid var(--muted);background:transparent;cursor:pointer}
+.chunk-dots button.on{background:var(--accent);border-color:var(--accent)}
+.chunk-dots button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (min-width:1200px){#landing{padding-left:max(48px,6vw)}#landing .landing-inner{margin:0}}
+@media (max-width:700px){.chunk-dots{display:none}.chunk{padding:40px 0}}
+@media (prefers-reduced-motion: no-preference){
+  #landing.chunks-on .chunk:not(.chunk-hero) .chunk-body{opacity:0;transform:translateY(40px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  #landing.chunks-on .chunk.in .chunk-body{opacity:1;transform:none}
+  #landing.chunks-on .chunk-hero:not(.in) .chunk-body{opacity:0;transform:translateY(-30px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+  #landing.chunks-on .chunk-hero.in .chunk-body{opacity:1;transform:none;transition:opacity .6s var(--ease),transform .6s var(--ease)}
+}
+@media (prefers-reduced-motion: reduce){#landing{scroll-snap-type:none;scroll-behavior:auto}}
+
+/* ---------- landing v2: wide sections, a tighter first screen, the sticky search bar ---------- */
+.chunk{padding:84px 0 48px}
+.chunk-hero{padding:24px 0 20px}
+.chunk-hero h1{font-size:clamp(38px,4.6vw,60px);margin-bottom:10px}
+.chunk-hero .landing-for{margin-bottom:8px}
+.chunk-hero .landing-sub{font-size:15.5px;line-height:1.5;margin-bottom:0}
+.chunk-hero .landing-samples-h{margin-top:16px}
+.chunk-hero .samples.start b{font-size:22px}
+.chunk-hero .samples.start{gap:10px}
+.chunk-hero .samples.start .sample-btn{min-height:0;padding:14px 18px}
+.chunk-hero .samples.start .where{display:none}
+.chunk-hero #own-address{margin-top:18px}
+.chunk-hero .landing-own{display:none}
+.chunk-hero .landing-form{margin-bottom:0}
+.chunk-hero .landing-form input,.chunk-hero .landing-form .btn{height:54px;min-height:54px}
+.chunk-close-h{font-family:var(--serif);font-weight:300;font-size:clamp(34px,4vw,54px);line-height:1.08;margin:0 0 12px}
+.chunk-close-btn{width:auto;padding:0 28px;margin:10px 0 26px}
+.lbar{position:fixed;z-index:6;top:0;left:0;right:0;display:flex;align-items:center;gap:18px;padding:10px max(24px,6vw);background:rgba(6,10,19,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transform:translateY(-110%);transition:transform .35s var(--ease)}
+.lbar.on{transform:none}
+.lbar-name{font-family:var(--serif);font-size:20px;color:var(--ink);white-space:nowrap}
+.lbar-form{display:flex;gap:8px;flex:1;max-width:620px}
+.lbar-form input{flex:1;min-width:0;height:42px;padding:0 18px;border-radius:999px;border:1px solid var(--line-2);background:rgba(255,255,255,.08);font-size:16px;color:var(--ink)}
+.lbar-form input:focus-visible{border-color:#FFE2B0}
+.lbar-form .btn{width:auto;min-height:42px;height:42px;padding:0 20px}
+@media (max-width:700px){.lbar-name{display:none}.lbar{padding:8px 12px}}
+@media (prefers-reduced-motion: reduce){.lbar{transition:none}}
+@media (min-width:1200px){
+  .chunk-wide .chunk-body{flex:none;width:min(1320px,calc(100vw - max(48px,6vw) - 90px))}
+  .chunk-wide .ev-cards{grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:0}
+  .chunk-wide .ev-card{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .chunk-wide .moments,.chunk-wide .features{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .chunk-wide .record-flash{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:center}
+  .chunk-wide .record-flash figcaption{padding:20px 24px}
+  #landing.wide-on .reel-scrim{background:rgba(6,10,19,.82);transition:background .6s}
+  #landing.wide-on .reel-hud{opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s}
+}
+
+/* landing v2b: the first screen fits a MacBook window (about 1512 x 740) with room under the search */
+.chunk-hero{padding:20px 0 36px}
+@media (min-width:1200px){.chunk-hero .chunk-body{width:min(700px,100%)}}
+@media (max-height:820px){
+  .chunk-hero h1{font-size:clamp(36px,4.2vw,54px)}
+  .chunk-hero .samples.start .sample-btn{padding:11px 16px}
+  .chunk-hero .samples.start b{font-size:20px}
+  .chunk-hero .landing-samples-h{margin-top:12px;margin-bottom:8px}
+  .chunk-hero #own-address{margin-top:14px}
+}
+
+/* landing v2d: five moments on one screen, three on top and two below; each card puts its words on the left and its timeline on the right */
+@media (min-width:1200px){
+  .chunk-wide .moments.moments-five{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+  .moments-five .moment{grid-column:span 2;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-auto-rows:min-content;column-gap:14px;row-gap:3px;padding:14px 16px;align-content:start}
+  .moments-five .moment > *{grid-column:1}
+  .moments-five .moment > .mt{grid-column:2;grid-row:1 / span 6;align-self:center;margin:0}
+  .moments-five .mo-k{font-size:11.5px;line-height:1.35}
+  .moments-five .mo-big{font-size:38px;line-height:1.05}
+  .moments-five .mo-t{font-size:16px;line-height:1.25}
+  .moments-five .mo-l{font-size:13.5px;line-height:1.45;margin:2px 0 4px}
+  .moments-five .mo-go{margin-top:4px;align-self:start;justify-self:start}
+  .moments-five .mt-svg{height:64px}
+}
+@media (min-width:1200px) and (max-width:1439px), (min-width:1200px) and (max-height:800px){
+  #ch-moments{padding-top:72px;padding-bottom:16px}
+  #ch-moments .landing-samples-h{margin-bottom:8px}
+  .moments-five .moment{padding:12px 14px;column-gap:12px}
+  .moments-five .moment{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+  .moments-five .mo-big{font-size:32px}
+  .moments-five .mo-t{font-size:15px}
+  .moments-five .mo-l{font-size:13px;line-height:1.4}
+  .moments-five .mt-now{font-size:12px}
+  .moments-five .mt-svg{height:52px}
+  .moments-five .mo-go{min-height:36px;padding:0 14px;font-size:14px}
+}
