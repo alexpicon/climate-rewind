@@ -16,7 +16,8 @@
     "outlook-record": "python3 scripts/outlook-record.py",
     "quiet-percentiles": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/quiet-percentiles.ts",
     "optional-views": "node scripts/optional-views.mjs",
-    "moment-timelines": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/moment-timelines.ts"
+    "moment-timelines": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/moment-timelines.ts",
+    "sample-previews": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/sample-previews.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.132.1",
