@@ -35,6 +35,7 @@ const { SAMPLE_ADDRESSES } = await import("../lib/ui/tabs.ts");
 const { geocodeAddress, heatArchiveUrl, heatDaysFromArchive } = await import("../lib/sources.ts");
 const { floodDates, rainArchiveUrl, rainFromArchive, rainRanges, shiftDate } = await import("../lib/flood-trigger.ts");
 const { findNearbyFloods, summarizeHeat } = await import("../lib/lookup.ts");
+const { extremesArchiveUrl, extremesFromArchive } = await import("../lib/extremes.ts");
 const { loadStateIndex, slugify } = await import("../lib/index-store.ts");
 type SampleSnapshot = import("../lib/samples.ts").SampleSnapshot;
 const { MIN_FLOOD_DAYS } = await import("../lib/flood-trigger.ts");
@@ -99,6 +100,7 @@ for (const sample of SAMPLE_ADDRESSES) {
     built: new Date().toISOString(),
     heat: existing?.heat ?? null,
     rain: existing?.rain ?? null,
+    extremes: existing?.extremes ?? null,
   };
 
   // ---- heat
@@ -123,6 +125,21 @@ for (const sample of SAMPLE_ADDRESSES) {
         console.log(`  heat: NOT captured (${(error as Error).message})`);
         incomplete += 1;
       }
+    }
+  }
+
+  // ---- wettest and windiest days (the address-extremes card)
+  if (snapshot.extremes && !refresh) {
+    console.log("  extremes: kept");
+  } else {
+    try {
+      const found = extremesFromArchive(await archiveJson<Parameters<typeof extremesFromArchive>[0]>(extremesArchiveUrl(address.lat, address.lon, lastYear), "extremes"));
+      if (!found) throw new Error("no rain or wind data");
+      snapshot.extremes = { wettest: found.wettest, windiest: found.windiest, source: `Open-Meteo archive, daily precipitation_sum and wind_gusts_10m_max, 2000-${lastYear}, fetched ${snapshot.built}` };
+      console.log(`  extremes: fetched, wettest ${found.wettest?.date} ${found.wettest?.inches} in, windiest ${found.windiest?.date} ${found.windiest?.mph} mph`);
+    } catch (error) {
+      console.log(`  extremes: NOT captured (${(error as Error).message})`);
+      incomplete += 1;
     }
   }
 

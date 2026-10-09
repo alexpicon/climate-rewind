@@ -3,7 +3,7 @@
  "address": "450 110th Ave NE, Bellevue, WA",
  "lat": 47.614205361757,
  "lon": -122.193517524226,
- "built": "2026-10-08T13:22:26.725Z",
+ "built": "2026-10-09T00:05:23.789Z",
  "heat": {
   "byYear": {
    "2000": 0,
@@ -73,5 +73,17 @@
   },
   "source": "Open-Meteo archive, daily apparent_temperature_max, 2000-2025, from the pipeline's saved copy of the same request (point_bellevue_2000-2025.json)"
  },
- "rain": null
+ "rain": null,
+ "extremes": {
+  "wettest": {
+   "date": "2019-12-20",
+   "inches": 2.74
+  },
+  "windiest": {
+   "date": "2006-11-15",
+   "mph": 64,
+   "measure": "gust"
+  },
+  "source": "Open-Meteo archive, daily precipitation_sum and wind_gusts_10m_max, 2000-2025, fetched 2026-10-09T00:05:23.789Z"
+ }
 }

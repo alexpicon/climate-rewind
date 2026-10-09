@@ -3,7 +3,7 @@
  "address": "350 Riverside Dr, Asheville, NC",
  "lat": 35.59175950072,
  "lon": -82.571739541063,
- "built": "2026-10-08T13:22:26.363Z",
+ "built": "2026-10-09T00:05:13.379Z",
  "heat": {
   "byYear": {
    "2000": 0,
@@ -73,5 +73,42 @@
   },
   "source": "Open-Meteo archive, daily apparent_temperature_max, 2000-2025, from the pipeline's saved copy of the same request (point_asheville_2000-2025.json)"
  },
- "rain": null
+ "rain": {
+  "byDate": {
+   "2015-09-28": 0.236,
+   "2015-09-29": 1.083,
+   "2016-02-02": 0.071,
+   "2016-02-03": 1.76,
+   "2017-10-22": 0.047,
+   "2017-10-23": 1.555,
+   "2018-05-17": 0.327,
+   "2018-05-18": 1.063,
+   "2018-12-27": 0.165,
+   "2018-12-28": 0.835,
+   "2019-07-10": 0.083,
+   "2019-07-11": 0.197,
+   "2020-07-30": 0.193,
+   "2020-07-31": 0.051,
+   "2020-09-09": 0.039,
+   "2020-09-10": 0.012,
+   "2024-01-08": 0.024,
+   "2024-01-09": 2.724,
+   "2024-09-24": 0.224,
+   "2024-09-25": 0.768,
+   "2024-09-26": 9.161
+  },
+  "source": "Open-Meteo archive (ERA5), daily precipitation_sum in inches, for 11 flood dates and the day before each, fetched 2026-10-09T00:05:13.379Z"
+ },
+ "extremes": {
+  "wettest": {
+   "date": "2024-09-26",
+   "inches": 5.13
+  },
+  "windiest": {
+   "date": "2024-09-27",
+   "mph": 77,
+   "measure": "gust"
+  },
+  "source": "Open-Meteo archive, daily precipitation_sum and wind_gusts_10m_max, 2000-2025, fetched 2026-10-09T00:05:13.379Z"
+ }
 }
