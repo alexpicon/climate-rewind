@@ -18,6 +18,8 @@ const nextConfig: NextConfig = {
     "/api/ask": ["./data/index/**/*", "./data/heat/**/*", "./data/samples/**/*", "./data/outlook-record/**/*", "./data/damage/**/*", "./data/events/**/*", "./data/quiet-percentiles.json"],
     // The area story reads only the events of the address's county and the zones over it.
     "/api/story": ["./data/events/**/*", "./data/samples/ai/**/*"],
+    // The area replay reads the county's and zones' events, the zone outlines and the county-to-zone crosswalk.
+    "/api/area-replay": ["./data/events/**/*"],
     // The climate view reads the precomputed sample projections and snapshots; the preparedness plan reads the area events, the index and the official guidance lines.
     "/api/future": ["./data/projections/**/*", "./data/samples/**/*"],
     "/api/ready": ["./data/events/**/*", "./data/index/**/*", "./data/samples/**/*", "./data/guidance/**/*"],

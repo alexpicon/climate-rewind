@@ -14,6 +14,7 @@ import { requestStory, type StoryResult } from "@/lib/ui/ahead-client";
 import { NEARBY_ZONE_KM } from "@/lib/constants";
 import { currentZone, eventLabel, FAMILIES, familyOf, otherZonesLine, tierLabel, zoneLabel } from "@/lib/ui/story-model";
 import { AiProblem } from "../ahead/AiProblem";
+import { AreaReplayCard } from "./AreaReplayCard";
 import { EventCard } from "./EventCard";
 import { StoryMap } from "./StoryMap";
 import { Timeline } from "./Timeline";
@@ -228,6 +229,8 @@ export function StoryView({ data, openEvent = null }: { data: LookupPayload; ope
             <p className="note quiet-note">Tags are the AI’s reading, kept only where the event’s own narrative says it. The counts and totals are added up by code from the records.</p>
           </section>
         ) : null}
+
+        {area.county ? <AreaReplayCard lat={data.address.lat} lon={data.address.lon} state={data.address.state} county={area.county} /> : null}
 
         <section className="timeline" aria-labelledby="tl-h">
           <h2 id="tl-h" className="sec-t">
