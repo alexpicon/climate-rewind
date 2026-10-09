@@ -1,0 +1,28 @@
+{
+ "nights": [
+  {
+   "slug": "asheville",
+   "nightId": "2024-09-25T23:00",
+   "lat": 35.59175950072,
+   "lon": -82.571739541063,
+   "file": "data/lightning/asheville/2024-09-25T2300.json",
+   "flashes": 1657
+  },
+  {
+   "slug": "bellevue",
+   "nightId": "2019-12-20T15:58",
+   "lat": 47.614205361757,
+   "lon": -122.193517524226,
+   "file": "data/lightning/bellevue/2019-12-20T1558.json",
+   "flashes": 0
+  },
+  {
+   "slug": "nashville",
+   "nightId": "2021-03-28T03:55",
+   "lat": 36.168175092703,
+   "lon": -86.777515855134,
+   "file": "data/lightning/nashville/2021-03-28T0355.json",
+   "flashes": 21839
+  }
+ ]
+}

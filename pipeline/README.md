@@ -129,3 +129,23 @@ The all-states run is well above the plan's "tens of dollars", so run the detect
 - a cheaper model.
 
 Measure real tokens on the eval run first. The code records `input_tokens` and `output_tokens` for each record.
+
+## Satellite lightning for the sample storm nights (`glm_flashes.py`)
+
+Reads NOAA's GOES Geostationary Lightning Mapper Level 2 files (public AWS open data, one file every 20 seconds, 2018 on) for one
+replay night, keeps the good-quality flashes (quality flag 0) inside the replay's map box and window, and writes
+`public/data/lightning/<slug>/<night>.json` plus an entry in `public/data/lightning/index.json`. The storm replay draws them only
+for that sample address and night. A flash's position is the centroid of the light the satellite saw (roughly 8 to 14 km), its
+energy is radiant energy at the sensor (not current), and GLM sees all lightning, in cloud and to ground.
+
+A night is about 180 files an hour at about 700 KB each, so it runs offline, never at request time. Needs `netCDF4` (pinned in
+`requirements.txt`). Pass the night id, window and box from the lookup's `stormReplay`, and the satellite: GOES-16 for the East
+until Apr 7, 2025 (then 19), GOES-17 for the West until Jan 4, 2023 (then 18).
+
+| Sample | Night | Satellite | Files | Flashes |
+|---|---|---|---|---|
+| Nashville | 2021-03-28T03:55 | GOES-16 | 1,277 | 21,839 |
+| Asheville | 2024-09-25T23:00 (Helene) | GOES-16 | 602 | 1,657 |
+| Bellevue | 2019-12-20T15:58 | GOES-17 | 735 | 0 |
+
+San Antonio's replay night (June 2, 2016) is before GLM began, so it has no lightning file.
