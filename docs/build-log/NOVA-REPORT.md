@@ -716,3 +716,90 @@ CDP shots           /tmp/nova/shots: 02, 12 landing click-through (Enter on a ca
 - Storm replay for Nashville, "2 · Correct the pins": report 1 should be read as naming Rosa Parks Blvd and Farmers Market with no single spot, never as "a region".
 - Heat tab for Denver: the note about NASA POWER (MERRA-2) should be read, and the chart should say "heat index".
 - At a phone width (390 px or a real phone): the "i" credits button at the top right should be reachable by touch and by Tab ("Toggle attribution", inside a "Map credits" region) and should open and close.
+
+# Round 7A: "Your area's story", never-empty results (Nova A)
+
+## What shipped
+- **Area events in the lookup** (`areaEvents`, additive). Coded to Claudio's new layout: `data/events/<ST>/<CODE>.json.gz` plus `county-areas.json`. The county comes from the Census match (`countyFips`, new on `LookupAddress`), with api.weather.gov `/points` `county` as the fallback; the `/points` forecast zone is not used. Only the files in that county's overlap list are read, lazily and cached. Returns counts by type and year, plus the 60 most severe events with their narratives. `lib/area-events.ts`, `lib/event-severity.ts`, `lib/nws-zones.ts`.
+- **"Your area's story" tab** (after Next 72 hours). Big number, the AI story (`POST /api/story`, `lib/ai/story.ts`), impact summary, a 2000-to-today timeline (color and shape by kind of weather; the dots are for mouse and touch, and the same events are a keyboard list), and the verbatim NWS narrative on click. The story is cached per county for a day. Sentences go through the existing `verifySentences` (event ids, numbers, quotes, overclaims). Impact tags (power outage, trees down, roads blocked, flooding, structure damage, travel) are kept only if the event exists, the evidence words are in that event's narrative, and those words match the tag (so "High Wind" never earns "power outages"). The summary lines and the deaths/injuries/damage totals are written by code. Verified live on Bellevue: 8 sentences kept, 1 impact tag dropped.
+- **Never empty.** Widening flood search (`nearestFlood`, to 50 km, never a city-placeholder report): "None on your street. The closest was 29 km away, in 2025." with the quote (Wallace, ID). Address extremes (`extremes`: wettest, windiest, hottest; Open-Meteo, NASA POWER fallback, optional sample snapshot). `quiet` placement from `data/quiet-percentiles.json` (`scripts/quiet-percentiles.ts`, `npm run quiet-percentiles`, seeded, 500 points per state, 51 states). The percentile is pooled across states: Washington's own sample is 89% zeros, which says more about how few reports WA files than about the address. The wording is positive only when true ("Quieter than X%" at 50% or more; "like X% of places" for none; otherwise "reports are sparse"). Bellevue, with 2 reports, is above the middle by this measure and says so. `QuietCard` with the two next-step links shows on the 72-hour tab, the storm empty state and the story tab. `ExtremesCard` is on the story tab.
+- **Brief context.** `quiet` and `area-counts`/event sources; for a quiet address the brief now gives why it is quiet, then the biggest area event, then the outlooks (checked live on Bellevue).
+- **Slots for Nova B.** `future` and `ready` tabs. `scripts/optional-views.mjs` (runs in `predev` and `prebuild`) writes `lib/ui/optional-tabs.generated.ts` and `components/views/optional-views.generated.ts` with static imports only for the view files that exist. Both views are already picked up.
+- **Top bar.** Eight tabs would not fit: icons only from 901 to 1399 px, short words from 1400, full names from 1800; on a phone the bar scrolls sideways.
+
+## Checks
+```
+npm test         652 tests, 648 pass. 4 fail, none mine: Koda's 51-state index vs tests that assume 7 states
+                 (edge-cases x3: Denver/DC "not indexed", state list; lookup.test "no index outside the six")
+tsc --noEmit     clean
+npm run build    passes
+curl (prod build) Bellevue 0.9 s (2 reports, 463 area events, quiet 12%), Nashville 0.5 s (42 reports, 1,317 events),
+                 Denver 6.6 s cold (5 reports, 224 events). Bellevue /api/story 8 s, then cached. Wallace ID: nearestFlood 28.6 km.
+axe-core         0 violations on story 1440 (event open), story 390, 72 hours quiet card, Denver story
+shots            /tmp/nova/shots/r7a-*.png (story, timeline + event card, quiet card, 390 px, Denver story)
+```
+
+## Flags
+1. **Those 4 tests** and `INDEXED_STATE_NAMES` (lib/constants.ts, landing text) now describe 7 states while data/index has 51. Not touched; needs a decision from Claudio/Koda.
+2. **Koda's zone overlap is wide.** Bellevue's 12 area codes include Cascade mountain zones, so the top events include Mt Rainier climbers and avalanches near Snoqualmie. Accurate, but not "your street". The fine print says zones can cover more than the county. A tighter list per county would improve the story most.
+3. **Payload size.** `areaEvents` adds 60 to 170 KB to a lookup (Nashville 168 KB). `AREA_EVENTS_TOP` in lib/constants.ts turns it down.
+4. **Sample snapshots lack the new `extremes` part**, so a sample address makes one more Open-Meteo call. I did not write `data/samples`. `npm run snapshot-samples` now captures it; run it once Open-Meteo is available. Three tests that said "no archive call at all" now allow that one call.
+5. `next.config.ts` now ships `data/events/**` and `quiet-percentiles.json` with lookup, brief, ask and story. Check the Vercel function size against the new events data.
+6. Percentiles were built from the current index. Re-run `npm run quiet-percentiles` if the index changes.
+7. One read-only `git status` ran by mistake at the end (nothing changed). Chrome only; no screen reader, Safari or Firefox.
+
+## Alex: check by keyboard and screen reader
+- Story tab (Bellevue): Tab through the cite chips under each sentence. Enter should open the event card and move focus to it; Close returns focus to the chip. The card should be read as "High Wind, Dec 14, 2006".
+- Timeline: the chart is announced as one image with a text label. "All 60 events as a list" is the keyboard route: each row opens the same card.
+- "What these events did": each line should read its text, then year buttons that open the event.
+- 72-hour tab for Bellevue: the "Few flood reports on your street" card, then "See a hard-hit street" should load Nashville on the Storm tab.
+- Phone width: the bottom tab bar scrolls sideways; Tab should bring each tab into view.
+
+# Round 7A2: "Your area's story" without the mountains (Nova A2)
+
+## What shipped
+- **`selectAreaEvents(lat, lon, stateCode, countyCode)`** in `lib/area-events.ts` (replaces `loadCountyEvents`; `county-areas.json` is no longer read). Returns `{areaCodes, zones, events}` or null when the state has no events data. Events: the county's own C rows (tier `county`), zone rows whose polygon contains the point (`your zone`), zone rows whose polygon edge is within 15 km (`nearby zone`, `NEARBY_ZONE_KM` in `lib/constants.ts`). Farther zones are never read. An `approx` (box-only) zone is `nearby` only if its box is within 15 km, never `your zone`. Each event carries `{tier, zoneName}` (new optional fields on `AreaEvent`). Candidates come from every zone in `zones.json` (box prefilter first), not from the county list, so a zone across a county line still counts. Geometry (ray casting with holes, point-to-edge distance on a local flat map, no deps) is in `lib/zone-geometry.ts`. Parsed `zones.json` and area files sit in LRUs.
+- **Used everywhere:** `lookupAreaEvents` (lookup and the story route share it), summary (`zones` list added), story ranking, brief sources. `LookupDeps.loadEvents` is now `(lat, lon, state, countyCode)`.
+- **Ranking:** `rankBySeverity` puts county and your-zone events before nearby ones, then severity. The 60-event `top` list keeps up to a fifth of its room for the top nearby events, so they show on the timeline, labelled. The story's 10 events come from that ranking (nearby only if the address has fewer than 10).
+- **AI:** the event sources say "YOUR zone" or "a NEARBY zone ... (name)"; a new prompt rule says to lead with own events and name the zone for nearby ones. The story cache key is now county plus the chosen zone codes (before, two addresses in one county shared a story).
+- **UI:** event card and list show "Nearby zone: Seattle and Vicinity" or "Your zone: ..." in words; a line under the big number says which zones are counted; the fine print is updated.
+
+## Real data (prod build, curl)
+```
+Bellevue   268 events (50 county, 78 your zone, 140 nearby), 1.1 s, 45 KB. Your zones WAZ007, WAZ505, WAZ556. Nearby WAZ508 3.8 km,
+           WAZ558 3.8 km, WAZ315 5.3 km, WAZ555 9.4 km. Dec 2006 windstorm (WAZ505) and Feb 2019 snow (WAZ556) in; 2020 smoke and June
+           2021 heat (WAZ558, nearby) in. No Rainier or avalanche events in the top 60 or in the AI story.
+Nashville  1,417 events (TNZ027 Davidson your zone, TNZ059 Williamson nearby 14.2 km). Denver 496 (COZ040 yours, COZ039 5.2 km, COZ036 13.5 km).
+Stories    Bellevue, Nashville, Denver: state ok, 0 or 1 sentence dropped; Bellevue's start with the 2002 and 2006 wind storms "in your zone".
+```
+## Checks
+```
+npm test         671 pass (43 files); new tests/area-select.test.ts (20): point in polygon (hole, island, L shape, edge), distance, 14.9/15.1 km,
+                 corner distance, approx zones, tier labels, Bellevue fixture, cache, story ranking and key. area-story.test.ts moved to the new layout.
+                 Mutation check: setting the radius to 16 km fails 4 of them.
+tsc --noEmit     clean      npm run build   passes
+axe-core         0 violations, Bellevue story with a nearby event open (1440). Shot: /tmp/nova/shots/a2-bellevue-story.png
+```
+
+## Flags
+1. **One avalanche still counts for Bellevue**: 2019-02-08, WAZ555 "East Puget Sound Lowlands", nearby 9.4 km. Its text is about 6 to 10 inches of snow (NWS mis-typed it). Not in the top 60 or the story; it shows in "Everything recorded, by type". WAZ555 is the post-2014 redraw of WAZ505, which contains the address, so the 15 km rule includes it. Dropping it would need a rule beyond the brief.
+2. **Retired zones overlap in time.** Your zone is WAZ007 (2001 to 2005), WAZ505 (2006 to 2014) and WAZ556 (2014 on); a nearby zone can be an old outline of the same place. Counts are rows filed under any of them. Boundary points near another state do not read the neighbouring state's zones (no cross-state lookup).
+3. **Denver zone names are long** ("North Douglas County Below 6000 Feet/Denver/West Adams and Arapahoe Counties/East Broomfield County"). Shown whole; it wraps.
+4. Cold start per state is one `zones.json` parse (Alaska 850 KB). Denver cold lookup was 3.2 s here, mostly other sources.
+
+## Note for Claudio: `lib/ready/events.ts` (not edited)
+`ReadyDeps.areaEvents` in `lib/ready/ready-route.ts` (default `async () => null`) takes `{lat, lon, state, county, zone}`. Wire it with:
+```ts
+import { selectAreaEvents, sinceYear } from "@/lib/area-events";
+areaEvents: async ({ lat, lon, state, county }) => {
+  if (!county) return null;                       // county code like TNC037 (from /points, or countyCodeOf(address))
+  const found = await selectAreaEvents(lat, lon, state, county);
+  return found ? sinceYear(found.events) : null;  // each event has tier and zoneName; ready's AreaEvent accepts them as is
+},
+```
+Ignore `zone` (today's id does not match old rows). If the plan ranks events, use `rankBySeverity` from `@/lib/event-severity` (your zone and county before nearby). Server only (reads files).
+
+## Alex: check by keyboard and screen reader
+- Bellevue story: the line under the big number should read "Your zone: ... Also counted, within 15 km: ...".
+- "All 60 events as a list": rows for nearby events end with "Nearby zone: <name>"; Enter opens the card, whose first line reads the same label; Close returns focus to the row.
+- Story sentences about nearby events (if any) should say the zone name, not "at your address".
