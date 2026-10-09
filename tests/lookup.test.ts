@@ -596,6 +596,14 @@ describe("shipped data (data/index, from the pipeline)", () => {
     expect([placed, ran]).toEqual([110, 364]);
   });
 
+  it("re-filed 21 of the 130 imprecise reports near the landing page's moments (Mayfield, Rolling Fork, Flushing, Fort Myers)", async () => {
+    const MOMENTS_RUN: Record<string, [ran: number, placed: number]> = { KY: [39, 3], MS: [6, 1], NY: [69, 13], FL: [16, 4] };
+    for (const [state, [ran, placed]] of Object.entries(MOMENTS_RUN)) {
+      const index = (await loadStateIndex(state))!;
+      expect([index.floods.filter((f) => f.detective !== null).length, index.floods.filter((f) => f.placed !== null).length], state).toEqual([ran, placed]);
+    }
+  });
+
   it("has no index for the territories (all 50 states and DC are indexed)", async () => {
     expect(await loadStateIndex("PR")).toBeNull();
     expect(await loadStateIndex("GU")).toBeNull();

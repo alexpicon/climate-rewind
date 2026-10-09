@@ -138,8 +138,9 @@ The payload also carries a few additive fields: `coverage` (`indexed`, `fixture`
 `severity` and `urgency`.
 
 **The indexes are the pipeline's real output** (built Oct 7 2026, six states, plus Washington added Oct 8, NCEI Storm Events and IEM LSRs 2015 to 2025,
-verbatim text and the NWS's own coordinates). The AI detective has since run on the sample areas (110 of 364 imprecise
-reports re-filed, the rest "I don't know"); `placed` and `detective` are null for reports it has not run on. These
+verbatim text and the NWS's own coordinates). The AI detective has since run around the sample addresses (110 of 364 imprecise
+reports re-filed, the rest "I don't know") and the landing page's moments (21 of 130, near Mayfield, Rolling Fork, Flushing and
+Fort Myers); `placed` and `detective` are null for reports it has not run on. These
 re-filings are not scored against the truth for the shipped areas. The scored result is the pre-registered test below.
 
 - Where the detective has not run for an area, step 2 says "The AI detective hasn't run for this area yet", shows the

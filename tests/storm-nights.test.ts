@@ -211,11 +211,11 @@ describe("detectiveHasRun: the check that flips the wording", () => {
     clearDataCaches();
     clearDetectiveStatusCache();
     expect(await detectiveHasRun()).toBe(true);
-    expect(await detectiveCounts()).toEqual({ ran: 364, placed: 110, states: 4 });
+    expect(await detectiveCounts()).toEqual({ ran: 494, placed: 131, states: 8 });
 
     // The same files drive the jobs list on the How it works page and the landing.
     const [detective, damage] = await loadAiJobs(await detectiveHasRun());
-    expect(detective.result).toBe("Real run on this site’s data: it re-filed 110 of 364 imprecise flood reports in the 4 sample areas and said “I don’t know” on the other 254. These re-filings are not scored against the truth yet.");
+    expect(detective.result).toBe("Real run on this site’s data: it re-filed 131 of 494 imprecise flood reports around the sample and featured addresses, in 8 states, and said “I don’t know” on the other 363. These re-filings are not scored against the truth yet.");
     expect(detective.detail).toContain("Real placements are in the data now.");
     expect(damage.status).toBe("pilot");
   });

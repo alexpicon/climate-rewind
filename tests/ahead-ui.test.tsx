@@ -261,10 +261,10 @@ describe("the AI jobs, with their numbers or 'pending'", () => {
 
   it("with the detective's real counts, the landing and How it works say what it did, and drop the 'not run yet' wording", () => {
     const jobs = describeJobs({ detectiveRan: true, damagePlaces: 68, briefEval: null, detectiveCounts: { ran: 364, placed: 110, states: 4 } });
-    expect(jobs[0].result).toContain("re-filed 110 of 364 imprecise flood reports in the 4 sample areas and said “I don’t know” on the other 254");
+    expect(jobs[0].result).toContain("re-filed 110 of 364 imprecise flood reports around the sample and featured addresses, in 4 states, and said “I don’t know” on the other 254");
     const how = renderToStaticMarkup(<HowStandalone onBack={noop} detectiveRan aiJobs={jobs} />);
     expect(how).toContain("An AI flood detective that refuses to guess.");
-    expect(how).toContain("re-filed 110 of 364 imprecise flood reports in the 4 sample areas");
+    expect(how).toContain("re-filed 110 of 364 imprecise flood reports around the sample and featured addresses, in 4 states");
     expect(how).toContain("extraction precision 0.98, recall 0.86; 45 of 72 damage places pinned");
     expect(how).not.toContain("It has not run on this data yet");
     expect(how).not.toContain("No real detective result is on this site yet");
