@@ -73,6 +73,7 @@ export function eventHarm(event: Pick<AreaEvent, "deaths" | "injuries" | "damage
 }
 
 export function money(amount: number): string {
+  if (amount >= 1_000_000_000) return `$${Math.round((amount / 1_000_000_000) * 10) / 10} billion`;
   if (amount >= 1_000_000) return `$${Math.round((amount / 1_000_000) * 10) / 10} million`;
   if (amount >= 1000) return `$${Math.round(amount / 1000).toLocaleString("en-US")} thousand`;
   return `$${Math.round(amount)}`;

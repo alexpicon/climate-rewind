@@ -318,3 +318,13 @@ describe("live alerts in force", () => {
     expect(activeAlerts([alert("2026-10-09T12:00:00Z")], at("2026-10-09T12:00:00Z"))).toEqual([]);
   });
 });
+
+describe("money on an event card", () => {
+  it("reads in billions, millions and thousands", async () => {
+    const { money } = await import("@/lib/ui/story-model");
+    expect(money(5_500_000_000)).toBe("$5.5 billion");
+    expect(money(7_000_000_000)).toBe("$7 billion");
+    expect(money(60_000_000)).toBe("$60 million");
+    expect(money(1_500)).toBe("$2 thousand");
+  });
+});
