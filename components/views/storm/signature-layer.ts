@@ -9,9 +9,9 @@ const VORTEX = "sig-vortex";
 const VORTEX_CORE = "sig-vortex-core";
 
 /**
- * The radar's own flags on the storm replay: an ice-blue disc for each hail detection (bigger for bigger estimated hail) and a red
- * ring for each tornado vortex signature, each appearing at its scan and fading over SIGNATURE_FADE_MS of storm time. With reduced
- * motion every flag of the night is shown faintly and still.
+ * The radar's own flags on the storm replay: a dark, bright-ringed pellet for each hail detection (bigger for bigger estimated
+ * hail) and a red ring for each tornado vortex signature, each appearing at its scan and fading over SIGNATURE_FADE_MS of storm
+ * time. With reduced motion every flag of the night is shown faintly and still.
  */
 export class SignatureLayer {
   private dead = false;
@@ -31,11 +31,12 @@ export class SignatureLayer {
       source: SOURCE,
       filter: ["==", ["get", "k"], "hail"],
       paint: {
-        "circle-color": "#9FE7FF",
+        // A dark pellet with a bright ring: unlike the solid teal flood reports, the white lightning and the red rotation rings.
+        "circle-color": "#0B111E",
         "circle-radius": ["interpolate", ["linear"], ["get", "s"], 0, 3, 1, 5, 2, 8, 4, 12] as never,
-        "circle-opacity": ["*", 0.75, ["get", "f"]] as never,
-        "circle-stroke-color": "#FFFFFF",
-        "circle-stroke-width": 1,
+        "circle-opacity": ["*", 0.85, ["get", "f"]] as never,
+        "circle-stroke-color": "#DDF6FF",
+        "circle-stroke-width": 2,
         "circle-stroke-opacity": ["get", "f"] as never,
       },
     });

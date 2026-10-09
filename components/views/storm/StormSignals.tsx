@@ -27,13 +27,15 @@ function LightningLine({ lightning, nowMs }: { lightning: LightningNight; nowMs:
             <path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="currentColor" />
           </svg>
         </span>
-        {total === 0 ? (
-          <>The {satellite} lightning mapper saw no lightning in this area that night.</>
-        ) : (
-          <>
-            <b>{soFar.toLocaleString("en-US")}</b> lightning flashes so far, of {total.toLocaleString("en-US")} that night, seen from space by {satellite}.
-          </>
-        )}
+        <span>
+          {total === 0 ? (
+            <>The {satellite} lightning mapper saw no lightning in this area that night.</>
+          ) : (
+            <>
+              <b>{soFar.toLocaleString("en-US")}</b> lightning flashes so far, of {total.toLocaleString("en-US")} that night, seen from space by {satellite}.
+            </>
+          )}
+        </span>
       </p>
       <More label="About the lightning">
         <p className="note">
@@ -56,20 +58,22 @@ function RadarFlagsLine({ state, nowMs }: { state: SignatureState; nowMs: number
     <div className="bolt-line sig-line">
       <p>
         <span className="sig-ic" aria-hidden="true" />
-        {none ? (
-          <>The radars flagged no hail or rotation in this area that night.</>
-        ) : (
-          <>
-            Radar flags so far: <b>{hail.toLocaleString("en-US")}</b> hail {hail === 1 ? "detection" : "detections"}
-            {hail > 0 ? <> (largest estimate {hailSize(largestIn)})</> : null}, <b>{vortex.toLocaleString("en-US")}</b> rotation {vortex === 1 ? "signature" : "signatures"}.
-          </>
-        )}
+        <span>
+          {none ? (
+            <>The radars flagged no hail or rotation in this area that night.</>
+          ) : (
+            <>
+              Radar flags so far: <b>{hail.toLocaleString("en-US")}</b> hail {hail === 1 ? "detection" : "detections"}
+              {hail > 0 ? <> (largest estimate {hailSize(largestIn)})</> : null}, <b>{vortex.toLocaleString("en-US")}</b> rotation {vortex === 1 ? "signature" : "signatures"}.
+            </>
+          )}
+        </span>
       </p>
       {signatures.notice ? <p className="note sig-note">{signatures.notice}</p> : null}
       <More label="About the radar flags">
         <p className="note">
           These are what the National Weather Service radars’ own computer algorithms flagged on each scan, from NOAA’s Severe Weather Data
-          Inventory. A blue disc is a hail detection, sized by the estimated largest hailstone. A red ring is a tornado vortex signature: strong
+          Inventory. A white-ringed dark pellet is a hail detection, sized by the estimated largest hailstone. A red ring is a tornado vortex signature: strong
           rotation seen by the radar. Neither is a confirmed report: hail may not reach the ground, and most rotation signatures never become
           tornadoes.
         </p>
