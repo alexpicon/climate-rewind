@@ -803,3 +803,61 @@ Ignore `zone` (today's id does not match old rows). If the plan ranks events, us
 - Bellevue story: the line under the big number should read "Your zone: ... Also counted, within 15 km: ...".
 - "All 60 events as a list": rows for nearby events end with "Nearby zone: <name>"; Enter opens the card, whose first line reads the same label; Close returns focus to the row.
 - Story sentences about nearby events (if any) should say the zone name, not "at your address".
+
+# Round 8: four tabs, maps that are never empty, a guided landing, real loading progress (Nova)
+
+## What shipped
+1. **Four top tabs.** Next 72 hours, Your history, What's changing, Get ready; "How it works" is a small link (icon + words from 1360 px, icon only below). Your history holds Story (default), Storm replay, Heat wave and Tornadoes behind a segmented control at the top of each panel (`components/panel/HistoryNav.tsx`: four real links, `aria-current`, no JS needed). The view ids did not change, so every old URL works (`?tab=storm`, `heat`, `tornado`, `story`; `?tab=history` opens the story). `lib/ui/tabs.ts` has `TOP_TABS`, `HISTORY_VIEWS`, `topTabOf`. Top bar: long names from 1360 px, short words 901 to 1359, four-tab bottom bar on a phone (no sideways scroll now).
+2. **Maps on every long-panel view** (`components/map/use-map-overlay.ts` + `MapCaption`: what is drawn, a key, the source, open on desktop and closed on a phone).
+   - *Next 72 hours:* the WPC rain/flood and SPC categorical outlook polygons, Day 1 to 3, with a kind and day toggle, plus the live alert outline. Source: the NWS ArcGIS services at `mapservices.weather.noaa.gov` (`lib/outlook-areas.ts`, `/api/outlook-areas`, 6 calls, about 25 KB, cached 10 min), not IEM: IEM's `spc_outlook.geojson` needs the issuance cycle and IEM has no WPC polygon feed. A Flood Watch has no polygon, so `/api/alert-zone` draws the NWS zone that holds the address and that the alert's own `affectedZones` names, labelled as the zone. The caption only says "near this address" for areas inside the framed region.
+   - *Story:* your zone's outline, the zones the cited events were filed for (dashed), and pins for events that have a place. "Show on map" under each sentence (or a click on its words) highlights its zone and pins and frames them; an open event does the same. `/api/area-map` serves zone outlines from `zones.json` and points from the state index.
+   - *What's changing:* a framed regional view with a dashed 25 km square and a label, "the scale a climate model works at" (a size cue, said so; not the models' own cell edges).
+   - *Get ready:* numbered pins for the plan items whose cited record has a place; pin button goes to its item, "Show on map" on an item goes to its pins.
+   - On a phone these four panels are now a bottom sheet (52% of the screen) so the map is seen above them.
+3. **Landing.** "For anyone renting, buying or living somewhere the climate is changing." under the headline; "Start here" with four big cards (name, one-line hook, place), then "Or your own address". Hooks checked against the data (below).
+4. **Real loading progress, and a faster first view.** `/api/lookup/geocode` then six parts in parallel (`/api/lookup/<records|area|live|fema|heat|trigger>`); the first view is drawn when `records` and `area` are in; alerts, FEMA, the 26-year heat history and the flood trigger fill in with skeletons (`data.pending`). The loading panel is a step list ticked by real responses (address found with the matched address, records, area events; outlooks and brief wait), and the brief card continues it (outlooks done, brief writing). The outlooks and the brief start the moment the address is matched. `lookupAddress` is unchanged, and a test checks the pieces put together equal it.
+5. **One zone name.** "Your zone: Bellevue and Vicinity": of the zones that hold the address, the latest `validTo` (`currentZone`). Earlier names and nearby zones are under "Other zone names counted". An event filed under an older number reads "Your zone, filed then as East Puget Sound Lowlands".
+6. **Bonus done.** `npm run precompute-ai` (run against a server started with `MEMORIA_SAMPLE_AI=off`) wrote real brief, story and plan for the four samples to `data/samples/ai/*.json` (all 12 parts `ok`, every sentence cites a source in the file). A sample click is now instant (brief 3 ms, story 1 ms, plan 30 ms). Labelled "Computed ahead of time" with the time. The brief goes stale (alerts, next 3 days), so it shows with its time and a live one is asked for at once and replaces it (or says it could not be had). The future tab already did this.
+
+## Hooks, checked against the data
+- Nashville: EF3 tornado, 0.65 km (2020-03-03). The Flood Watch is real today (issued Oct 8, to Oct 11) but a watch ends, so the card says "the alerts live right now" instead of naming it.
+- San Antonio: 27 flood reports within 5 km, 23 of them Flash Flood, nearest 0.36 km.
+- Asheville: Buncombe County, Sept 27 2024: Flash Flood with 15 deaths and Debris Flow with 13, narrative names Helene; 2 local flood reports on Sept 25 and 26. (The storm replay opens on the busiest night, Feb 2016; Helene is one pick away in the night picker.)
+- Bellevue: hottest feels-like 114.7 F on 2021-06-28, shown as 115.
+- I also replaced "the first look takes about 20 seconds" with "a few seconds" (measured below).
+
+## Cold timings (prod build, fresh server, 3 addresses not in the samples)
+```
+                                       before (one /api/lookup)   after: first view | all parts in
+1600 Pennsylvania Ave NW, Washington   3.17 s                     0.69 s            | 2.97 s
+200 E Colfax Ave, Denver               2.88 s                     0.21 s            | 1.45 s
+901 Bagby St, Houston, TX              2.82 s                     0.30 s            | 2.22 s
+```
+First view = address match + records + area events. The slowest part is the heat history (1.3 to 2.3 s), then the flood trigger. Census and Open-Meteo answers were warm on their side; a truly cold Open-Meteo is what made Denver 6.6 s in round 7, and that no longer holds the first view.
+
+## Checks
+```
+npm test         708 pass (47 files); new: staged-lookup (7), map-data (9), sample-ai (6), round8-ui (10), tab-labels rewritten (4), zone name (2)
+tsc --noEmit     clean      npm run build   passes (new routes: lookup/[part], outlook-areas, area-map, alert-zone)
+axe-core         0 violations: Nashville and Bellevue, 72 hours / story / what's changing / get ready at 1440; Nashville 72 hours and story, Bellevue ready at 390; landing
+                 (it caught the story pins: the year on a pin is now part of its name)
+shots            /tmp/nova/shots/f-*.png (landing, each top tab for Nashville and Bellevue at 1440 and 390, DC story and ready, loading panel at both sizes)
+keyboard (Chrome headless, scripted): Tab through the segmented control, Enter on Storm replay changes the view and marks it current, Show on map button, pin click opens the event card, plan pin click moves focus to its checkbox, Day and kind toggles
+```
+
+## Flags
+1. **Story pins cover flood reports and tornadoes only.** The NCEI area rows I keep carry no coordinates (wind, snow, heat and hail are filed for a zone or county), so only records whose id is in the state index get a point; a flood report filed at a city centre is not pinned. Bellevue shows 0 of 6 pins, Nashville 3 of 9, and the caption says so. Rebuilding `data/events` with BEGIN_LAT/LON would add hail and thunderstorm-wind pins; not done (size).
+2. **New runtime hosts:** `mapservices.weather.noaa.gov` (outlook polygons; HeatRisk already used it) and `api.weather.gov/zones` (alert zone outline). AGENTS.md's list is not edited.
+3. **`next.config.ts` tracing** now names `/api/lookup/[part]` and `/api/area-map`; without it Vercel would ship those routes with no data. `/api/story` also ships `data/samples/ai`.
+4. **The precomputed brief ages.** Re-run `npm run precompute-ai` before a demo if the stamp should be recent; the live replacement covers the rest. The AI files are about 100 KB.
+5. **Mobile:** the pre-roll card on Storm replay, Heat wave and Tornadoes covers their panel (and the segmented control) until "Watch" is pressed, as before.
+6. One read-only `git status` ran by mistake (nothing changed). Chrome only; no screen reader, Safari or Firefox. `requestLookup` (the one-call client) is kept for its tests but the app no longer uses it.
+
+## Alex: check by keyboard and screen reader
+- Top bar: Tab reaches four tabs and then "How it works"; each reads its full name ("Your history", "What's changing"); the current one is "current page". On a phone the bottom bar has four.
+- Your history: the segmented control is a navigation landmark "Your history: choose a view"; Enter on "Storm replay" changes the view; the current view reads "current page".
+- Landing: Tab lands on the four sample buttons first, then the address box. Enter on a sample opens it.
+- Loading (type a new address): a polite announcement for each finished step ("Finding your address: done. Now reading flood and tornado records").
+- Each map card: the title is a button (expanded or collapsed) that opens the key and the source. Next 72 hours: the "Rain and flooding / Storms" and "Day 1 / 2 / 3" buttons say pressed or not, and the sentence under them updates.
+- Story: under each sentence "Show on map" (pressed state); pins are buttons named with the event (Tab reaches them after the map controls); Enter on a pin opens the event card.
+- Get ready: "Show on map" on an item; a pin button moves focus to that item's checkbox.
