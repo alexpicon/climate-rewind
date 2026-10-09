@@ -26,6 +26,8 @@ interface Props {
   firstView: boolean;
   /** Arrived from a sample card: skip the intro card and start playing (reduced motion keeps the end state). */
   autoplay?: boolean;
+  /** With autoplay: start from this tornado (its NWS id) instead of the oldest. */
+  focusTornado?: string | null;
   onSeen: () => void;
   /** The optional 3D map view (terrain and buildings). */
   view3d: boolean;
@@ -37,7 +39,7 @@ export function TornadoView(props: Props) {
   return <TornadoPlayer {...props} />;
 }
 
-function TornadoPlayer({ data, reduced, firstView, autoplay = false, onSeen, view3d, onView3d }: Props) {
+function TornadoPlayer({ data, reduced, firstView, autoplay = false, focusTornado = null, onSeen, view3d, onView3d }: Props) {
   const api = useMapApi();
   const say = useAnnounce();
   const timeline = useMemo(() => buildTimeline(data.tornadoes), [data.tornadoes]);
@@ -58,7 +60,11 @@ function TornadoPlayer({ data, reduced, firstView, autoplay = false, onSeen, vie
   const ms = p * timeline.totalMs;
 
   useEffect(() => {
-    if (autoplay && !reduced) playback.play();
+    if (!autoplay || reduced) return;
+    const focus = focusTornado ? timeline.items.find((item) => item.tornado.id === focusTornado) : undefined;
+    // A beat before its track starts drawing, so its card and its line come in together.
+    if (focus) playback.setP(Math.max(0, focus.startMs - 400) / timeline.totalMs);
+    playback.play();
     // On arrival only: later visits to the tab start from the card or the controls.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

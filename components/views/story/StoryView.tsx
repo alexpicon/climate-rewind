@@ -27,7 +27,7 @@ type Selection = { id: string; from: "story" | "timeline" } | null;
  * "Your area's story": the AI's cited account of the area's biggest events, what they did, a timeline of the events since 2000 with
  * the National Weather Service's own words one click away, and, for a quiet address, the closer-to-home facts. Every address gets one.
  */
-export function StoryView({ data, openEvent = null }: { data: LookupPayload; openEvent?: string | null }) {
+export function StoryView({ data, openEvent = null, replayFrom = null }: { data: LookupPayload; openEvent?: string | null; replayFrom?: number | null }) {
   const area = data.areaEvents ?? null;
   // With area events the map view frames your zone itself (StoryMap); without them it just rests on the address.
   useRestOnAddress(data.address.lat, data.address.lon, 9, !area);
@@ -230,7 +230,7 @@ export function StoryView({ data, openEvent = null }: { data: LookupPayload; ope
           </section>
         ) : null}
 
-        {area.county ? <AreaReplayCard lat={data.address.lat} lon={data.address.lon} state={data.address.state} county={area.county} /> : null}
+        {area.county ? <AreaReplayCard lat={data.address.lat} lon={data.address.lon} state={data.address.state} county={area.county} playFrom={replayFrom} /> : null}
 
         <section className="timeline" aria-labelledby="tl-h">
           <h2 id="tl-h" className="sec-t">

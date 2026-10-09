@@ -103,6 +103,10 @@ export interface SampleAddress {
   event?: string;
   /** For the storm replay: the night the hook is about, when it is not the busiest one. */
   night?: string;
+  /** For the tornado replay: the tornado (its NWS id) to start playing from. */
+  tornado?: string;
+  /** For the story: play the area replay from Jan 1 of this year, on arrival. */
+  replayFrom?: number;
 }
 
 /**

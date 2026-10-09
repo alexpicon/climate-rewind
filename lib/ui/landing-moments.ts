@@ -19,6 +19,9 @@ export interface LandingMoment {
   tab: Tab;
   night?: string;
   event?: string;
+  /** The tornado the tornado replay starts from, and the year the area replay plays from. */
+  tornado?: string;
+  replayFrom?: number;
   /** What the button says. */
   action: string;
 }
@@ -33,7 +36,8 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     line: "Its track passed this close to 100 E Broadway, downtown. 24 deaths and 210 injuries were recorded in Graves County.",
     address: "100 E Broadway, Mayfield, KY",
     tab: "tornado",
-    action: "Watch the tornadoes",
+    tornado: "SE-994196",
+    action: "Play the tornado",
   },
   {
     id: "rolling-fork",
@@ -44,7 +48,8 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     line: "Its track passed this close to 100 Walnut St. 14 deaths and 150 injuries were recorded in Sharkey County.",
     address: "100 Walnut St, Rolling Fork, MS",
     tab: "tornado",
-    action: "Watch the tornadoes",
+    tornado: "SE-1102153",
+    action: "Play the tornado",
   },
   {
     id: "ida",
@@ -56,7 +61,7 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     address: "4105 Main St, Flushing, NY",
     tab: "storm",
     night: "2021-09-02T02:00",
-    action: "Replay the night",
+    action: "Play the night",
   },
   {
     id: "lahaina",
@@ -68,7 +73,8 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     address: "658 Front St, Lahaina, HI",
     tab: "story",
     event: "SE-1118193",
-    action: "Read the record",
+    replayFrom: 2019,
+    action: "Play the years",
   },
   {
     id: "ian",
@@ -80,11 +86,14 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     address: "2115 2nd St, Fort Myers, FL",
     tab: "story",
     event: "SE-1058654",
-    action: "Read the record",
+    replayFrom: 2018,
+    action: "Play the years",
   },
 ];
 
 /** The moment as a lookup the app opens like a sample card: the view, and the night or record it lands on. */
 export function momentLookup(moment: LandingMoment): SampleAddress {
-  return { label: moment.kicker.split(" · ")[1] ?? moment.kicker, detail: "", hook: moment.title, address: moment.address, tab: moment.tab, night: moment.night, event: moment.event };
+  // A story moment that plays the years lands on the replay, not on its record's card (both would pull the page to themselves).
+  const event = moment.replayFrom === undefined ? moment.event : undefined;
+  return { label: moment.kicker.split(" · ")[1] ?? moment.kicker, detail: "", hook: moment.title, address: moment.address, tab: moment.tab, night: moment.night, event, tornado: moment.tornado, replayFrom: moment.replayFrom };
 }

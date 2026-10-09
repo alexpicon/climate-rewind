@@ -15,6 +15,8 @@ interface Props {
   lon: number;
   state: string;
   county: string;
+  /** Arrived to watch: scroll the card into view and play from Jan 1 of this year (reduced motion: the finished picture). */
+  playFrom?: number | null;
 }
 
 /**
@@ -22,7 +24,7 @@ interface Props {
  * family's colour on its date, while the totals by family count up and the latest deadly or costly event is named. Ends on where it all
  * fell. A real button and a slider drive it; with reduced motion the button shows the finished picture instead of playing.
  */
-export function AreaReplayCard({ lat, lon, state, county }: Props) {
+export function AreaReplayCard({ lat, lon, state, county, playFrom = null }: Props) {
   const api = useMapApi();
   const reduced = useReducedMotion();
   const say = useAnnounce();
@@ -49,6 +51,26 @@ export function AreaReplayCard({ lat, lon, state, county }: Props) {
   const playback = usePlayback({ durationMs: AREA_REPLAY_MS, initialP: 0, onEnd: () => say("Replay finished. The map shows where events were filed most.") });
   const { p, playing } = playback;
   const frame = model ? replayFrame(model, p) : null;
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const arrived = useRef(false);
+  useEffect(() => {
+    if (!model || playFrom === null || arrived.current) return;
+    arrived.current = true;
+    setStarted(true);
+    // After the page has put focus on the panel's heading (which scrolls the panel to its top), bring the replay into view.
+    const timer = setTimeout(() => sectionRef.current?.scrollIntoView({ block: "center", behavior: reduced ? "auto" : "smooth" }), 350);
+    if (reduced) {
+      playback.setP(1);
+      return () => clearTimeout(timer);
+    }
+    const day = (Date.UTC(playFrom, 0, 1) - Date.UTC(model.since, 0, 1)) / 86_400_000;
+    playback.setP(Math.min(1, Math.max(0, day / model.spanDays)));
+    playback.play();
+    return () => clearTimeout(timer);
+    // Once, on arrival.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [model, playFrom]);
 
   useEffect(() => {
     if (!api || !replay || !started) return;
@@ -86,7 +108,7 @@ export function AreaReplayCard({ lat, lon, state, county }: Props) {
   const label = playing ? "Pause" : reduced ? "Show where events were filed" : started && p < 1 ? "Play" : `Play ${model.since} to ${lastYear}`;
 
   return (
-    <section className="area-replay" aria-labelledby="ar-h">
+    <section className="area-replay" aria-labelledby="ar-h" ref={sectionRef}>
       <h2 id="ar-h" className="sec-t">
         Every event since {model.since}, replayed
       </h2>

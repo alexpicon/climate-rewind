@@ -21,14 +21,26 @@ const GEOCODED: Record<string, [number, number]> = {
   ida: [40.758019717113, -73.829301134074],
 };
 
-describe("each moment opens a real view", () => {
-  it("as a lookup on its own address, view, night or record", () => {
+describe("each moment opens a replay, playing", () => {
+  it("as a lookup on its own address and view, with the night, tornado or year it plays from", () => {
     for (const m of LANDING_MOMENTS) {
       const lookup = momentLookup(m);
       expect(VISIBLE_TABS).toContain(lookup.tab);
       expect(lookup.address).toBe(m.address);
       expect(lookup.night).toBe(m.night);
-      expect(lookup.event).toBe(m.event);
+      expect(lookup.tornado).toBe(m.tornado);
+      expect(lookup.replayFrom).toBe(m.replayFrom);
+      expect(m.action).toMatch(/^Play /);
+    }
+  });
+
+  it("tornado moments start at their tornado; story moments play the years instead of opening a card", () => {
+    expect(momentLookup(moment("mayfield")).tornado).toBe("SE-994196");
+    expect(momentLookup(moment("rolling-fork")).tornado).toBe("SE-1102153");
+    for (const id of ["lahaina", "ian"]) {
+      const lookup = momentLookup(moment(id));
+      expect(lookup.replayFrom).toBeLessThan(Number(moment(id).kicker.match(/\d{4}/)![0]));
+      expect(lookup.event).toBeUndefined();
     }
   });
 });
