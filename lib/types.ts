@@ -282,6 +282,8 @@ export interface LookupPayload {
   areaEvents?: AreaEventsSummary | null;
   /** Additive: with no flood report within 5 km, the nearest placeable one up to 50 km away (null when there is none that close). */
   nearestFlood?: NearbyFlood | null;
+  /** Additive: with no tornado within 10 km, the closest few up to 50 km away, nearest first (empty when there is none that close). */
+  nearestTornadoes?: NearbyTornado[];
   /** Additive: the wettest, windiest and hottest days on record at the address. */
   extremes?: AddressExtremes | null;
   /** Additive: how the address compares with the sampled points of its state. */

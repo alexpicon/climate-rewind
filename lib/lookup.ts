@@ -261,6 +261,19 @@ export function findNearbyTornadoes(
   return nearby.sort((a, b) => Date.parse(a.start) - Date.parse(b.start));
 }
 
+/** With no tornado within the radius, the closest few beyond it (up to 50 km), nearest first, so the tab can show what did come close. */
+export function findNearestTornadoes(tornadoes: TornadoRow[], origin: Coord, count: number = NEAREST_TORNADO_COUNT, maxKm: number = NEAREST_TORNADO_MAX_KM): NearbyTornado[] {
+  const near: NearbyTornado[] = [];
+  for (const tornado of tornadoes) {
+    const hit = segmentDistance(origin, tornado.begin, tornado.end);
+    if (hit.km > TORNADO_RADIUS_KM && hit.km <= maxKm) near.push({ ...tornado, minDistanceKm: round(hit.km, 2), closest: hit.nearest });
+  }
+  return near.sort((a, b) => a.minDistanceKm - b.minDistanceKm).slice(0, count);
+}
+
+const NEAREST_TORNADO_COUNT = 3;
+const NEAREST_TORNADO_MAX_KM = 50;
+
 // ---------------------------------------------------------------- heat
 
 const DAY_MS = 24 * HOUR;
@@ -458,6 +471,7 @@ export async function lookupAddress(input: string, deps: LookupDeps = defaultDep
     notices,
     areaEvents: area.value,
     nearestFlood,
+    nearestTornadoes: index && tornadoes.length === 0 ? findNearestTornadoes(index.tornadoes, origin) : [],
     extremes,
     quiet,
   };
@@ -501,6 +515,7 @@ export async function lookupPart(part: LookupPart, address: LookupAddress, deps:
         damage: index ? damagePinsFor(damageRows, index.tornadoes, tornadoes) : [],
         coverage: coverageOf(index),
         nearestFlood: index && floodCount === 0 ? findNearestFlood(index.floods, origin) : null,
+        nearestTornadoes: index && tornadoes.length === 0 ? findNearestTornadoes(index.tornadoes, origin) : [],
         quiet: index ? placeInQuiet(quietFile, address.state, floodCount) : null,
         notices,
       };

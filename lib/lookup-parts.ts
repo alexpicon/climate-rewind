@@ -24,6 +24,7 @@ export function emptyPayload(address: LookupAddress, pending: LookupPart[]): Loo
     notices: {},
     areaEvents: null,
     nearestFlood: null,
+    nearestTornadoes: [],
     extremes: null,
     quiet: null,
     pending,

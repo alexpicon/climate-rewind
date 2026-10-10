@@ -1003,3 +1003,7 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .place-choices button{min-height:44px;padding:8px 14px;border-radius:999px;border:1px solid var(--line-2);background:rgba(255,255,255,.06);color:inherit;font:inherit;font-size:15px;cursor:pointer}
 .place-choices button:hover{border-color:var(--accent)}
 .place-choices button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Tornado tab with nothing within 10 km: the closest tracks beyond it. */
+.tor-near{list-style:none;margin:6px 0 10px;padding:0;display:grid;gap:8px;font-size:16px}
+.tor-near .ef{display:inline-block;min-width:38px;padding:2px 6px;border-radius:6px;color:#14100a;font-weight:700;font-size:13px;text-align:center;margin-right:6px}

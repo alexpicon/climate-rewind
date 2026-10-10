@@ -727,3 +727,15 @@ describe("one heat source per address", () => {
     expect({ ...ready.input.heat, regionalSlug: null }).toEqual({ ...payload.heat, regionalSlug: null });
   });
 });
+
+describe("findNearestTornadoes", () => {
+  it("lists the closest tracks beyond 10 km and within 50 km, nearest first, at most three", async () => {
+    const { findNearestTornadoes } = await import("@/lib/lookup");
+    const row = (id: string, lat: number) => ({ id, start: "2020-01-01T00:00:00-05:00", ef: "EF1", begin: [lat, -81.7] as [number, number], end: [lat, -81.69] as [number, number], widthYd: 50, lengthMi: 0.5, deaths: 0, injuries: 0, narrative: "" });
+    // 0.1 degree of latitude is about 11 km.
+    const rows = [row("in", 26.75), row("a", 26.82), row("b", 26.85), row("c", 26.9), row("d", 26.95), row("far", 27.5)];
+    const near = findNearestTornadoes(rows as never, [26.72, -81.7]);
+    expect(near.map((t) => t.id)).toEqual(["a", "b", "c"]);
+    expect(near[0].minDistanceKm).toBeGreaterThan(10);
+  });
+});
