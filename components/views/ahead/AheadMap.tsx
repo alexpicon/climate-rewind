@@ -89,8 +89,9 @@ export function AheadMap({ data, outlook }: { data: LookupPayload; outlook: Outl
   }, [areas, kind, day, alerts, zones]);
 
   useGeoOverlay("ahead-areas", shown, LAYERS);
-  const box = useMemo(() => boxAround(lat, lon, 2.3, 3.4), [lat, lon]);
-  useFitOnArea(lat, lon, 6, box, 7);
+  // About 130 km either way: the address's own region, not half the country.
+  const box = useMemo(() => boxAround(lat, lon, 1.2, 1.6), [lat, lon]);
+  useFitOnArea(lat, lon, 7, box, 8);
 
   // What the card says is what the framed region shows: an area elsewhere in the country is not "near you".
   const frame = [box[0][0], box[0][1], box[1][0], box[1][1]];

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { MapCaption } from "@/components/map/MapCaption";
 import { useMapApi } from "@/components/map/map-context";
-import { boxAround, useFitOnArea, useGeoOverlay, useMapPins, type Features, type OverlayLayer, type Pin } from "@/components/map/use-map-overlay";
+import { boxAround, growBox, useFitOnArea, useGeoOverlay, useMapPins, type Features, type OverlayLayer, type Pin } from "@/components/map/use-map-overlay";
 import type { AreaMap } from "@/lib/area-map";
 import type { ReadyItem } from "@/lib/ready/types";
 import { cameraFor } from "@/lib/ui/camera";
@@ -102,14 +102,17 @@ export function ReadyMap({
 
   const bounds = useMemo<[[number, number], [number, number]]>(() => {
     if (points.length === 0) return boxAround(lat, lon, 0.12, 0.16);
-    const lats = [lat, ...points.map((p) => p.lat)];
-    const lons = [lon, ...points.map((p) => p.lon)];
-    const pad = 0.02;
+    // The address, the pins and the whole of each tornado track, with room at the edges so nothing sits against the frame.
+    const b: [number, number, number, number] = [lon, lat, lon, lat];
+    for (const p of points) growBox([p.lon, p.lat], b);
+    for (const f of features.features) growBox(f.geometry.coordinates, b);
+    const [w, s, e, n] = b;
+    const [px, py] = [Math.max(0.02, (e - w) * 0.15), Math.max(0.02, (n - s) * 0.15)];
     return [
-      [Math.min(...lons) - pad, Math.min(...lats) - pad],
-      [Math.max(...lons) + pad, Math.max(...lats) + pad],
+      [w - px, s - py],
+      [e + px, n + py],
     ];
-  }, [points, lat, lon]);
+  }, [points, lat, lon, features]);
   useFitOnArea(lat, lon, 10, bounds, 12);
 
   // An item picked in the list: frame its pins and the address.
@@ -142,6 +145,11 @@ export function ReadyMap({
           <li style={{ "--c": "#FFB45A" } as React.CSSProperties}>
             <i className="dot" /> Plan item number: its flood report or tornado
           </li>
+          {features.features.length ? (
+            <li style={{ "--c": "#E59BFF" } as React.CSSProperties}>
+              <i className="line" /> A tornado’s track, from where it touched down to where it lifted
+            </li>
+          ) : null}
         </ul>
       }
       source="Pins: where the National Weather Service filed a flood report or a tornado track (NCEI Storm Events and Local Storm Reports); a report filed at a city centre is not pinned. Wind, snow, heat and hail records carry no coordinates, so those items have no pin."

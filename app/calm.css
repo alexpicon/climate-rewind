@@ -609,6 +609,7 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .mapcap-keys i{flex:none;width:14px;height:14px;border-radius:4px;background:var(--c);border:1.5px solid var(--c);opacity:.95}
 .mapcap-keys i.ring{background:transparent;border-style:dashed}
 .mapcap-keys i.dot{border-radius:50%}
+.mapcap-keys i.line{height:4px;width:16px;border-radius:2px;border:0}
 .mapcap .seg{margin:4px 0 8px;padding:2px}
 .mapcap .seg button{flex:1 1 0;min-height:36px;padding:0 8px;border:0;border-radius:999px;background:none;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
 .mapcap .seg button:hover{color:var(--ink);background:rgba(255,255,255,.08)}
