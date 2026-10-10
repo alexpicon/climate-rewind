@@ -6,6 +6,7 @@
  * Like the heat history, the answer is past weather: a 0.05 degree cell is reused for six hours. Sample addresses can read a snapshot.
  */
 import { describeFailure, fetchJson, type FetchLike } from "./http";
+import { withOpenMeteoKey } from "./open-meteo";
 import { gridKey, LruCache } from "./lru";
 import { powerUrl, rainFromPower } from "./nasa-power";
 import type { Sourced } from "./sources";
@@ -27,7 +28,7 @@ interface ArchiveReply {
 }
 
 export function extremesArchiveUrl(lat: number, lon: number, lastYear: number): string {
-  return (
+  return withOpenMeteoKey(
     "https://archive-api.open-meteo.com/v1/archive" +
     `?latitude=${lat.toFixed(2)}&longitude=${lon.toFixed(2)}&start_date=${FIRST_YEAR}-01-01&end_date=${lastYear}-12-31` +
     "&daily=precipitation_sum,wind_gusts_10m_max&precipitation_unit=inch&wind_speed_unit=mph&timezone=auto"

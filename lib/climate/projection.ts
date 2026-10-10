@@ -5,6 +5,7 @@
  * These are climate-model projections, not a forecast. The models run on climate-model grids of about 20–50 km, downscaled by Open-Meteo to about 10 km; they disagree, and so the page shows the range.
  */
 import type { DailyObservation, ModelResult, ProjectionBlock, Spread } from "./types";
+import { withOpenMeteoKey } from "../open-meteo";
 
 export const CLIMATE_API = "https://climate-api.open-meteo.com/v1/climate";
 export const ARCHIVE_API = "https://archive-api.open-meteo.com/v1/archive";
@@ -55,7 +56,7 @@ export interface ClimateReply {
 }
 
 export function climateUrl(lat: number, lon: number, startYear: number, endYear: number, models: readonly string[] = CLIMATE_MODELS): string {
-  return (
+  return withOpenMeteoKey(
     `${CLIMATE_API}?latitude=${lat.toFixed(2)}&longitude=${lon.toFixed(2)}` +
     `&start_date=${startYear}-01-01&end_date=${endYear}-12-31` +
     `&models=${models.join(",")}&daily=temperature_2m_max&temperature_unit=fahrenheit`
@@ -63,7 +64,7 @@ export function climateUrl(lat: number, lon: number, startYear: number, endYear:
 }
 
 export function archiveUrl(lat: number, lon: number, firstYear: number, lastYear: number): string {
-  return (
+  return withOpenMeteoKey(
     `${ARCHIVE_API}?latitude=${lat.toFixed(2)}&longitude=${lon.toFixed(2)}` +
     `&start_date=${firstYear}-01-01&end_date=${lastYear}-12-31` +
     "&daily=apparent_temperature_max,temperature_2m_max,precipitation_sum&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=auto"

@@ -16,6 +16,7 @@
  * Every outside call has the usual 8 s timeout and degrades to a plain-language notice. Tests pass a fake fetch.
  */
 import { BUSY_NOTICE, describeFailure, fetchJson, USER_AGENT, type FetchLike } from "./http";
+import { withOpenMeteoKey } from "./open-meteo";
 import { gridKey, LruCache } from "./lru";
 import { fetchPowerRain } from "./nasa-power";
 import { fetchGaugeRain, type GaugeRain } from "./rain-gauge";
@@ -140,7 +141,7 @@ export async function fetchRainForDates(
 
 /** The archive request for a point and a range of dates: one daily variable, inches, ERA5, local dates. */
 export function rainArchiveUrl(lat: number, lon: number, startDate: string, endDate: string, places = 4): string {
-  return (
+  return withOpenMeteoKey(
     "https://archive-api.open-meteo.com/v1/archive" +
     `?latitude=${lat.toFixed(places)}&longitude=${lon.toFixed(places)}&start_date=${startDate}&end_date=${endDate}` +
     "&daily=precipitation_sum&precipitation_unit=inch&models=era5&timezone=auto"

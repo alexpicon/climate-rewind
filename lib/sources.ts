@@ -4,6 +4,7 @@
  * 8 s timeout, and degrades to `null` plus a plain-language notice.
  */
 import { BUSY_NOTICE, describeFailure, fetchJson, USER_AGENT, type FetchLike } from "./http";
+import { withOpenMeteoKey } from "./open-meteo";
 import { gridKey, LruCache } from "./lru";
 import { fetchPowerHeat } from "./nasa-power";
 import type { AlertGeometry, FemaZone, HeatDay, HeatSource, LiveAlert, LiveAlerts, LookupAddress } from "./types";
@@ -195,7 +196,7 @@ export function clearHeatCache(): void {
 
 /** The archive request for a point: daily feels-like and air temperature highs, first year through the end of last year, Fahrenheit, local dates. */
 export function heatArchiveUrl(lat: number, lon: number, lastYear: number, places = 4): string {
-  return (
+  return withOpenMeteoKey(
     "https://archive-api.open-meteo.com/v1/archive" +
     `?latitude=${lat.toFixed(places)}&longitude=${lon.toFixed(places)}` +
     `&start_date=${HEAT_FIRST_YEAR}-01-01&end_date=${lastYear}-12-31` +
