@@ -124,7 +124,10 @@ export function useFitOnArea(lat: number, lon: number, zoom: number, bounds: Lng
     if (!api) return;
     const { map } = api;
     unlockCamera(map);
-    syncPadding(map);
+    // A new view owns the camera: stop what the last view left moving (its intro card easing its shift back out) and put the map's
+    // padding back on the real UI at once, or the half-removed shift would push this view off centre and zoom it out.
+    map.stop();
+    syncPadding(map, true);
     const fit = bounds ? cameraFor(map, bounds, { maxZoom }) : null;
     const target = fit ? { center: fit.center, zoom: fit.zoom } : { center: [lon, lat] as [number, number], zoom };
     if (isPlaced(map)) {

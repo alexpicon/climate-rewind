@@ -12,7 +12,10 @@ export function useRestOnAddress(lat: number, lon: number, zoom = 9.5, enabled =
     if (!api || !enabled) return;
     const { map } = api;
     unlockCamera(map);
-    syncPadding(map);
+    // A new view owns the camera: stop what the last view left moving (its intro card easing its shift back out) and put the map's
+    // padding back on the real UI at once, or the half-removed shift would push this view off centre and zoom it out.
+    map.stop();
+    syncPadding(map, true);
     const target = { center: [lon, lat] as [number, number], zoom };
     if (isPlaced(map)) {
       map.easeTo({ ...target, duration: 1500, essential: false });
