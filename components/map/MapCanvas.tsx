@@ -23,6 +23,7 @@ interface Props {
 export function MapCanvas({ address, reducedMotion, children }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const creditsRef = useRef<HTMLDivElement>(null);
+  const scaleRef = useRef<HTMLDivElement>(null);
   const [api, setApi] = useState<MapApi | null>(null);
   const [tileTrouble, setTileTrouble] = useState(false);
   // No WebGL (switched off, blocklisted GPU, some remote desktops): MapLibre cannot start. The panels hold the same information.
@@ -37,6 +38,7 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
   useEffect(() => {
     let map: MapLibreMap | null = null;
     let attribution: { onRemove(): void } | null = null;
+    const scales: Array<{ onRemove(): void }> = [];
     let cancelled = false;
 
     (async () => {
@@ -76,6 +78,13 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
       };
       collapseOnPhone();
       map.addControl(new gl.NavigationControl({ showCompass: false }), "top-right");
+      // The scale bars (metric and imperial) live in #map-scale, outside #map, for the same reason: the panel would cover a corner control.
+      for (const unit of ["metric", "imperial"] as const) {
+        const scale = new gl.ScaleControl({ maxWidth: 90, unit });
+        scales.push(scale);
+        const scaleEl = scale.onAdd(map);
+        scaleRef.current?.appendChild(scaleEl);
+      }
       map.touchZoomRotate.disableRotation();
 
       // Markers only follow "move" events; a clamped camera moves without one. Re-sync them.
@@ -119,6 +128,13 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
         // the control was never mounted
       }
       attribution = null;
+      for (const scale of scales) {
+        try {
+          scale.onRemove();
+        } catch {
+          // the control was never mounted
+        }
+      }
       addressMarker.current?.remove();
       addressMarker.current = null;
       map?.remove();
@@ -159,6 +175,7 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
         aria-label={`Interactive weather map${matched ? ` around ${matched}` : ""}. The panel and the text versions hold the same information.`}
       />
       <div id="vignette" aria-hidden="true" />
+      <div id="map-scale" role="img" aria-label="Map scale in kilometres and miles" ref={scaleRef} />
       <div id="map-credits" className="maplibregl-ctrl-bottom-right" role="region" aria-label="Map credits" ref={creditsRef} />
       {unavailable ? (
         <p id="map-off" className="glass" role="status">

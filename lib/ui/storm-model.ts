@@ -209,3 +209,16 @@ export function currentCorrection(p: number, count: number): CurrentCorrection |
 
 /** How far a pin has travelled, 0 to 1, given its slot progress. Pins move during the last half of their slot. */
 export const moveProgress = (u: number) => Math.min(1, Math.max(0, (u - 0.52) / 0.4));
+
+/** Width of the replay map, east to west through its middle, to the nearest 10 km. */
+export function mapWidthKm(bounds: [number, number, number, number]): number {
+  const [west, south, east, north] = bounds;
+  const mid = (south + north) / 2;
+  return Math.max(10, Math.round(haversineKm([mid, west], [mid, east]) / 10) * 10);
+}
+
+/** The one wording for the two report counts, used by the panel, the night picker's hint and the text version. */
+export function replayCountsText(near: number, total: number, bounds: [number, number, number, number]): string {
+  const noun = (n: number) => (n === 1 ? "flood report" : "flood reports");
+  return `${near} ${noun(near)} within 15 km of your address · ${total} across this map (about ${mapWidthKm(bounds)} km wide)`;
+}

@@ -69,7 +69,7 @@ export function NightPicker({ nights, current, onNight }: Props) {
         </button>
       </div>
       <p className="nights-hint" id="night-hint">
-        The busiest night is shown first. Counts are flood reports within 15 km of this address.
+        Nights are listed busiest first. Each count is flood reports within 15 km of your address, not the whole map.
       </p>
       {error ? (
         <p className="nights-error" role="alert">

@@ -30,7 +30,7 @@ export function ReportCard({ model, correction, progress, origin }: Props) {
   const state =
     progress.phase === "done"
       ? dest
-        ? `Re-filed: ${placement.label} · ${correction.km?.toFixed(1)} km ${compassWord(origin, dest)}`
+        ? `Re-filed: ${placement.label} · ${correction.km?.toFixed(2)} km ${compassWord(origin, dest)}`
         : placement.named.length > 0 && placement.vague.length === 0
           ? "Not placed: no single spot"
           : "Not placed: too vague"
@@ -44,7 +44,7 @@ export function ReportCard({ model, correction, progress, origin }: Props) {
 
   const say = placement.place.join(" and ");
   const unplaced = unplacedWords(placement);
-  const cityKm = model.cityPointKm !== null ? `, ${model.cityPointKm.toFixed(1)} km from your address` : "";
+  const cityKm = model.cityPointKm !== null ? `, ${model.cityPointKm.toFixed(2)} km from your address` : "";
 
   return (
     <section id="repcard" className="glass swap" key={number} aria-label="The written report being re-filed" data-ph={progress.phase}>

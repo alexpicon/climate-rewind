@@ -9,7 +9,7 @@ import { compassWord } from "@/lib/geo";
 import type { LookupPayload } from "@/lib/types";
 import { NightPicker } from "./NightPicker";
 import type { ReplayResult } from "@/lib/ui/lookup-client";
-import { currentCorrection, reportsSoFar, tallyCorrections, TIER_LABEL, type ReplayReport, type StormModel } from "@/lib/ui/storm-model";
+import { currentCorrection, replayCountsText, reportsSoFar, tallyCorrections, TIER_LABEL, type ReplayReport, type StormModel } from "@/lib/ui/storm-model";
 import { rainNoteText, type RainLink } from "@/lib/ui/rain-link";
 import type { LightningNight } from "@/lib/ui/lightning";
 import { StormSignals } from "./StormSignals";
@@ -56,7 +56,7 @@ export function StormPanel({ data, model, stage, p, onStage, replayDate, zone, o
   const sentence =
     stage === 1
       ? atEnd
-        ? "flood reports that night. Each dot is one report, shown when it was filed."
+        ? "flood reports across this map that night. Each dot is one report, shown when it was filed."
         : `flood reports filed so far, of ${total}.`
       : notRun
         ? data.floods.reports.length === 0
@@ -68,6 +68,7 @@ export function StormPanel({ data, model, stage, p, onStage, replayDate, zone, o
   const bigSr = stage === 2 && !notRun ? `${big} of ${count} ` : `${big} `;
 
   const nearNight = replay.reportIds.length;
+  const countsText = replayCountsText(nearNight, total, model.bounds);
   const latest = model.reports.filter((r) => r.ms <= now).slice(-3).reverse();
   const { tierCounts, reports: nearby } = data.floods;
 
@@ -101,6 +102,8 @@ export function StormPanel({ data, model, stage, p, onStage, replayDate, zone, o
           {stage === 2 && tally.sample > 0 && atEnd ? <> <span className="tag sample">{tally.sample} Sample</span></> : null}
         </p>
 
+        {stage === 1 ? <p className="note storm-counts">{countsText}</p> : null}
+
         {stage === 1 ? <StormSignals lightning={lightning} signatures={signatures} nowMs={model.startMs + p * (model.endMs - model.startMs)} /> : null}
 
         {data.pending?.includes("trigger") ? <Pending label="Reading the rain on past flood days…" /> : <TriggerCard trigger={data.floodTrigger} />}
@@ -109,7 +112,7 @@ export function StormPanel({ data, model, stage, p, onStage, replayDate, zone, o
           {stage === 1 ? (
             <>
               <p className="note">
-                {nearNight} of the {total} reports were within 15 km of your address; the rest are around the region. Shows NWS reports we could place near you, not every flood.
+                {countsText}. The reports beyond 15 km are the rest of the region that night. Shows NWS reports we could place near you, not every flood.
               </p>
               <h2 className="h3">Latest reports</h2>
               {latest.length === 0 ? (
@@ -152,7 +155,7 @@ export function StormPanel({ data, model, stage, p, onStage, replayDate, zone, o
                 <div className="tal u"><b>{tally.unknown}</b><span>“I don’t know”</span></div>
               </div>
               <p className="note">
-                The NWS filed all {count} of these reports at one city point{model.cityPointKm !== null ? `, ${model.cityPointKm.toFixed(1)} km from your address` : ""}. We don’t guess when the words are vague. Placements tagged <span className="tag sample">Sample</span> are illustrative until the detective runs on this report. The real NWS text and times are not. Only <span className="tag real">Verified</span> placements come from a real street address match.
+                The NWS filed all {count} of these reports at one city point{model.cityPointKm !== null ? `, ${model.cityPointKm.toFixed(2)} km from your address` : ""}. We don’t guess when the words are vague. Placements tagged <span className="tag sample">Sample</span> are illustrative until the detective runs on this report. The real NWS text and times are not. Only <span className="tag real">Verified</span> placements come from a real street address match.
               </p>
               <h2 className="h3">What the detective found</h2>
               <ol className="dlist">
@@ -169,7 +172,7 @@ export function StormPanel({ data, model, stage, p, onStage, replayDate, zone, o
                         </b>
                         <q className="dq">{readableCase(c.report.row.quote, names)}</q>
                         <span className="s">
-                          {c.placement.dest ? `${c.km?.toFixed(1)} km ${compassWord(origin, c.placement.dest)} of you. ` : ""}
+                          {c.placement.dest ? `${c.km?.toFixed(2)} km ${compassWord(origin, c.placement.dest)} of you. ` : ""}
                           {c.placement.why}
                         </span>
                       </div>
@@ -188,7 +191,7 @@ export function StormPanel({ data, model, stage, p, onStage, replayDate, zone, o
           <TextVersion>
             <p>
               <b>Replay.</b> On {replayDate}, between {formatAtOffset(model.startMs, model.offsetMin, { hour: "numeric", minute: "2-digit" })} and{" "}
-              {formatAtOffset(model.endMs, model.offsetMin, { hour: "numeric", minute: "2-digit" })} ({zone}), the National Weather Service filed {total} flood and flash flood reports in the region around {data.address.matched}; {nearNight} were within 15 km of the address. This is a time-lapse of real NWS radar, 1 second of animation for {replay.frameMinutes} minutes of storm. Each dot is a flood report shown at the minute it was filed. The dots do not move; the rain does.
+              {formatAtOffset(model.endMs, model.offsetMin, { hour: "numeric", minute: "2-digit" })} ({zone}), the National Weather Service filed flood and flash flood reports in the region around {data.address.matched}. {countsText}. This is a time-lapse of real NWS radar, 1 second of animation for {replay.frameMinutes} minutes of storm. Each dot is a flood report shown at the minute it was filed. The dots do not move; the rain does.
             </p>
             {!model.canCorrect ? (
               <>
@@ -209,7 +212,7 @@ export function StormPanel({ data, model, stage, p, onStage, replayDate, zone, o
                       {data.floods.reports.map((r) => (
                         <tr key={r.id}>
                           <th scope="row">{niceDate(r.start)}</th>
-                          <td>{r.distanceKm.toFixed(1)} km</td>
+                          <td>{r.distanceKm.toFixed(2)} km</td>
                           <td>{TIER_LABEL[r.tier]}</td>
                           <td>{readableCase(excerpt(r.quote, 200).text, [r.city, r.county])}</td>
                         </tr>
@@ -221,8 +224,8 @@ export function StormPanel({ data, model, stage, p, onStage, replayDate, zone, o
             ) : null}
             {count > 0 ? (
               <p>
-                <b>Flood detective.</b> Each pin is a written flood report, not a storm. {count} of the reports were filed by the NWS at one city point{model.cityPointKm !== null ? `, ${model.cityPointKm.toFixed(1)} km from the address` : ""}. For each one the screen shows its own words with the place words underlined and moves the pin to the place they name.{" "}
-                {model.corrections.map((c) => `Report ${c.number}: ${c.placement.dest ? `${c.placement.label}, ${c.km?.toFixed(1)} km ${compassWord(origin, c.placement.dest)}${c.placement.status === "sample" ? " (sample placement)" : ""}` : "too vague, not placed"}.`).join(" ")}
+                <b>Flood detective.</b> Each pin is a written flood report, not a storm. {count} of the reports were filed by the NWS at one city point{model.cityPointKm !== null ? `, ${model.cityPointKm.toFixed(2)} km from the address` : ""}. For each one the screen shows its own words with the place words underlined and moves the pin to the place they name.{" "}
+                {model.corrections.map((c) => `Report ${c.number}: ${c.placement.dest ? `${c.placement.label}, ${c.km?.toFixed(2)} km ${compassWord(origin, c.placement.dest)}${c.placement.status === "sample" ? " (sample placement)" : ""}` : "too vague, not placed"}.`).join(" ")}
               </p>
             ) : null}
           </TextVersion>
@@ -262,7 +265,7 @@ function NotRunDetails({ data, model }: { data: LookupPayload; model: StormModel
               <li key={r.id} className={r.tier === "citywide" ? "ph" : undefined}>
                 <div className="meta">
                   <time>{niceDate(r.start)}</time>
-                  <span>{r.distanceKm.toFixed(1)} km away</span>
+                  <span>{r.distanceKm.toFixed(2)} km away</span>
                   <span className="tiertag">{TIER_LABEL[r.tier]}</span>
                 </div>
                 <q>{readableCase(excerpt(r.quote, 170).text, [r.city, r.county])}</q>

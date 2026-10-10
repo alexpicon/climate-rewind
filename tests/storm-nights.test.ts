@@ -215,7 +215,7 @@ describe("detectiveHasRun: the check that flips the wording", () => {
 
     // The same files drive the jobs list on the How it works page and the landing.
     const [detective, damage] = await loadAiJobs(await detectiveHasRun());
-    expect(detective.result).toBe("Real run on this site’s data: it re-filed 131 of 494 imprecise flood reports around the sample and featured addresses, in 8 states, and said “I don’t know” on the other 363. These re-filings are not scored against the truth yet.");
+    expect(detective.result).toBe("Real run on this site’s data: it re-filed 131 of 494 imprecise flood reports around the sample and featured addresses, in 8 states, and said “I don’t know” on the other 363. These live re-filings are not scored one by one; the 100-report pre-registered test is (wrong pins 28% → 2%).");
     expect(detective.detail).toContain("Real placements are in the data now.");
     expect(damage.status).toBe("pilot");
   });

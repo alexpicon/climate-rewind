@@ -485,7 +485,7 @@ export class StormScene {
       return { correction, ghost, ghostEl, solid: null, solidEl: null };
     }
 
-    const where = `${correction.km?.toFixed(1)} km ${compassWord(this.opts.origin, placement.dest)} of you`;
+    const where = `${correction.km?.toFixed(2)} km ${compassWord(this.opts.origin, placement.dest)} of you`;
     const sample = placement.status === "sample";
     const solidEl = el(
       "div",
