@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { GeoJSONSource, LngLatBoundsLike, Marker } from "maplibre-gl";
 import { NO_FEATURES, type Features } from "@/lib/features";
-import { cameraFor, cameraPadding, isPlaced, markPlaced, unlockCamera } from "@/lib/ui/camera";
+import { cameraFor, isPlaced, markPlaced, syncPadding, unlockCamera } from "@/lib/ui/camera";
 import { el } from "@/lib/ui/dom";
 import { LABELS_LAYER } from "@/lib/ui/map-style";
 import { useMapApi } from "./map-context";
@@ -124,9 +124,9 @@ export function useFitOnArea(lat: number, lon: number, zoom: number, bounds: Lng
     if (!api) return;
     const { map } = api;
     unlockCamera(map);
-    const padding = cameraPadding(true);
-    const fit = bounds ? cameraFor(map, bounds, { padding, maxZoom }) : null;
-    const target = fit ? { center: fit.center, zoom: fit.zoom, padding: { top: 0, bottom: 0, left: 0, right: 0 } } : { center: [lon, lat] as [number, number], zoom, padding };
+    syncPadding(map);
+    const fit = bounds ? cameraFor(map, bounds, { maxZoom }) : null;
+    const target = fit ? { center: fit.center, zoom: fit.zoom } : { center: [lon, lat] as [number, number], zoom };
     if (isPlaced(map)) {
       map.easeTo({ ...target, duration: 1400, essential: false });
     } else {

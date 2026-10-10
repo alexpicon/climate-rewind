@@ -5,7 +5,7 @@
 import type { Marker } from "maplibre-gl";
 import type { MapApi } from "@/components/map/map-context";
 import { lerp, smooth } from "@/lib/ui/anim";
-import { cameraPadding, enterCamera, isMobile, unlockCamera, type Camera } from "@/lib/ui/camera";
+import { cameraPadding, syncPadding, enterCamera, unlockCamera, type Camera } from "@/lib/ui/camera";
 import { decorative, el } from "@/lib/ui/dom";
 import { HEAT_STOPS } from "@/lib/ui/heat-colors";
 import type { GridSummary } from "@/lib/ui/heat-model";
@@ -68,6 +68,7 @@ export class HeatScene {
    */
   private makeCameras(): { region: Camera; peak: Camera } {
     const { map, gl } = this.api;
+    syncPadding(map);
     const padding = cameraPadding();
     const [[w, s], [e, n]] = this.opts.summary.region;
     const z0 = this.minZoom() + 0.26;
@@ -95,7 +96,8 @@ export class HeatScene {
     // On a laptop the centre has always been moved once more by hand (by the same amount as the padding), so the house sits right of
     // the panel and under the pre-roll card, where the card's own "clear of the house" step expects it. On a phone that second move
     // would push the house off the top of the screen, so there the padding alone places it.
-    const [byHandX, byHandY] = isMobile() ? [0, 0] : [shiftX, shiftY];
+    // The map's own padding (set from the real UI) already centres the camera centre in the visible area, so nothing is moved by hand.
+    const [byHandX, byHandY] = [0, 0];
     const at = (lngLat: [number, number], zoom: number): Camera => {
       const world = 512 * 2 ** zoom;
       const mc = merc(lngLat[0], lngLat[1]);

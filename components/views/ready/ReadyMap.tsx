@@ -6,7 +6,7 @@ import { useMapApi } from "@/components/map/map-context";
 import { boxAround, useFitOnArea, useGeoOverlay, useMapPins, type Features, type OverlayLayer, type Pin } from "@/components/map/use-map-overlay";
 import type { AreaMap } from "@/lib/area-map";
 import type { ReadyItem } from "@/lib/ready/types";
-import { cameraFor, cameraPadding } from "@/lib/ui/camera";
+import { cameraFor } from "@/lib/ui/camera";
 
 const LAYERS: readonly OverlayLayer[] = [{ id: "rd-track", type: "line", layout: { "line-cap": "round" }, paint: { "line-color": "#E59BFF", "line-width": 3, "line-opacity": 0.85 } }];
 
@@ -119,7 +119,7 @@ export function ReadyMap({
     if (mine.length === 0) return;
     const lats = [lat, ...mine.map((p) => p.lat)];
     const lons = [lon, ...mine.map((p) => p.lon)];
-    const cam = cameraFor(api.map, [[Math.min(...lons) - 0.01, Math.min(...lats) - 0.01], [Math.max(...lons) + 0.01, Math.max(...lats) + 0.01]], { padding: cameraPadding(true), maxZoom: 13 });
+    const cam = cameraFor(api.map, [[Math.min(...lons) - 0.01, Math.min(...lats) - 0.01], [Math.max(...lons) + 0.01, Math.max(...lats) + 0.01]], { maxZoom: 13 });
     if (cam) api.map.easeTo({ center: cam.center, zoom: cam.zoom, duration: 900, essential: false });
   }, [api, active, points, lat, lon]);
 

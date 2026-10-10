@@ -6,7 +6,7 @@ import { useMapApi } from "@/components/map/map-context";
 import { boxAround, growBox, useFitOnArea, useGeoOverlay, useMapPins, type Features, type OverlayLayer, type Pin } from "@/components/map/use-map-overlay";
 import type { AreaMap } from "@/lib/area-map";
 import type { AreaEvent, AreaEventsSummary } from "@/lib/types";
-import { cameraFor, cameraPadding } from "@/lib/ui/camera";
+import { cameraFor } from "@/lib/ui/camera";
 import { currentZone, eventLabel, FAMILIES, familyOf, zoneLabel } from "@/lib/ui/story-model";
 
 const ZONE_NOW = "#FFB45A";
@@ -128,7 +128,7 @@ export function StoryMap({
     for (const f of got.map.features) if ((f.properties.kind === "zone" && hlZones.has(String(f.properties.code))) || (f.properties.kind === "track" && hl.has(String(f.properties.id)))) growBox(f.geometry.coordinates, box);
     if (box[0] > box[2]) return; // nothing it is about has a place
     growBox([lon, lat], box);
-    const cam = cameraFor(api.map, [[box[0], box[1]], [box[2], box[3]]], { padding: cameraPadding(true), maxZoom: 12 });
+    const cam = cameraFor(api.map, [[box[0], box[1]], [box[2], box[3]]], { maxZoom: 12 });
     if (cam) api.map.easeTo({ center: cam.center, zoom: cam.zoom, duration: 900, essential: false });
   }, [api, got, hl, hlZones, lat, lon]);
 

@@ -5,7 +5,7 @@
 import type { GeoJSONSource, Marker } from "maplibre-gl";
 import type { MapApi } from "@/components/map/map-context";
 import { clamp, inOut, lerp } from "@/lib/ui/anim";
-import { cameraFor, cameraPadding, enterCamera, isMobile, unlockCamera, type Camera, type CameraLock } from "@/lib/ui/camera";
+import { cameraFor, keepInView, safeRect, enterCamera, unlockCamera, type Camera, type CameraLock } from "@/lib/ui/camera";
 import { decorative, el } from "@/lib/ui/dom";
 import { LABELS_LAYER } from "@/lib/ui/map-style";
 import {
@@ -106,7 +106,7 @@ export class TornadoScene {
       [Math.min(...lons) - pad, Math.min(...lats) - pad],
       [Math.max(...lons) + pad, Math.max(...lats) + pad],
     ];
-    const fit = cameraFor(map, this.lockBox, { padding: { top: 0, bottom: 0, left: 0, right: 0 } });
+    const fit = cameraFor(map, this.lockBox);
     this.fitZoom = fit?.zoom ?? 8;
     this.view3d = Boolean(this.opts.view3d);
     if (this.view3d) enable3D(map);
@@ -156,10 +156,12 @@ export class TornadoScene {
     root.style.setProperty("--c", color);
     // The label is centred on the diamond; near the story panel (desktop, left side) it would open behind it, so it opens to the right instead.
     const keepClear = () => {
-      const panel = document.getElementById("panel");
-      const wide = window.matchMedia("(min-width: 901px)").matches;
-      const clearOf = wide && panel ? panel.getBoundingClientRect().right + 12 : 0;
+      const clearOf = safeRect().left;
       root.classList.toggle("flip", root.getBoundingClientRect().left - 150 < clearOf);
+      // Then slide the card back inside the visible map area (clear of the panel, the top bar and the dock).
+      const label = root.querySelector<HTMLElement>(".dmglab");
+      label?.style.removeProperty("translate");
+      requestAnimationFrame(() => keepInView(label));
     };
     root.addEventListener("mouseenter", keepClear);
     root.addEventListener("click", (event) => {
@@ -176,18 +178,18 @@ export class TornadoScene {
     const { origin } = this.opts;
     if (this.view3d) {
       const across = this.closest ? bearingAcross(this.closest.begin, this.closest.end) : -18;
-      return { ...camera3D(origin, 12.8, across), padding: cameraPadding() };
+      return camera3D(origin, 12.8, across);
     }
     const ringBox = circlePoints(origin, 12);
     const flat = cameraFor(this.api.map, [
       [Math.min(...ringBox.map((p) => p[0])), Math.min(...ringBox.map((p) => p[1]))],
       [Math.max(...ringBox.map((p) => p[0])), Math.max(...ringBox.map((p) => p[1]))],
     ]);
-    return flat ? { ...flat, pitch: 0, bearing: 0, padding: { top: 0, bottom: 0, left: 0, right: 0 } } : null;
+    return flat ? { ...flat, pitch: 0, bearing: 0 } : null;
   }
 
   private lock(): CameraLock {
-    const fit = cameraFor(this.api.map, this.lockBox, { padding: { top: 0, bottom: 0, left: 0, right: 0 } });
+    const fit = cameraFor(this.api.map, this.lockBox);
     this.fitZoom = fit?.zoom ?? this.fitZoom;
     return { bounds: this.lockBox, minZoom: Math.max(5, this.fitZoom), maxZoom: this.view3d ? 15 : 13.8 };
   }
@@ -294,19 +296,15 @@ export class TornadoScene {
     }
 
     this.drawFinale(ms, origin);
+    this.keepCardsInView();
   }
 
-  /** The map centre that puts `aim` in the middle of the part of the screen the panels leave free. */
-  private centerInFreeArea(aim: [number, number], zoom: number): [number, number] {
-    const padding = cameraPadding();
-    const world = 512 * 2 ** zoom;
-    const mc = this.api.gl.MercatorCoordinate.fromLngLat({ lng: aim[0], lat: aim[1] });
-    const shifted = new this.api.gl.MercatorCoordinate(
-      mc.x - (((padding.left ?? 0) - (padding.right ?? 0)) / 2) / world,
-      mc.y - (((padding.top ?? 0) - (padding.bottom ?? 0)) / 2) / world,
-      0,
-    ).toLngLat();
-    return [shifted.lng, shifted.lat];
+  /** The call-out, the distance chip and the moving tornado's label slide back inside the visible map area (clear of the panel, bar and dock). */
+  private keepCardsInView(): void {
+    for (const [marker, selector] of [[this.callout, ".torlab"], [this.distanceLabel, ".chip"], [this.vortex, ".tl"]] as const) {
+      const root = marker?.getElement();
+      if (root?.isConnected) keepInView(root.querySelector<HTMLElement>(selector));
+    }
   }
 
   /** Push in on the closest pass and draw the line from the address to it. */
@@ -324,7 +322,7 @@ export class TornadoScene {
       const zoom = lerp(this.cam0.zoom, target, k);
       const aim: [number, number] = [lerp(this.cam0.center[0], (origin[1] + near[1]) / 2, k), lerp(this.cam0.center[1], (origin[0] + near[0]) / 2 + 0.0004, k)];
       // On a phone the story panel covers the lower half; aim the closest pass at the free part of the screen.
-      map.jumpTo({ center: isMobile() && !this.view3d ? this.centerInFreeArea(aim, zoom) : aim, zoom });
+      map.jumpTo({ center: aim, zoom });
       const reach = clamp((fk - 0.45) / 0.3);
       const tip: [number, number] = [lerp(origin[1], near[1], reach), lerp(origin[0], near[0], reach)];
       line?.setData({ type: "FeatureCollection", features: [{ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: [[origin[1], origin[0]], tip] } }] } as never);

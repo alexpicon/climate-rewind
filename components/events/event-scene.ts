@@ -4,7 +4,7 @@
  */
 import type { ImageSource } from "maplibre-gl";
 import type { MapApi } from "@/components/map/map-context";
-import { cameraFor, cameraPadding, enterCamera, isMobile, unlockCamera } from "@/lib/ui/camera";
+import { cameraFor, enterCamera, isMobile, unlockCamera } from "@/lib/ui/camera";
 import type { EventEntry } from "@/lib/ui/event-catalog";
 import { eventFrame, type EventModel } from "@/lib/ui/event-model";
 import { LABELS_LAYER, radarCorners, radarFrameUrl } from "@/lib/ui/map-style";
@@ -86,7 +86,7 @@ export class EventScene {
     const padY = (north - south) * 1.5;
     this.cancelCamera = enterCamera(
       map,
-      () => cameraFor(map, box, { padding: cameraPadding() }),
+      () => cameraFor(map, box),
       () => ({ bounds: [[west - padX, south - padY], [east + padX, north + padY]], minZoom: 3.5, maxZoom: 9 }),
       this.opts.reduced,
     );

@@ -7,7 +7,7 @@
  */
 import type { LayerSpecification, Map as MapLibreMap } from "maplibre-gl";
 import { LABELS_LAYER } from "./map-style";
-import type { Camera } from "./camera";
+import { syncPadding, type Camera } from "./camera";
 import type { Coord } from "../types";
 
 export const DEM_TILES = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
@@ -183,5 +183,5 @@ export function disable3D(map: MapLibreMap): void {
   map.touchPitch.disable();
   map.touchZoomRotate.disableRotation();
   if (map.getPitch() !== 0 || map.getBearing() !== 0) map.jumpTo({ pitch: 0, bearing: 0 });
-  map.setPadding({ top: 0, bottom: 0, left: 0, right: 0 });
+  syncPadding(map, true);
 }

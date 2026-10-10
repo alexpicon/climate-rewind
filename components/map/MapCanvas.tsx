@@ -3,7 +3,7 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { Map as MapLibreMap, Marker } from "maplibre-gl";
-import { onPlaced } from "@/lib/ui/camera";
+import { onPlaced, watchPadding } from "@/lib/ui/camera";
 import { createAddressMarkerElement } from "@/lib/ui/dom";
 import { loadMapLibre } from "@/lib/ui/maplibre";
 import { baseStyle } from "@/lib/ui/map-style";
@@ -38,6 +38,7 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
   useEffect(() => {
     let map: MapLibreMap | null = null;
     let attribution: { onRemove(): void } | null = null;
+    let stopPadding: (() => void) | null = null;
     const scales: Array<{ onRemove(): void }> = [];
     let cancelled = false;
 
@@ -116,6 +117,8 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
         // Read-only handle for the browser tests (camera, pitch, terrain). Nothing in the app reads it.
         (window as unknown as { __memoriaMap?: MapLibreMap }).__memoriaMap = map;
         collapseOnPhone();
+        // Keep the map's padding on the real UI (panel, top bar, dock), so every camera lands in the visible area.
+        stopPadding = watchPadding(map);
         setApi({ map, gl });
       });
     })();
@@ -135,6 +138,7 @@ export function MapCanvas({ address, reducedMotion, children }: Props) {
           // the control was never mounted
         }
       }
+      stopPadding?.();
       addressMarker.current?.remove();
       addressMarker.current = null;
       map?.remove();

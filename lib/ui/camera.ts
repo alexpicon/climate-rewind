@@ -5,14 +5,153 @@ export function isMobile(): boolean {
   return window.innerWidth <= 900;
 }
 
-/** Padding that keeps the interesting part of the map clear of the panel, top bar and dock. */
-export function cameraPadding(sheet = false): PaddingOptions {
-  // The long-panel views ("Next 7 days", the story, what's changing, get ready) are a bottom sheet of about half the screen on a phone.
-  if (sheet && isMobile() && window.innerHeight >= 520) return { left: 12, right: 12, top: 104, bottom: Math.round(window.innerHeight * 0.52) + 92 + 16 };
-  // On a short screen (200% zoom, a landscape phone) the bottom stack must not eat the whole height, or no camera fits.
-  if (isMobile() && window.innerHeight < 520) return { left: 12, right: 12, top: 70, bottom: 90 };
-  if (isMobile()) return { left: 12, right: 12, top: 84, bottom: Math.min(Math.round(window.innerHeight * 0.34) + 200, Math.round(window.innerHeight * 0.6)) };
+const ZERO: Required<PaddingOptions> = { top: 0, bottom: 0, left: 0, right: 0 };
+
+/** The old fixed estimates, used only until the real UI is on the page (and in tests with no DOM). */
+function estimatedPadding(): PaddingOptions {
+  if (isMobile() && window.innerHeight >= 520) return { left: 12, right: 12, top: 84, bottom: Math.min(Math.round(window.innerHeight * 0.34) + 200, Math.round(window.innerHeight * 0.6)) };
+  if (isMobile()) return { left: 12, right: 12, top: 70, bottom: 90 };
   return { left: 404 + 20 * 2 + 16, right: 28, top: 72 + 30, bottom: 190 };
+}
+
+function visibleRect(id: string | Element | null): DOMRect | null {
+  const node = typeof id === "string" ? document.getElementById(id) : id;
+  if (!node) return null;
+  const r = node.getBoundingClientRect();
+  return r.width > 0 && r.height > 0 ? r : null;
+}
+
+/**
+ * Padding that keeps the interesting part of the map in the VISIBLE area, measured from the real UI:
+ * left = the panel's right edge + 24 (on a phone the panel is a bottom sheet, so bottom = its height), top = the top bar + 16,
+ * bottom = the dock (and on a phone the tab bar) + 16, right = 24, and the top also clears the map-caption card while it is collapsed.
+ */
+export function cameraPadding(_sheet = false): PaddingOptions {
+  if (typeof window === "undefined" || typeof document === "undefined") return ZERO;
+  const bar = visibleRect("bar");
+  if (!bar) return estimatedPadding();
+  const [W, H] = [window.innerWidth, window.innerHeight];
+  const mobile = isMobile();
+  let top = Math.round(bar.bottom + 16);
+  let bottom = 16;
+  let left = mobile ? 12 : 24;
+  const right = mobile ? 12 : 24;
+  const panel = visibleRect("panel");
+  if (panel) {
+    if (mobile) bottom = Math.max(bottom, H - panel.top + 16);
+    else left = Math.max(left, panel.right + 24);
+  }
+  const dock = visibleRect("dock");
+  if (dock) bottom = Math.max(bottom, H - dock.top + 16);
+  const tabs = mobile ? visibleRect("tabs") : null;
+  if (tabs) bottom = Math.max(bottom, H - tabs.top + 16);
+  const cap = visibleRect(document.querySelector(".mapcap"));
+  // The caption card sits over the top of the map (taller when open): keep clear of it as long as enough height is left for the map.
+  if (cap && cap.top < H / 2 && H - Math.round(cap.bottom + 12) - bottom >= 280) top = Math.max(top, Math.round(cap.bottom + 12));
+  // On a short or narrow screen the stack must not eat the whole canvas, or no camera fits.
+  if (H - top - bottom < 160) bottom = Math.max(16, H - top - 160);
+  if (H - top - bottom < 160) top = Math.max(16, H - bottom - 160);
+  if (W - left - right < 200) left = Math.max(12, W - right - 200);
+  return { top, bottom: Math.round(bottom), left: Math.round(left), right };
+}
+
+const waiting = new WeakSet<MapLibreMap>();
+const appliedReal = new WeakMap<MapLibreMap, Required<PaddingOptions>>();
+const SIDES = ["top", "bottom", "left", "right"] as const;
+
+/**
+ * Puts the real UI padding on the map. It adds only what changed since last time, so a temporary extra (the pre-roll card's shift)
+ * survives. With the padding set, the map's centre is the centre of the visible area, MapLibre's max-bounds lock works on that area
+ * and a camera that centres a point puts it in the middle of what the visitor can see.
+ */
+export function syncPadding(map: MapLibreMap, force = false): void {
+  if (typeof map.setPadding !== "function") return;
+  const read = (): Required<PaddingOptions> => ({ ...ZERO, ...(typeof map.getPadding === "function" ? map.getPadding() : ZERO) });
+  // setPadding is a jump: in the middle of a flight or an ease it would cut the move short. Wait for it to end.
+  if (!force && typeof map.isMoving === "function" && map.isMoving()) {
+    if (!waiting.has(map)) {
+      waiting.add(map);
+      map.once("moveend", () => {
+        waiting.delete(map);
+        syncPadding(map);
+      });
+    }
+    return;
+  }
+  const real = { ...ZERO, ...cameraPadding() };
+  const prev = force ? ZERO : (appliedReal.get(map) ?? ZERO);
+  const cur = force ? ZERO : read();
+  const next = { ...ZERO };
+  for (const side of SIDES) next[side] = Math.max(0, Math.round(cur[side] + real[side] - prev[side]));
+  appliedReal.set(map, real);
+  const now = read();
+  if (force || SIDES.some((side) => now[side] !== next[side])) map.setPadding(next);
+}
+
+/** Keeps the map's padding on the real UI as it changes (resize, tab change, panel or dock opening and closing). Returns a stop. */
+export function watchPadding(map: MapLibreMap): () => void {
+  let raf = 0;
+  const run = () => {
+    raf = 0;
+    try {
+      attach();
+      syncPadding(map);
+    } catch {
+      // the map was torn down
+    }
+  };
+  const queue = () => {
+    if (!raf) raf = requestAnimationFrame(run);
+  };
+  const resizeObserver = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(queue);
+  const watched = new Set<Element>();
+  const attach = () => {
+    for (const node of document.querySelectorAll("#bar, #panel, #dock, #tabs, .mapcap")) {
+      if (!watched.has(node)) {
+        watched.add(node);
+        resizeObserver?.observe(node);
+      }
+    }
+    for (const node of [...watched]) if (!node.isConnected) {
+      watched.delete(node);
+      resizeObserver?.unobserve(node);
+    }
+  };
+  const hook = new MutationObserver(queue);
+  hook.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["class", "hidden"] });
+  window.addEventListener("resize", queue);
+  window.addEventListener("orientationchange", queue);
+  attach();
+  syncPadding(map);
+  return () => {
+    cancelAnimationFrame(raf);
+    hook.disconnect();
+    resizeObserver?.disconnect();
+    window.removeEventListener("resize", queue);
+    window.removeEventListener("orientationchange", queue);
+  };
+}
+
+/** The rectangle (viewport pixels) that hover and popup cards must stay inside: clear of the panel, the top bar and the dock. */
+export function safeRect(): { left: number; top: number; right: number; bottom: number } {
+  const p = cameraPadding();
+  return { left: (p.left ?? 0) - 16, top: (p.top ?? 0) - 8, right: window.innerWidth - (p.right ?? 0) + 16, bottom: window.innerHeight - (p.bottom ?? 0) + 8 };
+}
+
+/** Slides a card (with CSS `translate`, so its own transform is untouched) back inside the visible map area. */
+export function keepInView(box: HTMLElement | null | undefined): void {
+  if (!box || !box.isConnected) return;
+  if (box.style.translate) box.style.translate = "";
+  const r = box.getBoundingClientRect();
+  if (!r.width || !r.height) return;
+  const s = safeRect();
+  let dx = 0;
+  let dy = 0;
+  if (r.right > s.right) dx = s.right - r.right;
+  if (r.left + dx < s.left) dx = s.left - r.left;
+  if (r.bottom > s.bottom) dy = s.bottom - r.bottom;
+  if (r.top + dy < s.top) dy = s.top - r.top;
+  if (dx || dy) box.style.translate = `${Math.round(dx)}px ${Math.round(dy)}px`;
 }
 
 export interface Camera {
@@ -29,7 +168,9 @@ export const isFiniteCamera = (cam: Camera): boolean => Number.isFinite(cam.zoom
 export function cameraFor(map: MapLibreMap, bounds: LngLatBoundsLike, extra: { padding?: PaddingOptions; maxZoom?: number } = {}): Camera | null {
   // maxZoom must be left out entirely when unset: an explicit undefined makes MapLibre return NaN.
   // On a very short screen the padding can leave no room for the box and MapLibre returns nothing; try again with half the padding.
-  let padding = extra.padding ?? cameraPadding();
+  // The map's own padding (the real UI, see syncPadding) already keeps the camera in the visible area; `extra.padding` is only added on top of it.
+  syncPadding(map);
+  let padding: PaddingOptions = { ...ZERO, ...extra.padding };
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const cam = map.cameraForBounds(bounds, { padding, ...(extra.maxZoom !== undefined ? { maxZoom: extra.maxZoom } : {}) });
     if (cam) {
@@ -84,8 +225,10 @@ export function constrainToBounds(map: MapLibreMap, cam: Camera, bounds: LngLatB
   if (corners.length !== 2 || !Array.isArray(corners[0]) || !Array.isArray(corners[1])) return cam;
   const [[west, south], [east, north]] = bounds as [[number, number], [number, number]];
   const canvas = map.getCanvas();
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
+  // The lock works on the visible (padded) area, and the camera centre is the centre of that area.
+  const pad = typeof map.getPadding === "function" ? { ...ZERO, ...map.getPadding() } : ZERO;
+  const width = canvas.clientWidth - pad.left - pad.right;
+  const height = canvas.clientHeight - pad.top - pad.bottom;
   const [x0, x1, yTop, yBottom] = [mercX(west), mercX(east), mercY(north), mercY(south)];
   if (!(width > 0 && height > 0 && x1 > x0 && yBottom > yTop)) return cam;
   const cover = Math.log2(Math.max(width / ((x1 - x0) * 512), height / ((yBottom - yTop) * 512)));
@@ -183,6 +326,7 @@ export function enterCamera(
   onSettled?: () => void,
 ): () => void {
   unlockCamera(map);
+  syncPadding(map);
   let cancelled = false;
   let finished = false;
   let fallback: ReturnType<typeof setTimeout> | undefined;

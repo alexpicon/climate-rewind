@@ -132,7 +132,7 @@ export class StormScene {
 
   /** The 3D replay camera: pitched, a gentle turn, the address in the free part of the screen. */
   private cam3d(): Camera {
-    return { ...camera3D(this.opts.origin, STORM_3D_MAX_ZOOM, -18), padding: cameraPadding() };
+    return camera3D(this.opts.origin, STORM_3D_MAX_ZOOM, -18);
   }
 
   /** The replay camera for the view that is on (3D or 2D). */
@@ -141,12 +141,12 @@ export class StormScene {
     // The camera the radar-box lock will leave it at, so flights land there instead of landing and then jumping.
     const wanted = cameraFor(this.api.map, toBox(boxAround(this.opts.origin, 90)));
     const flat = wanted ? constrainToBounds(this.api.map, wanted, lockBox(this.opts.model.bounds)) : null;
-    return flat ? { ...flat, pitch: 0, bearing: 0, padding: { top: 0, bottom: 0, left: 0, right: 0 } } : null;
+    return flat ? { ...flat, pitch: 0, bearing: 0 } : null;
   }
 
   private lock(): CameraLock {
     // The zoom at which the radar box just fills the screen, measured now (the window may have changed size since the view opened).
-    const fit = cameraFor(this.api.map, toBox(this.opts.model.bounds), { padding: { top: 0, bottom: 0, left: 0, right: 0 } });
+    const fit = cameraFor(this.api.map, toBox(this.opts.model.bounds));
     this.fitZoom = fit?.zoom ?? this.fitZoom;
     return { bounds: lockBox(this.opts.model.bounds), minZoom: Math.max(5, this.fitZoom), maxZoom: this.view3d ? STORM_3D_MAX_ZOOM : 12.5 };
   }
@@ -159,7 +159,7 @@ export class StormScene {
     if (this.view3d) enable3D(map, { buildings: STORM_BUILDINGS });
     // The lock box is the radar region; the minimum zoom is the one at which that box just fills the screen.
     this.cameras.replay = this.replayCamera();
-    const fit = cameraFor(map, toBox(model.bounds), { padding: { top: 0, bottom: 0, left: 0, right: 0 } });
+    const fit = cameraFor(map, toBox(model.bounds));
     this.fitZoom = fit?.zoom ?? 7;
     this.cancelCamera = enterCamera(
       map,
@@ -217,7 +217,6 @@ export class StormScene {
     this.cameras.replay = this.replayCamera();
     // Step 2 positions the camera itself, with its own offsets for the panel; leave the map's padding out of it.
     const target = this.stage === 2 ? null : this.cameras.replay;
-    if (this.stage === 2) map.setPadding({ top: 0, bottom: 0, left: 0, right: 0 });
     this.cancelCamera = enterCamera(
       map,
       target ?? { center: [map.getCenter().lng, map.getCenter().lat], zoom: map.getZoom(), pitch: on ? PITCH_3D : 0, bearing: on ? -18 : 0 },
@@ -507,7 +506,6 @@ export class StormScene {
 
     this.showFiledDots(false);
     // In 3D the map's own padding keeps the address clear of the panel; step 2 sets its own offsets, so it drops that padding.
-    if (stage === 2 && this.view3d) map.setPadding({ top: 0, bottom: 0, left: 0, right: 0 });
 
     if (stage === 1) {
       for (const pin of this.pins) {
@@ -554,7 +552,7 @@ export class StormScene {
         [Math.min(...lons) - 0.02, Math.min(...lats) - 0.02],
         [Math.max(...lons) + 0.02, Math.max(...lats) + 0.02],
       ],
-      { maxZoom: 12, padding: isMobile() && window.innerHeight < 520 ? { left: 12, right: 12, top: 70, bottom: 90 } : isMobile() ? { left: 12, right: 12, top: 140, bottom: Math.min(Math.round(window.innerHeight * 0.2) + 385, Math.round(window.innerHeight * 0.75)) } : { left: 470, right: 90, top: 440, bottom: 165 } },
+      { maxZoom: 12, padding: extraPadding(isMobile() && window.innerHeight < 520 ? { left: 12, right: 12, top: 70, bottom: 90 } : isMobile() ? { left: 12, right: 12, top: 140, bottom: Math.min(Math.round(window.innerHeight * 0.2) + 385, Math.round(window.innerHeight * 0.75)) } : { left: 470, right: 90, top: 440, bottom: 165 }) },
     );
     if (!map.getSource("trails")) {
       map.addSource("trails", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
@@ -675,4 +673,15 @@ export class StormScene {
 
     (map.getSource("trails") as GeoJSONSource | undefined)?.setData({ type: "FeatureCollection", features: trails } as never);
   }
+}
+
+/** The step-2 camera wants these margins from the window edge; the map's own padding already supplies the real UI's share, so only the rest is added. */
+function extraPadding(wanted: { left: number; right: number; top: number; bottom: number }): { left: number; right: number; top: number; bottom: number } {
+  const have = cameraPadding();
+  return {
+    left: Math.max(0, wanted.left - (have.left ?? 0)),
+    right: Math.max(0, wanted.right - (have.right ?? 0)),
+    top: Math.max(0, wanted.top - (have.top ?? 0)),
+    bottom: Math.max(0, wanted.bottom - (have.bottom ?? 0)),
+  };
 }
