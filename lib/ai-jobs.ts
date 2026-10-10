@@ -83,7 +83,7 @@ export function describeJobs(input: { detectiveRan: boolean; damagePlaces: numbe
       ? {
           id: "briefing",
           name: "The briefing and “Ask your street”",
-          does: "Writes the next-72-hours brief and answers questions, only in sentences a source backs up. Code checks every citation and number.",
+          does: "Writes the next-few-days brief and answers questions, only in sentences a source backs up. Code checks every citation and number.",
           status: "measured",
           number: `${briefEval.passPercent}% of the sentences it wrote passed the checks (${briefEval.sentencesVerified} of ${briefEval.sentencesWritten}, across ${briefEval.questions} questions on ${briefEval.addresses} addresses).`,
           detail: `${briefEval.sentencesVerified === briefEval.sentencesWritten ? "Nothing had to be removed in this run; the checks are tested on uncited sentences, made-up sources and unsupported numbers." : "The rest were removed before anyone saw them."} Measured ${briefEval.ranAt.slice(0, 10)} with ${briefEval.model}. It shows the checks work; it does not show every sentence is wise.`,
@@ -91,7 +91,7 @@ export function describeJobs(input: { detectiveRan: boolean; damagePlaces: numbe
       : {
           id: "briefing",
           name: "The briefing and “Ask your street”",
-          does: "Writes the next-72-hours brief and answers questions, only in sentences a source backs up. Code checks every citation and number.",
+          does: "Writes the next-few-days brief and answers questions, only in sentences a source backs up. Code checks every citation and number.",
           status: "pending",
           number: null,
           detail: "The 20-question test has not been run yet.",

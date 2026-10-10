@@ -22,8 +22,8 @@ export const LANDING_FEATURES: readonly LandingFeature[] = [
   {
     id: "ahead",
     icon: "clock",
-    title: "The next 72 hours",
-    body: "The official rain, tornado and heat outlooks for your spot, and an AI brief in which code checks every sentence against a source.",
+    title: "The next 7 days",
+    body: "A card for each of the next 7 days: the official forecast in plain words, what days like it meant on your street before, and what to do, with every piece of advice tied to an official guidance line.",
     sample: "Nashville, TN",
     tab: "ahead",
   },

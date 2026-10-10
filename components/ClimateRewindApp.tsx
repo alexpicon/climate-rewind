@@ -110,7 +110,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
     await requestStagedLookup(address, nightId, {
       isCurrent: current,
       onAddress: (found) => {
-        // The 72-hour tab is the opening one: its outlooks and brief start now, while the records load.
+        // "Next 7 days" opened straight from a link: its outlook read starts now, while the records load.
         if (nextTab === "ahead") prefetchAhead(address, found.lat, found.lon);
         setLookup((now) => (now.status === "loading" ? { ...now, progress: { ...now.progress, matched: found.matched } } : now));
       },

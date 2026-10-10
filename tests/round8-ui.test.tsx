@@ -49,7 +49,7 @@ describe("top bar: four tabs and a small How it works link", () => {
     const html = bar("ahead");
     const nav = html.slice(html.indexOf('<nav id="tabs"'), html.indexOf("</nav>"));
     expect((nav.match(/<a /g) ?? []).length).toBe(4);
-    for (const label of ["Next 72 hours", "Your history", "What’s changing", "Get ready"]) expect(nav).toContain(`aria-label="${label}"`);
+    for (const label of ["Your history", "Next 7 days", "What’s changing", "Get ready"]) expect(nav).toContain(`aria-label="${label}"`);
     expect(nav).toContain("tab=story");
     expect(nav).not.toContain("How it works");
     expect(html).toMatch(/<a id="how-link"[^>]*aria-label="How it works"/);

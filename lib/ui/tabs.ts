@@ -1,7 +1,7 @@
 import { AVAILABLE_OPTIONAL_TABS } from "./optional-tabs.generated";
 
 /** Every tab id. "future" and "ready" only show up in the bar when their view files exist (see scripts/optional-views.mjs). */
-export const TABS = ["ahead", "story", "storm", "heat", "tornado", "future", "ready", "how"] as const;
+export const TABS = ["story", "storm", "heat", "tornado", "ahead", "future", "ready", "how"] as const;
 export type Tab = (typeof TABS)[number];
 
 /** Tabs whose view lives in a file another person may not have written yet; they are hidden until the file exists. */
@@ -11,9 +11,9 @@ export type OptionalTab = (typeof OPTIONAL_TABS)[number];
 /** The tabs shown in the bar and accepted from a link. */
 export const VISIBLE_TABS: readonly Tab[] = TABS.filter((tab) => !(OPTIONAL_TABS as readonly string[]).includes(tab) || (AVAILABLE_OPTIONAL_TABS as readonly string[]).includes(tab));
 
-/** What each view is called (page titles, the panel headings). The top bar uses the four names under it. */
+/** What each view is called (page titles, the panel headings). The top bar uses the four names under it. The tab bar reads: Your history, Next 7 days, What's changing, Get ready. */
 export const TAB_LABEL: Record<Tab, string> = {
-  ahead: "Next 72 hours",
+  ahead: "Next 7 days",
   story: "Your history: Story",
   storm: "Your history: Storm replay",
   heat: "Your history: Heat wave",
@@ -24,14 +24,14 @@ export const TAB_LABEL: Record<Tab, string> = {
 };
 
 /** The four top tabs. "Your history" holds four views behind a segmented control; "How it works" is a small link, not a tab. */
-export const TOP_TABS = ["ahead", "history", "future", "ready"] as const;
+export const TOP_TABS = ["history", "ahead", "future", "ready"] as const;
 export type TopTab = (typeof TOP_TABS)[number];
 
 export const HISTORY_VIEWS = ["story", "storm", "heat", "tornado"] as const;
 export type HistoryView = (typeof HISTORY_VIEWS)[number];
 
 export const TOP_LABEL: Record<TopTab, string> = {
-  ahead: "Next 72 hours",
+  ahead: "Next 7 days",
   history: "Your history",
   future: "What’s changing",
   ready: "Get ready",
@@ -39,7 +39,7 @@ export const TOP_LABEL: Record<TopTab, string> = {
 
 /** Short labels for a phone's bottom bar and a narrow top bar (four tabs share 390 px). The full label stays the link's accessible name. */
 export const TOP_SHORT: Record<TopTab, string> = {
-  ahead: "72 hours",
+  ahead: "7 days",
   history: "History",
   future: "Changing",
   ready: "Ready",
@@ -66,8 +66,8 @@ export const isHistoryView = (tab: Tab): tab is HistoryView => (HISTORY_VIEWS as
 /** The top tabs shown in the bar (future and ready only when their view files exist). */
 export const VISIBLE_TOP_TABS: readonly TopTab[] = TOP_TABS.filter((top) => VISIBLE_TABS.includes(TOP_TAB_VIEW[top]));
 
-/** The tab a lookup opens on when the link names none: the AI briefing and the official outlooks. The storm replay is one click away. */
-export const DEFAULT_TAB: Tab = "ahead";
+/** The tab a lookup opens on when the link names none: Your history (the story). "Next 7 days" is one click away, and ?tab=ahead still opens it. */
+export const DEFAULT_TAB: Tab = "story";
 
 /** A link's `tab` value as a view. Every old view id still works (?tab=storm is Your history, Storm replay); "history" opens the story. */
 export function parseTab(value: string | undefined | null): Tab {
