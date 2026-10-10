@@ -4,6 +4,7 @@
  * distances and county totals from the state index, the deaths and damage from the NCEI event the card opens, the flood reports from
  * the storm night.
  */
+import { FULL_COST, type FullCost } from "./noaa-cost";
 import type { SampleAddress, Tab } from "./tabs";
 
 export interface LandingMoment {
@@ -27,6 +28,8 @@ export interface LandingMoment {
   action: string;
   /** One line on what science says about climate change and this event, from a source Scout read and confirmed (research/attribution-2026-10-09.md). Absent: no line. */
   attribution?: MomentAttribution;
+  /** NOAA's cost for the whole storm, when the big number is only a county's share of it (verified against NCEI; lib/ui/noaa-cost.ts). */
+  fullCost?: FullCost;
 }
 
 export interface MomentAttribution {
@@ -39,8 +42,8 @@ export interface MomentAttribution {
 }
 
 const TORNADO_ATTRIBUTION: MomentAttribution = {
-  text: "A single tornado can’t yet be pinned on climate change",
-  credit: "per AP / NOAA’s Harold Brooks",
+  text: "Linking a single tornado to climate change remains very challenging",
+  credit: "per AP / NSSL’s Harold Brooks",
   sourceLabel: "Source",
   url: "https://www.voanews.com/a/was-us-tornado-outbreak-related-to-climate-change-/6350849.html",
 };
@@ -109,7 +112,7 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     replayKinds: ["Wildfire"],
     action: "Play the years",
     attribution: {
-      text: "No formal attribution study; a UH scientist said Hawaii’s drying is consistent with climate projections",
+      text: "We found no formal attribution study; a UH scientist said Hawaii’s drying is consistent with climate projections",
       sourceLabel: "Source",
       url: "https://www.npr.org/transcripts/1193297709",
     },
@@ -120,7 +123,8 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     big: "$7",
     unit: "billion",
     title: "Hurricane Ian’s landfall",
-    line: "Recorded for coastal Lee County, next to downtown Fort Myers, with 60 deaths.",
+    line: "Recorded for Lee County’s coast, next to downtown Fort Myers, with 60 deaths.",
+    fullCost: FULL_COST.ian,
     address: "2115 2nd St, Fort Myers, FL",
     tab: "story",
     event: "SE-1058654",

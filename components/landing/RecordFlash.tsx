@@ -163,7 +163,7 @@ export function RecordFlash() {
       </div>
       <figcaption>
         <h3 id="rf-h" className="rf-t">
-          A world-record lightning flash: {record ? `${record.lengthKm} km (${record.lengthMi} miles)` : "768 km (477 miles)"} in about seven seconds
+          A {record ? record.lengthKm : 768} km megaflash (2020), the world record until 2025
         </h3>
         <p className="rf-b">
           On 29 April 2020 at 14:32:39 UTC, one flash ran {record?.where ?? "from near Houston, Texas, into southeastern Mississippi"}, certified by the{" "}

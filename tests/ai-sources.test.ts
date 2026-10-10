@@ -62,9 +62,9 @@ describe("buildSources", () => {
     const report = map.get("report-1")!;
     expect(report.quote).toBe(REPORT_QUOTE);
     expect(report.text).toContain("March 27, 2021, 10:55 pm local time");
-    expect(report.text).toContain("0.4 km from this address");
+    expect(report.text).toMatch(/0\.4\d km from this address/);
     expect(report.text).toContain("The AI detective placed it at ROSA L PARKS BLVD & JEFFERSON ST, NASHVILLE, TN (intersection, high confidence)");
-    expect(map.get("report-2")!.href).toBe("https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1265274");
+    expect(map.get("report-2")!.href).toBe("https://www.ncei.noaa.gov/access/storm-events-database/event-details/1265274");
     expect(map.get("report-3")!.href).toBeUndefined();
     expect(map.get("report-3")!.text).toContain("city placeholder, so the distance is not meaningful");
   });
@@ -78,7 +78,7 @@ describe("buildSources", () => {
 
   it("includes the tornado narrative as a quotation and the live alert state", () => {
     expect(map.get("tornado-1")!.quote).toContain("A violent tornado tore through East Nashville");
-    expect(map.get("alerts")!.text).toBe("The National Weather Service had no active alerts for this address when we checked (2026-10-08 19:00 UTC).");
+    expect(map.get("alerts")!.text).toBe("The National Weather Service had no active alerts for this address when we checked.");
     const withAlert = buildSources({
       lookup: lookupFixture({ live: { checkedAt: "2026-10-08T19:00:00.000Z", alerts: [{ id: "a", event: "Flood Watch", headline: "Flood Watch issued October 8", ends: "2026-10-11T12:00:00Z", polygon: null, motion: null, severity: null, urgency: null }] } }),
       outlook: outlookFixture(),

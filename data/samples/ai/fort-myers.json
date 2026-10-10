@@ -55,7 +55,7 @@
     "title": "Active National Weather Service alerts",
     "origin": "api.weather.gov alerts for this address",
     "href": "https://www.weather.gov/",
-    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 11:57 UTC)."
+    "text": "The National Weather Service had no active alerts for this address when we checked."
    },
    "flood-outlook": {
     "id": "flood-outlook",
@@ -106,7 +106,7 @@
     "chip": "Heat history",
     "title": "Hot days at this address since 2000",
     "origin": "Open-Meteo archive (ERA5 reanalysis), daily feels-like high, at this address",
-    "text": "Days with a feels-like high of 100 F or more: 2021: 24, 2022: 66, 2023: 83, 2024: 85, 2025: 73; 1069 in all since 2000. The hottest day since 2000 was Jul 5, 2023, with a feels-like high of 109.4 F. This is a model of past weather, not a thermometer at the address, and it shows no trend."
+    "text": "Days with a feels-like high of 100 F or more: 2021: 24, 2022: 66, 2023: 83, 2024: 85, 2025: 73; 1069 in all since 2000. The hottest day since 2000 was Jul 5, 2023, with a feels-like high of 109 F. This is a model of past weather, not a thermometer at the address, and it shows no trend."
    }
   },
   "dropped": 0,
@@ -214,7 +214,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Hurricane (Typhoon) on Aug 13, 2004 in Lee (forecast zone FLZ065, YOUR zone: the address is inside it). Deaths: 1. Injuries: 30. Recorded damage: $2,010,000,000 (about $2010 million).",
     "quote": "The collective effects of Hurricane Charley in southwest and west central Florida during August 13th resulted in 8 direct fatalities, 16 indirect fatalities, 792 injuries, eight tornadoes, an eight foot storm surge in Lee County, an estimated $11.2 billion in property damage (estimated to be about twice that of the insured damage), and $460 million in crop damage. The fast movement of Hurricane Charley limited rain fall totals to 4 to 6 inches along the track of the hurricane's eye wall. River flooding of one to three feet above flood stage was found on area rivers south of Interstate 4.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5417271"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5417271"
    },
    "SE-5422746": {
     "id": "SE-5422746",
@@ -224,7 +224,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Tropical Storm on Sep 5, 2004 in Lee (forecast zone FLZ065, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. Recorded damage: $6,400,000 (about $6.4 million).",
     "quote": "Hurricane Frances made landfall just after midnight on September 5th near Vero Beach as a Category 2 storm. The hurricane continued to move slowly west northwestward across central Florida to near Bartow by 2 pm, and just northeast of Tampa by 8 pm, when it was downgraded to a tropical storm. It then emerged back into the Gulf of Mexico near Hudson shortly before midnight. Hurricane Frances took almost 24 hours to move through the Florida peninsula. Frances continued northwestward through the northern gulf of Mexico, making a second landfall on the afternoon of September 6th in the Florida big bend near Tallahassee as a tropical storm. In Lee County the observation at Big Carlos Pass recorded a gust to 51 knots (59 MPH) from the west at 12:18 AM EST on 09/05/2004.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5422746"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5422746"
    },
    "SE-5470020": {
     "id": "SE-5470020",
@@ -234,7 +234,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Lightning on Aug 18, 2005 in LEE (county FLC071). Deaths: 2. Injuries: 1. No damage figure was recorded.",
     "quote": "Lightning from a fast-moving thundertstorm killed two Fort Myers roofers and injured a third as they were getting ready to go home for the day.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5470020"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5470020"
    },
    "SE-185308": {
     "id": "SE-185308",
@@ -244,7 +244,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Heat on Jun 23, 2009 in Lee (forecast zone FLZ065, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. No damage figure was recorded.",
     "quote": "Afternoon temperatures in the lower 90s combined with dew points in the lower 70s to make a heat index of 100 to 105 degrees on this afternoon. A 25-year-old male collapsed and later died due to the heat while playing basketball with friends in Cape Coral.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=185308"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/185308"
    },
    "SE-416015": {
     "id": "SE-416015",
@@ -254,7 +254,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Lightning on Oct 3, 2012 in LEE (county FLC071). Deaths: 1. Injuries: 0. No damage figure was recorded.",
     "quote": "An 11 year old student was struck by lightning during football practice at around 4:30 pm EDT on the 3rd, right after taking the field. The student died on the afternoon of the 7th after he was removed from life support.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=416015"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/416015"
    },
    "SE-521910": {
     "id": "SE-521910",
@@ -264,7 +264,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Lightning on Jul 22, 2014 in LEE (county FLC071). Deaths: 1. Injuries: 2. No damage figure was recorded.",
     "quote": "Local law enforcement and media reported a lightning strike on Fort Myers Beach. Three people were walking on the beach with thunderstorms in the area. A 41 year old male was struck and killed. Two others were injured, one critically, and were transported to a local hospital.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=521910"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/521910"
    },
    "SE-566445": {
     "id": "SE-566445",
@@ -274,7 +274,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Lightning on May 13, 2015 in LEE (county FLC071). Deaths: 1. Injuries: 1. No damage figure was recorded.",
     "quote": "Two men working on a roof were struck by lightning. They stopped working when it began to rain but returned shortly after the rain had stopped. Neighbors said that the lightning strike hit a roofer directly in the head ��� knocking him unconscious. That bolt then transferred to another worker who was just steps away. They were transferred to a local hospital to be treated for their injuries. The man who was struck directly died from his injuries three days later.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=566445"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/566445"
    },
    "SE-639807": {
     "id": "SE-639807",
@@ -284,7 +284,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Lightning on Jul 25, 2016 in LEE (county FLC071). Deaths: 1. Injuries: 0. No damage figure was recorded.",
     "quote": "A 35 year old man was struck by lightning while working on the 6th floor lanai of a building under construction. Witnesses said that this was the only lightning strike seen or heard in the area from the storm. Attempts to resuscitate the man were unsuccessful, and he died at the scene.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=639807"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/639807"
    },
    "SE-697130": {
     "id": "SE-697130",
@@ -294,7 +294,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Lightning on Jun 29, 2017 in LEE (county FLC071). Deaths: 1. Injuries: 1. No damage figure was recorded.",
     "quote": "Local broadcast media reported that a 9 month pregnant woman was struck by lightning in a neighborhood in Fort Myers. She was transported to a local hospital. After arriving at the hospital, doctors delivered the baby. After a few weeks in intensive care, the child passed away. The mother was eventually released from the hospital and is back home recovering from her injuries.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=697130"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/697130"
    },
    "SE-964040": {
     "id": "SE-964040",
@@ -304,7 +304,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Lightning on Jul 24, 2021 in LEE (county FLC071). Deaths: 1. Injuries: 1. No damage figure was recorded.",
     "quote": "A family of four was on the beach at Sanibel Island as a thunderstorm moved overhead. Unfortunately a lightning strike hit the father and he died of his injuries.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=964040"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/964040"
    },
    "area-counts": {
     "id": "area-counts",
@@ -328,13 +328,13 @@
   "state": "ok",
   "items": [
    {
-    "action": "On Sep 17, 2025 a written NWS report noted minor street flooding along First Street and Cleveland Avenue, 1.3 km from this address. Do not drive through flood waters; Turn Around, Don't Drown, and never drive around barriers blocking a flooded road.",
+    "action": "On Sep 17, 2025 a written NWS report noted minor street flooding along First Street and Cleveland Avenue, 1.32 km from this address. Do not drive through flood waters; Turn Around, Don't Drown, and never drive around barriers blocking a flooded road.",
     "why": [
      {
       "id": "SE-1293835",
       "label": "Flood report, Sep 17, 2025",
       "hazard": "flood",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1293835"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1293835"
      }
     ],
     "guidance": [
@@ -369,7 +369,7 @@
    {
     "id": "heat",
     "label": "Extreme heat",
-    "evidence": "1069 days with a feels-like high of 100°F or more in 26 of 26 years (2000 to 2025); hottest 109.4°F on Jul 5, 2023; 1 Heat event recorded for Lee since 2009 (NCEI Storm Events), latest Jun 23, 2009"
+    "evidence": "1069 days with a feels-like high of 100°F or more in 26 of 26 years (2000 to 2025); hottest 109°F on Jul 5, 2023; 1 Heat event recorded for Lee since 2009 (NCEI Storm Events), latest Jun 23, 2009"
    },
    {
     "id": "wind",

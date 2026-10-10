@@ -2,6 +2,7 @@
  * The small timelines on the landing page's moment cards (public/data/moments.json, written by scripts/moment-timelines.ts). Each is a
  * pure function of progress `p` (0 to 1): which marks have been reached, the running totals, and the words beside the playhead.
  */
+import { stateName } from "../states";
 import { formatAtOffset } from "./text";
 
 export interface TornadoNight {
@@ -101,10 +102,15 @@ export function timelineSummary(timeline: MomentTimeline): string {
   }
   if (timeline.kind === "tornadoes") {
     const focus = timeline.marks.find((m) => m.focus);
-    return `${plural(timeline.marks.length, "tornado record", "tornado records")} in ${timeline.state} that night${focus ? `; the EF${focus.ef} at ${clock(focus.t, timeline.offsetMin)} is this card's` : ""}.`;
+    return `${plural(timeline.marks.length, "tornado record", "tornado records")} in ${stateName(timeline.state)} that night${focus ? `; the EF${focus.ef} at ${clock(focus.t, timeline.offsetMin)} is this card's` : ""}.`;
   }
   const flashes = timeline.lightning.reduce((a, b) => a + b, 0);
   return `${plural(flashes, "lightning flash", "lightning flashes")} and ${plural(timeline.reports.length, "flood report", "flood reports")} over the night.`;
+}
+
+/** What the strip shows, said above it: "All Kentucky tornadoes that night". Null for the other kinds. */
+export function timelineLabel(timeline: MomentTimeline): string | null {
+  return timeline.kind === "tornadoes" ? `All ${stateName(timeline.state)} tornadoes that night` : null;
 }
 
 /** Where the card's own moment sits on the strip (0 to 1) and its label: the card's tornado, or the event's year. Null for a night. */

@@ -185,7 +185,7 @@ export function TrackReel() {
           <div className="reel-stats" aria-hidden="true">
             <span className="reel-year">{frame.year}</span>
             <span className="reel-stat">
-              <b>{frame.count.toLocaleString("en-US")}</b> tornado tracks
+              <b>{frame.count.toLocaleString("en-US")}</b> of {total.count.toLocaleString("en-US")} tornado tracks
             </span>
             <span className="reel-stat">
               <b>{frame.strong.toLocaleString("en-US")}</b> EF3 or stronger

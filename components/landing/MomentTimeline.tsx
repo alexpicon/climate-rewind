@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { usePlayback } from "@/components/use-playback";
 import { useReducedMotion } from "@/components/use-reduced-motion";
 import { useShown } from "./use-shown";
-import { nightX, TIMELINE_MS, timelineEnds, timelineFrame, timelineHighlight, timelineSummary, type MomentTimeline as Timeline } from "@/lib/ui/moment-timeline";
+import { nightX, TIMELINE_MS, timelineEnds, timelineFrame, timelineHighlight, timelineLabel, timelineSummary, type MomentTimeline as Timeline } from "@/lib/ui/moment-timeline";
 
 const W = 600;
 const H = 72;
@@ -67,6 +67,7 @@ export function MomentTimeline({ timeline }: { timeline: Timeline }) {
   const frame = timelineFrame(timeline, p);
   const [startLabel, endLabel] = timelineEnds(timeline);
   const highlight = timelineHighlight(timeline);
+  const label = timelineLabel(timeline);
 
   // Plays once, the first time its card is really on screen.
   const shown = useShown(ref, 0.6);
@@ -80,6 +81,7 @@ export function MomentTimeline({ timeline }: { timeline: Timeline }) {
   const atEnd = p >= 0.9995;
   return (
     <div className="mt" ref={ref}>
+      {label ? <p className="mt-label">{label}</p> : null}
       <div className="mt-head">
         <button
           type="button"

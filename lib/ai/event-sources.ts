@@ -15,6 +15,7 @@ const sanitize = (text: string) => text.replace(/[<>]/g, " ").replace(/\s+/g, " 
 
 /** "$1,500,000 (about $1.5 million)": both forms are in the source, so the model can copy either and the number check passes. */
 export function usd(amount: number): string {
+  if (amount >= 1_000_000_000) return `$${num(amount)} (about $${Math.round(amount / 10_000_000) / 100} billion)`;
   if (amount >= 1_000_000) {
     const millions = Math.round((amount / 1_000_000) * 10) / 10;
     return `$${num(amount)} (about $${millions} million)`;
@@ -24,6 +25,7 @@ export function usd(amount: number): string {
 
 /** A short dollar figure for the totals line: "$72 million", "$450,000". */
 export function usdShort(amount: number): string {
+  if (amount >= 1_000_000_000) return `$${Math.round(amount / 10_000_000) / 100} billion`;
   if (amount >= 1_000_000) return `$${Math.round((amount / 1_000_000) * 10) / 10} million`;
   return `$${num(Math.round(amount))}`;
 }
@@ -71,7 +73,7 @@ export function eventSource(event: AreaEvent): AiSource {
     origin: "NCEI Storm Events, as filed by the National Weather Service",
     text: facts.join(" "),
     quote: eventQuote(event) || undefined,
-    href: event.id.startsWith("SE-") ? `https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=${event.id.replace(/^SE-/, "")}` : undefined,
+    href: event.id.startsWith("SE-") ? `https://www.ncei.noaa.gov/access/storm-events-database/event-details/${event.id.replace(/^SE-/, "")}` : undefined,
   };
 }
 

@@ -132,9 +132,9 @@ describe("each moment's attribution line", () => {
       expect(a.sourceLabel).toMatch(/^Source/);
       expect(a.text.length).toBeLessThanOrEqual(130);
     }
-    expect(moment("mayfield").attribution?.text).toMatch(/can’t yet be pinned/);
+    expect(moment("mayfield").attribution?.text).toMatch(/remains very challenging/);
     expect(moment("rolling-fork").attribution?.credit).toMatch(/AP/);
-    expect(moment("lahaina").attribution?.text).toMatch(/^No formal attribution study/);
+    expect(moment("lahaina").attribution?.text).toMatch(/^We found no formal attribution study/);
     expect(moment("ian").attribution?.credit).toMatch(/not peer-reviewed/);
     expect(moment("ida").attribution?.sourceLabel).toBe("Source (preprint)");
     // Scout's rule: the Ida card never states the "quarter to half million" figure (it mixes current and future warming).

@@ -49,7 +49,7 @@
     "title": "Active National Weather Service alerts",
     "origin": "api.weather.gov alerts for this address",
     "href": "https://www.weather.gov/",
-    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 11:56 UTC)."
+    "text": "The National Weather Service had no active alerts for this address when we checked."
    },
    "flood-outlook": {
     "id": "flood-outlook",
@@ -245,7 +245,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Tornado on Sep 16, 2010 in QUEENS (county NYC081). Deaths: 2. Injuries: 1. Recorded damage: $17,200,000 (about $17.2 million).",
     "quote": "A National Weather Service Storm Survey Team confirmed a tornado in Queens.||The tornado impacted Flushing and Bayside. In Flushing, on Browne Street between Roosevelt and 38th Avenues, the third floor of a residential brick building was severely damaged structurally. Large tree tops were lying on top of buildings and shot like projectiles between buildings. Sides of houses were peeled back. There was clear evidence of twisted metal along the side of the building. On Warren Street near the intersection of Roosevelt Avenue, a steel framed water tower was blown over on the roof. There was a partial roof collapse on another residential building.||A Pennsylvania woman was killed in her car by a falling tree on Grand Central Parkway. Her passenger was injured. A man trying to assist the woman suffered a brain aneurysm and died.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=262537"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/262537"
    },
    "SE-5531650": {
     "id": "SE-5531650",
@@ -255,7 +255,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Heat on Aug 1, 2006 in Queens (forecast zone NYZ076, YOUR zone: the address is inside it). Deaths: 14. Injuries: 0. No damage figure was recorded.",
     "quote": "An oppressive air mass moved slowly east across the region from August 1 to August 3. This was preceded by a hot dry air mass, when temperatures reached at least 90 degrees for 5 consecutive days at LaGuardia Airport, from July 27 to July 31.Excessive heat occurred mainly from noon to midnight each day for 3 consecutive days. High temperatures ranged mainly from the upper 90s to around 100 degrees. With surface dew point temperatures in the mid 70s, heat indices ranged from 105 to 115 degrees.Excessive heat resulted in 42 deaths and scattered power outages that lead to business losses.In Southeast NY, excessive heat was responsible for 42 deaths; 40 in New York City; as follows: 14 in Queens, 14 in Brooklyn, 9 in Manhattan, and 3 in the Bronx. This information was provided by the NYC Office of Chief Medical Examiner.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5531650"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5531650"
    },
    "SE-249841": {
     "id": "SE-249841",
@@ -265,7 +265,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Excessive Heat on Jul 4, 2010 in Queens (forecast zone NYZ076, YOUR zone: the address is inside it). Deaths: 4. Injuries: 0. No damage figure was recorded.",
     "quote": "Hot temperatures in excess of 90 degrees began July 4th and continued through July 7th. The temperature eclipsed 100 degrees at several locations during this time.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=249841"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/249841"
    },
    "SE-14175": {
     "id": "SE-14175",
@@ -275,7 +275,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Extreme Cold/Wind Chill on Feb 4, 2007 in Queens (forecast zone NYZ076, YOUR zone: the address is inside it). Deaths: 4. Injuries: 0. No damage figure was recorded.",
     "quote": "An arctic air mass caused subfreezing temperatures across the local area for 5 consecutive days; from February 4th through February 8th.|During this time, the daily mean temperature averaged nearly 15 degrees below normal.|Based on a report by the NYC Medical Examiner's Office, hypothermia, was a direct cause of at least 11 fatalities during and after this period of extreme cold in New York City.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=14175"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/14175"
    },
    "SE-5127569": {
     "id": "SE-5127569",
@@ -285,7 +285,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Extreme Cold/Wind Chill on Jan 17, 2000 in Queens (forecast zone NYZ076, YOUR zone: the address is inside it). Deaths: 2. Injuries: 0. No damage figure was recorded.",
     "quote": "An arctic cold front swept across the region during Sunday afternoon, January 16th. Strong and gusty northwest winds combined with well below normal temperatures and produced extremely low wind chill values mainly from midnight to 10 am on January 17th and from 1 am to noon on January 18th.On January 17th, wind speeds from 15 to 20 mph combined with temperatures from 5 to 10 degrees above 0, produced wind chill values from 15 to around 20 degrees below 0 in New York City and from 20 to 30 degrees below 0 across the Lower Hudson Valley.On January 18th, wind speeds averaging 15 mph combined with temperatures from 0 to 5 above zero, produced wind chill values from 20 degrees below 0 at Central Park to 30 degrees below 0 at LaGuardia Airport.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5127569"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5127569"
    },
    "SE-413125": {
     "id": "SE-413125",
@@ -295,7 +295,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "High Wind on Oct 29, 2012 in Northern Queens (forecast zone NYZ176, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. Recorded damage: $1,000,000 (about $1 million). Recorded magnitude: 69 (EG).",
     "quote": "A wind gust up to 79 mph was reported near Jackson Heights at 802 pm. In addition, a wind gust up to 74 mph was measured at LaGuardia Airport at 655 pm. In Flatbush, a 30 year old male was killed when a tree fell onto his house.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=413125"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/413125"
    },
    "SE-621181": {
     "id": "SE-621181",
@@ -305,7 +305,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Winter Storm on Jan 22, 2016 in Northern Queens (forecast zone NYZ176, YOUR zone: the address is inside it). Deaths: 2. Injuries: 0. No damage figure was recorded.",
     "quote": "LaGuardia Airport reported an all time record storm total snowfall of 28.2 inches. Elsewhere, the public and trained spotters reported snowfall of 20 to 27 inches. Also, winds gusted to 48 mph at 9:00 AM at LaGuardia on Saturday January 23rd.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=621181"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/621181"
    },
    "SE-5418908": {
     "id": "SE-5418908",
@@ -315,7 +315,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Flash Flood on Aug 11, 2004 in QUEENS (county NYC081). Deaths: 2. Injuries: 0. No damage figure was recorded.",
     "quote": "Flash flooding of roads occurred at College Point. Two occupants of a vehicle were electrocuted by a fallen power line when they apparently stepped out of their vehicle into several feet of water.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5418908"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5418908"
    },
    "SE-987588": {
     "id": "SE-987588",
@@ -325,7 +325,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Flash Flood on Sep 1, 2021 in QUEENS (county NYC081). Deaths: 3. Injuries: 0. No damage figure was recorded.",
     "quote": "Two women and a man died when their basement apartment flooded on Peck Avenue near Kissena Boulevard in Flushing, Queens.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=987588"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/987588"
    },
    "area-counts": {
     "id": "area-counts",
@@ -349,13 +349,13 @@
   "state": "ok",
   "items": [
    {
-    "action": "On July 2, 2021, NWS recorded standing water up to the bumpers of cars in Flushing, about 1.3 km from you. If a road is flooded, do not drive through it. Turn Around, Don't Drown.",
+    "action": "On July 2, 2021, NWS recorded standing water up to the bumpers of cars in Flushing, about 1.30 km from you. If a road is flooded, do not drive through it. Turn Around, Don't Drown.",
     "why": [
      {
       "id": "SE-976295",
       "label": "Flash Flood report, Jul 2, 2021",
       "hazard": "flood",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=976295"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/976295"
      }
     ],
     "guidance": [
@@ -382,7 +382,7 @@
       "id": "SE-847286",
       "label": "Flash Flood report, Jul 17, 2019",
       "hazard": "flood",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=847286"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/847286"
      }
     ],
     "guidance": [
@@ -402,7 +402,7 @@
       "id": "SE-779619",
       "label": "Flash Flood report, Aug 11, 2018",
       "hazard": "flood",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=779619"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/779619"
      },
      {
       "id": "local-flood-count",
@@ -421,13 +421,13 @@
     ]
    },
    {
-    "action": "An EF0 tornado touched down near Saint Fidelis Catholic Church in College Point on Aug 2, 2018, 3.2 km from you, knocking down trees and power lines. Sign up for your community's warning system, and in a warning go to an interior room away from windows.",
+    "action": "An EF0 tornado touched down near Saint Fidelis Catholic Church in College Point on Aug 2, 2018, 3.21 km from you, knocking down trees and power lines. Sign up for your community's warning system, and in a warning go to an interior room away from windows.",
     "why": [
      {
       "id": "SE-781373",
       "label": "EF0 tornado, Aug 2, 2018",
       "hazard": "tornado",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=781373"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/781373"
      }
     ],
     "guidance": [
@@ -452,14 +452,14 @@
     "why": [
      {
       "id": "local-heat",
-      "label": "Hottest day on record, Jul 22, 2011 (feels like 111.5°F)",
+      "label": "Hottest day on record, Jul 22, 2011 (feels like 112°F)",
       "hazard": "heat"
      },
      {
       "id": "SE-5531650",
       "label": "Heat, Aug 1, 2006",
       "hazard": "heat",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5531650"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5531650"
      }
     ],
     "guidance": [
@@ -486,7 +486,7 @@
       "id": "SE-413126",
       "label": "High Wind, Oct 29, 2012",
       "hazard": "wind",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=413126"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/413126"
      }
     ],
     "guidance": [
@@ -521,7 +521,7 @@
    {
     "id": "heat",
     "label": "Extreme heat",
-    "evidence": "71 days with a feels-like high of 100°F or more in 20 of 26 years (2000 to 2025); hottest 111.5°F on Jul 22, 2011; 40 Excessive Heat and 18 Heat events recorded for Southern Westchester since 2001 (NCEI Storm Events), latest Jul 21, 2019"
+    "evidence": "71 days with a feels-like high of 100°F or more in 20 of 26 years (2000 to 2025); hottest 112°F on Jul 22, 2011; 40 Excessive Heat and 18 Heat events recorded for Southern Westchester since 2001 (NCEI Storm Events), latest Jul 21, 2019"
    },
    {
     "id": "wind",

@@ -15,7 +15,7 @@ interface Props {
 export function LandingSearchBar({ visible, input, onInput, onSubmit, lookingUp }: Props) {
   return (
     <div className={visible ? "lbar on" : "lbar"} aria-hidden={visible ? undefined : true} inert={visible ? undefined : true}>
-      <span className="lbar-name"><BrandMark size={24} />{APP_NAME}</span>
+      <span className="lbar-name"><BrandMark size={24} /><span className="lbar-text">{APP_NAME}</span></span>
       <form
         className="lbar-form"
         role="search"

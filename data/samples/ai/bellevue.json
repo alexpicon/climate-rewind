@@ -10,7 +10,7 @@
   "state": "ok",
   "sentences": [
    {
-    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 01:41 UTC); official alerts are at weather.gov.",
+    "text": "The National Weather Service had no active alerts for this address when we checked; official alerts are at weather.gov.",
     "cites": [
      "alerts"
     ]
@@ -60,7 +60,7 @@
     "title": "Active National Weather Service alerts",
     "origin": "api.weather.gov alerts for this address",
     "href": "https://www.weather.gov/",
-    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 01:41 UTC)."
+    "text": "The National Weather Service had no active alerts for this address when we checked."
    },
    "quiet": {
     "id": "quiet",
@@ -78,7 +78,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "High Wind on Dec 14, 2006 in East Puget Sound Lowlands (forecast zone WAZ505, YOUR zone: the address is inside it). Deaths: 0. Injuries: 16. Recorded damage: $10,000,000 (about $10 million). Recorded magnitude: 59 (MG).",
     "quote": "A person, near Eatonville was injured when a tree struck his car. 17 other people were injured directly from the wind storm as well.|",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=7254"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/7254"
    },
    "flood-outlook": {
     "id": "flood-outlook",
@@ -257,7 +257,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "High Wind on Dec 27, 2002 in Seattle Metropolitan Area (forecast zone WAZ007, YOUR zone: the address is inside it). Deaths: 0. Injuries: 1. Recorded damage: $3,300,000 (about $3.3 million). Recorded magnitude: 45 (M).",
     "quote": "High winds knocked out power to around 300,000 homes throughout western Washington. Dozens of trees were downed, some fell on houses and others blocked roadways. Two barges broke free from their moorings in Elliot bay, and the Tacoma Narrows bridge was closed when a trucks semi trailer was blown over. The storm also contributed to the death of a 10 year old boy, in Thurston county, who became entangled in a downed power line and was electrocuted. In downtown Seattle, a man was knocked unconscious by a flying truck canopy.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5326117"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5326117"
    },
    "SE-7254": {
     "id": "SE-7254",
@@ -267,7 +267,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "High Wind on Dec 14, 2006 in East Puget Sound Lowlands (forecast zone WAZ505, YOUR zone: the address is inside it). Deaths: 0. Injuries: 16. Recorded damage: $10,000,000 (about $10 million). Recorded magnitude: 59 (MG).",
     "quote": "A person, near Eatonville was injured when a tree struck his car. 17 other people were injured directly from the wind storm as well.|",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=7254"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/7254"
    },
    "SE-141127": {
     "id": "SE-141127",
@@ -277,7 +277,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Heavy Snow on Dec 21, 2008 in East Puget Sound Lowlands (forecast zone WAZ505, YOUR zone: the address is inside it). Deaths: 0. Injuries: 1. Recorded damage: $2,000,000 (about $2 million).",
     "quote": "Heavy snow of 4-12 inches fell. In Bellevue, a large tent weighted by heavy snow, collapsed at a temporary ice rink, briefly trapping a few people. One girl had minor injuries.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=141127"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/141127"
    },
    "SE-277809": {
     "id": "SE-277809",
@@ -287,7 +287,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Strong Wind on Jan 16, 2011 in East Puget Sound Lowlands (forecast zone WAZ505, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. No damage figure was recorded. Recorded magnitude: 35 (MG).",
     "quote": "A 66 year old state DOT worker was killed when a tree fell on Highway 203 south of Carnation, hitting him and his truck.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=277809"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/277809"
    },
    "SE-361916": {
     "id": "SE-361916",
@@ -297,7 +297,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Ice Storm on Jan 19, 2012 in East Puget Sound Lowlands (forecast zone WAZ505, YOUR zone: the address is inside it). Deaths: 1. Injuries: 2. Recorded damage: $800,000.",
     "quote": "Downed trees and damaged exhibits and fences totaled about 200,000 at Northwest Trek in Eatonville. A WSDOT employee was injured by an ice coated tree limb, and another was injured in an icy crash on I-405. Power infrastructure was also damaged.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=361916"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/361916"
    },
    "SE-1226565": {
     "id": "SE-1226565",
@@ -307,7 +307,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "High Wind on Nov 19, 2024 in Bellevue and Vicinity (forecast zone WAZ556, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. No damage figure was recorded. Recorded magnitude: 50 (EG).",
     "quote": "A woman died when a tree fell on her home 3 miles southeast of Kirkland.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1226565"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1226565"
    },
    "area-counts": {
     "id": "area-counts",
@@ -331,7 +331,7 @@
   "state": "ok",
   "items": [
    {
-    "action": "On Dec 20, 2019, Eastgate Elementary School in Bellevue, 0.7 km from your address, was closed due to flooding. Do not walk, swim or drive through flood waters, and turn around instead.",
+    "action": "On Dec 20, 2019, Eastgate Elementary School in Bellevue, 0.67 km from your address, was closed due to flooding. Do not walk, swim or drive through flood waters, and turn around instead.",
     "why": [
      {
       "id": "LSR-SEW-201912201558-0",
@@ -380,7 +380,7 @@
       "id": "SE-7245",
       "label": "High Wind, Dec 14, 2006",
       "hazard": "wind",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=7245"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/7245"
      }
     ],
     "guidance": [
@@ -401,11 +401,11 @@
     ]
    },
    {
-    "action": "Your address has had 5 days feeling like 100°F or more since 2000, and Jun 28, 2021 felt like 114.7°F. Identify cool places such as libraries or shopping malls, and do not rely on a fan as your main cooling.",
+    "action": "Your address has had 5 days feeling like 100°F or more since 2000, and Jun 28, 2021 felt like 115°F. Identify cool places such as libraries or shopping malls, and do not rely on a fan as your main cooling.",
     "why": [
      {
       "id": "local-heat",
-      "label": "Hottest day on record, Jun 28, 2021 (feels like 114.7°F)",
+      "label": "Hottest day on record, Jun 28, 2021 (feels like 115°F)",
       "hazard": "heat"
      }
     ],
@@ -433,7 +433,7 @@
       "id": "SE-1160372",
       "label": "Cold/Wind Chill, Jan 12, 2024",
       "hazard": "winter",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1160372"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1160372"
      }
     ],
     "guidance": [
@@ -453,7 +453,7 @@
       "id": "SE-361916",
       "label": "Ice Storm, Jan 19, 2012",
       "hazard": "winter",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=361916"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/361916"
      }
     ],
     "guidance": [
@@ -481,7 +481,7 @@
    {
     "id": "heat",
     "label": "Extreme heat",
-    "evidence": "5 days with a feels-like high of 100°F or more in 2 of 26 years (2000 to 2025); hottest 114.7°F on Jun 28, 2021; 28 Heat and 8 Excessive Heat events recorded for City Of Seattle since 2008 (NCEI Storm Events), latest Aug 12, 2025"
+    "evidence": "5 days with a feels-like high of 100°F or more in 2 of 26 years (2000 to 2025); hottest 115°F on Jun 28, 2021; 28 Heat and 8 Excessive Heat events recorded for City Of Seattle since 2008 (NCEI Storm Events), latest Aug 12, 2025"
    },
    {
     "id": "wind",

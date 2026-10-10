@@ -54,7 +54,7 @@
     "title": "Active National Weather Service alerts",
     "origin": "api.weather.gov alerts for this address",
     "href": "https://www.weather.gov/",
-    "text": "Active alerts for this address (checked 2026-10-09 01:40 UTC): Flood Watch: Flood Watch issued October 8 at 11:25AM CDT until October 11 at 7:00AM CDT by NWS Nashville TN (ends 2026-10-11 07:00)."
+    "text": "Active alerts for this address: Flood Watch: Flood Watch issued October 8 at 11:25AM CDT until October 11 at 7:00AM CDT by NWS Nashville TN."
    },
    "flood-outlook": {
     "id": "flood-outlook",
@@ -344,7 +344,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Tornado on Mar 3, 2020 in DAVIDSON (county TNC037). Deaths: 2. Injuries: 170. Recorded damage: $1,090,000,000 (about $1090 million).",
     "quote": "An historic, long-track, strong EF-3 tornado began in western Davidson County then tracked eastward for over 60 miles through Wilson County into Smith County before lifting, causing 5 deaths and 220 injuries. This tornado touched down west of River Road Pike then moved eastward across Bells Bend, destroying a barn and blowing down numerous trees. The tornado strengthened significantly and widened to 0.65 miles wide as it crossed the Cumberland River into the John C. Tune Airport area, causing strong EF-2 damage to numerous planes, hangers, warehouses, and other buildings from Cockrill Bend Way to Briley Parkway. Around $200 million in damage was reported at John C. Tune Airport alone.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=882999"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/882999"
    },
    "SE-226199": {
     "id": "SE-226199",
@@ -354,7 +354,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Flood on May 1, 2010 in DAVIDSON (county TNC037). Deaths: 10. Injuries: 0. Recorded damage: $1,500,001,000 (about $1500 million).",
     "quote": "At U.S. Highway 431 near the Robertson/Davidson County Line at Sycamore Creek, water was overflowing its banks, resulting in flooding of low lying areas. At least one home and farm was reported to be covered with flood waters. At the time of this report, U.S. Highway 431 was still open, although the water level near the base of the road and bridge was rising fast. No additional information was provided concerning any damage to the road or bridge. Also, flooding was reported along Charlotte Road just west of downtown Nashville by the public. Emergency Manager reported closing of Bluff Road due to water covering the road. Water was reported over Culbertson Road along Mill Creek near Nolensville. This made the road impassible to traffic. On Estes Road, approximately one mile west of Green Hills, a creek was flowing over the road. Depth was estimated at three to six inches.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=226199"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/226199"
    },
    "SE-257487": {
     "id": "SE-257487",
@@ -364,7 +364,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Excessive Heat on Aug 4, 2010 in Davidson (forecast zone TNZ027, YOUR zone: the address is inside it). Deaths: 0. Injuries: 25. Recorded damage: $100,000.",
     "quote": "Afternoon temperatures around 100 degrees and unusually high humidity led to heat index values between 110 and 115 degrees on August 4th. Around Metro Nashville, a couple dozen people were hospitalized suffering from heat exhaustion. Several others were hospitalized suffering from burnt feet. There were no known fatalities. There were numerous reports of damage from the heat including exploding tires on automobiles.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=257487"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/257487"
    },
    "SE-282698": {
     "id": "SE-282698",
@@ -374,7 +374,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Winter Weather on Feb 9, 2011 in Davidson (forecast zone TNZ027, YOUR zone: the address is inside it). Deaths: 0. Injuries: 48. No damage figure was recorded.",
     "quote": "Two and one half inches of total snowfall accumulation occurred across the county. A newspaper reported that the Nashville Metro Police Department Officers reported 100 accident as roads quickly became snow covered across the area during the first couple hours of snowfall. In total, the Nashville Metro Police Deaprtment and the Tennessee Highway Patrol reported a combined 272 accidents, including 48 with injuries. Details concerning damage to individual vehicles and damage costs were unknown. This total snowfall accumulation also resulted in closures or postponement of civic engagements across the county for the remainder of that day and night on Wednesday, February 9th, as travel across roads throughout the county became hazardous due to the accumulating snowfall.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=282698"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/282698"
    },
    "SE-480287": {
     "id": "SE-480287",
@@ -384,7 +384,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "High Wind on Oct 31, 2013 in Davidson (forecast zone TNZ027, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. Recorded damage: $50,000. Recorded magnitude: 52 (EG).",
     "quote": "Numerous trees and power lines were blown down across Davidson County, especially during the evening hours, with many blocked roads. The KBNA ASOS measured a peak wind gust of 52 mph around 830 PM CDT. One 9 year old boy was killed by electrocution around 930 PM CDT when he rode his bicycle over a live power line that had been knocked down by a fallen large tree limb. This death occurred in the 500 block of Charles E Davis Boulevard around 1.5 miles southeast of downtown Nashville. Trees were reportedly blown down in Old Hickory, a large tree limb was blown down on power lines in the Charlotte Park area of west Nashville, and a large tree limb was blown down in Sevier Park. Trees were blown down and blocked roads such as Robertson Avenue in west Nashville, Towry Street at Paragon Mills Road in Antioch, and Carter Avenue in east Nashville.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=480287"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/480287"
    },
    "SE-951956": {
     "id": "SE-951956",
@@ -394,7 +394,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Flash Flood on Mar 27, 2021 in DAVIDSON (county TNC037). Deaths: 5. Injuries: 0. Recorded damage: $20,000,000 (about $20 million).",
     "quote": "Major and historic flash flooding affected southern and eastern Davidson County, with the worst flooding affecting areas along and near Sevenmile Creek and Mill Creek in south Nashville. Hundreds of homes and businesses were flooded, numerous roadways were flooded and closed including I-24, I-40, and I-440, and over 130 water rescues were conducted from people stranded in flooded vehicles and homes. Homes and businesses that were flooded included a hotel at 95 Wallace Road near I-24 at Harding Place, the South Brooke Apartments on Linbar Drive, many homes around Edmondson Pike at Blackman Road, the Walmart on Nolensville Pike at Harding Place with vehicles in the parking lot submerged up to their windows, a home on Truxton Court in Donelson, and the Kroger on Old Hickory Blvd in Hermitage which also had cars stalled in flood waters in the parking lot.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=951956"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/951956"
    },
    "SE-1144554": {
     "id": "SE-1144554",
@@ -404,7 +404,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Tornado on Dec 9, 2023 in DAVIDSON (county TNC037). Deaths: 3. Injuries: 21. Recorded damage: $10,000,000 (about $10 million).",
     "quote": "This strong EF-2 tornado touched down just to the east of I-24 on Brick Church Lane in Davidson County. There were a few trees down and shingle damage to several homes in this area. The tornado strengthened in the Madison area causing EF-2 damage with winds up to 120-125 mph. The heaviest damage was confined to two areas, off of East Campbell Road as well as Nesbitt Lane. Multiple mobile homes were destroyed on Nesbitt Lane, and this is where three fatalities occurred. Multiple single family homes and a church off of East Campbell Road were missing large sections of their roofs with some exterior walls collapsed. Several metal power poles in the area were bent as well. Nearby, an apartment complex off Palmer Avenue sustained damage. As the tornado moved further northeast, substantial damage was found to houses in a cul-de-sac on Stoney River Lane.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1144554"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1144554"
    },
    "area-counts": {
     "id": "area-counts",
@@ -484,7 +484,7 @@
       "id": "SE-951956",
       "label": "Flash Flood, Mar 27, 2021",
       "hazard": "flood",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=951956"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/951956"
      }
     ],
     "guidance": [
@@ -498,13 +498,13 @@
     ]
    },
    {
-    "action": "An EF3 tornado on Mar 3, 2020 passed 0.7 km from this address. Pick your shelter now: a safe room or storm shelter, or otherwise a small interior windowless room or basement on the lowest level, and practice going there.",
+    "action": "An EF3 tornado on Mar 3, 2020 passed 0.65 km from this address. Pick your shelter now: a safe room or storm shelter, or otherwise a small interior windowless room or basement on the lowest level, and practice going there.",
     "why": [
      {
       "id": "SE-882999",
       "label": "EF3 tornado, Mar 3, 2020",
       "hazard": "tornado",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=882999"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/882999"
      }
     ],
     "guidance": [
@@ -524,7 +524,7 @@
       "id": "SE-1144554",
       "label": "Tornado, Dec 9, 2023",
       "hazard": "tornado",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1144554"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1144554"
      }
     ],
     "guidance": [
@@ -542,7 +542,7 @@
     "why": [
      {
       "id": "local-heat",
-      "label": "Hottest day on record, Jun 29, 2012 (feels like 113.1°F)",
+      "label": "Hottest day on record, Jun 29, 2012 (feels like 113°F)",
       "hazard": "heat"
      }
     ],
@@ -578,7 +578,7 @@
    {
     "id": "heat",
     "label": "Extreme heat",
-    "evidence": "531 days with a feels-like high of 100°F or more in 26 of 26 years (2000 to 2025); hottest 113.1°F on Jun 29, 2012; 8 Excessive Heat and 4 Heat events recorded for Williamson since 2010 (NCEI Storm Events), latest Jul 30, 2025"
+    "evidence": "531 days with a feels-like high of 100°F or more in 26 of 26 years (2000 to 2025); hottest 113°F on Jun 29, 2012; 8 Excessive Heat and 4 Heat events recorded for Williamson since 2010 (NCEI Storm Events), latest Jul 30, 2025"
    },
    {
     "id": "wind",

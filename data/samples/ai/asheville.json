@@ -54,7 +54,7 @@
     "title": "Active National Weather Service alerts",
     "origin": "api.weather.gov alerts for this address",
     "href": "https://www.weather.gov/",
-    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 01:40 UTC)."
+    "text": "The National Weather Service had no active alerts for this address when we checked."
    },
    "flood-outlook": {
     "id": "flood-outlook",
@@ -306,7 +306,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Flash Flood on Sep 27, 2024 in BUNCOMBE (county NCC021). Deaths: 15. Injuries: 0. Recorded damage: $300,000,000 (about $300 million).",
     "quote": "Historic and catastrophic flash flooding developed along the Swannanoa River basin during the early morning hours as rainfall rates began to intensify as tropical rainbands near the center of Helene swept across the area. Numerous structures and roads were inundated in the city of Black Mountain, the Swannanoa community and surrounding areas, with multiple homes and businesses and numerous roads destroyed. The most devastating flooding occurred in the Asheville area, as numerous businesses were damaged and some completely destroyed or swept away in Biltmore Village. The stream gauge on the Swannanoa River at Biltmore Village crested at just over 26 feet, which was more than 5 feet higher than the crest during the Great Flood of 1916. Multiple landslides occurred throughout the Swannanoa Valley, with some of those damaging or destroying homes.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1218197"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1218197"
    },
    "SE-29361": {
     "id": "SE-29361",
@@ -316,7 +316,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "High Wind on Apr 16, 2007 in Buncombe (forecast zone NCZ053, YOUR zone: the address is inside it). Deaths: 0. Injuries: 0. Recorded damage: $1,000,000 (about $1 million). Recorded magnitude: 65 (EG).",
     "quote": "After abating somewhat in the early morning hours, there was a resurgence in damaging winds across the Blue Ridge Mountains and surrounding areas during the daylight hours. Thousands of trees and numerous power lines fell across the area, with many trees falling on roads and damaging homes and vehicles. A 59-year-old man was killed when the vehicle he was driving on Turnpike Rd near Mills River was crushed by a fallen tree. In Saluda, a 75-year-old man was critically injured when a tree fell on his car. He died several days later. A utility worker was also seriously injured in in the Hickory Grove area of Polk County, when a falling tree pinned him to his vehicle. At the height of the event, about 30,000 customers were without power in Henderson County alone, with power outages numbering in the hundreds of thousands across the area as a whole.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=29361"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/29361"
    },
    "SE-29616": {
     "id": "SE-29616",
@@ -326,7 +326,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Frost/Freeze on Apr 8, 2007 in Buncombe (forecast zone NCZ053, YOUR zone: the address is inside it). Deaths: 0. Injuries: 0. Recorded damage: $10,000,000 (about $10 million).",
     "quote": "An early spring hard freeze saw temperatures fall to the upper teens and lower 20s across much of the western Carolinas and northeast Georgia on the morning of the 8th. This resulted in massive agricultural losses across the region. It was estimated that 90 percent of the apple and peach crop across the area was destroyed. As much as 50 percent of the berry crop was lost, while more than 50 percent of the grape crop across western North Carolina was damaged.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=29616"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/29616"
    },
    "SE-470386": {
     "id": "SE-470386",
@@ -336,7 +336,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Flash Flood on Jul 4, 2013 in BUNCOMBE (county NCC021). Deaths: 0. Injuries: 0. Recorded damage: $2,500,000 (about $2.5 million).",
     "quote": "Several streets were flooded from the Biltmore Forest area northward to Asheville. Numerous roads were closed by flooding, landslides and fallen trees. Around 9 pm EDT a large debris flow took out part of Vance Gap Road, isolating several homes. Around a dozen residences had to be evacuated as a result of the slide.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=470386"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/470386"
    },
    "SE-1036690": {
     "id": "SE-1036690",
@@ -346,7 +346,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Thunderstorm Wind on Jun 17, 2022 in BUNCOMBE (county NCC021). Deaths: 1. Injuries: 0. Recorded damage: $5,000. Recorded magnitude: 40 (EG).",
     "quote": "Media reported gusty winds associated with a weakening line of showers and thunderstorms blew down a tree onto a vehicle at Biltmore Estate, killing an occupant.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1036690"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1036690"
    },
    "SE-1096614": {
     "id": "SE-1096614",
@@ -356,7 +356,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Strong Wind on Apr 1, 2023 in Buncombe (forecast zone NCZ053, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. No damage figure was recorded. Recorded magnitude: 40 (EG).",
     "quote": "Gusty winds developed across western North Carolina in the wake of a cold front, causing a tree to fall on a 65-year-old employee on Approach Rd at Biltmore Estate.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1096614"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1096614"
    },
    "area-counts": {
     "id": "area-counts",
@@ -386,7 +386,7 @@
       "id": "SE-1218197",
       "label": "Flash Flood, Sep 27, 2024",
       "hazard": "flood",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1218197"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1218197"
      }
     ],
     "guidance": [
@@ -463,13 +463,13 @@
       "id": "SE-1036690",
       "label": "Thunderstorm Wind, Jun 17, 2022",
       "hazard": "wind",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1036690"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1036690"
      },
      {
       "id": "SE-1096614",
       "label": "Strong Wind, Apr 1, 2023",
       "hazard": "wind",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1096614"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1096614"
      }
     ],
     "guidance": [
@@ -496,7 +496,7 @@
       "id": "SE-5488724",
       "label": "Ice Storm, Dec 15, 2005",
       "hazard": "winter",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5488724"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5488724"
      }
     ],
     "guidance": [
@@ -517,11 +517,11 @@
     ]
    },
    {
-    "action": "Your address has had 11 days feeling like 100°F or more since 2000, the hottest on Jun 30, 2012 at 104.4°F. Identify places such as libraries and shopping malls where you can cool off, and do not rely on a fan as your main cooling.",
+    "action": "Your address has had 11 days feeling like 100°F or more since 2000, the hottest on Jun 30, 2012 at 104°F. Identify places such as libraries and shopping malls where you can cool off, and do not rely on a fan as your main cooling.",
     "why": [
      {
       "id": "local-heat",
-      "label": "Hottest day on record, Jun 30, 2012 (feels like 104.4°F)",
+      "label": "Hottest day on record, Jun 30, 2012 (feels like 104°F)",
       "hazard": "heat"
      }
     ],
@@ -557,7 +557,7 @@
    {
     "id": "heat",
     "label": "Extreme heat",
-    "evidence": "11 days with a feels-like high of 100°F or more in 7 of 26 years (2000 to 2025); hottest 104.4°F on Jun 30, 2012"
+    "evidence": "11 days with a feels-like high of 100°F or more in 7 of 26 years (2000 to 2025); hottest 104°F on Jun 30, 2012"
    },
    {
     "id": "wind",

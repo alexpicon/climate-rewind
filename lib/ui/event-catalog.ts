@@ -45,11 +45,11 @@ export const EVENTS: readonly EventEntry[] = [
     id: "derecho",
     title: "The Iowa derecho",
     when: "Aug 10, 2020 · Iowa and Illinois",
-    hook: "A line of storms crosses Iowa in an afternoon; a 126 mph gust is measured at Atkins, near Cedar Rapids.",
+    hook: "A line of storms crosses Iowa in an afternoon; a 126 mph gust (unofficial, per NWS) is reported at Atkins, near Cedar Rapids.",
     lede:
       "The 2020 derecho, by NOAA's count the costliest thunderstorm event in US records, crossing Iowa and into Illinois: the archived radar, the wind a NOAA weather model saw each hour, and the National Weather Service's reports of measured and estimated gusts and damage as they came in.",
     caveat:
-      "The model's hourly snapshot misses gusts that lasted minutes: it peaks near 60 mph while the ground measured 126. The reports are the measurements; the arrows show the pattern.",
+      "The model's hourly snapshot misses gusts that lasted minutes: it peaks near 60 mph while the ground reported a 126 mph gust (unofficial, per NWS). The reports are the measurements; the arrows show the pattern.",
     offsetMin: -300,
     zone: "CDT",
     durationMs: 30_000,

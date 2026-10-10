@@ -54,7 +54,7 @@
     "title": "Active National Weather Service alerts",
     "origin": "api.weather.gov alerts for this address",
     "href": "https://www.weather.gov/",
-    "text": "Active alerts for this address (checked 2026-10-09 11:56 UTC): Tropical Cyclone Local Statement: Tropical Cyclone Local Statement issued October 9 at 4:19AM CDT by NWS Jackson MS (ends 2026-10-09 12:30)."
+    "text": "Active alerts for this address: Tropical Cyclone Local Statement: Tropical Cyclone Local Statement issued October 9 at 4:19AM CDT by NWS Jackson MS."
    },
    "flood-outlook": {
     "id": "flood-outlook",
@@ -243,7 +243,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Tornado on Mar 24, 2023 in SHARKEY (county MSC125). Deaths: 14. Injuries: 150. Recorded damage: $83,136,000 (about $83.1 million).",
     "quote": "This long track, violent tornado began over northern |Issaquena County near Grant Rd, downing multiple trees and damaging |two older outbuildings. It tracked northeastward, producing tree |damage as it crossed the Steele Bayou Canal before crossing into |Sharkey County. At this point, the tornado began to substantially |increase in size and intensity. A very high percentage of trees were |snapped along the path through a wooded area south of Bear Lake Rd. |It was in this wooded area where the first indications of EF3 to EF4 |damage were noted, with at least one tree and root ball and several |more large tree pieces fully displaced into the downstream field. |From this point along the path in Sharkey County, there was a well |defined confluence zone in damage along the center of the tornado |track.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1102153"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1102153"
    },
    "SE-5471471": {
     "id": "SE-5471471",
@@ -253,7 +253,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Hurricane (Typhoon) on Aug 29, 2005 in Sharkey (forecast zone MSZ041, YOUR zone: the address is inside it). Deaths: 0. Injuries: 0. Recorded damage: $15,400,000 (about $15.4 million).",
     "quote": "Hurricane Katrina will likely go down as the worst and costliest natural disaster in United States history. The amount of destruction, the cost of damaged property/agriculture and the large loss of life across the affected region has been overwhelming. Catastrophic damage was widespread across a large portion of the Gulf Coast region. The devastation was not only confined to the coastal region, widespread and significant damage occurred well inland up to the Hattiesburg area and northward past Interstate 20. This hurricane has changed life as we know it across the Gulf Coast region which will take many years to return to normal.Hurricane Katrina was a very large and powerful storm which set several unfortunate records. This storm began as Tropical Depression 12 during the late afternoon and evening of August 23rd.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5471471"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5471471"
    },
    "SE-5505502": {
     "id": "SE-5505502",
@@ -263,7 +263,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Thunderstorm Wind on May 4, 2006 in SHARKEY (county MSC125). Deaths: 0. Injuries: 0. Recorded damage: $700,000. Recorded magnitude: 60 (EG).",
     "quote": "South Delta Middle School, in Anguilla, had a portion of its roof blown off along with many trees blown down and numerous large limbs broken and laid in area lawns and streets. Additionally, the damaging winds extended southward into Rolling Fork where several homes and businesses sustained damage.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5505502"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5505502"
    },
    "SE-224550": {
     "id": "SE-224550",
@@ -273,7 +273,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Tornado on Apr 24, 2010 in SHARKEY (county MSC125). Deaths: 0. Injuries: 0. Recorded damage: $2,000,000 (about $2 million).",
     "quote": "The path of the tornado clipped the far southeast corner of Sharkey County in the Delta National Forest. Considerable damage occurred to the timber along the path as it moved into western Yazoo County. The tornado reached EF2 intensity before moving into western Yazoo County with peak winds around 130 mph.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=224550"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/224550"
    },
    "SE-413060": {
     "id": "SE-413060",
@@ -283,7 +283,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Tornado on Oct 17, 2012 in SHARKEY (county MSC125). Deaths: 0. Injuries: 4. Recorded damage: $200,000.",
     "quote": "Several mobile homes were heavily damaged or destroyed, and dozens of power poles were snapped. Maximum winds were estimated at 125 mph. The tornado continued into Humphreys County.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=413060"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/413060"
    },
    "SE-1077241": {
     "id": "SE-1077241",
@@ -293,7 +293,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Tornado on Dec 13, 2022 in SHARKEY (county MSC125). Deaths: 0. Injuries: 3. Recorded damage: $1,000,000 (about $1 million).",
     "quote": "A tornado touched down north of Rolling Fork Road where a few trees had limbs damaged. The tornado intensified quickly as it traveled northeast across Garfield Rd. and destroyed numerous outbuildings. The tornado reached its maximum intensity as it crossed Rolling Fork Rd. and destroyed a well-constructed outbuilding after pulling out concrete anchors weighing several hundred pounds. The concrete was lofted and carried about 50 yards before landing on the pavement. The tornado continued northeastward, with some fluctuation in strength as it damaged numerous trees and caused primarily roof damage to homes. As the tornado crossed US Highway 61, several mobile homes were rolled and destroyed. In this group of homes, three injuries were reported. The tornado weakened and lifted shortly after over farmland. The maximum width was 250 yards. The maximum wind speed was 125 mph.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1077241"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1077241"
    },
    "SE-1159861": {
     "id": "SE-1159861",
@@ -303,7 +303,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Winter Storm on Jan 14, 2024 in Sharkey (forecast zone MSZ041, YOUR zone: the address is inside it). Deaths: 1. Injuries: 0. No damage figure was recorded.",
     "quote": "Accumulations of about one half inch of sleet fell across the county, but light snow and freezing rain also fell. Area roads were covered by the sleet and glaze of ice. A 32-year old man who was walking home during the winter storm was later found to have died from hypothermia near South Delta Elementary School. Temperatures below freezing and wind chills as low as -10 degrees Fahrenheit occurred during and after the winter storm.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1159861"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1159861"
    },
    "area-counts": {
     "id": "area-counts",
@@ -327,13 +327,13 @@
   "state": "ok",
   "items": [
    {
-    "action": "The NWS wrote up flooding 0.4 km from your address on January 14, 2020, when water surrounded several buildings and multiple roads flooded. Do not walk, swim or drive through flood waters; Turn Around, Don't Drown.",
+    "action": "The NWS wrote up flooding 0.40 km from your address on January 14, 2020, when water surrounded several buildings and multiple roads flooded. Do not walk, swim or drive through flood waters; Turn Around, Don't Drown.",
     "why": [
      {
       "id": "SE-873639",
       "label": "Flash Flood report, Jan 14, 2020",
       "hazard": "flood",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=873639"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/873639"
      },
      {
       "id": "local-flood-count",
@@ -366,7 +366,7 @@
    {
     "id": "heat",
     "label": "Extreme heat",
-    "evidence": "1148 days with a feels-like high of 100°F or more in 26 of 26 years (2000 to 2025); hottest 114.6°F on Aug 2, 2010; 3 Heat and 1 Excessive Heat events recorded for Yazoo since 2000 (NCEI Storm Events), latest Jul 19, 2017"
+    "evidence": "1148 days with a feels-like high of 100°F or more in 26 of 26 years (2000 to 2025); hottest 115°F on Aug 2, 2010; 3 Heat and 1 Excessive Heat events recorded for Yazoo since 2000 (NCEI Storm Events), latest Jul 19, 2017"
    },
    {
     "id": "wind",

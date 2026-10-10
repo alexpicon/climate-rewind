@@ -10,7 +10,7 @@
   "state": "ok",
   "sentences": [
    {
-    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 01:40 UTC); official alerts are at weather.gov.",
+    "text": "The National Weather Service had no active alerts for this address when we checked; official alerts are at weather.gov.",
     "cites": [
      "alerts"
     ]
@@ -55,7 +55,7 @@
     "title": "Active National Weather Service alerts",
     "origin": "api.weather.gov alerts for this address",
     "href": "https://www.weather.gov/",
-    "text": "The National Weather Service had no active alerts for this address when we checked (2026-10-09 01:40 UTC)."
+    "text": "The National Weather Service had no active alerts for this address when we checked."
    },
    "flood-outlook": {
     "id": "flood-outlook",
@@ -243,7 +243,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Heat on Jun 27, 2022 in Bexar (forecast zone TXZ205, YOUR zone: the address is inside it). Deaths: 53. Injuries: 0. No damage figure was recorded.",
     "quote": "Temperatures were unusually hot on the 27th with high temperatures in the San Antonio area ranging from 100-103 degrees (the normal high is 93). Sixty-seven people were found in a tractor-trailer on the southwest side of San Antonio. Fifty-three people died of heat related illnesses. Forty-eight people died at the scene and five others died after being taken to hospitals. Forty of the victims were male and 13 were female. Their ages were not released.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1039790"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1039790"
    },
    "SE-713949": {
     "id": "SE-713949",
@@ -253,7 +253,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Heat on Jul 22, 2017 in Bexar (forecast zone TXZ205, YOUR zone: the address is inside it). Deaths: 10. Injuries: 29. No damage figure was recorded.",
     "quote": "Thirty-nine people were discovered in a hot semi-trailer just after��midnight��on Sunday, July 23rd in southwestern San Antonio. The San Antonio Fire Department reported that 8 people died at the scene. Two others died after being taken to hospitals. Twenty-nine others were treated for heat related illnesses. High temperatures ranged from 100-104 degrees across the San Antonio metro area on Saturday, July 22nd. Peak heat index values were estimated to have been around 101-105 degrees.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=713949"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/713949"
    },
    "SE-943791": {
     "id": "SE-943791",
@@ -263,7 +263,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Extreme Cold/Wind Chill on Feb 14, 2021 in Bexar (forecast zone TXZ205, YOUR zone: the address is inside it). Deaths: 4. Injuries: 0. No damage figure was recorded.",
     "quote": "Extreme cold temperatures and breezy winds combined to produce wind chill values of -5 to -10 degrees F. According to a FOIA (Freedom of Information Act request) to the Texas Department of State Health Services made in April 2021, information released showed one direct death from hypothermia and three indirect deaths from other causes. Detailed information was not provided on exact date, sex of the fatalities, age, or in the case of the indirect deaths, the exact cause of death. Detailed information will not be made public until 25 years after date of death.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=943791"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/943791"
    },
    "SE-5285553": {
     "id": "SE-5285553",
@@ -273,7 +273,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Tornado on Mar 19, 2002 in BEXAR (county TXC029). Deaths: 0. Injuries: 30. Recorded damage: $2,000,000 (about $2 million).",
     "quote": "Tornado number five, strongest of the six and rated as a minimal F2 tornado on the Fujita Scale, formed about 3.5 miles southwest of the intersection of Loop 1604 and I35. It struck near 720 pm along near Silver Street and Bravo Street and moved toward the north for 1.5 miles. It apparently weakened periodically, producing a hit-and-miss damage path. It completely destroyed four mobile homes and damaged several others.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5285553"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5285553"
    },
    "SE-5311543": {
     "id": "SE-5311543",
@@ -283,7 +283,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Flash Flood on Jul 1, 2002 in BEXAR (county TXC029). Deaths: 4. Injuries: 0. No damage figure was recorded.",
     "quote": "Additional 2 to 3 inch totals fell across Bexar County with isolated totals of up to 6 inches in the north central part of the city of San Antonio. Flash flooding developed very quickly and was countywide in its coverage. Small streams and creeks were also flash flooding. Officials reported more than 230 high water rescues in San Antonio from the night of July 1 through noon on July 2. Damage was reported to numerous roads and bridges across the county. An elderly couple apparently attempted to drive home from a restaurant during the severe flash flooding late Monday evening, despite the pleas of the restaurant patrons. Their bodies were recovered near 0930CST on July 4 in their submerged automobile in Olmos Creek. A young man and his friend were playing near swollen Apache Creek when both were swept into the creek on the afternoon of July 1.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=5311543"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/5311543"
    },
    "SE-51439": {
     "id": "SE-51439",
@@ -293,7 +293,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Flash Flood on Aug 16, 2007 in BEXAR (county TXC029). Deaths: 2. Injuries: 0. Recorded damage: $15,000,000 (about $15 million).",
     "quote": "The area of extremely heavy rainfall associated with the remains of Tropical Storm Erin continued to spread northwestward across Bexar County, with a general 4 to 5 inch rain over the county. Totals of up to 8 inches were reported at several locations in the south and west parts of San Antonio as well as between Helotes and Leon Springs. By 1400 CST, most roads in the northwest part of the county were closed. By 1530 CST that afternoon, more than 39 high water rescues were reportedly underway in San Antonio. Water was almost waist-deep at Southcross Boulevard in San Antonio. Floodwaters were so deep and running so swiftly at the San Antonio High School West Campus that they collapsed a masonry wall and filled the school with almost five feet of muddy water. Hallways were flooded, and desks, computers and boxes were tossed and thrown together.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=51439"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/51439"
    },
    "SE-453032": {
     "id": "SE-453032",
@@ -303,7 +303,7 @@
     "origin": "NCEI Storm Events, as filed by the National Weather Service",
     "text": "Flash Flood on May 25, 2013 in BEXAR (county TXC029). Deaths: 2. Injuries: 0. No damage figure was recorded.",
     "quote": "Thunderstorms produced heavy rain that caused flash flooding in and around San Antonio and Bexar County. There was record rainfall in the San Antonio area with the San Antonio International Airport recording 9.87 inches of rain (2nd highest 24 hr total on record) and CoCoRAHS observers reporting over 11 inches. Most of the rain fell in about six hours with four inches in one hour between 6 and 7 AM. A USGS stream and rain gauge on Olmos Creek and Dresden Drive reported 2.58 inches in 15 min between 615 and 630 am. The gauge reported 6.13 inches in one hour, 9.46 inches in 2 hours, and totaled 15.31 inches in 5 hours. A 24hr total at this gauge was 17 inches of rain. This led to massive flooding in the Olmos Basin/Creek just inside Loop 410 near the Quarry. Most of the flooding across the city was in north central and northwest San Antonio along and just side Loop 410.",
-    "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=453032"
+    "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/453032"
    },
    "area-counts": {
     "id": "area-counts",
@@ -327,13 +327,13 @@
   "state": "ok",
   "items": [
    {
-    "action": "The NWS report for May 29, 2023 describes a car stranded in flood water near the St. Mary's St. bridge over the San Antonio River, 0.4 km from this address. Do not drive through flood waters, and never drive around barriers blocking a flooded road.",
+    "action": "The NWS report for May 29, 2023 describes a car stranded in flood water near the St. Mary's St. bridge over the San Antonio River, 0.36 km from this address. Do not drive through flood waters, and never drive around barriers blocking a flooded road.",
     "why": [
      {
       "id": "SE-1102954",
       "label": "Flash Flood report, May 29, 2023",
       "hazard": "flood",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1102954"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1102954"
      }
     ],
     "guidance": [
@@ -354,19 +354,19 @@
     ]
    },
    {
-    "action": "On March 28, 2018, flash flooding closed the lower level of I-35 between Alamo St. and Guadalupe St., 0.7 km away, and on May 30, 2025 multiple vehicles were stranded. Remember that one foot of moving water can sweep a vehicle away.",
+    "action": "On March 28, 2018, flash flooding closed the lower level of I-35 between Alamo St. and Guadalupe St., 0.74 km away, and on May 30, 2025 multiple vehicles were stranded. Remember that one foot of moving water can sweep a vehicle away.",
     "why": [
      {
       "id": "SE-745469",
       "label": "Flash Flood report, Mar 28, 2018",
       "hazard": "flood",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=745469"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/745469"
      },
      {
       "id": "SE-1265274",
       "label": "Flash Flood report, May 30, 2025",
       "hazard": "flood",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1265274"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1265274"
      }
     ],
     "guidance": [
@@ -398,7 +398,7 @@
       "id": "SE-1272324",
       "label": "Flash Flood, Jun 12, 2025",
       "hazard": "flood",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1272324"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1272324"
      }
     ],
     "guidance": [
@@ -412,13 +412,13 @@
     ]
    },
    {
-    "action": "An EF0 tornado on Oct 26, 2023 passed 2.5 km from this address, damaging trees in the Masonic Cemetery. Sign up for your community's warning system, and in a tornado warning go to an interior room away from windows.",
+    "action": "An EF0 tornado on Oct 26, 2023 passed 2.54 km from this address, damaging trees in the Masonic Cemetery. Sign up for your community's warning system, and in a tornado warning go to an interior room away from windows.",
     "why": [
      {
       "id": "SE-1144582",
       "label": "EF0 tornado, Oct 26, 2023",
       "hazard": "tornado",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1144582"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1144582"
      }
     ],
     "guidance": [
@@ -445,7 +445,7 @@
       "id": "SE-1039790",
       "label": "Heat, Jun 27, 2022",
       "hazard": "heat",
-      "href": "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1039790"
+      "href": "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1039790"
      }
     ],
     "guidance": [
@@ -480,7 +480,7 @@
    {
     "id": "heat",
     "label": "Extreme heat",
-    "evidence": "1382 days with a feels-like high of 100°F or more in 26 of 26 years (2000 to 2025); hottest 114.6°F on Jun 21, 2023; 8 Excessive Heat and 7 Heat events recorded for Bexar since 2000 (NCEI Storm Events), latest Jul 9, 2025"
+    "evidence": "1382 days with a feels-like high of 100°F or more in 26 of 26 years (2000 to 2025); hottest 115°F on Jun 21, 2023; 8 Excessive Heat and 7 Heat events recorded for Bexar since 2000 (NCEI Storm Events), latest Jul 9, 2025"
    },
    {
     "id": "wind",

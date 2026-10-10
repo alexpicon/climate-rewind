@@ -233,10 +233,10 @@ function alertsSource(lookup: LookupPayload): AiSource {
   const base = { id: "alerts", kind: "alert" as const, chip: "Live alerts", title: "Active National Weather Service alerts", origin: "api.weather.gov alerts for this address", href: "https://www.weather.gov/" };
   const live = lookup.live;
   if (!live) return { ...base, text: `Live alerts could not be checked just now. ${lookup.notices.live ?? ""}`.trim() };
-  const checked = live.checkedAt.replace("T", " ").slice(0, 16);
-  if (live.alerts.length === 0) return { ...base, text: `The National Weather Service had no active alerts for this address when we checked (${checked} UTC).` };
-  const list = live.alerts.slice(0, 5).map((a) => `${sanitize(a.event)}${a.headline ? `: ${sanitize(a.headline)}` : ""}${a.ends ? ` (ends ${a.ends.slice(0, 16).replace("T", " ")})` : ""}`);
-  return { ...base, text: `Active alerts for this address (checked ${checked} UTC): ${list.join(" | ")}.` };
+  // No raw timestamps: they end up in the model's sentences as "(2026-10-09 01:40 UTC)". The alert's own headline already says when it ends.
+  if (live.alerts.length === 0) return { ...base, text: "The National Weather Service had no active alerts for this address when we checked." };
+  const list = live.alerts.slice(0, 5).map((a) => `${sanitize(a.event)}${a.headline ? `: ${sanitize(a.headline)}` : ""}`);
+  return { ...base, text: `Active alerts for this address: ${list.join(" | ")}.` };
 }
 
 // ---------------------------------------------------------------- a quiet address, and the wider area
@@ -254,7 +254,7 @@ function quietSource(lookup: LookupPayload): AiSource | null {
   const q = lookup.quiet;
   const parts = [
     count === 0 ? "No flood report within 5 km of this address is in our records." : `Only ${count} flood ${count === 1 ? "report" : "reports"} within 5 km of this address ${count === 1 ? "is" : "are"} in our records.`,
-    near ? `The closest flood report we could place was ${near.distanceKm.toFixed(1)} km away, in ${near.start.slice(0, 4)}${near.city ? ` (${sanitize(near.city)})` : ""}.` : count === 0 ? "No placeable flood report is within 50 km." : "",
+    near ? `The closest flood report we could place was ${near.distanceKm.toFixed(2)} km away, in ${near.start.slice(0, 4)}${near.city ? ` (${sanitize(near.city)})` : ""}.` : count === 0 ? "No placeable flood report is within 50 km." : "",
     q ? `We measured ${q.sample} random places across the ${q.states} states we have indexed: ${q.nonePct}% had no flood report within 5 km, ${q.quieterThanPct}% had more than this address and ${q.samePct}% had the same number.` : "",
     "A flood report exists only if someone filed one, and this is a count of reports we could place near an address. A quiet record means no report was filed close by. It does not mean nothing happened here, and it does not mean flooding is impossible.",
   ].filter(Boolean);
@@ -286,7 +286,7 @@ const TIER_TEXT: Record<NearbyFlood["tier"], string> = {
 };
 
 function ncdcLink(id: string): string | undefined {
-  return id.startsWith("SE-") ? `https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=${id.replace(/^SE-/, "")}` : undefined;
+  return id.startsWith("SE-") ? `https://www.ncei.noaa.gov/access/storm-events-database/event-details/${id.replace(/^SE-/, "")}` : undefined;
 }
 
 /** Which reports the model reads: the ones the detective placed first, then those whose own words name a place, then the nearest. */
@@ -357,7 +357,7 @@ function reportSource(report: NearbyFlood, n: number): AiSource {
     chip: `Report ${n}`,
     title: `NWS ${sanitize(report.type).toLowerCase()} report, ${niceDate(report.start)}`,
     origin: report.source === "StormEvents" ? "NCEI Storm Events" : "NWS Local Storm Report",
-    text: `${sanitize(report.type)} report from ${report.source === "StormEvents" ? "NCEI Storm Events" : "an NWS Local Storm Report"}, ${localMoment(report.start)}, ${sanitize(report.city || report.county)}, ${sanitize(report.county)} County. It is ${report.distanceKm.toFixed(1)} km from this address (${TIER_TEXT[report.tier]}).${detective}`,
+    text: `${sanitize(report.type)} report from ${report.source === "StormEvents" ? "NCEI Storm Events" : "an NWS Local Storm Report"}, ${localMoment(report.start)}, ${sanitize(report.city || report.county)}, ${sanitize(report.county)} County. It is ${report.distanceKm.toFixed(2)} km from this address (${TIER_TEXT[report.tier]}).${detective}`,
     quote: sanitize(report.quote),
     href: ncdcLink(report.id),
   };
@@ -377,7 +377,7 @@ function tornadoHistorySource(lookup: LookupPayload): AiSource | null {
     chip: "Tornado records",
     title: "Tornado tracks near this address",
     origin: "NCEI Storm Events tornado records",
-    text: `${list.length} tornado tracks passed within 10 km of this address in our records. The closest, an ${closest.ef} on ${niceDate(closest.start)}, passed ${closest.minDistanceKm.toFixed(2)} km away. The strongest was an ${strongest.ef} on ${niceDate(strongest.start)}, ${strongest.minDistanceKm.toFixed(1)} km away. Tracks join the NWS start and end points.`,
+    text: `${list.length} tornado tracks passed within 10 km of this address in our records. The closest, an ${closest.ef} on ${niceDate(closest.start)}, passed ${closest.minDistanceKm.toFixed(2)} km away. The strongest was an ${strongest.ef} on ${niceDate(strongest.start)}, ${strongest.minDistanceKm.toFixed(2)} km away. Tracks join the NWS start and end points.`,
   };
 }
 
@@ -403,7 +403,7 @@ function damageSource(row: DamageRow & { distanceKm: number }, n: number, tornad
     chip: "Damage map",
     title: `Damage place from the NWS narrative${tornado ? `, ${tornado.ef} tornado ${niceDate(tornado.start)}` : ""}`,
     origin: "AI damage mapper: a place named in the NWS tornado narrative, pinned by a geocoder match checked against the tornado track",
-    text: `The NWS narrative names ${sanitize(row.place)} as a place with damage${row.ef ? ` (rated ${row.ef} there)` : ""}. The damage mapper pinned it ${row.distanceKm.toFixed(1)} km from this address (${damageWhere(row.matchType)}, ${row.confidence ?? "unrated"} confidence).`,
+    text: `The NWS narrative names ${sanitize(row.place)} as a place with damage${row.ef ? ` (rated ${row.ef} there)` : ""}. The damage mapper pinned it ${row.distanceKm.toFixed(2)} km from this address (${damageWhere(row.matchType)}, ${row.confidence ?? "unrated"} confidence).`,
     quote: sanitize(row.phrase),
     href: tornado ? ncdcLink(tornado.id) : undefined,
   };
