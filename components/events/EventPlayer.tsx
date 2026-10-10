@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { APP_NAME } from "@/lib/brand";
 import { AnnounceProvider } from "@/components/announce";
+import { BrandMark } from "@/components/BrandMark";
 import { MapCanvas } from "@/components/map/MapCanvas";
 import { useMapApi, useMapUnavailable } from "@/components/map/map-context";
 import { Dock } from "@/components/panel/Dock";
@@ -45,10 +46,7 @@ export function EventPlayer({ entry }: { entry: EventEntry }) {
       </a>
       <header id="bar" className="ev-bar">
         <a className="brand" href="/" aria-label={`${APP_NAME}, home`}>
-          <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" focusable="false">
-            <path d="M15 2.5c4.6 6 8.2 10 8.2 14.4A8.2 8.2 0 0 1 6.8 16.9C6.8 12.5 10.4 8.5 15 2.5Z" fill="none" stroke="#FFB45A" strokeWidth="2.2" strokeLinejoin="round" />
-            <path d="M11 18.2a4.4 4.4 0 0 0 3.8 3.4" fill="none" stroke="#FFB45A" strokeWidth="2.2" strokeLinecap="round" />
-          </svg>
+          <BrandMark />
           <span>{APP_NAME}</span>
         </a>
         <a className="ev-back" href="/#storms-h">
