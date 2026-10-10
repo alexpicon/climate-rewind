@@ -1,10 +1,22 @@
 import type { HeatSummary } from "@/lib/types";
 
 /**
- * Days per year at a feels-like high of 100 F or more, at this address. Every bar is a real count;
+ * Days per year at a high of 100 F or more, at this address. Every bar is a real count;
  * the highest and lowest are labelled and the full list is in the text version's table.
  */
-export function HeatChart({ byYear, hottestYear, measure = "feels-like" }: { byYear: HeatSummary["byYear"]; hottestYear: string; /** "feels-like", or "heat index" when NASA POWER stood in for Open-Meteo. */ measure?: string }) {
+export function HeatChart({
+  byYear,
+  hottestYear,
+  measure = "feels-like high",
+  rule = null,
+}: {
+  byYear: HeatSummary["byYear"];
+  hottestYear: string;
+  /** What a day's number is: "high", "feels-like high", or "heat index high" when NASA POWER stood in for Open-Meteo. */
+  measure?: string;
+  /** What "high" means, when it is the higher of two measures (lib/ui/data-source.ts heatHighWords). */
+  rule?: string | null;
+}) {
   const years = Object.keys(byYear).sort();
   const max = Math.max(1, ...years.map((y) => byYear[y]));
   const maxYear = years.reduce((a, b) => (byYear[b] > byYear[a] ? b : a), years[0]);
@@ -20,7 +32,7 @@ export function HeatChart({ byYear, hottestYear, measure = "feels-like" }: { byY
   return (
     <figure className="chart-wrap">
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-labelledby="chart-t chart-d">
-        <title id="chart-t">{`Days per year at 100 degrees or more, ${measure}`}</title>
+        <title id="chart-t">{`Days per year with a ${measure} of 100 degrees or more`}</title>
         <desc id="chart-d">
           {byYear[maxYear] === byYear[minYear]
             ? `${years[0]} to ${years[years.length - 1]}: ${byYear[maxYear]} days every year. The full list is in the text version.`
@@ -54,7 +66,9 @@ export function HeatChart({ byYear, hottestYear, measure = "feels-like" }: { byY
           );
         })}
       </svg>
-      <figcaption className="hint">Days a year the {measure} high reached 100°F at this address. The orange bar holds the hottest day.</figcaption>
+      <figcaption className="hint">
+        Days a year the {measure} reached 100°F at this address{rule ? `: ${rule}` : ""}. The orange bar holds the hottest day.
+      </figcaption>
     </figure>
   );
 }

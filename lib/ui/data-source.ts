@@ -2,7 +2,8 @@
  * Plain-language labels for where the heat and rain numbers came from. Open-Meteo (ERA5) is the usual source; when it is rate limited
  * or down, NASA POWER (MERRA-2) stands in, and the page says so. Client-safe.
  */
-import type { FloodTrigger, HeatSummary } from "../types";
+import { dayHigh, dayHighKind } from "../heat-measure";
+import type { FloodTrigger, HeatDay, HeatSummary } from "../types";
 
 export const POWER_NAME = "NASA POWER (MERRA-2)";
 export const OPEN_METEO_NAME = "weather reanalysis (ERA5 via Open-Meteo)";
@@ -28,6 +29,25 @@ export function heatLabels(heat: Pick<HeatSummary, "provider"> | null | undefine
     };
   }
   return { measure: "feels-like", source: OPEN_METEO_NAME, fallback: false, explain: null };
+}
+
+/**
+ * How the heat tab names its daily high. With air temperatures in the data: "high", meaning the air temperature or the feels-like
+ * (heat index) where humidity made it feel hotter. An older snapshot without them: the feels-like (heat index) high, as before.
+ */
+export function heatHighWords(heat: Pick<HeatSummary, "provider" | "hottest">): { short: string; rule: string | null } {
+  const { measure } = heatLabels(heat);
+  if (heat.hottest.airF === undefined) return { short: `${measure} high`, rule: null };
+  return { short: "high", rule: `the air temperature, or the ${measure} where humidity made it feel hotter` };
+}
+
+/** One day's high in words, with the other measure beside it: "101°F air temperature (felt like 98°F)". */
+export function dayHighWords(day: HeatDay, measure: string): string {
+  const high = Math.round(dayHigh(day));
+  if (day.airF === undefined) return `${high}°F ${measure}`;
+  return dayHighKind(day) === "air"
+    ? `${high}°F air temperature (${measure} ${Math.round(day.feelsF)}°F)`
+    : `${high}°F ${measure} (air temperature ${Math.round(day.airF)}°F)`;
 }
 
 /** The gridded rain source (ERA5, NASA POWER or both), for the days no gauge read. */

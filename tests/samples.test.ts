@@ -72,7 +72,7 @@ describe("live data for any other address is cached by 0.05 degree cell", () => 
     clearRainCache();
   });
 
-  it("two addresses in one cell make one heat request, asked for one variable at the cell's centre", async () => {
+  it("two addresses in one cell make one heat request, asked for the two highs it needs at the cell's centre", async () => {
     const urls: string[] = [];
     const fetchFn = async (url: string) => {
       urls.push(url);
@@ -85,7 +85,8 @@ describe("live data for any other address is cached by 0.05 degree cell", () => 
     expect(urls).toHaveLength(1);
     expect(urls[0]).toContain("latitude=36.15&longitude=-86.80");
     expect(urls[0]).toContain("daily=apparent_temperature_max");
-    expect(urls[0].match(/daily=([^&]*)/)?.[1]).toBe("apparent_temperature_max"); // only the variable that is needed
+    // Only what the heat tab needs: the feels-like high and the air temperature high (it counts the higher of the two).
+    expect(urls[0].match(/daily=([^&]*)/)?.[1]).toBe("apparent_temperature_max,temperature_2m_max");
   });
 
   it("a failure is not cached, and keeps the honest message (HTTP 429)", async () => {
@@ -309,9 +310,9 @@ describe("the snapshots that ship in data/samples", () => {
     }
   });
 
-  it("Bellevue's hottest day is Jun 28, 2021, 114.7 F feels-like (a day, not a week)", () => {
+  it("Bellevue's hottest day is Jun 28, 2021, 114.7 F feels-like (a day, not a week), above its 107.7 F air temperature", () => {
     const heat = read("bellevue.json").heat!;
-    expect(heat.hottest).toEqual({ date: "2021-06-28", feelsF: 114.7 });
+    expect(heat.hottest).toEqual({ date: "2021-06-28", feelsF: 114.7, airF: 107.7 });
   });
 
   it("each snapshot's rain covers every flood date within 5 km of its address, from today's index (a stale snapshot fails here)", async () => {
@@ -364,7 +365,7 @@ describe("the real /api/lookup route reading the shipped snapshots", () => {
     const body = (await response.json()) as import("@/lib/types").LookupPayload;
     expect(response.status).toBe(200);
     expect(body.coverage).toBe("indexed");
-    expect(body.heat?.hottest).toEqual({ date: "2021-06-28", feelsF: 114.7 });
+    expect(body.heat?.hottest).toEqual({ date: "2021-06-28", feelsF: 114.7, airF: 107.7 });
     expect(body.heat?.worstWeek).toMatchObject({ start: "2021-06-25", end: "2021-07-01" });
     expect(body.heat?.regionalSlug).toBe("bellevue");
     expect(body.floodTrigger).toMatchObject({ status: "insufficient", floodDays: 1 });

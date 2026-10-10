@@ -3,11 +3,11 @@
  "address": "100 Military Plaza, San Antonio, TX",
  "lat": 29.424796286769,
  "lon": -98.494678611909,
- "built": "2026-10-09T00:05:08.236Z",
+ "built": "2026-10-10T01:06:23.960Z",
  "heat": {
   "byYear": {
-   "2000": 51,
-   "2001": 47,
+   "2000": 52,
+   "2001": 48,
    "2002": 25,
    "2003": 36,
    "2004": 21,
@@ -17,7 +17,7 @@
    "2008": 37,
    "2009": 74,
    "2010": 44,
-   "2011": 91,
+   "2011": 92,
    "2012": 58,
    "2013": 53,
    "2014": 43,
@@ -28,14 +28,15 @@
    "2019": 67,
    "2020": 58,
    "2021": 42,
-   "2022": 81,
+   "2022": 84,
    "2023": 97,
    "2024": 76,
    "2025": 80
   },
   "hottest": {
    "date": "2023-06-21",
-   "feelsF": 114.6
+   "feelsF": 114.6,
+   "airF": 104.9
   },
   "worstWeek": {
    "start": "2023-06-18",
@@ -43,35 +44,42 @@
    "daily": [
     {
      "date": "2023-06-18",
-     "feelsF": 111.4
+     "feelsF": 111.4,
+     "airF": 104.7
     },
     {
      "date": "2023-06-19",
-     "feelsF": 111.6
+     "feelsF": 111.6,
+     "airF": 105
     },
     {
      "date": "2023-06-20",
-     "feelsF": 111.6
+     "feelsF": 111.6,
+     "airF": 105.2
     },
     {
      "date": "2023-06-21",
-     "feelsF": 114.6
+     "feelsF": 114.6,
+     "airF": 104.9
     },
     {
      "date": "2023-06-22",
-     "feelsF": 103.7
+     "feelsF": 103.7,
+     "airF": 98.4
     },
     {
      "date": "2023-06-23",
-     "feelsF": 105.5
+     "feelsF": 105.5,
+     "airF": 101.8
     },
     {
      "date": "2023-06-24",
-     "feelsF": 105.9
+     "feelsF": 105.9,
+     "airF": 101.4
     }
    ]
   },
-  "source": "Open-Meteo archive, daily apparent_temperature_max, 2000-2025, from the pipeline's saved copy of the same request (point_san-antonio_2000-2025.json)"
+  "source": "Open-Meteo archive, daily apparent_temperature_max and temperature_2m_max, 2000-2025, fetched 2026-10-10T01:06:23.960Z"
  },
  "rain": {
   "byDate": {

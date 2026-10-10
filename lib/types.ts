@@ -160,14 +160,17 @@ export interface LiveAlerts {
 
 export interface HeatDay {
   date: string;
+  /** The feels-like high (Open-Meteo) or heat-index high (NASA POWER), °F. */
   feelsF: number;
+  /** The air temperature high, °F (additive; older snapshots lack it). The heat tab uses the higher of the two (lib/heat-measure.ts). */
+  airF?: number;
 }
 
 /** Where the daily highs came from. Absent means Open-Meteo (ERA5 feels-like), the usual source. */
 export type HeatSource = "open-meteo" | "nasa-power";
 
 export interface HeatSummary {
-  /** Days per year with a feels-like high of 100 F or more. */
+  /** Days per year with a high of 100 F or more: the air temperature, or the feels-like where it was higher (lib/heat-measure.ts). */
   byYear: Record<string, number>;
   hottest: HeatDay;
   /** The 7 days centred on the hottest day. */

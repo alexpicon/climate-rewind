@@ -96,7 +96,7 @@ export function powerUrl(lat: number, lon: number, parameters: string[], startDa
   );
 }
 
-/** Daily heat-index highs from a POWER reply. A day missing its temperature or its humidity is left out. */
+/** Daily heat-index highs (and the air temperature highs they come from) from a POWER reply. A day missing its temperature or its humidity is left out. */
 export function heatDaysFromPower(data: PowerReply): HeatDay[] {
   const p = data.properties?.parameter ?? {};
   const highs = p.T2M_MAX ?? {};
@@ -106,7 +106,7 @@ export function heatDaysFromPower(data: PowerReply): HeatDay[] {
     if (!isValue(highC)) continue;
     const rh = humidityAtHigh(highC, p.QV2M?.[key], p.PS?.[key], p.RH2M?.[key]);
     if (rh === null) continue;
-    days.push({ date: dashed(key), feelsF: Math.round(heatIndexF(cToF(highC), rh) * 10) / 10 });
+    days.push({ date: dashed(key), feelsF: Math.round(heatIndexF(cToF(highC), rh) * 10) / 10, airF: Math.round(cToF(highC) * 10) / 10 });
   }
   return days;
 }

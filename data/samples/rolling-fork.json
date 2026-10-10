@@ -3,7 +3,7 @@
  "address": "100 Walnut St, Rolling Fork, MS",
  "lat": 32.908372685663,
  "lon": -90.876237438021,
- "built": "2026-10-09T11:47:34.540Z",
+ "built": "2026-10-10T01:06:37.422Z",
  "heat": {
   "byYear": {
    "2000": 56,
@@ -35,7 +35,8 @@
   },
   "hottest": {
    "date": "2010-08-02",
-   "feelsF": 114.6
+   "feelsF": 114.6,
+   "airF": 101.8
   },
   "worstWeek": {
    "start": "2010-07-30",
@@ -43,35 +44,42 @@
    "daily": [
     {
      "date": "2010-07-30",
-     "feelsF": 106.6
+     "feelsF": 106.6,
+     "airF": 96.6
     },
     {
      "date": "2010-07-31",
-     "feelsF": 107
+     "feelsF": 107,
+     "airF": 98.5
     },
     {
      "date": "2010-08-01",
-     "feelsF": 110.8
+     "feelsF": 110.8,
+     "airF": 100.8
     },
     {
      "date": "2010-08-02",
-     "feelsF": 114.6
+     "feelsF": 114.6,
+     "airF": 101.8
     },
     {
      "date": "2010-08-03",
-     "feelsF": 114
+     "feelsF": 114,
+     "airF": 102.7
     },
     {
      "date": "2010-08-04",
-     "feelsF": 112
+     "feelsF": 112,
+     "airF": 100
     },
     {
      "date": "2010-08-05",
-     "feelsF": 109.4
+     "feelsF": 109.4,
+     "airF": 96.4
     }
    ]
   },
-  "source": "Open-Meteo archive, daily apparent_temperature_max, 2000-2025, fetched 2026-10-09T11:47:34.540Z"
+  "source": "Open-Meteo archive, daily apparent_temperature_max and temperature_2m_max, 2000-2025, fetched 2026-10-10T01:06:37.422Z"
  },
  "rain": {
   "byDate": {

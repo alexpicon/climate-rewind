@@ -3,12 +3,12 @@
  "address": "100 James Robertson Pkwy, Nashville, TN",
  "lat": 36.168175092703,
  "lon": -86.777515855134,
- "built": "2026-10-09T00:05:01.432Z",
+ "built": "2026-10-10T01:06:18.855Z",
  "heat": {
   "byYear": {
    "2000": 15,
-   "2001": 9,
-   "2002": 20,
+   "2001": 10,
+   "2002": 21,
    "2003": 5,
    "2004": 3,
    "2005": 24,
@@ -17,12 +17,12 @@
    "2008": 14,
    "2009": 12,
    "2010": 50,
-   "2011": 47,
+   "2011": 48,
    "2012": 26,
    "2013": 9,
    "2014": 11,
    "2015": 17,
-   "2016": 34,
+   "2016": 35,
    "2017": 12,
    "2018": 11,
    "2019": 23,
@@ -35,7 +35,8 @@
   },
   "hottest": {
    "date": "2012-06-29",
-   "feelsF": 113.1
+   "feelsF": 113.2,
+   "airF": 106.7
   },
   "worstWeek": {
    "start": "2012-06-26",
@@ -43,35 +44,42 @@
    "daily": [
     {
      "date": "2012-06-26",
-     "feelsF": 84.8
+     "feelsF": 84.9,
+     "airF": 88.4
     },
     {
      "date": "2012-06-27",
-     "feelsF": 97.1
+     "feelsF": 97.1,
+     "airF": 95.2
     },
     {
      "date": "2012-06-28",
-     "feelsF": 104.3
+     "feelsF": 104.4,
+     "airF": 104.6
     },
     {
      "date": "2012-06-29",
-     "feelsF": 113.1
+     "feelsF": 113.2,
+     "airF": 106.7
     },
     {
      "date": "2012-06-30",
-     "feelsF": 110.3
+     "feelsF": 110.4,
+     "airF": 104
     },
     {
      "date": "2012-07-01",
-     "feelsF": 109.2
+     "feelsF": 109.3,
+     "airF": 103.4
     },
     {
      "date": "2012-07-02",
-     "feelsF": 105.4
+     "feelsF": 105.4,
+     "airF": 100.4
     }
    ]
   },
-  "source": "Open-Meteo archive, daily apparent_temperature_max, 2000-2025, from the pipeline's saved copy of the same request (point_nashville_2000-2025.json)"
+  "source": "Open-Meteo archive, daily apparent_temperature_max and temperature_2m_max, 2000-2025, fetched 2026-10-10T01:06:18.855Z"
  },
  "rain": {
   "byDate": {

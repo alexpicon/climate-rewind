@@ -1,10 +1,11 @@
 /**
- * Writes data/samples/<slug>.json for every prepared address (the samples and the landing page's moments, lib/ui/prepared.ts): the heat summary (26 years of daily feels-like highs) and the rain
+ * Writes data/samples/<slug>.json for every prepared address (the samples and the landing page's moments, lib/ui/prepared.ts): the heat summary (26 years of daily feels-like and air temperature highs) and the rain
  * on each flood date within 5 km, both from the Open-Meteo archive. The app reads these instead of calling Open-Meteo for the
  * samples (lib/samples.ts), so a judge clicking them over and over cannot use up the free daily allowance.
  *
  *   npm run snapshot-samples
  *   npm run snapshot-samples -- --only nashville --refresh
+ *   npm run snapshot-samples -- --refresh-heat          (the heat part only, keeping rain and extremes)
  *   npm run snapshot-samples -- --heat-cache ../memoria-pipeline/raw/heat --rain-seed /tmp/ft-nashville.json
  *
  * Safe to run again: a part that is already complete is kept (use --refresh to fetch it again). When Open-Meteo answers 429,
@@ -49,6 +50,8 @@ const flag = (name: string) => process.argv.includes(`--${name}`);
 const OUT_DIR = path.join(process.cwd(), "data", "samples");
 const only = arg("only");
 const refresh = flag("refresh");
+// Fetch the heat part again even when it is complete, keeping the other parts.
+const refreshHeat = refresh || flag("refresh-heat");
 const heatCacheDirs = (arg("heat-cache") ?? "").split(",").filter(Boolean);
 const rainSeedFile = arg("rain-seed");
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -105,14 +108,14 @@ for (const sample of PREPARED_ADDRESSES) {
 
   // ---- heat
   const lastYear = new Date().getUTCFullYear() - 1;
-  if (snapshot.heat && !refresh) {
+  if (snapshot.heat && !refreshHeat) {
     console.log("  heat: kept");
   } else {
     try {
       const data = await archiveJson<Parameters<typeof heatDaysFromArchive>[0]>(heatArchiveUrl(address.lat, address.lon, lastYear), "heat");
       const summary = summarizeHeat(heatDaysFromArchive(data));
       if (!summary) throw new Error("no temperature data");
-      snapshot.heat = { byYear: summary.byYear, hottest: summary.hottest, worstWeek: summary.worstWeek, source: `Open-Meteo archive, daily apparent_temperature_max, 2000-${lastYear}, fetched ${snapshot.built}` };
+      snapshot.heat = { byYear: summary.byYear, hottest: summary.hottest, worstWeek: summary.worstWeek, source: `Open-Meteo archive, daily apparent_temperature_max and temperature_2m_max, 2000-${lastYear}, fetched ${snapshot.built}` };
       console.log(`  heat: fetched, hottest ${summary.hottest.date} ${summary.hottest.feelsF} F`);
     } catch (error) {
       const cached = heatCacheDirs.map((dir) => path.join(dir, `point_${slug}_2000-${lastYear}.json`)).find((candidate) => existsSync(candidate)) ?? null;

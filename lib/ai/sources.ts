@@ -20,7 +20,7 @@ import {
   type TornadoRecordKey,
 } from "../outlook-types";
 import { stateName } from "../states";
-import { heatLabels, POWER_NAME, rainLabel } from "../ui/data-source";
+import { dayHighWords, heatHighWords, heatLabels, POWER_NAME, rainLabel } from "../ui/data-source";
 import { damageWhere } from "../ui/tornado-model";
 import { damageNear, type DamageRow } from "./damage";
 import { countsSource, eventSource, storyEvents } from "./event-sources";
@@ -183,6 +183,7 @@ function heatHistorySource(lookup: LookupPayload): AiSource | null {
   const heat = lookup.heat;
   if (!heat) return null;
   const label = heatLabels(heat);
+  const high = heatHighWords(heat);
   const years = Object.keys(heat.byYear).sort();
   const recent = years.slice(-5);
   const total = years.reduce((sum, y) => sum + heat.byYear[y], 0);
@@ -191,10 +192,10 @@ function heatHistorySource(lookup: LookupPayload): AiSource | null {
     kind: "heat",
     chip: "Heat history",
     title: "Hot days at this address since 2000",
-    origin: label.fallback ? `${POWER_NAME} reanalysis, daily heat-index high (National Weather Service formula), at this address` : "Open-Meteo archive (ERA5 reanalysis), daily feels-like high, at this address",
+    origin: label.fallback ? `${POWER_NAME} reanalysis, daily heat-index high (National Weather Service formula), at this address` : `Open-Meteo archive (ERA5 reanalysis), daily ${high.rule ? "air temperature and feels-like highs" : "feels-like high"}, at this address`,
     text:
-      `${label.explain ? `${label.explain} ` : ""}Days with a ${label.measure} high of 100 F or more: ${recent.map((y) => `${y}: ${heat.byYear[y]}`).join(", ")}; ${total} in all since ${years[0]}. ` +
-      `The hottest day since ${years[0]} was ${niceDate(heat.hottest.date)}, with a ${label.measure} high of ${heat.hottest.feelsF} F. This is a model of past weather, not a thermometer at the address, and it shows no trend.`,
+      `${label.explain ? `${label.explain} ` : ""}${high.rule ? `A day's high here is ${high.rule}. ` : ""}Days with a ${high.short} of 100 F or more: ${recent.map((y) => `${y}: ${heat.byYear[y]}`).join(", ")}; ${total} in all since ${years[0]}. ` +
+      `The hottest day since ${years[0]} was ${niceDate(heat.hottest.date)}, at ${dayHighWords(heat.hottest, label.measure).replaceAll("°F", " F")}. This is a model of past weather, not a thermometer at the address, and it shows no trend.`,
   };
 }
 

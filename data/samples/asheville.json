@@ -3,7 +3,7 @@
  "address": "350 Riverside Dr, Asheville, NC",
  "lat": 35.59175950072,
  "lon": -82.571739541063,
- "built": "2026-10-09T00:05:13.379Z",
+ "built": "2026-10-10T01:06:26.904Z",
  "heat": {
   "byYear": {
    "2000": 0,
@@ -13,7 +13,7 @@
    "2004": 0,
    "2005": 1,
    "2006": 0,
-   "2007": 1,
+   "2007": 2,
    "2008": 0,
    "2009": 0,
    "2010": 3,
@@ -35,7 +35,8 @@
   },
   "hottest": {
    "date": "2012-06-30",
-   "feelsF": 104.4
+   "feelsF": 104.4,
+   "airF": 96.9
   },
   "worstWeek": {
    "start": "2012-06-27",
@@ -43,35 +44,42 @@
    "daily": [
     {
      "date": "2012-06-27",
-     "feelsF": 83.7
+     "feelsF": 83.7,
+     "airF": 81
     },
     {
      "date": "2012-06-28",
-     "feelsF": 92.4
+     "feelsF": 92.5,
+     "airF": 90.6
     },
     {
      "date": "2012-06-29",
-     "feelsF": 97.9
+     "feelsF": 97.9,
+     "airF": 94.1
     },
     {
      "date": "2012-06-30",
-     "feelsF": 104.4
+     "feelsF": 104.4,
+     "airF": 96.9
     },
     {
      "date": "2012-07-01",
-     "feelsF": 102.4
+     "feelsF": 102.4,
+     "airF": 96.3
     },
     {
      "date": "2012-07-02",
-     "feelsF": 92.1
+     "feelsF": 92.1,
+     "airF": 86.8
     },
     {
      "date": "2012-07-03",
-     "feelsF": 96.5
+     "feelsF": 96.6,
+     "airF": 89.5
     }
    ]
   },
-  "source": "Open-Meteo archive, daily apparent_temperature_max, 2000-2025, from the pipeline's saved copy of the same request (point_asheville_2000-2025.json)"
+  "source": "Open-Meteo archive, daily apparent_temperature_max and temperature_2m_max, 2000-2025, fetched 2026-10-10T01:06:26.904Z"
  },
  "rain": {
   "byDate": {

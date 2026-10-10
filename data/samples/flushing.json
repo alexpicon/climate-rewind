@@ -3,7 +3,7 @@
  "address": "4105 Main St, Flushing, NY",
  "lat": 40.758019717113,
  "lon": -73.829301134074,
- "built": "2026-10-09T11:47:38.099Z",
+ "built": "2026-10-10T01:07:08.769Z",
  "heat": {
   "byYear": {
    "2000": 0,
@@ -35,7 +35,8 @@
   },
   "hottest": {
    "date": "2011-07-22",
-   "feelsF": 111.5
+   "feelsF": 111.5,
+   "airF": 101.7
   },
   "worstWeek": {
    "start": "2011-07-19",
@@ -43,35 +44,42 @@
    "daily": [
     {
      "date": "2011-07-19",
-     "feelsF": 98.3
+     "feelsF": 98.3,
+     "airF": 88.6
     },
     {
      "date": "2011-07-20",
-     "feelsF": 90.2
+     "feelsF": 90.2,
+     "airF": 84.5
     },
     {
      "date": "2011-07-21",
-     "feelsF": 100.3
+     "feelsF": 100.3,
+     "airF": 95.3
     },
     {
      "date": "2011-07-22",
-     "feelsF": 111.5
+     "feelsF": 111.5,
+     "airF": 101.7
     },
     {
      "date": "2011-07-23",
-     "feelsF": 106.6
+     "feelsF": 106.6,
+     "airF": 101.1
     },
     {
      "date": "2011-07-24",
-     "feelsF": 96.6
+     "feelsF": 96.6,
+     "airF": 89.4
     },
     {
      "date": "2011-07-25",
-     "feelsF": 84.4
+     "feelsF": 84.4,
+     "airF": 79.7
     }
    ]
   },
-  "source": "Open-Meteo archive, daily apparent_temperature_max, 2000-2025, fetched 2026-10-09T11:47:38.099Z"
+  "source": "Open-Meteo archive, daily apparent_temperature_max and temperature_2m_max, 2000-2025, fetched 2026-10-10T01:07:08.769Z"
  },
  "rain": {
   "byDate": {

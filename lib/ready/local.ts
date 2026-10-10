@@ -6,6 +6,7 @@
 import { localMoment, pickReports } from "../ai/sources";
 import type { AiSource } from "../ai/types";
 import type { HeatSummary, NearbyFlood, NearbyTornado } from "../types";
+import { dayHighWords, heatHighWords, heatLabels } from "../ui/data-source";
 import { excerpt, niceDate } from "../ui/text";
 import { hazardOfType, type AreaEvent } from "./events";
 import type { HazardId, HazardSummary, LocalFact } from "./types";
@@ -121,15 +122,18 @@ function heatFacts(heat: HeatSummary | null, out: { sources: AiSource[]; facts: 
   const first = years[0];
   const last = years[years.length - 1];
   const list = hotYears.map((y) => `${y}: ${plural(heat.byYear[y], "day")}`).join("; ");
-  out.evidence.set("heat", [`${plural(total, "day")} with a feels-like high of 100°F or more in ${hotYears.length} of ${years.length} years (${first} to ${last}); hottest ${heat.hottest.feelsF}°F on ${niceDate(heat.hottest.date)}`]);
-  const label = `Hottest day on record, ${niceDate(heat.hottest.date)} (feels like ${heat.hottest.feelsF}°F)`;
+  const measure = heatLabels(heat).measure;
+  const high = heatHighWords(heat);
+  const hottest = dayHighWords(heat.hottest, measure);
+  out.evidence.set("heat", [`${plural(total, "day")} with a ${high.short} of 100°F or more in ${hotYears.length} of ${years.length} years (${first} to ${last}); hottest ${hottest} on ${niceDate(heat.hottest.date)}`]);
+  const label = `Hottest day on record, ${niceDate(heat.hottest.date)} (${hottest})`;
   out.sources.push({
     id: "local-heat",
     kind: "heat",
     chip: "Heat record",
     title: label,
-    origin: "Open-Meteo weather archive (ERA5), daily feels-like highs",
-    text: `Days with a feels-like high of 100°F or more at this address, ${first} to ${last}: ${plural(total, "day")} in total. By year: ${list}. The hottest day was ${niceDate(heat.hottest.date)}, feeling like ${heat.hottest.feelsF}°F.`,
+    origin: high.rule ? `Open-Meteo weather archive (ERA5), daily highs: ${high.rule}` : "Open-Meteo weather archive (ERA5), daily feels-like highs",
+    text: `Days with a ${high.short} of 100°F or more at this address${high.rule ? ` (${high.rule})` : ""}, ${first} to ${last}: ${plural(total, "day")} in total. By year: ${list}. The hottest day was ${niceDate(heat.hottest.date)}, at ${hottest}.`,
   });
   out.facts.push({ id: "local-heat", label, hazard: "heat" });
 }

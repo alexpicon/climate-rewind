@@ -25,6 +25,7 @@ import { buildFloodTrigger } from "./flood-trigger";
 import { loadDamageRows } from "./ai/damage";
 import { damagePinsFor } from "./damage-pins";
 import { boxAround, haversineKm, segmentDistance } from "./geo";
+import { dayHigh } from "./heat-measure";
 import { loadHeatGrid, loadStateIndex, slugify } from "./index-store";
 import { loadQuietFile, placeInQuiet, type QuietFile } from "./quiet";
 import type { FetchLike } from "./http";
@@ -265,10 +266,12 @@ const DAY_MS = 24 * HOUR;
 const isoDay = (ms: number) => new Date(ms).toISOString().slice(0, 10);
 
 /**
- * Summarises the daily feels-like highs: days at or above 100 F per year, the
- * single hottest day, and the 7 days centred on that day (shifted if the day
- * sits near the end of the record). Not a trend and not a forecast.
+ * Summarises the daily highs (each day's air temperature or feels-like, whichever is higher; lib/heat-measure.ts): days at or above
+ * 100 F per year, the single hottest day, and the 7 days centred on that day (shifted if the day sits near the end of the record).
+ * Not a trend and not a forecast.
  */
+const roundDay = (day: HeatDay): HeatDay => (day.airF === undefined ? { date: day.date, feelsF: round(day.feelsF, 1) } : { date: day.date, feelsF: round(day.feelsF, 1), airF: round(day.airF, 1) });
+
 export function summarizeHeat(days: HeatDay[]): HeatSummary | null {
   if (days.length === 0) return null;
 
@@ -277,8 +280,8 @@ export function summarizeHeat(days: HeatDay[]): HeatSummary | null {
   for (const day of days) {
     const year = day.date.slice(0, 4);
     byYear[year] ??= 0;
-    if (day.feelsF >= HEAT_THRESHOLD_F) byYear[year] += 1;
-    if (day.feelsF > hottest.feelsF) hottest = day;
+    if (dayHigh(day) >= HEAT_THRESHOLD_F) byYear[year] += 1;
+    if (dayHigh(day) > dayHigh(hottest)) hottest = day;
   }
 
   const byDate = new Map(days.map((day) => [day.date, day]));
@@ -289,12 +292,12 @@ export function summarizeHeat(days: HeatDay[]): HeatSummary | null {
   const daily: HeatDay[] = [];
   for (let i = 0; i < 7; i += 1) {
     const day = byDate.get(isoDay(startMs + i * DAY_MS));
-    if (day) daily.push({ date: day.date, feelsF: round(day.feelsF, 1) });
+    if (day) daily.push(roundDay(day));
   }
 
   return {
     byYear,
-    hottest: { date: hottest.date, feelsF: round(hottest.feelsF, 1) },
+    hottest: roundDay(hottest),
     worstWeek: { start: daily[0].date, end: daily[daily.length - 1].date, daily },
     regionalSlug: null,
   };

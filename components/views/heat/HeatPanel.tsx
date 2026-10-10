@@ -3,7 +3,8 @@
 import { HistoryNav } from "@/components/panel/HistoryNav";
 import { More, TextVersion } from "@/components/panel/Disclosure";
 import { WEEKDAYS_LONG, streakAt, weekdayOf, type GridSummary } from "@/lib/ui/heat-model";
-import { heatLabels } from "@/lib/ui/data-source";
+import { dayHigh } from "@/lib/heat-measure";
+import { dayHighWords, heatHighWords, heatLabels } from "@/lib/ui/data-source";
 import { shortDay } from "@/lib/ui/text";
 import type { LookupPayload } from "@/lib/types";
 import { HeatChart } from "./HeatChart";
@@ -22,6 +23,7 @@ export function HeatPanel({ data, regional }: Props) {
   const hottestYear = heat.hottest.date.slice(0, 4);
   const years = Object.keys(heat.byYear).sort();
   const label = heatLabels(heat);
+  const high = heatHighWords(heat);
 
   let big: number;
   let sentence: React.ReactNode;
@@ -43,11 +45,19 @@ export function HeatPanel({ data, regional }: Props) {
       </>
     );
   } else {
-    big = Math.round(heat.hottest.feelsF);
+    big = Math.round(dayHigh(heat.hottest));
     eyebrow = "Heat at your address";
+    const other =
+      heat.hottest.airF === undefined
+        ? ""
+        : heat.hottest.airF > heat.hottest.feelsF
+          ? ` (it felt like ${Math.round(heat.hottest.feelsF)}°F)`
+          : ` (air temperature ${Math.round(heat.hottest.airF)}°F)`;
+    const kind = heat.hottest.airF === undefined ? `${label.measure} high` : heat.hottest.airF > heat.hottest.feelsF ? "air temperature high" : `${label.measure} high`;
     sentence = (
       <>
-        {label.measure} high on {shortDay(heat.hottest.date)}, {hottestYear}: <em>the hottest day at this address since {years[0]}.</em>
+        {kind} on {shortDay(heat.hottest.date)}, {hottestYear}
+        {other}: <em>the hottest day at this address since {years[0]}.</em>
       </>
     );
   }
@@ -73,7 +83,7 @@ export function HeatPanel({ data, regional }: Props) {
         </p>
         {label.explain ? <p className="note">{label.explain}</p> : null}
 
-        {regional ? null : <HeatChart byYear={heat.byYear} hottestYear={hottestYear} measure={label.measure} />}
+        {regional ? null : <HeatChart byYear={heat.byYear} hottestYear={hottestYear} measure={high.short} rule={high.rule} />}
 
         <More>
           {regional ? (
@@ -90,10 +100,15 @@ export function HeatPanel({ data, regional }: Props) {
                   <span>{streakAt(week, regional.day) === 1 ? "day at 100°F or more" : "days in a row at 100°F or more"}</span>
                 </div>
               </div>
-              <HeatChart byYear={heat.byYear} hottestYear={hottestYear} />
+              <HeatChart byYear={heat.byYear} hottestYear={hottestYear} measure={high.short} rule={high.rule} />
             </>
           ) : (
-            <p className="note">No regional map for this place yet, so this is the address alone. A {label.measure} high combines air temperature and humidity.</p>
+            <p className="note">
+              No regional map for this place yet, so this is the address alone.{" "}
+              {high.rule
+                ? `Each day counts ${high.rule}, whichever was higher: in dry heat the thermometer reads higher, in humid heat the ${label.measure} does.`
+                : `A ${label.measure} high combines air temperature and humidity.`}
+            </p>
           )}
           <p className="note">
             {peakTotal > 0 ? `Most days at 100°F or more: ${peakTotal} in ${worstYear}.` : `No day reached 100°F at this address since ${years[0]}, by this measure.`} Daily highs from {label.source}; this shows the past, not a trend or a forecast.
@@ -102,8 +117,8 @@ export function HeatPanel({ data, regional }: Props) {
 
           <TextVersion>
             <p>
-              {label.measure === "heat index" ? "Heat-index" : "Feels-like"} daily highs at this address, {years[0]} to {years[years.length - 1]}, from {label.source}. The hottest day was {shortDay(heat.hottest.date)}, {hottestYear}, at {Math.round(heat.hottest.feelsF)}°F. The week around it:{" "}
-              {week.map((d) => `${shortDay(d.date)}: ${Math.round(d.feelsF)}°F`).join("; ")}.
+              {high.rule ? `Daily highs at this address (${high.rule})` : `${label.measure === "heat index" ? "Heat-index" : "Feels-like"} daily highs at this address`}, {years[0]} to {years[years.length - 1]}, from {label.source}. The hottest day was {shortDay(heat.hottest.date)}, {hottestYear}, at {dayHighWords(heat.hottest, label.measure)}. The week around it:{" "}
+              {week.map((d) => `${shortDay(d.date)}: ${Math.round(dayHigh(d))}°F`).join("; ")}.
               {regional
                 ? ` The map covers a ${regional.regionSize} area around your address in ${regional.summary.cells.length.toLocaleString("en-US")} squares, each about 55 km wide, and the camera is locked so you can never see past the edge of the data. Each square is one feels-like high from the same reanalysis, not a thermometer reading; nothing is smoothed. Day by day, the hottest square on the map: ${week.map((d, i) => `${shortDay(d.date)}: ${Math.round(regional.summary.hottestByDay[i].values[i])}°F near ${nearestCity(regional.summary.hottestByDay[i].lat, regional.summary.hottestByDay[i].lon)}`).join("; ")}.`
                 : ""}

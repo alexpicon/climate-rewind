@@ -173,7 +173,7 @@ export async function fetchActiveAlerts(
 // ---------------------------------------------------------------- Open-Meteo heat
 
 export interface OpenMeteoResponse {
-  daily?: { time?: string[]; apparent_temperature_max?: Array<number | null> };
+  daily?: { time?: string[]; apparent_temperature_max?: Array<number | null>; temperature_2m_max?: Array<number | null> };
 }
 
 export const HEAT_THRESHOLD_F = 100;
@@ -193,13 +193,13 @@ export function clearHeatCache(): void {
   heatCache.clear();
 }
 
-/** The archive request for a point: daily feels-like highs, first year through the end of last year, Fahrenheit, local dates. */
+/** The archive request for a point: daily feels-like and air temperature highs, first year through the end of last year, Fahrenheit, local dates. */
 export function heatArchiveUrl(lat: number, lon: number, lastYear: number, places = 4): string {
   return (
     "https://archive-api.open-meteo.com/v1/archive" +
     `?latitude=${lat.toFixed(places)}&longitude=${lon.toFixed(places)}` +
     `&start_date=${HEAT_FIRST_YEAR}-01-01&end_date=${lastYear}-12-31` +
-    "&daily=apparent_temperature_max&temperature_unit=fahrenheit&timezone=auto"
+    "&daily=apparent_temperature_max,temperature_2m_max&temperature_unit=fahrenheit&timezone=auto"
   );
 }
 
@@ -207,17 +207,19 @@ export function heatArchiveUrl(lat: number, lon: number, lastYear: number, place
 export function heatDaysFromArchive(data: OpenMeteoResponse): HeatDay[] {
   const dates = data.daily?.time ?? [];
   const highs = data.daily?.apparent_temperature_max ?? [];
+  const air = data.daily?.temperature_2m_max ?? [];
   const days: HeatDay[] = [];
   dates.forEach((date, i) => {
     const feelsF = highs[i];
-    if (typeof feelsF === "number") days.push({ date, feelsF });
+    const airF = air[i];
+    if (typeof feelsF === "number") days.push(typeof airF === "number" ? { date, feelsF, airF } : { date, feelsF });
   });
   return days;
 }
 
 /**
- * Daily feels-like highs from the Open-Meteo archive, first year through the end of last year. One variable only: the cost is the 26 years,
- * not the columns. When Open-Meteo is rate limited (429) or otherwise fails, the highs come from NASA POWER instead (a heat index, not
+ * Daily feels-like and air temperature highs from the Open-Meteo archive, first year through the end of last year. Two variables: the
+ * cost is the 26 years, not the columns. When Open-Meteo is rate limited (429) or otherwise fails, the highs come from NASA POWER instead (a heat index, not
  * the same measure), and the answer says so in `source`. Only when both fail is there a notice.
  */
 export async function fetchDailyFeelsLike(
