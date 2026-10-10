@@ -18,6 +18,7 @@ import {
   REPLAY_REGION_KM,
   TOP_NIGHTS,
   TORNADO_RADIUS_KM,
+  NEARBY_REPLAY_KM,
 } from "./constants";
 import { lookupAreaEvents, selectAreaEvents, type AreaSelection } from "./area-events";
 import { fetchDayExtremes, joinExtremes, type DayExtremes } from "./extremes";
@@ -261,16 +262,22 @@ export function findNearbyTornadoes(
   return nearby.sort((a, b) => Date.parse(a.start) - Date.parse(b.start));
 }
 
-/** With no tornado within the radius, the closest few beyond it (up to 50 km), nearest first, so the tab can show what did come close. */
+/**
+ * With no tornado within the radius, what did come close, nearest first: every track within 25 km (at most 8, for the tab's replay),
+ * or else the closest few up to 50 km (a list and dots only).
+ */
 export function findNearestTornadoes(tornadoes: TornadoRow[], origin: Coord, count: number = NEAREST_TORNADO_COUNT, maxKm: number = NEAREST_TORNADO_MAX_KM): NearbyTornado[] {
   const near: NearbyTornado[] = [];
   for (const tornado of tornadoes) {
     const hit = segmentDistance(origin, tornado.begin, tornado.end);
     if (hit.km > TORNADO_RADIUS_KM && hit.km <= maxKm) near.push({ ...tornado, minDistanceKm: round(hit.km, 2), closest: hit.nearest });
   }
-  return near.sort((a, b) => a.minDistanceKm - b.minDistanceKm).slice(0, count);
+  near.sort((a, b) => a.minDistanceKm - b.minDistanceKm);
+  const replayable = near.filter((t) => t.minDistanceKm <= NEARBY_REPLAY_KM);
+  return replayable.length ? replayable.slice(0, NEARBY_REPLAY_MAX) : near.slice(0, count);
 }
 
+const NEARBY_REPLAY_MAX = 8;
 const NEAREST_TORNADO_COUNT = 3;
 const NEAREST_TORNADO_MAX_KM = 50;
 

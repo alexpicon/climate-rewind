@@ -3,6 +3,8 @@
 export const FLOOD_RADIUS_KM = 5;
 export const REPLAY_NIGHT_RADIUS_KM = 15;
 export const TORNADO_RADIUS_KM = 10;
+/** With no tornado within 10 km, the replay plays the tracks within this distance instead (and says so). */
+export const NEARBY_REPLAY_KM = 25;
 /** Reports farther than this are not drawn on the replay map. */
 export const REPLAY_REGION_KM = 120;
 /** A "night" is the busiest stretch of at most this many hours. */

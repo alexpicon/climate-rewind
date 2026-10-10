@@ -41,6 +41,8 @@ interface SceneOptions {
   reduced: boolean;
   /** Start in the 3D view (terrain and buildings). Toggle later with setView3d. */
   view3d?: boolean;
+  /** The outer ring and the resting camera: 10 km, or 25 km when no tornado came within 10 km (rings at 10 and 25 km then). */
+  radiusKm?: number;
   /** Called when a track passes within 2 km while playing, for the screen reader. */
   onPass?: (tornado: NearbyTornado) => void;
 }
@@ -83,7 +85,7 @@ export class TornadoScene {
       type: "geojson",
       data: {
         type: "FeatureCollection",
-        features: [10, 5].map((km) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: circlePoints(origin, km) } })),
+        features: this.rings().map((km) => ({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: circlePoints(origin, km) } })),
       },
     });
     map.addLayer({ id: "rings-l", type: "line", source: "rings", paint: { "line-color": "#E8EAF2", "line-width": 1.6, "line-dasharray": [3, 4], "line-opacity": 0.7 } }, LABELS_LAYER);
@@ -131,7 +133,7 @@ export class TornadoScene {
       const color = efColor(pin.ef ?? item.tornado.ef);
       return [{ marker: new gl.Marker({ element: this.damageElement(pin, color), anchor: "center" }).setLngLat([pin.lon, pin.lat]), at: item.startMs + item.drawMs, on: false }];
     });
-    this.ringLabels = [[5, "5 km"], [10, "10 km"]].map(([km, text]) =>
+    this.ringLabels = this.rings().map((km) => [km, `${km} km`]).map(([km, text]) =>
       new gl.Marker({ element: decorative(el("div", {}, [el("div", { className: "ringlab", text: String(text) })])), anchor: "bottom", offset: [0, -2] })
         .setLngLat([lonLat[0], lonLat[1] + Number(km) / 110.57])
         .addTo(map),
@@ -173,6 +175,12 @@ export class TornadoScene {
     return root;
   }
 
+  /** The two rings: 5 and 10 km, or 10 and 25 km for the tracks beyond 10 km. */
+  private rings(): number[] {
+    const outer = this.opts.radiusKm ?? 10;
+    return outer === 10 ? [10, 5] : [outer, 10];
+  }
+
   /** The camera the animation rests on: the 10 km circle, or in 3D a pitched view across the closest track. */
   private baseCamera(): Camera | null {
     const { origin } = this.opts;
@@ -180,7 +188,7 @@ export class TornadoScene {
       const across = this.closest ? bearingAcross(this.closest.begin, this.closest.end) : -18;
       return camera3D(origin, 12.8, across);
     }
-    const ringBox = circlePoints(origin, 12);
+    const ringBox = circlePoints(origin, (this.opts.radiusKm ?? 10) * 1.2);
     const flat = cameraFor(this.api.map, [
       [Math.min(...ringBox.map((p) => p[0])), Math.min(...ringBox.map((p) => p[1]))],
       [Math.max(...ringBox.map((p) => p[0])), Math.max(...ringBox.map((p) => p[1]))],

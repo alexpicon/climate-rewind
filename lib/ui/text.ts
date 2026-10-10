@@ -133,7 +133,7 @@ export function highlightSegments(text: string, highlights: Highlights): TextSeg
  * sentence boundary. `truncated` tells the UI to add an ellipsis.
  */
 export function excerpt(text: string, max = 340): { text: string; truncated: boolean } {
-  const clean = text.replace(/\s+/g, " ").trim();
+  const clean = text.replace(/\|/g, " ").replace(/\s+/g, " ").trim();
   if (clean.length <= max) return { text: clean, truncated: false };
 
   const sentences = clean.match(/[^.!?]+[.!?]+(\s|$)/g) ?? [clean];

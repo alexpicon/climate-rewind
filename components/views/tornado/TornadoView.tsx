@@ -11,6 +11,7 @@ import { PreRoll } from "@/components/panel/PreRoll";
 import { focusPanelHeadingSoon } from "@/lib/ui/focus";
 import { usePlayback } from "@/components/use-playback";
 import type { LookupPayload } from "@/lib/types";
+import { NEARBY_REPLAY_KM, TORNADO_RADIUS_KM } from "@/lib/constants";
 import { buildTimeline, cardTornado, closestTornado, efColor, isBig } from "@/lib/ui/tornado-model";
 import { niceDate } from "@/lib/ui/text";
 import { TornadoEmpty } from "./TornadoEmpty";
@@ -35,11 +36,19 @@ interface Props {
 }
 
 export function TornadoView(props: Props) {
-  if (props.data.tornadoes.length === 0) return <TornadoEmpty data={props.data} />;
-  return <TornadoPlayer {...props} />;
+  // None within 10 km: replay the tracks within 25 km instead, in date order, and say so.
+  const nearby = useMemo(() => {
+    if (props.data.tornadoes.length) return null;
+    const near = (props.data.nearestTornadoes ?? []).filter((t) => t.minDistanceKm <= NEARBY_REPLAY_KM);
+    return near.length ? { ...props.data, tornadoes: [...near].sort((a, b) => Date.parse(a.start) - Date.parse(b.start)) } : null;
+  }, [props.data]);
+  if (props.data.tornadoes.length) return <TornadoPlayer {...props} radiusKm={TORNADO_RADIUS_KM} />;
+  if (nearby) return <TornadoPlayer {...props} data={nearby} radiusKm={NEARBY_REPLAY_KM} />;
+  return <TornadoEmpty data={props.data} />;
 }
 
-function TornadoPlayer({ data, reduced, firstView, autoplay = false, focusTornado = null, onSeen, view3d, onView3d }: Props) {
+function TornadoPlayer({ data, reduced, firstView, autoplay = false, focusTornado = null, onSeen, view3d, onView3d, radiusKm }: Props & { radiusKm: number }) {
+  const beyond = radiusKm !== TORNADO_RADIUS_KM;
   const api = useMapApi();
   const say = useAnnounce();
   const timeline = useMemo(() => buildTimeline(data.tornadoes), [data.tornadoes]);
@@ -78,6 +87,7 @@ function TornadoPlayer({ data, reduced, firstView, autoplay = false, focusTornad
       damage,
       reduced,
       view3d: view3dRef.current,
+      radiusKm,
       onPass: (t) => say(`A tornado passed ${t.minDistanceKm.toFixed(2)} kilometres from your address.`),
     });
     scene.enter();
@@ -87,7 +97,7 @@ function TornadoPlayer({ data, reduced, firstView, autoplay = false, focusTornad
       scene.destroy();
       sceneRef.current = null;
     };
-  }, [api, origin, timeline, damage, reduced, say]);
+  }, [api, origin, timeline, damage, reduced, say, radiusKm]);
 
   useEffect(() => {
     sceneRef.current?.setView3d(view3d);
@@ -144,7 +154,7 @@ function TornadoPlayer({ data, reduced, firstView, autoplay = false, focusTornad
 
   return (
     <>
-      <TornadoPanel data={data} timeline={timeline} ms={ms} closest={closest} playing={playing} flags={flags} />
+      <TornadoPanel data={data} timeline={timeline} ms={ms} closest={closest} playing={playing} flags={flags} radiusKm={radiusKm} />
 
       <View3DToggle on={view3d} onToggle={onView3d} />
 
@@ -153,7 +163,7 @@ function TornadoPlayer({ data, reduced, firstView, autoplay = false, focusTornad
       {card ? (
         <PreRoll
           mode="Replay · real past data"
-          sentence="These are the real tornadoes the weather service recorded near your street."
+          sentence={beyond ? `No tornado in our records came within 10 km of you. These are the closest ones, within ${radiusKm} km.` : "These are the real tornadoes the weather service recorded near your street."}
           scale={
             <>
               Real NWS tornado tracks, in date order. <b>One tornado at a time:</b> about {seconds} seconds in all. After each one, the NWS’s own damage notes.
@@ -172,7 +182,7 @@ function TornadoPlayer({ data, reduced, firstView, autoplay = false, focusTornad
       {!card ? (
         <Legend>
           <b>Each line is one real tornado</b>
-          <p className="lg-p">From where it touched down to where it lifted (NWS start and end points). Rings = 5 and 10 km from you.</p>
+          <p className="lg-p">From where it touched down to where it lifted (NWS start and end points). Rings = {beyond ? `10 and ${radiusKm}` : "5 and 10"} km from you.</p>
           {[
             ["EF3", "EF3 or stronger: severe damage"],
             ["EF2", "EF2: considerable"],

@@ -18,10 +18,15 @@ interface Props {
   playing?: boolean;
   /** The radar's rotation flags around each tornado, when asked for. */
   flags?: TornadoFlags;
+  /** 10 km, or 25 km when no tornado came within 10 km and these are the closest beyond it. */
+  radiusKm?: number;
 }
 
-export function TornadoPanel({ data, timeline, ms, closest, playing = false, flags }: Props) {
+export function TornadoPanel({ data, timeline, ms, closest, playing = false, flags, radiusKm = 10 }: Props) {
+  const beyond = radiusKm !== 10;
   const total = timeline.items.length;
+  // Beyond 10 km the lookup keeps only the closest 8: with 8, there may have been more within 25 km.
+  const capped = beyond && total >= 8;
   const drawn = timeline.items.filter((i) => ms - i.startMs > i.drawMs * 0.5).length;
   const finale = ms >= timeline.tracksMs + timeline.finaleMs * 0.55;
   const nowPlaying = playing && ms < timeline.tracksMs;
@@ -41,9 +46,9 @@ export function TornadoPanel({ data, timeline, ms, closest, playing = false, fla
       <section id="v-tornado" className="view on" aria-labelledby="tor-h">
         <HistoryNav current="tornado" address={data.address.input} />
         <h1 className="sr" id="tor-h">
-          Tornado paths within 10 kilometres of {data.address.matched}
+          Tornado paths within {radiusKm} kilometres of {data.address.matched}{beyond ? " (none within 10 kilometres)" : ""}
         </h1>
-        <p className="eyebrow">Real tornadoes in our records · within 10 km</p>
+        <p className="eyebrow">{beyond ? `Real tornadoes in our records · none within 10 km · these within ${radiusKm} km` : "Real tornadoes in our records · within 10 km"}</p>
         <div className="big" style={bigStyle} aria-hidden="true">
           <span>{closest.minDistanceKm.toFixed(2)}</span>
           <small>km</small>
@@ -52,11 +57,11 @@ export function TornadoPanel({ data, timeline, ms, closest, playing = false, fla
           <span className="sr">{closest.minDistanceKm.toFixed(2)} kilometres. </span>
           {finale ? (
             <>
-              closest of the <em>{total} tornadoes</em> that passed within 10 km: an <em>{closest.ef} on {niceDate(closest.start)}</em>.
+              closest of the <em>{capped ? `${total} closest tornadoes` : `${total} tornado${total === 1 ? "" : "es"}`}</em> that passed within {radiusKm} km: an <em>{closest.ef} on {niceDate(closest.start)}</em>.
             </>
           ) : (
             <>
-              closest tornado, of {total} within 10 km. Each line is <em>one real tornado</em>, from touchdown to lift-off.
+              closest tornado, of {capped ? `the ${total} closest` : total} within {radiusKm} km{beyond ? " (none came within 10 km)" : ""}. Each line is <em>one real tornado</em>, from touchdown to lift-off.
             </>
           )}
         </p>
@@ -121,7 +126,7 @@ export function TornadoPanel({ data, timeline, ms, closest, playing = false, fla
           {data.notices.index ? <p className="note">{data.notices.index}</p> : null}
           <TextVersion>
             <p>
-              {total} tornado track{total === 1 ? "" : "s"} in the records we have passed within 10 km of this address. The closest, {closest.minDistanceKm.toFixed(2)} km away, was an {closest.ef} on {niceDate(closest.start)}
+              {beyond ? "No tornado track in the records we have passed within 10 km of this address. " : ""}{capped ? `These are the ${total} closest tornado tracks within ${radiusKm} km of this address in the records we have.` : `${total} tornado track${total === 1 ? "" : "s"} in the records we have passed within ${radiusKm} km of this address.`} The closest, {closest.minDistanceKm.toFixed(2)} km away, was an {closest.ef} on {niceDate(closest.start)}
               {casualtyParts(closest).length ? `, with ${casualtyParts(closest).join(" and ")} recorded for this county’s part of the track` : ""}. Each line joins the NWS start and end points of one tornado. After each track the card quotes the National Weather Service’s own damage narrative from Storm Events, word for word.
             </p>
             <table>
