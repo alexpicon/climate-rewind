@@ -165,7 +165,7 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, choices, o
           }}
         >
           <label className="sr" htmlFor="landing-address">
-            Street address
+            Address or city
           </label>
           <input
             ref={inputRef}
@@ -173,7 +173,10 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, choices, o
             name="address"
             type="text"
             value={input}
-            autoComplete="street-address"
+autoComplete="off"
+            data-1p-ignore="true"
+            data-lpignore="true"
+            data-form-type="other"
             spellCheck={false}
             placeholder="100 James Robertson Pkwy, Nashville, TN"
             aria-describedby={error ? "landing-error" : undefined}

@@ -884,10 +884,16 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 .lbar{position:fixed;z-index:6;top:0;left:0;right:0;display:flex;align-items:center;gap:18px;padding:10px max(24px,6vw);background:rgba(6,10,19,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transform:translateY(-110%);transition:transform .35s var(--ease)}
 .lbar.on{transform:none}
 .lbar-name{font-family:var(--serif);font-size:20px;color:var(--ink);white-space:nowrap}
-.lbar-form{display:flex;gap:8px;flex:1;max-width:620px}
-.lbar-form input{flex:1;min-width:0;height:42px;padding:0 18px;border-radius:999px;border:1px solid var(--line-2);background:rgba(255,255,255,.08);font-size:16px;color:var(--ink)}
-.lbar-form input:focus-visible{border-color:#FFE2B0}
-.lbar-form .btn{width:auto;min-height:42px;height:42px;padding:0 20px}
+/* The same pill as the app's address bar (#addr): pin, text, and "Look up" inside one rounded field. */
+.lbar-form{display:flex;align-items:center;gap:8px;flex:1;max-width:560px;height:48px;padding:0 6px 0 14px;border-radius:999px;border:1px solid var(--line-2);background:rgba(255,255,255,.07);transition:background .2s,border-color .2s}
+.lbar-form:hover{background:rgba(255,255,255,.1)}
+.lbar-form:focus-within{border-color:#FFE2B0;background:rgba(255,255,255,.12);box-shadow:0 0 0 3px rgba(255,226,176,.55)}
+.lbar-form .pin{flex:none;color:var(--accent)}
+.lbar-form input::placeholder{color:var(--faint)}
+.lbar-form input{flex:1;min-width:0;height:100%;padding:0;border:0;background:transparent;font-size:16px;color:var(--ink);outline:none}
+.lbar-form .go{flex:none;display:inline-flex;align-items:center;min-height:36px;height:36px;padding:0 14px;border-radius:999px;border:0;background:rgba(255,255,255,.1);font-size:14px;font-weight:600;color:var(--ink);cursor:pointer}
+.lbar-form .go:hover{background:rgba(255,255,255,.18)}
+.lbar-form .go[disabled]{opacity:.6;cursor:progress}
 @media (max-width:700px){.lbar-name{display:none}.lbar{padding:8px 12px}}
 @media (prefers-reduced-motion: reduce){.lbar{transition:none}}
 @media (min-width:1200px){
@@ -968,8 +974,7 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
   .lbar-text{display:none}
   .lbar-name{flex:none}
   .lbar-form{min-width:0;max-width:none}
-  .lbar-form input{padding:0 14px}
-  .lbar-form .btn{padding:0 14px;flex:none}
+  .lbar-form{padding:0 4px 0 12px}
 }
 
 .mt-label{margin:0 0 6px;font-size:13px;font-weight:650;color:var(--ink)}

@@ -27,20 +27,27 @@ export function LandingSearchBar({ visible, input, onInput, onSubmit, lookingUp 
           onSubmit();
         }}
       >
+        <svg className="pin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+          <path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" />
+          <circle cx="12" cy="9.5" r="2.5" />
+        </svg>
         <label className="sr" htmlFor="lbar-address">
-          Street address
+          Address or city
         </label>
         <input
           id="lbar-address"
           name="address"
           type="text"
           value={input}
-          autoComplete="street-address"
+          autoComplete="off"
+          data-1p-ignore="true"
+          data-lpignore="true"
+          data-form-type="other"
           spellCheck={false}
-          placeholder="Type any US address"
+          placeholder="Address, or city and state"
           onChange={(event) => onInput(event.target.value)}
         />
-        <button className="btn" type="submit" disabled={lookingUp}>
+        <button className="go" type="submit" disabled={lookingUp}>
           {lookingUp ? "Looking up…" : "Look up"}
         </button>
       </form>

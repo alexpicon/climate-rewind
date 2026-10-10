@@ -65,16 +65,19 @@ export function TopBar({ input, onInput, onSubmit, matched, lookingUp, tab, addr
             <circle cx="12" cy="9.5" r="2.5" />
           </svg>
           <label className="sr" htmlFor="addrin">
-            Street address
+            Address or city
           </label>
           <input
             id="addrin"
             name="address"
             type="text"
             value={input}
-            autoComplete="street-address"
+autoComplete="off"
+            data-1p-ignore="true"
+            data-lpignore="true"
+            data-form-type="other"
             spellCheck={false}
-            placeholder="Street address, city, state"
+            placeholder="Address, or city and state"
             aria-describedby="addrmatch"
             onChange={(event) => onInput(event.target.value)}
           />
@@ -92,7 +95,7 @@ export function TopBar({ input, onInput, onSubmit, matched, lookingUp, tab, addr
           </button>
         </form>
         <div className="sr" id="addrmatch" role="status">
-          {matched ? `Matched by the US Census geocoder: ${matched}` : "Type a US street address."}
+          {matched ? `Matched by the US Census geocoder: ${matched}` : "Type a US address, or a city and state."}
         </div>
       </div>
 
