@@ -178,7 +178,7 @@ autoComplete="off"
             data-lpignore="true"
             data-form-type="other"
             spellCheck={false}
-            placeholder="100 James Robertson Pkwy, Nashville, TN"
+            placeholder="US address or city"
             aria-describedby={error ? "landing-error" : undefined}
             aria-invalid={error ? true : undefined}
             onChange={(event) => onInput(event.target.value)}
