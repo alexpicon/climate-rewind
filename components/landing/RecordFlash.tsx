@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePlayback } from "@/components/use-playback";
+import { useDevicePixelRatio } from "@/components/use-device-pixel-ratio";
 import { useReducedMotion } from "@/components/use-reduced-motion";
 import { useShown } from "./use-shown";
 import type { Fit } from "@/lib/ui/albers";
@@ -49,6 +50,7 @@ function drawGlow(ctx: CanvasRenderingContext2D, fit: Fit, model: RecordModel, f
  */
 export function RecordFlash() {
   const reduced = useReducedMotion();
+  const dpr = useDevicePixelRatio();
   const wrapRef = useRef<HTMLDivElement>(null);
   const traceRef = useRef<HTMLCanvasElement>(null);
   const liveRef = useRef<HTMLCanvasElement>(null);
@@ -98,7 +100,6 @@ export function RecordFlash() {
     return () => observer.disconnect();
   }, []);
 
-  const dpr = typeof window === "undefined" ? 1 : Math.min(2, window.devicePixelRatio || 1);
   useEffect(() => {
     const trace = traceRef.current?.getContext("2d");
     const live = liveRef.current?.getContext("2d");

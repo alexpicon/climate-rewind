@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useDevicePixelRatio } from "@/components/use-device-pixel-ratio";
 import { useReducedMotion } from "@/components/use-reduced-motion";
 import { LOOP_MS, restingP, type SamplePreview } from "@/lib/ui/sample-preview";
 import { drawPreview } from "./sample-preview-draw";
@@ -11,6 +12,7 @@ import { drawPreview } from "./sample-preview-draw";
  */
 export function SampleBackdrop({ preview, paused }: { preview: SamplePreview | undefined; paused: boolean }) {
   const reduced = useReducedMotion();
+  const dpr = useDevicePixelRatio();
   const wrapRef = useRef<HTMLSpanElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [{ width, height }, setSize] = useState({ width: 0, height: 0 });
@@ -36,7 +38,6 @@ export function SampleBackdrop({ preview, paused }: { preview: SamplePreview | u
   useEffect(() => {
     const ctx = canvasRef.current?.getContext("2d");
     if (!ctx || !preview || !width || !height) return;
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (still || !visible) {
       drawPreview(ctx, preview, width, height, reduced ? restingP(preview) : (pRef.current ?? restingP(preview)), clockRef.current);
@@ -55,9 +56,8 @@ export function SampleBackdrop({ preview, paused }: { preview: SamplePreview | u
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [preview, width, height, still, visible, reduced]);
+  }, [preview, width, height, dpr, still, visible, reduced]);
 
-  const dpr = typeof window === "undefined" ? 1 : Math.min(2, window.devicePixelRatio || 1);
   return (
     <span className="sp-back" ref={wrapRef} aria-hidden="true">
       <canvas ref={canvasRef} width={width * dpr} height={height * dpr} style={{ width, height }} />

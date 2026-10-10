@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useDevicePixelRatio } from "@/components/use-device-pixel-ratio";
 import { useReducedMotion } from "@/components/use-reduced-motion";
 import { fetchJson } from "./fetch-json";
 import { useShown } from "./use-shown";
@@ -109,6 +110,7 @@ function draw(ctx: CanvasRenderingContext2D, model: EventModel, shapes: StateSha
  */
 export function EventPreview({ id }: { id: string }) {
   const reduced = useReducedMotion();
+  const dpr = useDevicePixelRatio();
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [pkg, setPkg] = useState<EventPackage | null>(null);
@@ -149,7 +151,6 @@ export function EventPreview({ id }: { id: string }) {
   useEffect(() => {
     const ctx = canvasRef.current?.getContext("2d");
     if (!ctx || !model || !width || !height) return;
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (still || !shown) {
       draw(ctx, model, shapes, width, height, reduced ? keyMomentP(model) : (pRef.current ?? keyMomentP(model)));
@@ -166,9 +167,8 @@ export function EventPreview({ id }: { id: string }) {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [model, shapes, width, height, still, shown, reduced]);
+  }, [model, shapes, width, height, dpr, still, shown, reduced]);
 
-  const dpr = typeof window === "undefined" ? 1 : Math.min(2, window.devicePixelRatio || 1);
   return (
     <div className="ev-prev" ref={wrapRef}>
       <canvas ref={canvasRef} width={width * dpr} height={height * dpr} style={{ width, height }} aria-hidden="true" />
