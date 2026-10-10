@@ -951,3 +951,5 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 /* the brand mark beside the name */
 .lbar-name{display:inline-flex;align-items:center;gap:8px}
 .brand-eyebrow{display:inline-flex;align-items:center;gap:8px}
+/* The name beside the mark reads the same everywhere: like the landing page's "CLIMATE REWIND" (the eyebrow style). */
+.brand span,.lbar-name{font-family:var(--sans);font-size:14px;font-weight:650;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
