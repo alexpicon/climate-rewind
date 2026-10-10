@@ -22,8 +22,11 @@ describe("findPlace (the search box's city fallback)", () => {
   });
 
   it("does not turn a state name, a street address or nonsense into a small town", () => {
-    for (const q of ["Texas", "Indiana", "Nevada", "Fort Myers, ZZ", "100 Main St, Fort Myers, FL", "asdfgh"]) expect(findPlace(q)).toBeNull();
+    for (const q of ["Fort Myers, ZZ", "100 Main St, Fort Myers, FL", "asdfgh"]) expect(findPlace(q)).toBeNull();
+    for (const q of ["Texas", "Indiana", "Nevada"]) expect(findPlace(q)).toMatchObject({ kind: "state", choices: [] });
+    expect(findPlace("Texas")).toMatchObject({ name: "Texas", example: "Houston, TX" });
     expect(one("New York")).toBe("New York, NY");
-    expect(one("Washington")).toBe("Washington, DC");
+    expect(findPlace("Washington")).toMatchObject({ kind: "state", name: "Washington", choices: ["Washington, DC"], example: "Seattle, WA" });
+    expect(one("Washington, DC")).toBe("Washington, DC");
   });
 });

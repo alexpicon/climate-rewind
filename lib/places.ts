@@ -13,7 +13,12 @@ export interface Place {
   population: number;
 }
 
-export type PlaceMatch = { kind: "one"; place: Place } | { kind: "many"; name: string; choices: string[] } | null;
+export type PlaceMatch =
+  | { kind: "one"; place: Place }
+  | { kind: "many"; name: string; choices: string[] }
+  /** A state's name alone: the app looks up one spot, not a state, so it says so (with a city of that name in another state as a choice). */
+  | { kind: "state"; name: string; example: string | null; choices: string[] }
+  | null;
 
 /** The 50 states and DC, the area our storm records cover. */
 const STATES: Record<string, string> = {
@@ -67,6 +72,17 @@ function placeIndex(): Map<string, Place[]> {
   return index;
 }
 
+let biggest: Map<string, Place> | null = null;
+
+/** The biggest place in a state, for the example in the "that is a state" message. */
+function biggestIn(state: string): Place | null {
+  if (!biggest) {
+    biggest = new Map();
+    for (const list of placeIndex().values()) for (const place of list) if ((biggest.get(place.state)?.population ?? -1) < place.population) biggest.set(place.state, place);
+  }
+  return biggest.get(state) ?? null;
+}
+
 /** A name with no state picks the biggest place only when it is at least this many times bigger than the next one. */
 const CLEAR_LEAD = 10;
 const MAX_CHOICES = 6;
@@ -99,9 +115,16 @@ export function findPlace(input: string): PlaceMatch {
   if (comma > 0) return null;
 
   const list = places.get(normalizePlace(text));
+  // A state's name alone ("Texas", "Washington") means the state, not a small town named after it. A big city of that name in the same
+  // state (New York) opens; one in another place (Washington, DC) is offered as a choice.
+  const stateCode = STATE_BY_TEXT.get(normalizePlace(text));
+  if (stateCode) {
+    const big = list?.[0] && list[0].population >= BIG_CITY ? list[0] : null;
+    if (big && big.state === stateCode) return { kind: "one", place: big };
+    const example = biggestIn(stateCode);
+    return { kind: "state", name: STATES[stateCode], example: example ? `${example.name}, ${example.state}` : null, choices: big ? [`${big.name}, ${big.state}`] : [] };
+  }
   if (!list?.length) return null;
-  // A state's name alone ("Texas", "Indiana") means the state, not a small town named after it; New York and Washington, DC are kept.
-  if (STATE_BY_TEXT.has(normalizePlace(text)) && list[0].population < BIG_CITY) return null;
   if (list.length === 1 || list[0].population >= CLEAR_LEAD * Math.max(1, list[1].population)) return { kind: "one", place: list[0] };
   return { kind: "many", name: list[0].name, choices: list.slice(0, MAX_CHOICES).map((p) => `${p.name}, ${p.state}`) };
 }

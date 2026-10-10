@@ -44,7 +44,7 @@ export function LandingSearchBar({ visible, input, onInput, onSubmit, lookingUp 
           data-lpignore="true"
           data-form-type="other"
           spellCheck={false}
-          placeholder="Address, or city and state"
+          placeholder="US address or city"
           onChange={(event) => onInput(event.target.value)}
         />
         <button className="go" type="submit" disabled={lookingUp}>

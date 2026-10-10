@@ -77,7 +77,7 @@ autoComplete="off"
             data-lpignore="true"
             data-form-type="other"
             spellCheck={false}
-            placeholder="Address, or city and state"
+            placeholder="US address or city"
             aria-describedby="addrmatch"
             onChange={(event) => onInput(event.target.value)}
           />

@@ -80,6 +80,11 @@ export async function geocodeAddress(input: string, fetchFn: FetchLike): Promise
     const place = findPlace(address);
     if (place?.kind === "one") return placeAddress(address, place.place, fetchFn);
     if (place?.kind === "many") throw new LookupError(404, `There is more than one ${place.name}. Which one did you mean?`, place.choices);
+    if (place?.kind === "state") {
+      const other = place.choices.length ? ` Did you mean ${place.choices[0]}?` : "";
+      const tryThis = place.example ? ` Type an address or a city in ${place.name}, like ${place.example}.` : " Type an address or a city there.";
+      throw new LookupError(404, `${place.name} is a state, and Climate Rewind looks up one place.${other}${tryThis}`, place.choices.length ? place.choices : undefined);
+    }
     throw new LookupError(
       404,
       "We could not match that to a street address or a US city. Try a full address, or a city and state, like Fort Myers, FL.",
