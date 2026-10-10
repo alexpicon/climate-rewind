@@ -13,6 +13,7 @@ import type { AreaEvent, LookupPayload } from "@/lib/types";
 import { requestStory, type StoryResult } from "@/lib/ui/ahead-client";
 import { NEARBY_ZONE_KM } from "@/lib/constants";
 import { currentZone, eventLabel, FAMILIES, familyOf, otherZonesLine, tierLabel, zoneLabel } from "@/lib/ui/story-model";
+import { ClimateStrip } from "@/components/climate/ClimateStrip";
 import { AiProblem } from "../ahead/AiProblem";
 import { AreaReplayCard } from "./AreaReplayCard";
 import { EventCard } from "./EventCard";
@@ -142,6 +143,7 @@ export function StoryView({
             Your area’s story
           </h1>
           <p className="ahead-addr">{data.address.matched}</p>
+          <ClimateStrip lat={data.address.lat} lon={data.address.lon} address={data.address.input} />
           <p className="lede">{data.notices.areaEvents ?? "We have no area events for this address yet."}</p>
           {quiet ? <QuietCard data={data} showStoryLink={false} /> : null}
           <ExtremesCard data={data} />
@@ -165,6 +167,8 @@ export function StoryView({
           {data.address.matched}
           {zone ? ` · ${zone} County` : ""}
         </p>
+
+        <ClimateStrip lat={data.address.lat} lon={data.address.lon} address={data.address.input} />
 
         <div className="big story-big" aria-hidden="true">
           <span>{area.total.toLocaleString("en-US")}</span>

@@ -122,3 +122,22 @@ describe("the record flash", () => {
     if (frame.glowFrom > 0) expect(frame.ms - file.groups[frame.glowFrom - 1][0]).toBeGreaterThan(GLOW_MS);
   });
 });
+
+describe("each moment's attribution line", () => {
+  it("is a short honest line with an https source link, and never claims one tornado or the Maui fire was caused by climate change", () => {
+    for (const m of LANDING_MOMENTS) {
+      const a = m.attribution;
+      if (!a) continue;
+      expect(a.url).toMatch(/^https:\/\//);
+      expect(a.sourceLabel).toMatch(/^Source/);
+      expect(a.text.length).toBeLessThanOrEqual(130);
+    }
+    expect(moment("mayfield").attribution?.text).toMatch(/can’t yet be pinned/);
+    expect(moment("rolling-fork").attribution?.credit).toMatch(/AP/);
+    expect(moment("lahaina").attribution?.text).toMatch(/^No formal attribution study/);
+    expect(moment("ian").attribution?.credit).toMatch(/not peer-reviewed/);
+    expect(moment("ida").attribution?.sourceLabel).toBe("Source (preprint)");
+    // Scout's rule: the Ida card never states the "quarter to half million" figure (it mixes current and future warming).
+    expect(JSON.stringify(moment("ida").attribution)).not.toMatch(/million/);
+  });
+});

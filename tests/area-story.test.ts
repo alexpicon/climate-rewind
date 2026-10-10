@@ -394,11 +394,11 @@ describe("the brief's context for a quiet address", () => {
 });
 
 describe("tabs and the timeline model", () => {
-  it("'future' and 'ready' are hidden until their view files exist; the story view follows the 72 hours and sits inside Your history", () => {
-    expect(VISIBLE_TABS[0]).toBe("ahead");
-    expect(VISIBLE_TABS[1]).toBe("story");
+  it("'future' and 'ready' are hidden until their view files exist; Your history comes first and Next 7 days follows the four history views", () => {
+    expect(VISIBLE_TABS[0]).toBe("story");
+    expect(VISIBLE_TABS[4]).toBe("ahead");
     expect(VISIBLE_TABS).toContain("how");
-    expect(VISIBLE_TOP_TABS).toEqual(["ahead", "history", "future", "ready"]);
+    expect(VISIBLE_TOP_TABS).toEqual(["history", "ahead", "future", "ready"]);
   });
 
   it("sorts event types into families and puts dots on a 2000-to-now axis, one lane per family in use", () => {

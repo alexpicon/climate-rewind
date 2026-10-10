@@ -25,7 +25,25 @@ export interface LandingMoment {
   replayKinds?: readonly string[];
   /** What the button says. */
   action: string;
+  /** One line on what science says about climate change and this event, from a source Scout read and confirmed (research/attribution-2026-10-09.md). Absent: no line. */
+  attribution?: MomentAttribution;
 }
+
+export interface MomentAttribution {
+  text: string;
+  /** Who said it, when the line is a paraphrase: "per AP / NOAA’s Harold Brooks". */
+  credit?: string;
+  /** The small link's words and address. */
+  sourceLabel: string;
+  url: string;
+}
+
+const TORNADO_ATTRIBUTION: MomentAttribution = {
+  text: "A single tornado can’t yet be pinned on climate change",
+  credit: "per AP / NOAA’s Harold Brooks",
+  sourceLabel: "Source",
+  url: "https://www.voanews.com/a/was-us-tornado-outbreak-related-to-climate-change-/6350849.html",
+};
 
 /** The NWS event types of a tropical cyclone's landfall. */
 export const TROPICAL = ["Hurricane (Typhoon)", "Tropical Storm", "Tropical Depression", "Storm Surge/Tide"] as const;
@@ -45,6 +63,7 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     tab: "tornado",
     tornado: "SE-994196",
     action: "Play the tornado",
+    attribution: TORNADO_ATTRIBUTION,
   },
   {
     id: "rolling-fork",
@@ -57,6 +76,7 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     tab: "tornado",
     tornado: "SE-1102153",
     action: "Play the tornado",
+    attribution: TORNADO_ATTRIBUTION,
   },
   {
     id: "ida",
@@ -69,6 +89,11 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     tab: "storm",
     night: "2021-09-02T02:00",
     action: "Play the night",
+    attribution: {
+      text: "Researchers link climate change to deeper, more unequal flooding from Ida",
+      sourceLabel: "Source (preprint)",
+      url: "https://www.researchsquare.com/article/rs-3470345/latest",
+    },
   },
   {
     id: "lahaina",
@@ -83,6 +108,11 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     replayFrom: 2000,
     replayKinds: ["Wildfire"],
     action: "Play the years",
+    attribution: {
+      text: "No formal attribution study; a UH scientist said Hawaii’s drying is consistent with climate projections",
+      sourceLabel: "Source",
+      url: "https://www.npr.org/transcripts/1193297709",
+    },
   },
   {
     id: "ian",
@@ -97,6 +127,12 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     replayFrom: 2000,
     replayKinds: TROPICAL,
     action: "Play the years",
+    attribution: {
+      text: "Climate change added at least 10% more rain",
+      credit: "per AP, rapid study, not peer-reviewed",
+      sourceLabel: "Source",
+      url: "https://www.bostonglobe.com/2022/09/29/nation/study-finds-that-climate-change-added-10-percent-ians-rainfall/",
+    },
   },
   {
     id: "heat-dome",
@@ -111,6 +147,12 @@ export const LANDING_MOMENTS: readonly LandingMoment[] = [
     replayFrom: 2000,
     replayKinds: HEAT,
     action: "Play the years",
+    attribution: {
+      text: "Scientists found this heat was “virtually impossible without human-caused climate change”",
+      credit: "World Weather Attribution",
+      sourceLabel: "Source",
+      url: "https://www.worldweatherattribution.org/western-north-american-extreme-heat-virtually-impossible-without-human-caused-climate-change/",
+    },
   },
 ];
 

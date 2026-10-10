@@ -110,6 +110,7 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
         <Chunk id="ch-start" label="Start" className="chunk-hero">
         <p className="eyebrow brand-eyebrow"><BrandMark size={22} />{APP_NAME}</p>
         <h1 id="landing-h">What the weather did to your street.</h1>
+        <p className="landing-claim">Climate change, measured at your address.</p>
         <p className="landing-for">For anyone renting, buying or living somewhere the climate is changing.</p>
         <p className="landing-sub">
           Everything the National Weather Service recorded at an address since 2000, from floods and tornadoes to heat, wind, ice and
@@ -220,6 +221,16 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
                 </span>
                 {moment.line}
               </p>
+              {moment.attribution ? (
+                <p className="mo-attr">
+                  {moment.attribution.text}
+                  {moment.attribution.credit ? ` (${moment.attribution.credit})` : ""}.{" "}
+                  <a href={moment.attribution.url} target="_blank" rel="noopener noreferrer">
+                    {moment.attribution.sourceLabel}
+                    <span className="sr"> for {moment.title} (opens in a new tab)</span>
+                  </a>
+                </p>
+              ) : null}
               {moments?.moments[moment.id] ? <MomentTimeline timeline={moments.moments[moment.id]} /> : null}
               <button
                 type="button"
