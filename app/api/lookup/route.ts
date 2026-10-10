@@ -17,7 +17,7 @@ export async function GET(request: Request): Promise<Response> {
     return Response.json(payload, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     if (error instanceof LookupError) {
-      return Response.json({ error: error.message } satisfies LookupErrorBody, { status: error.status });
+      return Response.json({ error: error.message, ...(error.choices ? { choices: error.choices } : {}) } satisfies LookupErrorBody, { status: error.status });
     }
     console.error("lookup failed", error);
     return Response.json(

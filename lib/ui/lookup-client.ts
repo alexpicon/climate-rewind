@@ -94,14 +94,14 @@ export interface StagedHandlers {
   /** Another part arrived (or failed with a notice). The page merges it into what is on screen with `applyPart`. */
   onPart: (part: LookupPart, patch: LookupPatch) => void;
   /** The address could not be matched (or the whole thing failed): the message to show. */
-  onFail: (message: string) => void;
+  onFail: (message: string, choices?: string[]) => void;
   /** False once the visitor has asked for something else; nothing more is reported. */
   isCurrent?: () => boolean;
 }
 
 type Fetcher = (url: string, init?: { signal?: AbortSignal }) => Promise<Response>;
 
-async function getJson<T>(fetchFn: Fetcher, url: string, timeoutMs: number): Promise<{ ok: true; body: T } | { ok: false; message: string }> {
+async function getJson<T>(fetchFn: Fetcher, url: string, timeoutMs: number): Promise<{ ok: true; body: T } | { ok: false; message: string; choices?: string[] }> {
   const controller = new AbortController();
   let timedOut = false;
   const timer = setTimeout(() => {
@@ -111,7 +111,10 @@ async function getJson<T>(fetchFn: Fetcher, url: string, timeoutMs: number): Pro
   try {
     const response = await fetchFn(url, { signal: controller.signal });
     const body = (await response.json()) as T | LookupErrorBody;
-    if (!response.ok || (body && typeof body === "object" && "error" in body)) return { ok: false, message: (body as LookupErrorBody)?.error || GENERIC_MESSAGE };
+    if (!response.ok || (body && typeof body === "object" && "error" in body)) {
+      const choices = (body as LookupErrorBody)?.choices;
+      return { ok: false, message: (body as LookupErrorBody)?.error || GENERIC_MESSAGE, ...(Array.isArray(choices) && choices.length ? { choices } : {}) };
+    }
     return { ok: true, body: body as T };
   } catch {
     return { ok: false, message: timedOut ? TIMEOUT_MESSAGE : NETWORK_MESSAGE };
@@ -136,7 +139,7 @@ export async function requestStagedLookup(
   const matched = await getJson<{ address: LookupAddress }>(fetchFn, `/api/lookup/geocode?address=${encodeURIComponent(address)}`, timeoutMs);
   if (!current()) return;
   if (!matched.ok) {
-    handlers.onFail(matched.message);
+    handlers.onFail(matched.message, matched.choices);
     return;
   }
   const where = matched.body.address;

@@ -387,6 +387,8 @@ export interface QuietPlacement {
 
 export interface LookupErrorBody {
   error: string;
+  /** Places to pick from, when a city name matched more than one. */
+  choices?: string[];
 }
 
 /** Regional heat grid file, data/heat/<slug>.json (v3.3 prototype format). */

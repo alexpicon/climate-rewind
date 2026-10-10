@@ -1,5 +1,6 @@
 "use client";
 
+import { PlaceChoices } from "./PlaceChoices";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { APP_TITLE, pageTitle } from "@/lib/brand";
 import type { AiJob } from "@/lib/ai-jobs";
@@ -54,7 +55,7 @@ type Lookup =
   | { status: "idle" }
   | { status: "loading"; address: string; progress: Progress }
   | { status: "ready"; data: LookupPayload }
-  | { status: "error"; message: string };
+  | { status: "error"; message: string; choices?: string[] };
 
 /** The loading panel's list. Each line turns done when its own request comes back; the last two are read by the first view. */
 function loadingSteps(progress: Progress): Step[] {
@@ -124,7 +125,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
         setLookup((now) => (now.status === "loading" ? { ...now, progress: { ...now.progress, matched: found.matched } } : now));
       },
       onStep: (part) => setLookup((now) => (now.status === "loading" ? { ...now, progress: { ...now.progress, [part]: true } } : now)),
-      onFail: (message) => setLookup({ status: "error", message }),
+      onFail: (message, choices) => setLookup({ status: "error", message, choices }),
       onCore: (payload) => {
         if (push) pendingFocus.current = true;
         setLookup({ status: "ready", data: payload });
@@ -172,6 +173,13 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
     if (!address) return;
     setArrival(null);
     void runLookup(address, tab, true, null, view3d);
+  };
+
+  /** A city search that matched several places: look up the one picked. */
+  const pickPlace = (place: string) => {
+    setInput(place);
+    setArrival(null);
+    void runLookup(place, tab, true, null, view3d);
   };
 
   /** A sample card on the landing page: look it up in the same click and land on the view its hook is about. */
@@ -269,6 +277,8 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
           onSample={pickSample}
           lookingUp={false}
           error={lookup.status === "error" ? lookup.message : null}
+          choices={lookup.status === "error" ? lookup.choices : undefined}
+          onChoice={pickPlace}
         />
       </AnnounceProvider>
     );
@@ -308,6 +318,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
             <aside id="panel" className="glass" aria-label="Story" tabIndex={-1}>
               <h1 className="sr">Address lookup problem</h1>
               <p className="errcard" role="alert"><b>We couldn’t look that up.</b>{lookup.message}</p>
+              {lookup.choices?.length ? <PlaceChoices choices={lookup.choices} onChoice={pickPlace} /> : null}
             </aside>
           ) : null}
 

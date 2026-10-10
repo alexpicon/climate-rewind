@@ -29,7 +29,7 @@ export async function GET(request: Request, context: { params: Promise<{ part: s
     const patch = await lookupPart(part, address, undefined, { night: params.get("night") });
     return Response.json({ patch }, { headers });
   } catch (error) {
-    if (error instanceof LookupError) return Response.json({ error: error.message } satisfies LookupErrorBody, { status: error.status });
+    if (error instanceof LookupError) return Response.json({ error: error.message, ...(error.choices ? { choices: error.choices } : {}) } satisfies LookupErrorBody, { status: error.status });
     console.error("lookup part failed", part, error);
     return Response.json({ error: "Something went wrong on our side. Please try again." } satisfies LookupErrorBody, { status: 500 });
   }

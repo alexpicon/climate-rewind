@@ -115,7 +115,7 @@ describe("a nonsense address", () => {
     expect(response.status).toBe(404);
     const body = (await response.json()) as LookupErrorBody;
     expect(body.error).toMatch(/could not match that to a street address/);
-    expect(body.error).toMatch(/house number, street, city and state/);
+    expect(body.error).toMatch(/a city and state, like Fort Myers, FL/);
   });
 
   it("400 for an empty or very long address, before any service is called", async () => {

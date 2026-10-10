@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { tidyAddress } from "@/lib/ui/text";
 import { boxAround, kmToDegrees, squareAround, useFitOnArea, useGeoOverlay, useMapLabel, type Features, type OverlayLayer } from "@/components/map/use-map-overlay";
 import { MapCaption } from "@/components/map/MapCaption";
 
@@ -30,7 +31,7 @@ export function FutureMap({ lat, lon, matched }: { lat: number; lon: number; mat
   return (
     <MapCaption
       title="The area these numbers describe"
-      summary={`The dashed square (about ${MODEL_CELL_KM} km across) shows the rough size of a climate-model grid cell, centred on ${matched.split(",")[0].toLowerCase().replace(/\b([a-z])/g, (c) => c.toUpperCase()).replace(/\b(Ne|Nw|Se|Sw)\b/g, (d) => d.toUpperCase())}. The numbers describe this wider area, not one street.`}
+      summary={`The dashed square (about ${MODEL_CELL_KM} km across) shows the rough size of a climate-model grid cell, centred on ${tidyAddress(matched.split(",")[0])}. The numbers describe this wider area, not one street.`}
       keys={
         <ul className="mapcap-keys" aria-label="Key">
           <li style={{ "--c": "#7FD1FF" } as React.CSSProperties}>

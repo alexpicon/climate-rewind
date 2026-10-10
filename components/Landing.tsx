@@ -1,5 +1,6 @@
 "use client";
 
+import { PlaceChoices } from "./PlaceChoices";
 import { useEffect, useRef, useState } from "react";
 import { Chunk, LandingChunks } from "./landing/LandingChunks";
 import { LandingSearchBar } from "./landing/LandingSearchBar";
@@ -25,6 +26,9 @@ interface Props {
   onSubmit: () => void;
   lookingUp: boolean;
   error: string | null;
+  /** Places to pick from, when a city name matched more than one. */
+  choices?: string[];
+  onChoice?: (place: string) => void;
   onHow: () => void;
   /** Real detective results exist in the data. */
   detectiveRan: boolean;
@@ -53,7 +57,7 @@ function FeatureGlyph({ icon }: { icon: FeatureIcon }) {
 }
 
 /** First screen: who it is for, four sample addresses to start with (one click each), a search box for your own, then what it shows. */
-export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, detectiveRan, aiJobs = [], onSample }: Props) {
+export function Landing({ input, onInput, onSubmit, lookingUp, error, choices, onChoice, onHow, detectiveRan, aiJobs = [], onSample }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const heroFormRef = useRef<HTMLFormElement>(null);
   // The slim bar at the top: shown once the first screen's search box has scrolled out of view.
@@ -186,6 +190,7 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
             {error}
           </p>
         ) : null}
+        {error && choices?.length && onChoice ? <PlaceChoices choices={choices} onChoice={onChoice} /> : null}
         </Chunk>
 
         <Chunk className="chunk-wide" id="ch-storms" label="Watch the storms move">

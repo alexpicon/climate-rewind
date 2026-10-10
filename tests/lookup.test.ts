@@ -261,10 +261,31 @@ describe("geocodeAddress", () => {
     expect(address).toMatchObject({ state: "TN", county: "Davidson", city: "NASHVILLE", lat: NASHVILLE[0], lon: NASHVILLE[1] });
   });
 
-  it("answers 404 with a clear message when there is no street-address match", async () => {
+  it("answers 404 with a clear message when there is no street-address or city match", async () => {
     const fetchFn = fakeFetch({ census: () => ok({ result: { addressMatches: [] } }) });
-    await expect(geocodeAddress("Nashville, TN", fetchFn)).rejects.toMatchObject({ status: 404 });
-    await expect(geocodeAddress("Nashville, TN", fetchFn)).rejects.toThrow(/street address/);
+    await expect(geocodeAddress("Zzyzxqville, TN", fetchFn)).rejects.toMatchObject({ status: 404 });
+    await expect(geocodeAddress("Zzyzxqville, TN", fetchFn)).rejects.toThrow(/street address or a US city/);
+  });
+
+  it("falls back to a city's centre when there is no street address, with the county from the Census by point", async () => {
+    const fetchFn = (url: string) =>
+      Promise.resolve(
+        url.includes("/coordinates")
+          ? Response.json({ result: { geographies: { Counties: [{ NAME: "Lee County", COUNTY: "071" }] } } })
+          : Response.json({ result: { addressMatches: [] } }),
+      );
+    for (const typed of ["Fort Myers, FL", "fort myers", "Ft. Myers, Florida"]) {
+      const address = await geocodeAddress(typed, fetchFn);
+      expect(address).toMatchObject({ matched: "Center of Fort Myers, FL", state: "FL", county: "Lee", countyFips: "071", city: "Fort Myers" });
+      expect(address.lat).toBeCloseTo(26.62, 1);
+    }
+  });
+
+  it("asks which one when a city name is in several states, biggest first", async () => {
+    const fetchFn = fakeFetch({ census: () => ok({ result: { addressMatches: [] } }) });
+    await expect(geocodeAddress("Portland", fetchFn)).rejects.toMatchObject({ status: 404, choices: expect.arrayContaining(["Portland, OR", "Portland, ME"]) });
+    const picked = await geocodeAddress("Portland, ME", fetchFn);
+    expect(picked).toMatchObject({ matched: "Center of Portland, ME", state: "ME" });
   });
 
   it("answers 400 for an empty or very long address without calling the Census", async () => {

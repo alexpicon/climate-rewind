@@ -76,7 +76,7 @@ export function tidyAddress(matched: string): string {
   return matched
     .split(",")
     .map((part) => part.trim())
-    .map((part) => (/^[A-Za-z]{2}$/.test(part) ? part.toUpperCase() : /^\d{5}(-\d{4})?$/.test(part) ? part : part.toLowerCase().replace(/\b([a-z])([a-z']*)/g, (_, a: string, rest: string) => a.toUpperCase() + rest).replace(/\b(Ne|Nw|Se|Sw)\b/g, (d) => d.toUpperCase())))
+    .map((part) => (/^[A-Za-z]{2}$/.test(part) ? part.toUpperCase() : /^\d{5}(-\d{4})?$/.test(part) ? part : part.toLowerCase().replace(/\b([a-z])([a-z']*)/g, (_, a: string, rest: string) => a.toUpperCase() + rest).replace(/\b(Ne|Nw|Se|Sw)\b/g, (d) => d.toUpperCase()).replace(/(?<=.)\bOf\b/g, "of")))
     .join(", ");
 }
 

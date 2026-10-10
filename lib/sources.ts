@@ -7,12 +7,15 @@ import { BUSY_NOTICE, describeFailure, fetchJson, USER_AGENT, type FetchLike } f
 import { withOpenMeteoKey } from "./open-meteo";
 import { gridKey, LruCache } from "./lru";
 import { fetchPowerHeat } from "./nasa-power";
+import { findPlace, placeLabel, type Place } from "./places";
 import type { AlertGeometry, FemaZone, HeatDay, HeatSource, LiveAlert, LiveAlerts, LookupAddress } from "./types";
 
 export class LookupError extends Error {
   constructor(
     public readonly status: number,
     message: string,
+    /** Places to pick from, when a city name matched more than one ("Portland, OR", "Portland, ME"). */
+    public readonly choices?: string[],
   ) {
     super(message);
     this.name = "LookupError";
@@ -52,7 +55,7 @@ export const NOT_AN_ADDRESS = "That doesn't look like a street address. Type the
  */
 export async function geocodeAddress(input: string, fetchFn: FetchLike): Promise<LookupAddress> {
   const address = input.trim();
-  if (!address) throw new LookupError(400, "Type a street address, like 100 James Robertson Pkwy, Nashville, TN.");
+  if (!address) throw new LookupError(400, "Type a street address or a city, like 100 James Robertson Pkwy, Nashville, TN or Fort Myers, FL.");
   if (address.length > MAX_ADDRESS_LENGTH) throw new LookupError(400, "That address is too long. Try just the street, city and state.");
   // Markup or other junk is the visitor's input, not our failure: say so plainly (400) before asking the Census anything.
   if (NOT_ADDRESS_CHARS.test(address) || !/[A-Za-z0-9]/.test(address)) throw new LookupError(400, NOT_AN_ADDRESS);
@@ -73,9 +76,13 @@ export async function geocodeAddress(input: string, fetchFn: FetchLike): Promise
 
   const match = result.data.result?.addressMatches?.[0];
   if (!match) {
+    // No street address: maybe a city ("Fort Myers, FL" or "Fort Myers"), which opens at the city's centre.
+    const place = findPlace(address);
+    if (place?.kind === "one") return placeAddress(address, place.place, fetchFn);
+    if (place?.kind === "many") throw new LookupError(404, `There is more than one ${place.name}. Which one did you mean?`, place.choices);
     throw new LookupError(
       404,
-      "The Census could not match that to a street address. Include the house number, street, city and state.",
+      "We could not match that to a street address or a US city. Try a full address, or a city and state, like Fort Myers, FL.",
     );
   }
 
@@ -92,6 +99,29 @@ export async function geocodeAddress(input: string, fetchFn: FetchLike): Promise
     city: match.addressComponents?.city ?? null,
     countyFips: countyFips && /^\d{3}$/.test(countyFips) ? countyFips : null,
   };
+}
+
+/** A city search: the city's centre, with its county from the Census (by point). Without the county the lookup still works, with less. */
+async function placeAddress(input: string, place: Place, fetchFn: FetchLike): Promise<LookupAddress> {
+  const url =
+    "https://geocoding.geo.census.gov/geocoder/geographies/coordinates" +
+    `?x=${place.lon}&y=${place.lat}&benchmark=Public_AR_Current&vintage=Current_Current&layers=Counties&format=json`;
+  const result = await fetchJson<CensusPointResponse>(fetchFn, url);
+  const county = result.ok ? result.data.result?.geographies?.Counties?.[0] : undefined;
+  return {
+    input,
+    matched: placeLabel(place),
+    lat: place.lat,
+    lon: place.lon,
+    state: place.state,
+    county: county?.NAME ? county.NAME.replace(/ County$/, "") : null,
+    city: place.name,
+    countyFips: county?.COUNTY && /^\d{3}$/.test(county.COUNTY) ? county.COUNTY : null,
+  };
+}
+
+interface CensusPointResponse {
+  result?: { geographies?: { Counties?: Array<{ NAME?: string; COUNTY?: string }> } };
 }
 
 // ---------------------------------------------------------------- FEMA
