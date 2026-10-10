@@ -35,7 +35,7 @@ function utcStamp(iso: string | null): string | null {
 }
 
 /**
- * The map under "Next 72 hours": the agencies' own outlook polygons for the day and kind chosen (rain and flooding from the WPC, storms from
+ * The map under "Next 7 days": the agencies' own outlook polygons for the day and kind chosen (rain and flooding from the WPC, storms from
  * the SPC), the live NWS alert outline if there is one, and the address. It frames the region, not the street: the cards say what it means
  * at the address. A polygon is the agency's shape, never ours.
  */

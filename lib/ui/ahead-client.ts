@@ -4,6 +4,7 @@
  */
 import type { AiAnswer, AiErrorBody, AiErrorState, StoryAnswer } from "../ai/types";
 import type { OutlookPayload } from "../outlook-types";
+import type { WeekPayload } from "../week/types";
 import { GENERIC_MESSAGE, NETWORK_MESSAGE, TIMEOUT_MESSAGE } from "./lookup-client";
 
 type FetchLike = (url: string, init?: RequestInit) => Promise<Response>;
@@ -32,7 +33,7 @@ async function timedFetch(fetchFn: FetchLike, url: string, init: RequestInit, ti
 }
 
 /**
- * The 72-hour tab starts its two reads (official outlooks, the AI brief) the moment the address is matched, while the records are still
+ * The "Next 7 days" tab starts its outlook read the moment the address is matched, while the records are still
  * loading, and hands them over when the tab opens. A read is used once and only within a minute; a retry always asks again.
  */
 const PREFETCH_MS = 60_000;
@@ -44,10 +45,9 @@ function takePrefetched<T>(key: string): Promise<T> | null {
   return hit && Date.now() - hit.at < PREFETCH_MS ? (hit.promise as Promise<T>) : null;
 }
 
-export function prefetchAhead(address: string, lat: number, lon: number): void {
-  const key = (kind: string, id: string) => `${kind}|${id}`;
-  prefetched.set(key("outlook", `${lat},${lon}`), { at: Date.now(), promise: requestOutlook(lat, lon, defaultFetch, OUTLOOK_TIMEOUT_MS, true) });
-  prefetched.set(key("brief", address.toLowerCase()), { at: Date.now(), promise: requestBrief(address, defaultFetch, AI_TIMEOUT_MS, "prefetch") });
+/** Starts the official outlook read early (the AI brief now waits until "More" is opened, so it is not asked for here). */
+export function prefetchAhead(_address: string, lat: number, lon: number): void {
+  prefetched.set(`outlook|${lat},${lon}`, { at: Date.now(), promise: requestOutlook(lat, lon, defaultFetch, OUTLOOK_TIMEOUT_MS, true) });
 }
 
 export async function requestOutlook(lat: number, lon: number, fetchFn: FetchLike = defaultFetch, timeoutMs = OUTLOOK_TIMEOUT_MS, fresh = false): Promise<OutlookResult> {
@@ -107,6 +107,28 @@ export async function requestStory(address: string, fetchFn: FetchLike = default
       return { ok: false, state: err.state ?? "error", message: err.message ?? GENERIC_MESSAGE, ...(err.retryAfter ? { retryAfter: err.retryAfter } : {}) };
     }
     return { ok: true, story: body };
+  } catch {
+    return { ok: false, state: "error", message: GENERIC_MESSAGE };
+  }
+}
+
+export type WeekResult = { ok: true; week: WeekPayload } | { ok: false; state: AiErrorState; message: string; retryAfter?: number };
+
+/**
+ * The seven day cards for an address (/api/week). `actions: false` asks for the cards alone (fast, no AI); `true` adds the "what to do"
+ * lines, which take a few seconds the first time and are kept an hour on the server.
+ */
+export async function requestWeek(lat: number, lon: number, state: string, actions: boolean, fetchFn: FetchLike = defaultFetch, timeoutMs = AI_TIMEOUT_MS): Promise<WeekResult> {
+  const query = `lat=${lat}&lon=${lon}&state=${encodeURIComponent(state)}${actions ? "" : "&actions=0"}`;
+  const got = await timedFetch(fetchFn, `/api/week?${query}`, {}, timeoutMs);
+  if ("error" in got) return { ok: false, state: "error", message: got.error };
+  try {
+    const body = (await got.response.json()) as WeekPayload | (Partial<AiErrorBody> & { error?: string });
+    if (!got.response.ok || !("days" in body)) {
+      const err = body as Partial<AiErrorBody> & { error?: string };
+      return { ok: false, state: err.state ?? "error", message: err.message ?? err.error ?? GENERIC_MESSAGE, ...(err.retryAfter ? { retryAfter: err.retryAfter } : {}) };
+    }
+    return { ok: true, week: body };
   } catch {
     return { ok: false, state: "error", message: GENERIC_MESSAGE };
   }

@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
     "/api/area-replay": ["./data/events/**/*"],
     // The climate view reads the precomputed sample projections and snapshots; the preparedness plan reads the area events, the index and the official guidance lines.
     "/api/future": ["./data/projections/**/*", "./data/samples/**/*"],
+    // The 7-day cards read the saved outlook record (sample addresses), the flood and tornado index, the area events and the official guidance lines.
+    "/api/week": ["./data/outlook-record/**/*", "./data/index/**/*", "./data/events/**/*", "./data/samples/**/*", "./data/guidance/**/*"],
     "/api/ready": ["./data/events/**/*", "./data/index/**/*", "./data/samples/**/*", "./data/guidance/**/*"],
   },
 };

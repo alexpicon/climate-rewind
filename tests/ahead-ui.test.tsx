@@ -309,7 +309,7 @@ describe("the product name lives in one constant", () => {
     expect(APP_SLUG).toBe("climate-rewind");
     expect(APP_TITLE).toBe("Climate Rewind: what the weather did to your street");
     expect(APP_USER_AGENT).toBe("climate-rewind/0.1 (ForgeHacks 2026 project)");
-    expect(pageTitle("Next 72 hours", "1 Main St")).toBe("Next 72 hours | 1 Main St | Climate Rewind");
+    expect(pageTitle("Next 7 days", "1 Main St")).toBe("Next 7 days | 1 Main St | Climate Rewind");
   });
 
   it("is what the landing prints", () => {
@@ -319,18 +319,20 @@ describe("the product name lives in one constant", () => {
 });
 
 describe("tabs", () => {
-  it("opens on the AI briefing by default, with the storm replay one click away", () => {
-    expect(DEFAULT_TAB).toBe("ahead");
-    expect(parseTab(undefined)).toBe("ahead");
-    expect(parseTab("nonsense")).toBe("ahead");
+  it("opens on Your history by default, with Next 7 days one click away and ?tab=ahead still working", () => {
+    expect(DEFAULT_TAB).toBe("story");
+    expect(parseTab(undefined)).toBe("story");
+    expect(parseTab("nonsense")).toBe("story");
+    expect(parseTab("ahead")).toBe("ahead");
     expect(parseTab("storm")).toBe("storm");
-    expect(TABS).toEqual(["ahead", "story", "storm", "heat", "tornado", "future", "ready", "how"]);
-    // The history views sit right after the 72 hours (they are one top tab now); "future" and "ready" show only when their view files exist.
-    expect(VISIBLE_TABS.slice(0, 2)).toEqual(["ahead", "story"]);
+    expect(TABS).toEqual(["story", "storm", "heat", "tornado", "ahead", "future", "ready", "how"]);
+    // The history views come first (they are one top tab); "future" and "ready" show only when their view files exist.
+    expect(VISIBLE_TABS.slice(0, 5)).toEqual(["story", "storm", "heat", "tornado", "ahead"]);
     expect(parseTab("history")).toBe("story");
     expect(parseTab("story")).toBe("story");
     expect(viewUrl("1 Main St", "ahead")).toBe("/?address=1+Main+St&tab=ahead");
-    expect(viewUrl(null, "ahead")).toBe("/");
+    expect(viewUrl(null, "ahead")).toBe("/?tab=ahead");
+    expect(viewUrl(null, "story")).toBe("/");
     expect(viewUrl(null, "how")).toBe("/?tab=how");
   });
 });

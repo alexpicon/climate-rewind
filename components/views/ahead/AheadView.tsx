@@ -2,33 +2,29 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAnnounce } from "@/components/announce";
-import type { OutlookPayload } from "@/lib/outlook-types";
-import { requestBrief, requestOutlook, type AiResult } from "@/lib/ui/ahead-client";
-import type { LookupPayload } from "@/lib/types";
-import { isQuiet, QuietCard } from "@/components/panel/QuietCard";
 import { LoadSteps } from "@/components/panel/LoadSteps";
+import { requestOutlook, requestWeek } from "@/lib/ui/ahead-client";
+import type { LookupPayload } from "@/lib/types";
+import type { WeekPayload } from "@/lib/week/types";
 import { AheadMap } from "./AheadMap";
-import { PrecomputedNote } from "@/components/panel/PrecomputedNote";
-import { AiAnswerView } from "./AiAnswerView";
-import { AiProblem } from "./AiProblem";
-import { AskBox } from "./AskBox";
-import { OutlookCards } from "./OutlookCards";
+import { AheadMore, type Outlook } from "./AheadMore";
+import { WeekCards, type ActionsStatus } from "./WeekCards";
 
-type Outlook = { status: "loading" } | { status: "ready"; outlook: OutlookPayload } | { status: "error"; message: string };
-type Brief = { status: "loading" } | { status: "done"; result: AiResult; /** An early brief (made ahead of time) is on screen while a live one is asked for. */ refreshing?: "pending" | "failed" };
+type Week = { status: "loading" } | { status: "ready"; week: WeekPayload; actions: ActionsStatus } | { status: "error"; message: string };
 
 /**
- * "Your street's next 72 hours": the AI brief on top (every sentence checked against a source), the three official outlooks made
- * local below it, then a box to ask your street a question. The official outlooks load on their own, so they are on screen
- * even if the AI is resting.
+ * "Next 7 days": one card per day for today and the six after it. Quiet days are a single line; notable days say what to expect (the
+ * official forecast in plain words), what that kind of day meant here before, and what to do (chosen by the AI from official guidance,
+ * every action citing a guidance line). The cards come first and fast; the advice fills in a few seconds later. The AI brief, the
+ * official outlooks and "Ask your street" sit below, collapsed under "More".
  */
 export function AheadView({ data }: { data: LookupPayload }) {
   const say = useAnnounce();
-  const address = data.address.input;
-  const { lat, lon } = data.address;
+  const { lat, lon, state } = data.address;
 
+  const [week, setWeek] = useState<Week>({ status: "loading" });
   const [outlook, setOutlook] = useState<Outlook>({ status: "loading" });
-  const [brief, setBrief] = useState<Brief>({ status: "loading" });
+  const [moreOpen, setMoreOpen] = useState(false);
   const run = useRef(0);
 
   const loadOutlook = useCallback(async () => {
@@ -39,117 +35,119 @@ export function AheadView({ data }: { data: LookupPayload }) {
     setOutlook(result.ok ? { status: "ready", outlook: result.outlook } : { status: "error", message: result.message });
   }, [lat, lon]);
 
-  const loadBrief = useCallback(async () => {
+  /** The cards first (no AI), then the advice for the notable days. */
+  const loadWeek = useCallback(async () => {
     const id = run.current;
-    setBrief({ status: "loading" });
-    const result = await requestBrief(address);
+    setWeek({ status: "loading" });
+    const cards = await requestWeek(lat, lon, state, false);
     if (id !== run.current) return;
-    // A brief made ahead of time (a sample address) shows at once with its time on it; a live one is asked for now and takes its place.
-    const early = result.ok && result.answer.precomputed;
-    setBrief({ status: "done", result, ...(early ? { refreshing: "pending" as const } : {}) });
-    if (result.ok) say(result.answer.state === "ok" ? `The brief is ready: ${result.answer.sentences.length} checked sentences, each with its source.` : (result.answer.message ?? "No brief."));
-    else say(result.message);
-    if (!early) return;
-    const live = await requestBrief(address, undefined, undefined, "live");
-    if (id !== run.current) return;
-    if (live.ok && live.answer.state === "ok") {
-      setBrief({ status: "done", result: live });
-      say("A fresh brief replaced the earlier one.");
-    } else {
-      setBrief({ status: "done", result, refreshing: "failed" });
+    if (!cards.ok) {
+      setWeek({ status: "error", message: cards.message });
+      say(cards.message);
+      return;
     }
-  }, [address, say]);
+    const notable = cards.week.days.filter((d) => d.notable).length;
+    if (cards.week.state !== "ok" || notable === 0) {
+      setWeek({ status: "ready", week: cards.week, actions: "done" });
+      say(cards.week.state !== "ok" ? "The forecast could not be read." : "Nothing unusual is expected in the next 7 days.");
+      return;
+    }
+    setWeek({ status: "ready", week: cards.week, actions: "loading" });
+    say(`Your next 7 days. ${notable} ${notable === 1 ? "day is" : "days are"} worth planning around. Choosing what to do.`);
+    const full = await requestWeek(lat, lon, state, true);
+    if (id !== run.current) return;
+    if (full.ok) {
+      setWeek({ status: "ready", week: full.week, actions: "done" });
+      say("What to do is ready.");
+    } else {
+      setWeek({ status: "ready", week: cards.week, actions: "failed" });
+    }
+  }, [lat, lon, state, say]);
 
   useEffect(() => {
     run.current += 1;
     void loadOutlook();
-    void loadBrief();
+    void loadWeek();
     return () => {
       run.current += 1;
     };
-  }, [loadOutlook, loadBrief]);
+  }, [loadOutlook, loadWeek]);
 
   useEffect(() => {
-    say("Your street’s next 72 hours.");
+    say("Your street’s next 7 days.");
   }, [say]);
 
   return (
     <>
-    <AheadMap data={data} outlook={outlook.status === "ready" ? outlook.outlook : null} />
-    <aside id="panel" className="glass ahead" aria-label="Story" tabIndex={-1}>
-      <section id="v-ahead" className="view on" aria-labelledby="ahead-h">
-        <p className="eyebrow">Next 72 hours · official outlooks, made local</p>
-        <h1 id="ahead-h" className="ahead-h">
-          Your street’s next 72 hours
-        </h1>
-        <p className="ahead-addr">{data.address.matched}</p>
+      <AheadMap data={data} outlook={outlook.status === "ready" ? outlook.outlook : null} />
+      <aside id="panel" className="glass ahead" aria-label="Story" tabIndex={-1}>
+        <section id="v-ahead" className="view on" aria-labelledby="ahead-h">
+          <p className="eyebrow">Next 7 days · official forecasts, made local</p>
+          <h1 id="ahead-h" className="ahead-h">
+            Your street’s next 7 days
+          </h1>
+          <p className="ahead-addr">{data.address.matched}</p>
 
-        <section className="ai-brief" aria-labelledby="brief-h">
-          <h2 id="brief-h" className="sec-t">
-            <span className="tag ai" aria-hidden="true">
-              AI
-            </span>
-            <span aria-hidden="true">The brief</span>
-            <span className="sr">The AI brief</span>
-          </h2>
-          <p className="ai-sub">Written by an AI from the official outlooks and our records. Only sentences that a source backs up are shown; tap a source to read it.</p>
-          {brief.status === "loading" ? (
-            <>
+          {week.status === "loading" ? (
+            <section aria-labelledby="wk-load-h">
+              <h2 id="wk-load-h" className="sr">
+                Loading the forecast
+              </h2>
               <LoadSteps
-                label="Writing your brief"
+                label="Reading your forecast"
                 steps={[
-                  { id: "outlooks", label: "Reading the official outlooks", state: outlook.status === "loading" ? "active" : "done" },
-                  { id: "brief", label: "Writing your brief", state: "active" },
+                  { id: "nws", label: "Reading the National Weather Service forecast", state: "active" },
+                  { id: "outlooks", label: "Reading the official outlooks and HeatRisk", state: "wait" },
+                  { id: "record", label: "Checking what this street has seen before", state: "wait" },
                 ]}
               />
               <div className="skeleton" aria-hidden="true" />
-            </>
-          ) : brief.result.ok ? (
-            <>
-              {brief.result.answer.precomputed ? <PrecomputedNote at={brief.result.answer.precomputed.at} refreshing={brief.refreshing} /> : null}
-              <AiAnswerView answer={brief.result.answer} />
-            </>
+            </section>
+          ) : week.status === "error" ? (
+            <section aria-labelledby="wk-err-h">
+              <h2 id="wk-err-h" className="sr">
+                Forecast problem
+              </h2>
+              <p className="errcard" role="alert">
+                <b>We couldn’t read your forecast.</b>
+                {week.message}
+              </p>
+              <button type="button" className="ai-retry" onClick={() => void loadWeek()}>
+                Try again
+              </button>
+            </section>
+          ) : week.week.state !== "ok" ? (
+            <section aria-labelledby="wk-err-h">
+              <h2 id="wk-err-h" className="sr">
+                Forecast problem
+              </h2>
+              <p className="errcard" role="alert">
+                <b>We couldn’t read your forecast.</b>
+                {week.week.notices.join(" ")}
+              </p>
+              <button type="button" className="ai-retry" onClick={() => void loadWeek()}>
+                Try again
+              </button>
+            </section>
           ) : (
-            <AiProblem result={brief.result} onRetry={() => void loadBrief()} />
+            <WeekCards week={week.week} status={week.actions} onRetryActions={() => void loadWeek()} />
           )}
+
+          <details
+            className="ahead-more"
+            onToggle={(event) => {
+              if ((event.currentTarget as HTMLDetailsElement).open) setMoreOpen(true);
+            }}
+          >
+            <summary>More: the AI brief, the official outlooks, and ask your street</summary>
+            {moreOpen ? <AheadMore data={data} outlook={outlook} onRetryOutlook={() => void loadOutlook()} /> : null}
+          </details>
+
+          <p className="ahead-fine">
+            Forecasts and outlooks come from the National Weather Service. “What it meant here before” counts past days at this address: it is not a forecast and not our prediction. For warnings, use weather.gov.
+          </p>
         </section>
-
-        {isQuiet(data) ? <QuietCard data={data} /> : null}
-
-        {outlook.status === "loading" ? (
-          <section className="outlooks" aria-labelledby="out-h">
-            <h2 id="out-h" className="sec-t">
-              Official outlooks at your address
-            </h2>
-            <p className="ai-wait" role="status">
-              Reading the Weather Prediction Center, Storm Prediction Center and HeatRisk…
-            </p>
-            <div className="skeleton" aria-hidden="true" />
-          </section>
-        ) : outlook.status === "error" ? (
-          <section className="outlooks" aria-labelledby="out-h">
-            <h2 id="out-h" className="sec-t">
-              Official outlooks at your address
-            </h2>
-            <p className="errcard" role="alert">
-              <b>We couldn’t read the outlooks.</b>
-              {outlook.message}
-            </p>
-            <button type="button" className="ai-retry" onClick={() => void loadOutlook()}>
-              Try again
-            </button>
-          </section>
-        ) : (
-          <OutlookCards outlook={outlook.outlook} />
-        )}
-
-        <AskBox address={address} />
-
-        <p className="ahead-fine">
-          Outlooks come from the National Weather Service. Counts of past days are “how this has played out here”: they are not a forecast and not our prediction. For warnings, use weather.gov.
-        </p>
-      </section>
-    </aside>
+      </aside>
     </>
   );
 }

@@ -1,5 +1,5 @@
 /**
- * The official outlook areas for the map on "Next 72 hours": the WPC Excessive Rainfall Outlook (Days 1 to 3) and the SPC convective
+ * The official outlook areas for the map on "Next 7 days": the WPC Excessive Rainfall Outlook (Days 1 to 3) and the SPC convective
  * outlook, categorical (Days 1 to 3), as the agencies' own polygons. They come from the NWS ArcGIS services at
  * mapservices.weather.noaa.gov (the same host the HeatRisk reading already uses), generalized to about 1 km so a whole country is a few KB.
  * General thunderstorm areas are left out (they cover half the map and are not a risk category). Nothing here is our forecast.
