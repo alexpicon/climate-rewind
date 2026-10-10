@@ -23,8 +23,8 @@ export function baseStyle(): StyleSpecification {
     version: 8,
     sources: {
       base: { type: "raster", tiles: BASE_TILES, tileSize: 256, maxzoom: 15, attribution: ATTRIBUTION },
-      // Read at 384 px so the place names are 1.5 times larger on screen and still legible through a colour overlay.
-      labels: { type: "raster", tiles: LABEL_TILES, tileSize: 384, maxzoom: 14 },
+      // Read at the tiles' own 256 px: the place names stay sharp (at 384 px they were 1.5 times larger but blurry).
+      labels: { type: "raster", tiles: LABEL_TILES, tileSize: 256, maxzoom: 14 },
       tint: { type: "geojson", data: WORLD },
     },
     layers: [

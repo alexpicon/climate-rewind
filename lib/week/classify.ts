@@ -41,6 +41,14 @@ const HEAT_PLAIN: Record<number, string> = {
   3: "Dangerous heat for everyone, with little relief overnight.",
 };
 
+/** Why it feels hotter than the thermometer: in humid air the feels-like (heat index) runs well above the air temperature, so say so. */
+function feelsLine(forecast: DayForecast): string {
+  if (forecast.feelsF === null) return "";
+  const feels = Math.round(forecast.feelsF);
+  if (forecast.highF !== null && feels - Math.round(forecast.highF) >= 4) return `The air will reach about ${Math.round(forecast.highF)}°F, and the humidity will make it feel like ${feels}°F. `;
+  return `It will feel like ${feels}°F at the hottest. `;
+}
+
 const dayWord = (index: number, kind: "outlook" | "forecast") => (kind === "outlook" ? `Day ${index + 1}` : "");
 
 /** The notable hazards of one day, worst first. Empty: a quiet day. `index` is 0 for today. */
@@ -55,7 +63,7 @@ export function classifyDay(forecast: DayForecast, official: DayOfficial, index:
       kind: "heat",
       level: heat as WeekLevel,
       title: heat >= 3 ? "Dangerous heat" : "Hot",
-      plain: `${forecast.feelsF !== null ? `It will feel like ${Math.round(forecast.feelsF)}°F at the hottest. ` : ""}${HEAT_PLAIN[heat]}`,
+      plain: `${feelsLine(forecast)}${HEAT_PLAIN[heat]}`,
       source: sources.join(" · "),
     });
   }

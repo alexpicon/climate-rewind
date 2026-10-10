@@ -355,3 +355,12 @@ describe("the week, end to end with no network", () => {
     expect(problem.notices[0]).toMatch(/National Weather Service/);
   });
 });
+
+describe("the heat line says why it feels hotter", () => {
+  it("names the humidity when the feels-like runs well above the air temperature", () => {
+    const [humid] = classifyDay(calm({ highF: 90, feelsF: 104 }), { ...NO_OFFICIAL, heatRisk: 2 }, 0);
+    expect(humid.plain).toContain("The air will reach about 90°F, and the humidity will make it feel like 104°F.");
+    const [dry] = classifyDay(calm({ highF: 104, feelsF: 105 }), { ...NO_OFFICIAL, heatRisk: 2 }, 0);
+    expect(dry.plain).toContain("It will feel like 105°F at the hottest.");
+  });
+});

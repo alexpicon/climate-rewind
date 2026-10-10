@@ -97,6 +97,8 @@ export class TornadoScene {
     map.addLayer({ id: "tor-line", type: "line", source: "tor", layout: { "line-cap": "round" }, paint: { "line-color": ["get", "c"], "line-width": ["get", "w"], "line-opacity": ["get", "a"] } }, LABELS_LAYER);
     map.addLayer({ id: "tor-start", type: "circle", source: "tor", paint: { "circle-radius": ["+", 2.5, ["*", ["get", "w"], 0.22]], "circle-color": "#0b111e", "circle-stroke-color": ["get", "c"], "circle-stroke-width": 2, "circle-opacity": ["get", "a"], "circle-stroke-opacity": ["get", "a"] } }, LABELS_LAYER);
     map.addLayer({ id: "dist-l", type: "line", source: "dist", paint: { "line-color": "#fff", "line-width": 2.5, "line-dasharray": [1, 1.6] } }, LABELS_LAYER);
+    // Where the line ends: the closest point of the closest track, marked so the line always points at something (a short EF0 track is a dot).
+    map.addLayer({ id: "dist-end", type: "circle", source: "dist", filter: ["==", ["geometry-type"], "Point"], paint: { "circle-radius": 8, "circle-color": ["get", "c"], "circle-stroke-color": "#fff", "circle-stroke-width": 2.5 } }, LABELS_LAYER);
 
     // Camera: the 10 km circle, locked inside a box that holds every track so nobody pans into empty map.
     const damage = this.opts.damage ?? [];
@@ -235,7 +237,7 @@ export class TornadoScene {
     clearTimeout(this.pulseTimer);
     [this.vortex, this.callout, this.distanceLabel, ...this.ringLabels, ...this.damageMarkers.map((d) => d.marker)].forEach((m) => m?.remove());
     if (map.getStyle()) {
-      for (const id of ["dist-l", "tor-start", "tor-line", "tor-case", "tor-glow", "tor-swath-edge", "tor-swath", "rings-l"]) if (map.getLayer(id)) map.removeLayer(id);
+      for (const id of ["dist-end", "dist-l", "tor-start", "tor-line", "tor-case", "tor-glow", "tor-swath-edge", "tor-swath", "rings-l"]) if (map.getLayer(id)) map.removeLayer(id);
       for (const id of ["dist", "tor", "swath", "rings"]) if (map.getSource(id)) map.removeSource(id);
     }
     document.querySelector(".addr-pin")?.classList.remove("tp");
@@ -339,7 +341,13 @@ export class TornadoScene {
       map.jumpTo({ center: aim, zoom });
       const reach = clamp((fk - 0.45) / 0.3);
       const tip: [number, number] = [lerp(origin[1], near[1], reach), lerp(origin[0], near[0], reach)];
-      line?.setData({ type: "FeatureCollection", features: [{ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: [[origin[1], origin[0]], tip] } }] } as never);
+      line?.setData({
+        type: "FeatureCollection",
+        features: [
+          { type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: [[origin[1], origin[0]], tip] } },
+          { type: "Feature", properties: { c: efColor(closest.ef) }, geometry: { type: "Point", coordinates: [near[1], near[0]] } },
+        ],
+      } as never);
       if (reach >= 1) {
         if (!this.distanceLabel!.getElement().isConnected) {
           const box = this.distanceLabel!.getElement().firstElementChild as HTMLElement;
