@@ -118,7 +118,7 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, choices, o
         <p className="landing-for">For anyone renting, buying or living somewhere the climate is changing.</p>
         <p className="landing-sub">
           Everything the National Weather Service recorded at an address since 2000, from floods and tornadoes to heat, wind, ice and
-          lightning, replayed on real radar. Anything that is not real data is tagged SAMPLE.
+          lightning, replayed on real radar. Built on official records from NOAA, the National Weather Service and FEMA.
         </p>
 
         <div className="sp-head">
