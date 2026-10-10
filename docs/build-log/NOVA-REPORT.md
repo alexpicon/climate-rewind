@@ -861,3 +861,39 @@ keyboard (Chrome headless, scripted): Tab through the segmented control, Enter o
 - Each map card: the title is a button (expanded or collapsed) that opens the key and the source. Next 72 hours: the "Rain and flooding / Storms" and "Day 1 / 2 / 3" buttons say pressed or not, and the sentence under them updates.
 - Story: under each sentence "Show on map" (pressed state); pins are buttons named with the event (Tab reaches them after the map controls); Enter on a pin opens the event card.
 - Get ready: "Show on map" on an item; a pin button moves focus to that item's checkbox.
+
+# Round 10B: climate change as the visible thread (Nova B)
+
+- **Landing:** new line under the H1, "Climate change, measured at your address." (`.landing-claim`); "For anyone renting, buying…" kept. To keep the first screen fitting 1512x740 the hero's H1, claim and "for anyone" line are tightened in the short-screen rules (`app/calm.css`). CDP screenshots: nothing overflows the viewport in chunk 1 or the moments chunk.
+- **Then, now, 2040s strip** (`components/climate/ClimateStrip.tsx`, model in `lib/climate-strip/strip-model.ts`, test `tests/climate-strip.test.ts`): top of Your history, under the address, for every address (also the no-area variant). Reads `/api/future`, which serves `data/projections/<slug>.json` for prepared addresses and the live archive otherwise; skeleton while loading, honest message on failure.
+  - Measure: **days a year with an air-temperature high of 90 F or more** (`air90`), the same one the What's changing chart uses, because the CMIP6 models only give air temperature; a feels-like "then/now" beside an air-temperature projection would not be like for like. Labelled as air temperature.
+  - 2000s vs 2016-2025 (from the record's by-year counts) vs the lowest-to-highest of the models for 2041-2050. Heavy rain (1 inch or more) shows then and now only; the models were not asked for rain.
+  - "Trend" only when the existing Mann-Kendall result is p < 0.05 (Nashville's rain, for one); otherwise "Record: No clear trend yet." Caveat "climate models (CMIP6), not a forecast", plus the existing "models run higher than the record here" sentence when it applies (Bellevue, Nashville). "See what's changing" link goes to that tab.
+- **Moment cards:** one attribution line each from `research/attribution-2026-10-09.md`, each with a "Source" link (new tab). Heat dome: WWA "virtually impossible…"; Ian: AP, rapid study, not peer-reviewed; Ida: Scout's safer line, "Source (preprint)", no "quarter to half million" figure; Lahaina: "No formal attribution study…"; Mayfield and Rolling Fork: "A single tornado can't yet be pinned on climate change (per AP / NOAA's Harold Brooks)". The card grid's timeline and attribution share the right column.
+- **README:** live URL, climate-change lead and 3-line pitch, a Results section (detective 28% to 2%, p = 3e-8, 16% vs 33%; damage mapper P 0.98 / R 0.86; brief verifier 98.5%, 66 of 67, from `data/ai-eval/brief.json`; CMIP6; forecaster +3.5% vs 0.0%). Video stays `<coming>`.
+- **Checks:** tsc clean; `npm run build` passes; new tests pass.
+
+## Flags (10B)
+1. The Rolling Fork card's source is the AP piece about the Mayfield outbreak (the claim is general; Scout found no Rolling Fork-specific article). The Ida line is the weakest source (a preprint that mixes current and future warming): cut it if in doubt.
+2. Failing tests at the time of my last run belong to Nova A's tab rename ("Next 7 days") if any remain.
+3. Chrome headless only; no screen reader.
+
+## Alex: check by keyboard and screen reader (10B)
+- Landing moments: Tab reaches each "Source" link after the card's text; its name reads "Source for <card title> (opens in a new tab)".
+- Your history: the strip is a section "How the climate here has changed"; screen readers get one summary sentence per row (the big numbers are hidden from them), and the skeleton announces "Reading the climate record…". Tab to "See what's changing" and Enter.
+
+## Round 10A (Oct 9, 2026): tab order, "Next 7 days"
+
+**Tabs.** Bar order is now Your history, Next 7 days, What's changing, Get ready (+ How it works link). `DEFAULT_TAB` is `story`, so a lookup (and a link with no tab) opens Your history. "Next 72 hours" is "Next 7 days" everywhere (bar, page title, mobile short label "7 days", aria, tests, landing feature title in `lib/ui/landing-features.ts`). `?tab=ahead` still opens it. `viewUrl(null, "ahead")` is now `/?tab=ahead` (it used to be `/`).
+
+**One card per day (`/api/week?lat&lon&state[&actions=0]`, `lib/week/**`).** Sources: NWS `/points` then the gridpoint (hourly feels-like, temperature, rain, gusts) and forecast periods (the NWS's own words); NWS HeatRisk ImageServer identify for 7 days (checked live: days 1-6 return a level, then NoData, which is shown as nothing); WPC ERO and SPC Days 1-3 via the existing `buildOutlook`. Notable day = HeatRisk Moderate+ or feels-like 100 F+, ERO Slight+ or 1 in of rain, SPC tornado 2%+ (Day 3 any-severe 15%+), gusts 45 mph+. Quiet days are one line. Notable days show What to expect (plain line, official names in small text), What it meant here before (outlook track record "On 10 of 118 past Slight-risk days here...", else the last NWS flood report or tornado within the index radius, else the latest matching area event, else nothing), Climate context (heat only: decade averages of days at or above the day's feels-like, 2000-2009 vs 2016-2025; "trend" only if Mann-Kendall p < 0.05) and What to do.
+
+**What to do.** One model call per address for all notable days (`lib/week/actions.ts`), cached 60 min (key: place plus the set of notable days). The model may cite only guidance lines offered for that day's hazards; code drops any action with no cite, an off-list cite, more than 2 cites, or a number/quote/overclaim the existing `verifySentence` rejects. Source shown comes from our corpus by id. If the AI is resting or off, or nothing passes, the card shows official lines word for word, labelled as such. The page loads the cards first (`actions=0`), then the advice.
+
+**More.** The old brief, outlooks and Ask box sit under a collapsed "More" and mount on first open, so the brief's model call is no longer paid on every visit (`prefetchAhead` no longer prefetches it).
+
+**Not done.** No precompute for the 10 prepared addresses: the content is a live forecast and goes stale in hours, so a saved copy would be wrong tomorrow. `next.config.ts` gained a `/api/week` tracing entry (data files for Vercel).
+
+**Verified.** `npm test` 877 pass (22 new in `tests/week.test.ts`: day classification, grid parsing, decade averages and trend rule, history lines, action verifier, end-to-end with fake network and fake model); `tsc` clean; `next build` clean. curl `/api/week`: Nashville (Sat rain Slight risk with the 10 of 118 line, Tue heat; 3 actions each, all cited), Bellevue (all 7 days quiet, no model call), 1600 Pennsylvania Ave NW (non-sample: Sun rain, last NWS flood report Jul 19, 2025). CDP at 1512x740 in `/tmp/nova10a/shots/`: `nashville-7days*.png`, `bellevue-7days.png`, `dc-after-lookup.png` (URL `tab=story`, Your history current).
+
+**Alex to check by keyboard and screen reader (not done by me).** Tab through the bar (order and "Next 7 days" name), the day cards (each notable day is an article with an h3; the guidance links open new tabs), the "More" summary (Enter/Space opens it; the brief then loads), and that the "choosing what to do" and "What to do is ready" announcements are heard. Contrast of the small source text (`--faint`) was not measured. Not run: axe, Safari, Firefox, phone widths.

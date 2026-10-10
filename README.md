@@ -1,11 +1,26 @@
 # Climate Rewind
 
-Type a US street address and watch what the weather did to it, from National Weather Service records:
-the storm night (real NEXRAD radar with the flood reports popping in), the heat wave, and the tornadoes.
+**Climate change, measured at your address.** Type a US street address and see what the weather did there since 2000
+(floods, tornadoes, heat, wind, ice, lightning, from National Weather Service records), how often dangerous heat and heavy rain
+come now compared with the 2000s, and what climate models (CMIP6) say the 2040s could look like.
 ForgeHacks 2026 (AI + Climate). **Built during ForgeHacks 2026 (Oct 7–10).**
 
-- Live demo: <coming>
+- The record: every storm night replayed on real NEXRAD radar, the heat wave, the tornado tracks.
+- The change: then (2000s) → now (2016–2025) → 2040s (the range across climate models, not a forecast), for any address.
+- The AI: re-files imprecise reports, maps damage, and writes cited sentences that code verifies. It never has the last word.
+
+- Live demo: https://climaterewind.com
 - Video: <coming>
+
+## Results
+
+Every number below is read from a file in this repository.
+
+- **The AI flood detective (pre-registered, 100 fresh reports):** wrong pins (more than 5 km off) fell from **28% to 2%** (exact McNemar p = 3e-8). The trade-off is reach: **16% vs 33% within 1 km**, because it abstains rather than guess when a report names only a road. See [`pipeline/eval/`](pipeline/eval/) ([protocol](pipeline/eval/PREREG.md), [scores](pipeline/eval/score.json)) and the table under "The AI detective's pre-registered test".
+- **The damage mapper:** extraction **precision 0.98, recall 0.86** on 5 hand-labelled NWS damage surveys (72 labelled places; 45 pinned). Gold labels and scoring: [`pipeline/eval/damage_gold.json`](pipeline/eval/damage_gold.json), [`pipeline/eval/score_damage.py`](pipeline/eval/score_damage.py).
+- **The brief verifier:** **98.5%** of the AI's written sentences passed code verification (66 of 67, over the fixed 20 questions at 4 addresses); the dropped sentence is shown as dropped, never rewritten. [`data/ai-eval/brief.json`](data/ai-eval/brief.json).
+- **CMIP6 projections** (`data/projections/<slug>.json`, Open-Meteo Climate API, seven HighResMIP models, a high-emissions path): at all 10 prepared addresses the middle model has more 90°F air-temperature days a year in 2041–2050 than in 2001–2020 (Bellevue 4.1 → 8.9, Portland 20.0 → 28.2, Nashville 53.7 → 75.8), and the models disagree, so the page shows the range. In the 26-year weather record, a Mann-Kendall trend with p < 0.05 shows at 2 of the 10 (Fort Myers, Portland); everywhere else it says "no clear trend yet". These are not forecasts.
+- **The forecaster experiment (a negative result we kept):** a flood model trained on 2016–22 beat the official outlook by Brier skill **+3.5%** only when it was given the day's observed rain (hindsight); with only what is known in advance it scored **0.0%**. So we did not ship a forecast, and explain the official ones instead. [`docs/forecast-experiment.md`](docs/forecast-experiment.md).
 
 **Honesty first.** Real data is real; anything that is not is tagged SAMPLE. It shows NWS reports we could
 place near you, not every flood. We make no forecast of our own (the next-72-hours outlooks are the National Weather Service's, and the AI only explains them), and we never fake an alert.
