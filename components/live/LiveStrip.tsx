@@ -2,11 +2,13 @@
 
 import type { Live } from "./use-live";
 
-const timeOf = (ms: number) => new Date(ms).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZoneName: "short" });
-const untilOf = (iso: string | null) => (iso ? ` · until ${timeOf(Date.parse(iso))}` : "");
+import { timeAtPlace, zoneIdFor } from "@/lib/ui/zone";
 
 /** Small dot plus short text: green when quiet, red only for a real active warning. Opens the drawer. */
-export function LiveStrip({ live, open, onToggle }: { live: Live; open: boolean; onToggle: () => void }) {
+export function LiveStrip({ live, open, onToggle, place = null }: { live: Live; open: boolean; onToggle: () => void; /** The address's state and longitude: times read in its own time zone. */ place?: { state: string; lon: number } | null }) {
+  const zone = place ? zoneIdFor(place.state, place.lon) : null;
+  const timeOf = (ms: number) => timeAtPlace(ms, zone);
+  const untilOf = (iso: string | null) => (iso ? ` · until ${timeOf(Date.parse(iso))}` : "");
   const when = live.checkedAt ? timeOf(live.checkedAt) : "";
   const first = live.alerts[0];
   const more = live.alerts.length - 1;

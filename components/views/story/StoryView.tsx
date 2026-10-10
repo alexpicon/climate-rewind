@@ -178,7 +178,10 @@ export function StoryView({
         </p>
         {currentZone(area.zones) ? (
           <p className="ai-sub story-zones">
-            Your zone: <b>{zoneLabel(currentZone(area.zones)!.name) ?? currentZone(area.zones)!.code}</b>
+            Your zone:{" "}
+            <b className="zn" title={zoneLabel(currentZone(area.zones)!.name) ?? currentZone(area.zones)!.code}>
+              {zoneLabel(currentZone(area.zones)!.name) ?? currentZone(area.zones)!.code}
+            </b>
           </p>
         ) : null}
         {otherZonesLine(area.zones) ? (

@@ -72,3 +72,42 @@ export function zoneAbbreviation(ms: number, offsetMin: number, state?: string |
   }
   return plainOffset(offsetMin);
 }
+
+const EASTERN = new Set(["CT", "DE", "DC", "GA", "ME", "MD", "MA", "NH", "NJ", "NY", "NC", "OH", "PA", "RI", "SC", "VT", "VA", "WV"]);
+const CENTRAL = new Set(["AL", "AR", "IL", "IA", "LA", "MN", "MS", "MO", "OK", "WI"]);
+const MOUNTAIN = new Set(["CO", "MT", "NM", "UT", "WY"]);
+const PACIFIC = new Set(["CA", "NV", "WA", "OR"]);
+
+/**
+ * The IANA time zone of an address, from its state and longitude (states that straddle a boundary are split by longitude).
+ * Null when the state is unknown, so the caller can fall back to the viewer's own zone.
+ */
+export function zoneIdFor(state: string | null | undefined, lon: number): string | null {
+  const st = (state ?? "").toUpperCase();
+  if (EASTERN.has(st)) return "America/New_York";
+  if (CENTRAL.has(st)) return "America/Chicago";
+  if (MOUNTAIN.has(st)) return "America/Denver";
+  if (PACIFIC.has(st)) return "America/Los_Angeles";
+  switch (st) {
+    case "AZ": return "America/Phoenix";
+    case "AK": return "America/Anchorage";
+    case "HI": return "Pacific/Honolulu";
+    case "FL": return lon > -85.4 ? "America/New_York" : "America/Chicago";
+    case "MI": return lon > -87.6 ? "America/New_York" : "America/Chicago";
+    case "IN": return lon > -86.9 ? "America/New_York" : "America/Chicago";
+    case "KY": return lon > -86 ? "America/New_York" : "America/Chicago";
+    case "TN": return lon > -85.5 ? "America/New_York" : "America/Chicago";
+    case "TX": return lon < -105.5 ? "America/Denver" : "America/Chicago";
+    case "KS": return lon < -101.5 ? "America/Denver" : "America/Chicago";
+    case "NE": return lon < -101 ? "America/Denver" : "America/Chicago";
+    case "ND": return lon < -101 ? "America/Denver" : "America/Chicago";
+    case "SD": return lon < -100.3 ? "America/Denver" : "America/Chicago";
+    case "ID": return "America/Denver";
+    default: return null;
+  }
+}
+
+/** "5:30 PM CDT": a clock time in the address's own zone (the viewer's zone when the address's is unknown). */
+export function timeAtPlace(ms: number, zoneId: string | null): string {
+  return new Date(ms).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZoneName: "short", ...(zoneId ? { timeZone: zoneId } : {}) });
+}

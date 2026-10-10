@@ -7,7 +7,7 @@ import { usePlayback } from "@/components/use-playback";
 import { useReducedMotion } from "@/components/use-reduced-motion";
 import type { AreaReplay } from "@/lib/area-replay";
 import { AREA_REPLAY_MS, buildReplayModel, finalTint, kindsLabel, onlyKinds, replayDate, replayFrame } from "@/lib/ui/area-replay-model";
-import { FAMILIES, FAMILY_ORDER } from "@/lib/ui/story-model";
+import { FAMILIES, FAMILY_ORDER, money } from "@/lib/ui/story-model";
 import { AreaReplayLayer } from "./area-replay-layer";
 
 interface Props {
@@ -174,7 +174,7 @@ export function AreaReplayCard({ lat, lon, state, county, playFrom = null, kinds
             <b>{frame.notable.type}</b>, {replayDate(model, frame.notable.day)}, {replay.areas[frame.notable.area]?.name ?? ""}
             {frame.notable.deaths > 0 ? ` · ${frame.notable.deaths} ${frame.notable.deaths === 1 ? "death" : "deaths"}` : ""}
             {frame.notable.injuries > 0 ? ` · ${frame.notable.injuries} injured` : ""}
-            {frame.notable.damageUsd >= 1_000_000 ? ` · $${(frame.notable.damageUsd / 1_000_000).toLocaleString("en-US", { maximumFractionDigits: 1 })} million in damage` : ""}
+            {frame.notable.damageUsd >= 1_000_000 ? ` · ${money(frame.notable.damageUsd)} in damage` : ""}
           </>
         ) : started ? (
           " "

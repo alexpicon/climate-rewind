@@ -7,7 +7,7 @@ import { localMoment, pickReports } from "../ai/sources";
 import type { AiSource } from "../ai/types";
 import type { HeatSummary, NearbyFlood, NearbyTornado } from "../types";
 import { dayHighWords, heatHighWords, heatLabels } from "../ui/data-source";
-import { excerpt, niceDate } from "../ui/text";
+import { excerpt, niceDate, titleWords } from "../ui/text";
 import { hazardOfType, type AreaEvent } from "./events";
 import type { HazardId, HazardSummary, LocalFact } from "./types";
 
@@ -20,7 +20,7 @@ const sanitize = (text: string) => text.replace(/[<>]/g, " ").replace(/\s+/g, " 
 /** NWS writes some names in capitals ("FLASH FLOOD", "DAVIDSON"): show those in ordinary capitals. Mixed-case text is left alone. */
 const tidy = (text: string) => {
   const clean = sanitize(text);
-  return clean === clean.toUpperCase() ? clean.toLowerCase().replace(/\b([a-z])/g, (c) => c.toUpperCase()) : clean;
+  return clean === clean.toUpperCase() ? titleWords(clean.toLowerCase()) : clean;
 };
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 const money = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
@@ -36,7 +36,7 @@ const HAZARD_LABEL: Record<HazardId, string> = {
 export const hazardLabel = (id: HazardId): string => HAZARD_LABEL[id];
 
 function ncdcLink(id: string): string | undefined {
-  return id.startsWith("SE-") ? `https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=${id.replace(/^SE-/, "")}` : undefined;
+  return id.startsWith("SE-") ? `https://www.ncei.noaa.gov/access/storm-events-database/event-details/${id.replace(/^SE-/, "")}` : undefined;
 }
 
 export interface LocalInputs {
@@ -70,7 +70,7 @@ function floodFacts(floods: NearbyFlood[], out: { sources: AiSource[]; facts: Lo
     chip: "Flood reports nearby",
     title: `Flood reports within 5 km of this address, ${span}`,
     origin: "NCEI Storm Events and NWS Local Storm Reports, 2015 to 2025",
-    text: `${plural(floods.length, "written NWS flood report")} within 5 km of this address, ${onDays}. The closest was ${closest.toFixed(1)} km away. A report is a written NWS report of flooding, not a measure of how deep the water was.`,
+    text: `${plural(floods.length, "written NWS flood report")} within 5 km of this address, ${onDays}. The closest was ${closest.toFixed(2)} km away. A report is a written NWS report of flooding, not a measure of how deep the water was.`,
   });
   out.facts.push({ id: "local-flood-count", label: `${floods.length} flood reports within 5 km, ${span}`, hazard: "flood" });
 
@@ -82,7 +82,7 @@ function floodFacts(floods: NearbyFlood[], out: { sources: AiSource[]; facts: Lo
       chip: "NWS flood report",
       title: label,
       origin: report.source === "StormEvents" ? "NCEI Storm Events" : "NWS Local Storm Report",
-      text: `${tidy(report.type)} report, ${localMoment(report.start)}, ${tidy(report.city || report.county)}, ${tidy(report.county)} County. It is ${report.distanceKm.toFixed(1)} km from this address.`,
+      text: `${tidy(report.type)} report, ${localMoment(report.start)}, ${tidy(report.city || report.county)}, ${tidy(report.county)} County. It is ${report.distanceKm.toFixed(2)} km from this address.`,
       quote: sanitize(report.quote),
       href: ncdcLink(report.id),
     });
@@ -104,7 +104,7 @@ function tornadoFacts(tornadoes: NearbyTornado[], out: { sources: AiSource[]; fa
       chip: `${t.ef} tornado`,
       title: label,
       origin: "NCEI Storm Events",
-      text: `${t.ef} tornado on ${niceDate(t.start)}. Its track passed ${t.minDistanceKm.toFixed(1)} km from this address. Recorded width up to ${t.widthYd} yards and length ${t.lengthMi} miles${casualties ? `; ${casualties} recorded for the county part of the track` : ""}.`,
+      text: `${t.ef} tornado on ${niceDate(t.start)}. Its track passed ${t.minDistanceKm.toFixed(2)} km from this address. Recorded width up to ${t.widthYd} yards and length ${t.lengthMi} miles${casualties ? `; ${casualties} recorded for the county part of the track` : ""}.`,
       quote: sanitize(excerpt(t.narrative, 360).text),
       href: ncdcLink(t.id),
     });

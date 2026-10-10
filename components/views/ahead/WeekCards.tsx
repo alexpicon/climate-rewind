@@ -49,6 +49,9 @@ function Actions({ day, status, onRetry }: { day: WeekDay; status: ActionsStatus
     return null;
   }
   const items: WeekAction[] = day.actions;
+  // "(during extreme heat)" is true of the NWS page, not of this day: only say it on a day with the highest heat concern.
+  const extreme = day.hazards.some((h) => h.kind === "heat" && h.level === 3);
+  const sourceOf = (source: string) => (extreme ? source : source.replace(/\s*\(during extreme heat\)/i, ""));
   return (
     <>
       <ul className="wk-actions">
@@ -57,8 +60,8 @@ function Actions({ day, status, onRetry }: { day: WeekDay; status: ActionsStatus
             <span>{action.text}</span>{" "}
             <span className="wk-cites">
               {action.guidance.filter((line, i, all) => all.findIndex((other) => other.url === line.url) === i).map((line) => (
-                <a key={line.id} className="wk-cite" href={line.url} target="_blank" rel="noreferrer noopener" aria-label={`Official guidance: ${line.source} (opens in a new tab)`}>
-                  {line.source}
+                <a key={line.id} className="wk-cite" href={line.url} target="_blank" rel="noreferrer noopener" aria-label={`Official guidance: ${sourceOf(line.source)} (opens in a new tab)`}>
+                  {sourceOf(line.source)}
                 </a>
               ))}
             </span>

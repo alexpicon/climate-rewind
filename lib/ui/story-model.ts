@@ -73,7 +73,7 @@ export function eventHarm(event: Pick<AreaEvent, "deaths" | "injuries" | "damage
 }
 
 export function money(amount: number): string {
-  if (amount >= 1_000_000_000) return `$${Math.round((amount / 1_000_000_000) * 10) / 10} billion`;
+  if (amount >= 1_000_000_000) return `$${Math.round(amount / 10_000_000) / 100} billion`;
   if (amount >= 1_000_000) return `$${Math.round((amount / 1_000_000) * 10) / 10} million`;
   if (amount >= 1000) return `$${Math.round(amount / 1000).toLocaleString("en-US")} thousand`;
   return `$${Math.round(amount)}`;
@@ -118,7 +118,7 @@ export function axisTicks(now: Date, fromYear = 2000, step = 5): Array<{ year: n
 /** "None on your street. The closest was 12.4 km away in 2019." Null when there is no such report. */
 export function nearestFloodLine(nearest: Pick<NearbyFlood, "distanceKm" | "start"> | null | undefined): string | null {
   if (!nearest) return null;
-  const km = nearest.distanceKm < 10 ? nearest.distanceKm.toFixed(1) : String(Math.round(nearest.distanceKm));
+  const km = nearest.distanceKm.toFixed(2);
   return `None on your street. The closest was ${km} km away, in ${nearest.start.slice(0, 4)}.`;
 }
 
@@ -141,7 +141,7 @@ export function extremeItems(x: AddressExtremes | null | undefined): Array<{ key
   const items: Array<{ key: "wettest" | "windiest" | "hottest"; label: string; value: string; date: string }> = [];
   if (x.wettest) items.push({ key: "wettest", label: "Wettest day", value: `${x.wettest.inches} in of rain`, date: niceDate(x.wettest.date) });
   if (x.windiest) items.push({ key: "windiest", label: x.windiest.measure === "gust" ? "Windiest day" : "Windiest day (sustained)", value: `${x.windiest.mph} mph ${x.windiest.measure === "gust" ? "gust" : "wind"}`, date: niceDate(x.windiest.date) });
-  if (x.hottest) items.push({ key: "hottest", label: "Hottest day", value: `${x.hottest.feelsF}°F feels-like`, date: niceDate(x.hottest.date) });
+  if (x.hottest) items.push({ key: "hottest", label: "Hottest day", value: `${Math.round(x.hottest.feelsF)}°F feels-like`, date: niceDate(x.hottest.date) });
   return items;
 }
 
@@ -211,4 +211,20 @@ export function otherZonesLine(zones: readonly AreaZoneInfo[] | undefined): stri
 export function zoneLabel(name: string | null): string | null {
   if (!name) return null;
   return placeName(name).replace(/\b(And|Of|The|In|On|To)\b/g, (w) => w.toLowerCase());
+}
+
+const KNOT_TO_MPH = 1.15078;
+const WIND_MEASURES: Record<string, string> = { EG: "estimated gust", MG: "measured gust", ES: "estimated sustained wind", MS: "measured sustained wind" };
+
+/**
+ * An event's recorded magnitude in words. NCEI files wind in knots; people read mph, so the card says mph first and keeps the filed
+ * knots beside it. Hail is inches. Anything else keeps its bare number.
+ */
+export function magnitudeText(event: Pick<AreaEvent, "type" | "magnitude" | "magnitudeType">): string | null {
+  const { magnitude, magnitudeType } = event;
+  if (!magnitude) return null;
+  const wind = magnitudeType ? WIND_MEASURES[magnitudeType.toUpperCase()] : undefined;
+  if (wind) return `${wind} ${Math.round(magnitude * KNOT_TO_MPH)} mph (${magnitude} knots as filed)`;
+  if (/hail/i.test(event.type)) return `hail ${magnitude} in`;
+  return `magnitude ${magnitude}`;
 }

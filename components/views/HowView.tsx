@@ -124,7 +124,9 @@ function HowContent({ detectiveRan, aiJobs }: { detectiveRan: boolean; aiJobs: A
           <dt>Flood reports</dt>
           <dd>NWS Local Storm Reports and NCEI Storm Events, quoted from the archive</dd>
           <dt>Heat</dt>
-          <dd>Weather reanalysis (ERA5 via Open-Meteo), daily feels-like highs. A model fitted to observations, not a thermometer at your door. If Open-Meteo is rate limited, the page uses NASA POWER (MERRA-2) instead, computes a heat index from it, and says so where the number appears.</dd>
+          <dd>Weather reanalysis (ERA5 via Open-Meteo), daily feels-like and air-temperature highs. A model fitted to observations, not a thermometer at your door. If Open-Meteo is rate limited, the page uses NASA POWER (MERRA-2) instead, computes a heat index from it, and says so where the number appears.</dd>
+          <dt>Climate models</dt>
+          <dd>CMIP6 HighResMIP models via the Open-Meteo Climate API: physics simulations, not a forecast. They can run hotter than the record at a spot, so What’s changing and the Story strip show the models’ own change, not their raw level.</dd>
           <dt>Tornadoes</dt>
           <dd>NOAA Storm Events, including the NWS damage narratives (quoted word for word)</dd>
           <dt>Live strip</dt>
@@ -134,7 +136,7 @@ function HowContent({ detectiveRan, aiJobs }: { detectiveRan: boolean; aiJobs: A
           <dt>AI detective</dt>
           <dd>
             {detectiveRan
-              ? "Where it has not run for an area yet, the page says so and moves no pin. Where it has, a placement tagged Verified is a Census address or intersection match for the words, and Area is a named area’s centre. None of these has been scored against the truth yet."
+              ? "Where it has not run for an area yet, the page says so and moves no pin. Where it has, a placement tagged Verified is a Census address or intersection match for the words, and Area is a named area’s centre. The live re-filings on this site are not scored one by one; the 100-report pre-registered test is (28% → 2%)."
               : "No real result yet. Where it has not run for an area, the page says so and moves no pin. The few Nashville placements shown in the storm replay are hand-made demos, tagged SAMPLE."}
           </dd>
           <dt>

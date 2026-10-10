@@ -30,7 +30,7 @@ describe("local facts", () => {
   const facts = buildLocalFacts(inputs());
 
   it("gives every fact a real id, an official check link where there is one, and a 'why' label with its date", () => {
-    expect(facts.facts.get("SE-1265274")).toMatchObject({ label: "Flash Flood report, Mar 27, 2021", href: "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1265274" });
+    expect(facts.facts.get("SE-1265274")).toMatchObject({ label: "Flash Flood report, Mar 27, 2021", href: "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1265274" });
     expect(facts.facts.get("SE-882999")?.label).toBe("EF3 tornado, Mar 3, 2020");
     expect(facts.facts.get("local-heat")?.label).toMatch(/^Hottest day on record, Jun 29, 2012/);
     expect(facts.facts.get("SE-555001")?.label).toBe("High Wind, Dec 31, 2018");
@@ -42,7 +42,7 @@ describe("local facts", () => {
     expect(heat.text).toContain("2011: 4 days; 2012: 7 days");
     const count = facts.sources.find((s) => s.id === "local-flood-count")!;
     expect(count.text).toContain("2 written NWS flood reports");
-    expect(count.text).toContain("0.4 km");
+    expect(count.text).toMatch(/0\.4\d km/);
   });
 
   it("area events say they are for the area, not the exact address, and carry the verbatim narrative", () => {

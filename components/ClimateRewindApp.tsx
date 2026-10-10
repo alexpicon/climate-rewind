@@ -99,6 +99,15 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
   const data = lookup.status === "ready" ? lookup.data : null;
   const live = useLive(data?.address.lat ?? null, data?.address.lon ?? null, data?.live ?? null, lookup.status === "loading" || Boolean(data?.pending?.includes("live")));
 
+  // The browser tab's title follows the view, whichever way it was reached: a tab click, a lookup, back/forward (popstate), or the landing.
+  const status = lookup.status;
+  const matched = data?.address.matched ?? null;
+  useEffect(() => {
+    if (status === "loading") return;
+    if (matched && status === "ready") document.title = pageTitle(TAB_LABEL[tab], tidyAddress(matched));
+    else document.title = tab === "how" ? pageTitle(TAB_LABEL.how) : APP_TITLE;
+  }, [status, matched, tab]);
+
   const runLookup = useCallback(async (address: string, nextTab: Tab, push: boolean, nightId: string | null = null, wants3d = false) => {
     const id = ++requestId.current;
     const current = () => id === requestId.current;
@@ -122,7 +131,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
         setNight(nightId);
         const url = viewUrl(address, nextTab, nightId, wants3d);
         if (push) window.history.pushState(null, "", url);
-        document.title = pageTitle(TAB_LABEL[nextTab], payload.address.matched);
+        document.title = pageTitle(TAB_LABEL[nextTab], tidyAddress(payload.address.matched));
       },
       onPart: (part, patch) => setLookup((now) => (now.status === "ready" ? { status: "ready", data: applyPart(now.data, part, patch) } : now)),
     });
@@ -194,7 +203,6 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
     setArrival(null);
     setDrawerOpen(false);
     window.history.pushState(null, "", viewUrl(data?.address.input ?? null, next, night, view3d));
-    document.title = pageTitle(TAB_LABEL[next]);
   };
 
   const toggle3d = useCallback(() => {
@@ -281,7 +289,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
         tab={tab}
         address={data?.address.input ?? null}
         onTab={changeTab}
-        live={<LiveStrip live={live} open={drawerOpen} onToggle={toggleDrawer} />}
+        live={<LiveStrip live={live} open={drawerOpen} onToggle={toggleDrawer} place={data ? { state: data.address.state, lon: data.address.lon } : null} />}
       />
 
       <MapCanvas address={data ? { lat: data.address.lat, lon: data.address.lon, matched: data.address.matched } : null} reducedMotion={reduced}>
@@ -321,7 +329,7 @@ export function ClimateRewindApp({ initialAddress, initialTab, detectiveRan, aiJ
       </MapCanvas>
 
       {drawerOpen && data ? (
-        <LiveDrawer live={live} lat={data.address.lat} lon={data.address.lon} notice={data.notices.live} trigger={data.pending?.includes("trigger") ? null : data.floodTrigger} onClose={closeDrawer} />
+        <LiveDrawer live={live} lat={data.address.lat} lon={data.address.lon} state={data.address.state} notice={data.notices.live} trigger={data.pending?.includes("trigger") ? null : data.floodTrigger} onClose={closeDrawer} />
       ) : null}
       </NavProvider>
     </AnnounceProvider>

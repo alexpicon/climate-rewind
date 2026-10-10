@@ -154,7 +154,16 @@ export class TornadoScene {
       ]),
     );
     root.style.setProperty("--c", color);
+    // The label is centred on the diamond; near the story panel (desktop, left side) it would open behind it, so it opens to the right instead.
+    const keepClear = () => {
+      const panel = document.getElementById("panel");
+      const wide = window.matchMedia("(min-width: 901px)").matches;
+      const clearOf = wide && panel ? panel.getBoundingClientRect().right + 12 : 0;
+      root.classList.toggle("flip", root.getBoundingClientRect().left - 150 < clearOf);
+    };
+    root.addEventListener("mouseenter", keepClear);
     root.addEventListener("click", (event) => {
+      keepClear();
       event.stopPropagation();
       const open = root.classList.toggle("active");
       if (open) for (const other of document.querySelectorAll(".dmgm.active")) if (other !== root) other.classList.remove("active");

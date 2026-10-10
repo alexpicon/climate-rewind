@@ -197,16 +197,16 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
         <EventCards />
         </Chunk>
 
-        <Chunk className="chunk-wide" id="ch-record" label="The record lightning flash">
+        <Chunk className="chunk-wide" id="ch-record" label="A flash seen from space">
 
-        <h2 className="h3 landing-samples-h" id="moments-h">
-          Moments the records caught
+        <h2 className="h3 landing-samples-h" id="record-h">
+          A flash seen from space
         </h2>
         <RecordFlash />
         </Chunk>
 
         <Chunk className="chunk-wide" id="ch-moments" label="Moments the records caught">
-        <h2 className="h3 landing-samples-h">Moments the records caught</h2>
+        <h2 className="h3 landing-samples-h" id="moments-h">Moments the records caught</h2>
         <ul className="moments moments-five" aria-labelledby="moments-h">
           {LANDING_MOMENTS.map((moment) => (
             <li key={moment.id} className="moment">
@@ -221,15 +221,27 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
                 </span>
                 {moment.line}
               </p>
-              {moment.attribution ? (
-                <p className="mo-attr">
-                  {moment.attribution.text}
-                  {moment.attribution.credit ? ` (${moment.attribution.credit})` : ""}.{" "}
-                  <a href={moment.attribution.url} target="_blank" rel="noopener noreferrer">
-                    {moment.attribution.sourceLabel}
-                    <span className="sr"> for {moment.title} (opens in a new tab)</span>
-                  </a>
-                </p>
+              {moment.fullCost || moment.attribution ? (
+                <div className="mo-attr">
+                  {moment.fullCost ? (
+                    <p>
+                      {moment.fullCost.text}.{" "}
+                      <a href={moment.fullCost.url} target="_blank" rel="noopener noreferrer">
+                        Source<span className="sr"> for the full cost of {moment.title} (opens in a new tab)</span>
+                      </a>
+                    </p>
+                  ) : null}
+                  {moment.attribution ? (
+                    <p>
+                      {moment.attribution.text}
+                      {moment.attribution.credit ? ` (${moment.attribution.credit})` : ""}.{" "}
+                      <a href={moment.attribution.url} target="_blank" rel="noopener noreferrer">
+                        {moment.attribution.sourceLabel}
+                        <span className="sr"> for {moment.title} (opens in a new tab)</span>
+                      </a>
+                    </p>
+                  ) : null}
+                </div>
               ) : null}
               {moments?.moments[moment.id] ? <MomentTimeline timeline={moments.moments[moment.id]} /> : null}
               <button
@@ -304,7 +316,7 @@ export function Landing({ input, onInput, onSubmit, lookingUp, error, onHow, det
         <Chunk id="ch-own" label="Try your own address" className="chunk-close">
 
         <h2 className="chunk-close-h">What did the weather do to your street?</h2>
-        <p className="landing-own">Type any US address in the bar at the top, or start from one of the four samples.</p>
+        <p className="landing-own">Type any US address in the bar at the top, or use a sample above.</p>
         <button type="button" className="btn chunk-close-btn" onClick={backToSearch}>
           Look up an address
         </button>

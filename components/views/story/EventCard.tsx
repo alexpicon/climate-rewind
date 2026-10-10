@@ -4,7 +4,8 @@ import { forwardRef } from "react";
 import { IMPACT_PHRASE } from "@/lib/ai/story-labels";
 import type { VerifiedImpact } from "@/lib/ai/types";
 import type { AreaEvent } from "@/lib/types";
-import { eventHarm, tierLabel, zoneLabel } from "@/lib/ui/story-model";
+import { eventHarm, magnitudeText, tierLabel, zoneLabel } from "@/lib/ui/story-model";
+import { FULL_COST_OF_EVENT } from "@/lib/ui/noaa-cost";
 import { niceDate } from "@/lib/ui/text";
 
 /**
@@ -16,6 +17,7 @@ export const EventCard = forwardRef<HTMLElement, { event: AreaEvent; impacts: re
   const harm = eventHarm(event);
   const own = event.narrative.trim();
   const episode = event.episodeNarrative.trim();
+  const fullCost = FULL_COST_OF_EVENT[event.id];
   const where = tierLabel(event, currentZoneCode) ?? zoneLabel(event.area.name) ?? event.area.code;
   return (
     <section className="eventcard" ref={ref} tabIndex={-1} aria-label={`${event.type}, ${niceDate(event.start)}`}>
@@ -27,9 +29,17 @@ export const EventCard = forwardRef<HTMLElement, { event: AreaEvent; impacts: re
       </div>
       <p className="src-title">{niceDate(event.start)}</p>
       <p className="src-origin">
-        {where} · NCEI Storm Events{harm ? ` · ${harm}` : " · no deaths, injuries or damage figure recorded"}
-        {event.magnitude ? ` · magnitude ${event.magnitude}` : ""}
+        <span className="zn" title={where}>{where}</span> · NCEI Storm Events{harm ? ` · ${harm}` : " · no deaths, injuries or damage figure recorded"}
+        {magnitudeText(event) ? ` · ${magnitudeText(event)}` : ""}
       </p>
+      {fullCost ? (
+        <p className="src-origin">
+          {fullCost.text}.{" "}
+          <a href={fullCost.url} target="_blank" rel="noopener noreferrer">
+            Source<span className="sr"> for the full cost (opens in a new tab)</span>
+          </a>
+        </p>
+      ) : null}
       {own ? <blockquote className="src-quote ev-quote">{own}</blockquote> : <p className="note">The National Weather Service wrote no narrative for this event.</p>}
       {episode && episode !== own ? (
         <details className="ev-episode">
@@ -51,7 +61,7 @@ export const EventCard = forwardRef<HTMLElement, { event: AreaEvent; impacts: re
         </div>
       ) : null}
       {event.id.startsWith("SE-") ? (
-        <a className="src-link" href={`https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=${event.id.replace(/^SE-/, "")}`} target="_blank" rel="noopener noreferrer">
+        <a className="src-link" href={`https://www.ncei.noaa.gov/access/storm-events-database/event-details/${event.id.replace(/^SE-/, "")}`} target="_blank" rel="noopener noreferrer">
           Open the NCEI record<span className="sr"> (opens in a new tab)</span>
         </a>
       ) : null}

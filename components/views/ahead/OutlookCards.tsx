@@ -127,7 +127,9 @@ export function OutlookCards({ outlook }: { outlook: OutlookPayload }) {
         ) : heat.notices.forecast ? (
           <p className="hz-note">{heat.notices.forecast}</p>
         ) : null}
-        {outlook.recordSlug && !heat.hasHistory ? <p className="hz-note">{heat.notices.history}</p> : null}
+        {outlook.recordSlug && !heat.hasHistory ? (
+          <p className="hz-note">{hottest && hottest.feelsF >= 95 ? heat.notices.history : "Nothing unusual in the heat forecast, so there is no comparison with past years to show."}</p>
+        ) : null}
       </Hazard>
 
       {outlook.recordNotice ? <p className="hz-note">{outlook.recordNotice}</p> : null}

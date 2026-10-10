@@ -57,7 +57,12 @@ function capitalizeRoadNames(text: string): string {
  */
 export function placeName(city: string): string {
   const bare = city.replace(/^\d+\s+[NSEW]{1,3}\s+/i, "").trim().toLowerCase();
-  return bare.replace(/\b([a-z])([a-z']*)/g, (_, a: string, rest: string) => a.toUpperCase() + rest);
+  return titleWords(bare);
+}
+
+/** Title-cases lower-case words and keeps the compass pairs as capitals ("110th Ave NE", not "Ave Ne"). */
+export function titleWords(lower: string): string {
+  return lower.replace(/\b([a-z])([a-z']*)/g, (_, a: string, rest: string) => a.toUpperCase() + rest).replace(/\b(Ne|Nw|Se|Sw)\b/g, (d) => d.toUpperCase());
 }
 
 /** "ROSA L PARKS BLVD, NASHVILLE, TN 37201" -> "Rosa L Parks Blvd" (first part, title case; NE, NW, SE and SW stay capitals). */

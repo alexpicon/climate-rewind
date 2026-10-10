@@ -10,7 +10,7 @@ const base: ReadyPayload = {
   items: [
     {
       action: "After the Flash Flood report of Mar 27, 2021 near you, never drive through flood waters.",
-      why: [{ id: "SE-1265274", label: "Flash Flood report, Mar 27, 2021", hazard: "flood", href: "https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1265274" }],
+      why: [{ id: "SE-1265274", label: "Flash Flood report, Mar 27, 2021", hazard: "flood", href: "https://www.ncei.noaa.gov/access/storm-events-database/event-details/1265274" }],
       guidance: [guidanceById("flood-turn-around")!],
     },
     { action: "Your record has 11 days at 100°F or more; know where to get cool.", why: [{ id: "local-heat", label: "Hottest day on record, Jun 29, 2012 (feels like 113.3°F)", hazard: "heat" }], guidance: [guidanceById("heat-cool-places")!] },
@@ -36,7 +36,7 @@ describe("ReadyContent", () => {
   it("gives each item its reason with the record's date, a link to the record, and the official line with its source link", () => {
     expect(html).toContain("Why:");
     expect(html).toContain("Flash Flood report, Mar 27, 2021");
-    expect(html).toContain('href="https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=1265274"');
+    expect(html).toContain('href="https://www.ncei.noaa.gov/access/storm-events-database/event-details/1265274"');
     expect(html).toContain("Do not walk, swim or drive through flood waters.");
     expect(html).toContain('href="https://www.ready.gov/floods"');
     expect(html).toContain('rel="noopener noreferrer"');

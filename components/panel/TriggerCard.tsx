@@ -1,5 +1,5 @@
 import type { FloodTrigger } from "@/lib/types";
-import { niceDate } from "@/lib/ui/text";
+import { niceDate, titleWords } from "@/lib/ui/text";
 import { dayPossessive, TRIGGER_TITLE, triggerCopy, triggerFinePrint } from "@/lib/ui/trigger-text";
 import { gaugeDays, POWER_NAME } from "@/lib/ui/data-source";
 
@@ -93,8 +93,5 @@ export function TriggerCard({ trigger }: { trigger: FloodTrigger }) {
 
 /** "NASHVILLE INTERNATIONAL AIRPORT, TN US" as "Nashville International Airport". */
 function titleCase(station: string): string {
-  return station
-    .replace(/,\s*[A-Z]{2}\s+US$/, "")
-    .toLowerCase()
-    .replace(/\b([a-z])/g, (letter) => letter.toUpperCase());
+  return titleWords(station.replace(/,\s*[A-Z]{2}\s+US$/, "").toLowerCase());
 }

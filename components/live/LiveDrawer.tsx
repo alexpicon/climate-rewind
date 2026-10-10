@@ -6,6 +6,7 @@ import { alertLevel, parseMotion } from "@/lib/ui/alerts";
 import { el, HOUSE_SVG } from "@/lib/ui/dom";
 import { loadMapLibre } from "@/lib/ui/maplibre";
 import { baseStyle, LABELS_LAYER, liveRadarTiles } from "@/lib/ui/map-style";
+import { timeAtPlace, zoneIdFor } from "@/lib/ui/zone";
 import { bearingWord } from "@/lib/geo";
 import type { FloodTrigger } from "@/lib/types";
 import { TRIGGER_TITLE, triggerCopy, triggerFinePrint } from "@/lib/ui/trigger-text";
@@ -15,17 +16,19 @@ interface Props {
   live: Live;
   lat: number;
   lon: number;
+  /** The address's state, so alert times read in the address's time zone. */
+  state?: string | null;
   notice?: string;
   /** The street's flood trigger, shown as one calm line under the alerts. */
   trigger?: FloodTrigger | null;
   onClose: () => void;
 }
 
-const timeOf = (ms: number) => new Date(ms).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZoneName: "short" });
 const COLORS = { warn: "#FF8A7A", watch: "#FFB45A" } as const;
 
 /** The live alerts drawer: status, each real alert, and a small map with the outline and storm motion. */
-export function LiveDrawer({ live, lat, lon, notice, trigger, onClose }: Props) {
+export function LiveDrawer({ live, lat, lon, state = null, notice, trigger, onClose }: Props) {
+  const timeOf = (ms: number) => timeAtPlace(ms, zoneIdFor(state, lon));
   const [radar, setRadar] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const mapBox = useRef<HTMLDivElement>(null);

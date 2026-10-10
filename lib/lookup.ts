@@ -207,7 +207,8 @@ export function listStormNights(floods: FloodRow[], origin: Coord): StormNight[]
     .slice(TOP_NIGHTS)
     .map(entry)
     .filter((night) => night.reports >= RECENT_NIGHT_MIN_REPORTS && Number(night.date.slice(0, 4)) >= RECENT_NIGHT_FROM_YEAR)
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
+    .sort((a, b) => b.reports - a.reports || (a.date < b.date ? 1 : -1));
+  // Every night after the first five has no more reports than the fifth, so the whole list runs busiest first; the first entry is the default.
   return [...top, ...recent];
 }
 

@@ -4,7 +4,7 @@
  * Everything labelled "record" is a count of past days at this address, never a forecast.
  */
 
-/** WPC Excessive Rainfall Outlook categories. ENH exists in the 2026 proposal (PNS 26-57); accepted if it appears. */
+/** WPC Excessive Rainfall Outlook categories. ENH is not on WPC's current scale (Marginal, Slight, Moderate, High); it is only tolerated if a feed ever carries it, and no percentage is claimed for it. */
 export type EroLevel = "none" | "MRGL" | "SLGT" | "ENH" | "MDT" | "HIGH";
 
 export const ERO_LABEL: Record<EroLevel, string> = {
@@ -21,7 +21,7 @@ export const ERO_MEANING: Record<EroLevel, string> = {
   none: "no excessive rainfall risk area here",
   MRGL: "at least a 5% chance that rain exceeds flash flood guidance within 25 miles",
   SLGT: "at least a 15% chance that rain exceeds flash flood guidance within 25 miles",
-  ENH: "at least a 25% chance that rain exceeds flash flood guidance within 25 miles",
+  ENH: "a level the Weather Prediction Center lists between Slight and Moderate",
   MDT: "at least a 40% chance that rain exceeds flash flood guidance within 25 miles",
   HIGH: "at least a 70% chance that rain exceeds flash flood guidance within 25 miles",
 };

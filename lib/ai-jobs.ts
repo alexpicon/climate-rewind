@@ -64,7 +64,7 @@ export function describeJobs(input: { detectiveRan: boolean; damagePlaces: numbe
       number: `${EVAL_HEADLINE} ${EVAL_TRADEOFF}`,
       detail: `It said “I don’t know” on ${DETECTIVE_EVAL.abstain.detective}% of reports instead of guessing, and no wrong pin was a confident one. ${PILOT_FOOTNOTE}.${detectiveRan ? " Real placements are in the data now." : " It has not run on this data yet."}`,
       result: real
-        ? `Real run on this site’s data: it re-filed ${real.placed} of ${real.ran} imprecise flood reports around the sample and featured addresses, in ${real.states} states, and said “I don’t know” on the other ${real.ran - real.placed}. These re-filings are not scored against the truth yet.`
+        ? `Real run on this site’s data: it re-filed ${real.placed} of ${real.ran} imprecise flood reports around the sample and featured addresses, in ${real.states} states, and said “I don’t know” on the other ${real.ran - real.placed}. These live re-filings are not scored one by one; the 100-report pre-registered test is (wrong pins 28% → 2%).`
         : null,
     },
     {

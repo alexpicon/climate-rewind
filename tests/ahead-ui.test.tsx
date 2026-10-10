@@ -117,11 +117,14 @@ describe("OutlookCards", () => {
     expect(failed).not.toContain(">Slight<");
   });
 
-  it("says a sample's heat ranking is pending when its history is not saved yet", () => {
+  it("says a calm line on a mild day, and that the ranking is pending on a hot one, when the history is not saved yet", () => {
     const o = outlookFixture();
     const pending = renderToStaticMarkup(<OutlookCards outlook={{ ...o, heat: { ...o.heat, hasHistory: false, forecast: [{ date: "2026-10-09", feelsF: 88, rank: null }], notices: { history: "This address's feels-like history is not saved yet, so there is no ranking." } } }} />);
-    expect(pending).toContain("not saved yet");
+    expect(pending).toContain("no comparison with past years");
+    expect(pending).not.toContain("not saved yet");
     expect(pending).not.toContain("were this hot or hotter");
+    const hot = renderToStaticMarkup(<OutlookCards outlook={{ ...o, heat: { ...o.heat, hasHistory: false, forecast: [{ date: "2026-10-09", feelsF: 101, rank: null }], notices: { history: "This address's feels-like history is not saved yet, so there is no ranking." } } }} />);
+    expect(hot).toContain("not saved yet");
   });
 });
 

@@ -63,7 +63,7 @@ export function TornadoPanel({ data, timeline, ms, closest, flags }: Props) {
             <div className="tc-head">
               <span className="tc-ef">{shown.ef}</span>
               <span className="tc-date">{niceDate(shown.start)}</span>
-              <span className="tc-km">{shown.minDistanceKm.toFixed(shown.minDistanceKm < 2 ? 2 : 1)} km from you</span>
+              <span className="tc-km">{shown.minDistanceKm.toFixed(2)} km from you</span>
             </div>
             <p className="tc-h">What the NWS survey found</p>
             <blockquote className="tc-q">
@@ -72,7 +72,7 @@ export function TornadoPanel({ data, timeline, ms, closest, flags }: Props) {
             </blockquote>
             <p className="tc-src">
               NWS Storm Events{casualtyParts(shown).length ? ` · ${casualtyParts(shown).join(", ")} in this county` : ""}
-              <a className="tc-id" href={`https://www.ncdc.noaa.gov/stormevents/eventdetails.jsp?id=${shown.id.replace(/^SE-/, "")}`} target="_blank" rel="noopener noreferrer">
+              <a className="tc-id" href={`https://www.ncei.noaa.gov/access/storm-events-database/event-details/${shown.id.replace(/^SE-/, "")}`} target="_blank" rel="noopener noreferrer">
                 Event {shown.id.replace(/^SE-/, "")}
               </a>
             </p>
@@ -136,7 +136,7 @@ export function TornadoPanel({ data, timeline, ms, closest, flags }: Props) {
                     <tr key={t.id}>
                       <th scope="row">{niceDate(t.start)}</th>
                       <td>{t.ef}</td>
-                      <td>{t.minDistanceKm.toFixed(1)} km</td>
+                      <td>{t.minDistanceKm.toFixed(2)} km</td>
                       <td>
                         {e.text}
                         {e.truncated ? "…" : ""}
