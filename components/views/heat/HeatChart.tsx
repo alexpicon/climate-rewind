@@ -20,9 +20,11 @@ export function HeatChart({ byYear, hottestYear, measure = "feels-like" }: { byY
   return (
     <figure className="chart-wrap">
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-labelledby="chart-t chart-d">
-        <title id="chart-t">Days per year at 100 degrees or more, {measure}</title>
+        <title id="chart-t">{`Days per year at 100 degrees or more, ${measure}`}</title>
         <desc id="chart-d">
-          {`${years[0]} to ${years[years.length - 1]}. Most: ${byYear[maxYear]} days in ${maxYear}. Fewest: ${byYear[minYear]} days in ${minYear}. The full list is in the text version.`}
+          {byYear[maxYear] === byYear[minYear]
+            ? `${years[0]} to ${years[years.length - 1]}: ${byYear[maxYear]} days every year. The full list is in the text version.`
+            : `${years[0]} to ${years[years.length - 1]}. Most: ${byYear[maxYear]} days in ${maxYear}. Fewest: ${byYear[minYear]} days in ${minYear}. The full list is in the text version.`}
         </desc>
         {years.map((year, i) => {
           const h = ((H - top - bottom) * byYear[year]) / max;
@@ -30,7 +32,8 @@ export function HeatChart({ byYear, hottestYear, measure = "feels-like" }: { byY
           const highlight = year === hottestYear;
           return <rect key={year} x={x} y={H - bottom - h} width={bar} height={Math.max(h, 1)} rx={2} fill={highlight ? "#FFB45A" : "#8C93A8"} />;
         })}
-        {[maxYear, minYear].map((year) => {
+        {/* The most and the fewest are the same year when every year has the same count (often none): label it once. */}
+        {[...new Set([maxYear, minYear])].map((year) => {
           const i = years.indexOf(year);
           const x = i * slot + slot / 2;
           const anchor = x < 40 ? "start" : x > W - 40 ? "end" : "middle";
