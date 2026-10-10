@@ -88,7 +88,7 @@ describe("/api/future numbers", () => {
     const body = (await (await futureRoute(req(BELLEVUE), { future: { fetch: net.fetchFn, now: () => new Date(NOW) } })).json()) as FuturePayload;
     expect(body.observed).not.toBeNull();
     expect(body.projected).toBeNull();
-    expect(body.notices.projected).toMatch(/climate model service returned an error \(HTTP 429\)/);
+    expect(body.notices.projected).toBe("The climate data service is busy right now. Try again in a minute.");
   });
 
   it("serves a sample address from its file with no outside call", async () => {

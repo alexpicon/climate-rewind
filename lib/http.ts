@@ -49,12 +49,16 @@ export async function fetchJson<T>(
   }
 }
 
+/** What the page says when a data service answers 429: no status code, no host name in the main text. */
+export const BUSY_NOTICE = "The climate data service is busy right now. Try again in a minute.";
+
 /** Plain-language reason for a failed call, for the "notices" in the payload. */
 export function describeFailure(label: string, result: Extract<FetchResult<unknown>, { ok: false }>): string {
   switch (result.reason) {
     case "timeout":
       return `${label} did not answer within ${REQUEST_TIMEOUT_MS / 1000} seconds.`;
     case "http":
+      if (result.status === 429) return BUSY_NOTICE;
       return `${label} returned an error (HTTP ${result.status}).`;
     case "parse":
       return `${label} sent a reply we could not read.`;

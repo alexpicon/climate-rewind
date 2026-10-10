@@ -45,6 +45,7 @@ export function LiveStrip({ live, open, onToggle, place = null }: { live: Live; 
       aria-haspopup="dialog"
       aria-expanded={open}
       aria-controls="drawer"
+      aria-label={`${full}${alerting ? " for this address" : ""}`}
       aria-describedby="live-desc"
       onClick={() => (live.state === "error" ? live.refresh() : onToggle())}
     >
@@ -53,6 +54,7 @@ export function LiveStrip({ live, open, onToggle, place = null }: { live: Live; 
       <span className="lt">
         <span className="lf">{full}</span>
         <span className="ls">{short}</span>
+        <span className="lm" aria-hidden="true">Live</span>
       </span>
       {alerting ? <span className="sr"> for this address</span> : null}
       <svg className="lchev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">

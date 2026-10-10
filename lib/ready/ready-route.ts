@@ -11,10 +11,9 @@ import { getAiDeps, guardAiRequest, serverError } from "../climate/model";
 import { parsePoint } from "../climate/future-route";
 import type { FetchLike } from "../http";
 import { loadStateIndex } from "../index-store";
-import { findNearbyFloods, findNearbyTornadoes, summarizeHeat } from "../lookup";
+import { findNearbyFloods, findNearbyTornadoes, liveHeatSummary } from "../lookup";
 import { fetchAreaIds, type NwsAreaIds } from "../nws-zones";
 import { findSnapshot, loadSampleSnapshots, type SampleSnapshot } from "../samples";
-import { fetchDailyFeelsLike } from "../sources";
 import type { AiDeps } from "../ai/service";
 import type { HeatSummary, StateIndex } from "../types";
 import { selectAreaEvents, sinceYear } from "@/lib/area-events";
@@ -44,8 +43,7 @@ export interface ReadyDeps {
   samplePlan?: (lat: number, lon: number) => Promise<ReadyPayload | null>;
 }
 
-export function defaultReadyDeps(): ReadyDeps {
-  const fetchFn: FetchLike = (url, init) => fetch(url, init);
+export function defaultReadyDeps(fetchFn: FetchLike = (url, init) => fetch(url, init)): ReadyDeps {
   return {
     fetch: fetchFn,
     now: () => new Date(),
@@ -59,8 +57,7 @@ export function defaultReadyDeps(): ReadyDeps {
     areaIds: (lat, lon) => fetchAreaIds(lat, lon, fetchFn),
     snapshots: () => loadSampleSnapshots(),
     heat: async (lat, lon) => {
-      const daily = await fetchDailyFeelsLike(lat, lon, fetchFn);
-      return daily.value ? summarizeHeat(daily.value) : null;
+      return (await liveHeatSummary(lat, lon, fetchFn)).value;
     },
     ai: getAiDeps,
     samplePlan: async (lat, lon) => (await sampleAiForPoint(lat, lon))?.ready ?? null,

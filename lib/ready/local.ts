@@ -4,6 +4,7 @@
  * worked out HERE, in code, so the model copies numbers instead of calculating them.
  */
 import { localMoment, pickReports } from "../ai/sources";
+import { billions } from "../money";
 import type { AiSource } from "../ai/types";
 import type { HeatSummary, NearbyFlood, NearbyTornado } from "../types";
 import { dayHighWords, heatHighWords, heatLabels } from "../ui/data-source";
@@ -23,7 +24,7 @@ const tidy = (text: string) => {
   return clean === clean.toUpperCase() ? titleWords(clean.toLowerCase()) : clean;
 };
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
-const money = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
+const money = (n: number) => billions(n) ?? `$${Math.round(n).toLocaleString("en-US")}`;
 
 const HAZARD_LABEL: Record<HazardId, string> = {
   flood: "Flooding",

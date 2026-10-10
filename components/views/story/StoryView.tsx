@@ -79,16 +79,8 @@ export function StoryView({
   const answer: StoryAnswer | null = story.status === "done" && story.result.ok ? story.result.story : null;
   const selected = selection ? (byId.get(selection.id) ?? null) : null;
 
-  // The events the map is about: the ones the story cites once it is in, else the ten it was asked to write about.
-  const mapEvents = useMemo(() => {
-    if (!area) return [];
-    if (answer) {
-      const cited = new Set([...answer.sentences.flatMap((s) => s.cites), ...answer.impactLines.flatMap((l) => l.eventIds)]);
-      const own = [...cited].map((id) => byId.get(id)).filter((e): e is AreaEvent => !!e);
-      if (own.length) return own;
-    }
-    return storyEvents(area);
-  }, [area, answer, byId]);
+  // The events the map is about: always the ones the story is written about, so the map card and the story count the same events.
+  const mapEvents = useMemo(() => (area ? storyEvents(area) : []), [area]);
   const highlightIds = useMemo(() => (selection ? [selection.id] : focus), [selection, focus]);
   const showOnMap = (ids: string[]) => {
     setSelection(null);

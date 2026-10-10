@@ -347,6 +347,16 @@ function coverageOf(index: StateIndex | null): Coverage {
   return index.fixture ? "fixture" : "indexed";
 }
 
+/** The one live heat summary for a point (Open-Meteo, else NASA POWER, through the shared cache). Lookup and Get ready both read it here. */
+export async function liveHeatSummary(lat: number, lon: number, fetchFn: FetchLike, now: () => Date = () => new Date()): Promise<Sourced<HeatSummary>> {
+  const daily = await fetchDailyFeelsLike(lat, lon, fetchFn, now);
+  if (!daily.value) return { value: null, notice: daily.notice };
+  const summary = summarizeHeat(daily.value);
+  if (!summary) return { value: null, notice: "There was not enough temperature data for this address." };
+  // NASA POWER's highs are a heat index; say so, and keep the regional map (Open-Meteo's feels-like) out of it.
+  return { value: daily.source === "nasa-power" ? { ...summary, provider: "nasa-power" } : summary };
+}
+
 async function summarizeAddressHeat(
   address: LookupAddress,
   deps: LookupDeps,
@@ -358,13 +368,10 @@ async function summarizeAddressHeat(
     const { byYear, hottest, worstWeek } = snapshot.heat;
     summary = { byYear, hottest, worstWeek, regionalSlug: null };
   } else {
-    const daily = await fetchDailyFeelsLike(address.lat, address.lon, deps.fetch, deps.now);
-    if (!daily.value) return { value: null, notice: daily.notice };
-    summary = summarizeHeat(daily.value);
-    if (!summary) return { value: null, notice: "There was not enough temperature data for this address." };
-    // Open-Meteo was rate limited or down: the highs are a heat index from NASA POWER. Say so, and keep the regional map (which is
-    // Open-Meteo's feels-like) out of it, so two different measures are never drawn as one.
-    if (daily.source === "nasa-power") return { value: { ...summary, provider: "nasa-power" } };
+    const live = await liveHeatSummary(address.lat, address.lon, deps.fetch, deps.now);
+    if (!live.value) return live;
+    summary = live.value;
+    if (summary.provider === "nasa-power") return { value: summary };
   }
 
   if (address.city) {

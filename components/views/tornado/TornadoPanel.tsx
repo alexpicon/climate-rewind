@@ -14,15 +14,18 @@ interface Props {
   timeline: TornadoTimeline;
   ms: number;
   closest: NearbyTornado;
+  /** The replay is running: the card follows the track being drawn. Paused, ended, or not yet played: it shows the closest tornado, like the big number. */
+  playing?: boolean;
   /** The radar's rotation flags around each tornado, when asked for. */
   flags?: TornadoFlags;
 }
 
-export function TornadoPanel({ data, timeline, ms, closest, flags }: Props) {
+export function TornadoPanel({ data, timeline, ms, closest, playing = false, flags }: Props) {
   const total = timeline.items.length;
   const drawn = timeline.items.filter((i) => ms - i.startMs > i.drawMs * 0.5).length;
   const finale = ms >= timeline.tracksMs + timeline.finaleMs * 0.55;
-  const shown = cardTornado(timeline, ms);
+  const nowPlaying = playing && ms < timeline.tracksMs;
+  const shown = nowPlaying ? cardTornado(timeline, ms) : closest;
   const note = shown ? excerpt(shown.narrative, 360) : null;
   const bigStyle = shown ? { fontSize: 72 } : undefined;
 
@@ -60,6 +63,7 @@ export function TornadoPanel({ data, timeline, ms, closest, flags }: Props) {
 
         {shown && note ? (
           <article className="tcard swap" key={shown.id} style={{ "--c": efColor(shown.ef) } as React.CSSProperties} aria-label="What the National Weather Service wrote about this tornado">
+            {nowPlaying ? <p className="tc-h">Now playing</p> : null}
             <div className="tc-head">
               <span className="tc-ef">{shown.ef}</span>
               <span className="tc-date">{niceDate(shown.start)}</span>

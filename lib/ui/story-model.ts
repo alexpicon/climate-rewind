@@ -5,6 +5,7 @@
  */
 import { NEARBY_ZONE_KM } from "../constants";
 import type { AddressExtremes, AreaEvent, AreaZoneInfo, NearbyFlood, QuietPlacement } from "../types";
+import { billions } from "../money";
 import { niceDate, placeName } from "./text";
 
 export type Family = "wind" | "water" | "winter" | "heat" | "storm" | "other";
@@ -73,7 +74,8 @@ export function eventHarm(event: Pick<AreaEvent, "deaths" | "injuries" | "damage
 }
 
 export function money(amount: number): string {
-  if (amount >= 1_000_000_000) return `$${Math.round(amount / 10_000_000) / 100} billion`;
+  const big = billions(amount);
+  if (big) return big;
   if (amount >= 1_000_000) return `$${Math.round((amount / 1_000_000) * 10) / 10} million`;
   if (amount >= 1000) return `$${Math.round(amount / 1000).toLocaleString("en-US")} thousand`;
   return `$${Math.round(amount)}`;

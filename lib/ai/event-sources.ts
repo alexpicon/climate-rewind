@@ -3,6 +3,7 @@
  * and one for the area's totals. Shared by the area story and the 72-hour brief. No server-only imports, so it can sit under both.
  */
 import { STORY_EVENTS } from "../constants";
+import { billions } from "../money";
 import { rankBySeverity, topDistinctEpisodes } from "../event-severity";
 import type { AreaEvent, AreaEventsSummary } from "../types";
 import { niceDate, placeName } from "../ui/text";
@@ -15,7 +16,7 @@ const sanitize = (text: string) => text.replace(/[<>]/g, " ").replace(/\s+/g, " 
 
 /** "$1,500,000 (about $1.5 million)": both forms are in the source, so the model can copy either and the number check passes. */
 export function usd(amount: number): string {
-  if (amount >= 1_000_000_000) return `$${num(amount)} (about $${Math.round(amount / 10_000_000) / 100} billion)`;
+  if (amount >= 1_000_000_000) return `$${num(amount)} (about ${billions(amount)})`;
   if (amount >= 1_000_000) {
     const millions = Math.round((amount / 1_000_000) * 10) / 10;
     return `$${num(amount)} (about $${millions} million)`;
@@ -25,7 +26,8 @@ export function usd(amount: number): string {
 
 /** A short dollar figure for the totals line: "$72 million", "$450,000". */
 export function usdShort(amount: number): string {
-  if (amount >= 1_000_000_000) return `$${Math.round(amount / 10_000_000) / 100} billion`;
+  const big = billions(amount);
+  if (big) return big;
   if (amount >= 1_000_000) return `$${Math.round((amount / 1_000_000) * 10) / 10} million`;
   return `$${num(Math.round(amount))}`;
 }

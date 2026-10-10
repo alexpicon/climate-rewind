@@ -37,6 +37,14 @@
   #addr .go{display:none}
 }
 
+@media (max-width:480px){
+  .live{max-width:none;flex:none;padding-right:14px}
+  #addr{min-width:0}
+  .live .lf,.live .ls{display:none}
+  .live .lm{display:block}
+  .live .lchev{display:none}
+}
+
 /* ---------- 2. landing ---------- */
 #landing{position:fixed;inset:0;overflow:auto;display:grid;place-items:center;padding:40px 24px;background:radial-gradient(90% 70% at 50% 35%,#13224a 0,#0b1226 52%,#060A13 100%)}
 .landing-inner{width:min(720px,100%)}
@@ -958,7 +966,7 @@ details.trig-days tr.lowest th,details.trig-days tr.lowest td{color:var(--ink);f
 #map-scale{position:fixed;z-index:9;left:calc(var(--pad) + var(--panel-w) + 20px);bottom:6px;display:flex;gap:6px;pointer-events:none}
 #map-scale .maplibregl-ctrl-scale{margin:0;background:rgba(6,10,19,.72);color:var(--muted);border:1px solid var(--line);border-top:0;font-size:11px;line-height:1.3;padding:0 6px;white-space:nowrap;box-sizing:border-box}
 @media (max-width:900px){
-  #map-scale{left:12px;bottom:auto;top:calc(var(--bar-h) + 52px)}
+  #map-scale{left:12px;bottom:auto;top:calc(var(--bar-h) + 68px)}
 }
 
 /* Sticky search bar on a phone: logo + box + Look up, no name text, nothing wider than the screen. */

@@ -407,7 +407,7 @@ describe("lookupAddress", () => {
     expect(payload.heat).toBeNull();
     expect(payload.notices.fema).toMatch(/FEMA/);
     expect(payload.notices.live).toMatch(/Weather Service/);
-    expect(payload.notices.heat).toMatch(/Open-Meteo/);
+    expect(payload.notices.heat).toBe("The climate data service is busy right now. Try again in a minute.");
   });
 
   it("says FEMA has no zone when the point is unmapped (not an error)", async () => {
@@ -691,5 +691,18 @@ describe("shipped regional heat grids (data/heat, converted from the pipeline)",
     const grid = (await loadHeatGrid(slug))!;
     expect(gridMatchesWeek(grid, { start: first, end: last, daily: [] })).toBe(true);
     expect(gridMatchesWeek(grid, { start: "2010-08-09", end: "2010-08-15", daily: [] })).toBe(false);
+  });
+});
+
+describe("one heat source per address", () => {
+  beforeEach(() => clearHeatCache());
+
+  it("Get ready and the lookup read the identical heat summary for the same address", async () => {
+    const { gatherRecord, defaultReadyDeps } = await import("@/lib/ready/ready-route");
+    const deps = makeDeps({ meteo: () => ok(openMeteoReply(heatYear(2012, { "2012-06-25": 104 }).concat(heatYear(2025, { "2025-07-09": 102 })))) });
+    const payload = await lookupAddress("100 James Robertson Pkwy, Nashville, TN", deps);
+    const ready = await gatherRecord(36.17, -86.78, "TN", { ...defaultReadyDeps(deps.fetch), now: deps.now, snapshots: async () => [], loadIndex: async () => null, areaIds: async () => null });
+    expect(ready.input.heat).not.toBeNull();
+    expect({ ...ready.input.heat, regionalSlug: null }).toEqual({ ...payload.heat, regionalSlug: null });
   });
 });

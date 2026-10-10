@@ -15,7 +15,7 @@
  *
  * Every outside call has the usual 8 s timeout and degrades to a plain-language notice. Tests pass a fake fetch.
  */
-import { describeFailure, fetchJson, USER_AGENT, type FetchLike } from "./http";
+import { BUSY_NOTICE, describeFailure, fetchJson, USER_AGENT, type FetchLike } from "./http";
 import { gridKey, LruCache } from "./lru";
 import { fetchPowerRain } from "./nasa-power";
 import { fetchGaugeRain, type GaugeRain } from "./rain-gauge";
@@ -131,7 +131,7 @@ export async function fetchRainForDates(
   const last = missing.map((range) => range.end).sort().at(-1) as string;
   const power = await fetchPowerRain(lat, lon, first, last, fetchFn, now);
   const reason = results.find((r) => !r.rain)?.notice ?? "The Open-Meteo weather archive had no rainfall records for this address.";
-  if (!power.value) return { rain: null, notice: `${reason} The fallback did not work either: ${power.notice}` };
+  if (!power.value) return { rain: null, notice: reason === BUSY_NOTICE ? reason : `${reason} The fallback did not work either: ${power.notice}` };
   for (const range of missing) {
     for (let day = range.start; day <= range.end; day = shiftDate(day, 1)) rain.set(day, power.value.get(day) ?? null);
   }

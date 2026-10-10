@@ -140,7 +140,7 @@ describe("heat: Open-Meteo first, NASA POWER when it fails", () => {
   it("when both fail, both reasons are in the notice", async () => {
     const result = await fetchDailyFeelsLike(36.1, -86.7, fakeFetch({ meteo: () => httpError(429), power: () => httpError(500) }), () => NOW);
     expect(result.value).toBeNull();
-    expect(result.notice).toBe("The Open-Meteo weather archive returned an error (HTTP 429). The fallback did not work either: The NASA POWER (MERRA-2) weather archive returned an error (HTTP 500).");
+    expect(result.notice).toBe("The climate data service is busy right now. Try again in a minute.");
   });
 
   it("a lookup keeps going: heat comes from POWER, is marked, and the regional Open-Meteo map is not linked to it", async () => {
@@ -237,7 +237,7 @@ describe("the flood trigger's rain: ERA5 first, NASA POWER when Open-Meteo fails
     const { fetchFn } = fetchFor(() => httpError(429), () => httpError(503));
     const trigger = await buildFloodTrigger({ lat: NASHVILLE[0], lon: NASHVILLE[1] }, reports, { fetch: fetchFn, now: () => NOW });
     expect(trigger.status).toBe("unavailable");
-    expect(trigger.notices.history).toBe("The Open-Meteo weather archive returned an error (HTTP 429). The fallback did not work either: The NASA POWER (MERRA-2) weather archive returned an error (HTTP 503).");
+    expect(trigger.notices.history).toBe("The climate data service is busy right now. Try again in a minute.");
   });
 });
 

@@ -245,7 +245,7 @@ describe("buildFloodTrigger", () => {
   it("the rain history failing means no trigger and no verdict, never a made-up number", async () => {
     const { trigger } = await build(reportsOn(DATES), { archive: () => httpError(429) });
     expect(trigger).toMatchObject({ status: "unavailable", triggerIn: null, forecast: null });
-    expect(trigger.notices.history).toMatch(/Open-Meteo/);
+    expect(trigger.notices.history).toBe("The climate data service is busy right now. Try again in a minute.");
     expect(triggerCopy(trigger).tone).toBe("error");
   });
 

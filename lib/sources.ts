@@ -3,7 +3,7 @@
  * Each call takes an injectable fetch (so tests never touch the network), has an
  * 8 s timeout, and degrades to `null` plus a plain-language notice.
  */
-import { describeFailure, fetchJson, USER_AGENT, type FetchLike } from "./http";
+import { BUSY_NOTICE, describeFailure, fetchJson, USER_AGENT, type FetchLike } from "./http";
 import { gridKey, LruCache } from "./lru";
 import { fetchPowerHeat } from "./nasa-power";
 import type { AlertGeometry, FemaZone, HeatDay, HeatSource, LiveAlert, LiveAlerts, LookupAddress } from "./types";
@@ -247,5 +247,6 @@ export async function fetchDailyFeelsLike(
   const power = await fetchPowerHeat(lat, lon, fetchFn, now);
   if (power.value) return { value: power.value, source: "nasa-power" };
   // Both failed: Open-Meteo's reason leads (it is the primary source), and the fallback's follows.
+  if (notice === BUSY_NOTICE) return { value: null, notice };
   return { value: null, notice: `${notice} The fallback did not work either: ${power.notice}` };
 }

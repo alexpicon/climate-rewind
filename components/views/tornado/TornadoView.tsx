@@ -118,7 +118,7 @@ function TornadoPlayer({ data, reduced, firstView, autoplay = false, focusTornad
   }, [ms, timeline, flags, reduced, closest.id, flagsVersion]);
 
   // Read each NWS survey aloud once, as its card appears.
-  const shown = cardTornado(timeline, ms);
+  const shown = playing ? cardTornado(timeline, ms) : null;
   const saidRef = useRef<string | null>(null);
   useEffect(() => {
     if (!shown || !playing || saidRef.current === shown.id) return;
@@ -144,7 +144,7 @@ function TornadoPlayer({ data, reduced, firstView, autoplay = false, focusTornad
 
   return (
     <>
-      <TornadoPanel data={data} timeline={timeline} ms={ms} closest={closest} flags={flags} />
+      <TornadoPanel data={data} timeline={timeline} ms={ms} closest={closest} playing={playing} flags={flags} />
 
       <View3DToggle on={view3d} onToggle={onView3d} />
 

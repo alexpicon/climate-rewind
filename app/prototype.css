@@ -579,6 +579,7 @@ body[data-tab="heat"] .addr-pin .lab::before{top:auto;bottom:-6px;transform:rota
 .live .ld{flex:none;width:12px;height:12px;border-radius:50%;background:#8FE3A7;box-shadow:0 0 0 3px rgba(143,227,167,.25);animation:livedot 1.8s ease-in-out infinite}
 .live .lt{min-width:0}
 .live .ls{display:none}
+.live .lm{display:none}
 .live .lchev{flex:none;opacity:.65}
 .live[data-state="loading"] .ld{background:#9AA4B8;box-shadow:0 0 0 3px rgba(154,164,184,.25)}
 .live[data-state="error"]{border-color:var(--accent)}
