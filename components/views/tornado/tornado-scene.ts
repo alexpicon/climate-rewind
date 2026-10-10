@@ -100,7 +100,9 @@ export class TornadoScene {
 
     // Camera: the 10 km circle, locked inside a box that holds every track so nobody pans into empty map.
     const damage = this.opts.damage ?? [];
-    const points: Coord[] = [origin, ...timeline.items.flatMap((i) => [i.tornado.begin, i.tornado.end]), ...damage.map((d): Coord => [d.lat, d.lon])];
+    // The outer ring is in the box too, so the whole circle can always be seen.
+    const ring = circlePoints(origin, this.opts.radiusKm ?? 10).map(([lon, lat]): Coord => [lat, lon]);
+    const points: Coord[] = [origin, ...ring, ...timeline.items.flatMap((i) => [i.tornado.begin, i.tornado.end]), ...damage.map((d): Coord => [d.lat, d.lon])];
     const lats = points.map((p) => p[0]);
     const lons = points.map((p) => p[1]);
     const pad = 0.12;
@@ -199,7 +201,11 @@ export class TornadoScene {
   private lock(): CameraLock {
     const fit = cameraFor(this.api.map, this.lockBox);
     this.fitZoom = fit?.zoom ?? this.fitZoom;
-    return { bounds: this.lockBox, minZoom: Math.max(5, this.fitZoom), maxZoom: this.view3d ? 15 : 13.8 };
+    // Room to pull back: two steps of zoom out past the box, and pan bounds wide enough that they never stop that zoom (the map runs
+    // full width behind the panel, so bounds as tight as the tracks would block zooming out at all).
+    const [[w, s], [e, n]] = this.lockBox;
+    const [mx, my] = [Math.max(0.6, (e - w) * 1.5), Math.max(0.5, (n - s) * 1.5)];
+    return { bounds: [[w - mx, s - my], [e + mx, n + my]], minZoom: Math.max(5, this.fitZoom - 2), maxZoom: this.view3d ? 15 : 13.8 };
   }
 
   /** Turns the 3D view on or off: a slow pitched fly-in (a jump with reduced motion), or back to the flat circle, then the terrain goes. */
