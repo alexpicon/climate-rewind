@@ -19,7 +19,7 @@ export interface DailyObservation {
 export type MeasureId = "feels90" | "feels100" | "rain1" | "air90";
 
 export interface DecadeRow {
-  /** "2000s", "2010s", or "2020 to 2025" for a decade that is not complete. */
+  /** "2000s" or "2016 to 2025": the two windows used everywhere (the Story strip and What's changing). */
   label: string;
   startYear: number;
   endYear: number;

@@ -101,6 +101,6 @@ describe("spreadOf, URLs and the caveat", () => {
   });
 
   it("the caveat says what the brief asked for", () => {
-    expect(CAVEAT).toBe("Climate-model projections (CMIP6), not a forecast; ~25 km grid; models disagree, so we show the range.");
+    expect(CAVEAT).toBe("Climate-model projections (CMIP6), not a forecast; climate-model grids of about 20–50 km, downscaled by Open-Meteo to about 10 km; models disagree, so we show the range.");
   });
 });

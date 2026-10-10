@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { buildChartModel, fmt1, headline, trendSentence } from "@/lib/climate/chart-model";
-import { CAVEAT, SCENARIO_NOTE } from "@/lib/climate/projection";
+import { caveatLine, modelChange, SCENARIO_NOTE, signed } from "@/lib/climate/projection";
 import type { FuturePayload, ObservedMeasure } from "@/lib/climate/types";
 import { FutureChart } from "./FutureChart";
 import "./future.css";
@@ -8,7 +8,7 @@ import "./future.css";
 const MEASURE_ORDER = ["feels90", "feels100", "rain1"] as const;
 
 function decadeLine(measure: ObservedMeasure): string {
-  return measure.decades.map((d) => `${d.label.replace(" to ", "–")}: ${fmt1(d.perYear)}`).join(" · ");
+  return measure.decades.map((d) => `${d.label === "2000s" ? "2000–2009" : d.label.replace(" to ", "–")}: ${fmt1(d.perYear)}`).join(" · ");
 }
 
 /** The numbers, in the order a person asks: what the record shows, then what models project, then how sure we are. */
@@ -17,6 +17,7 @@ export function FutureContent({ payload, explanation }: { payload: FuturePayload
   const lede = headline(payload);
   const obs = payload.observed;
   const proj = payload.projected;
+  const change = modelChange(proj);
 
   return (
     <>
@@ -83,7 +84,7 @@ export function FutureContent({ payload, explanation }: { payload: FuturePayload
               .map((m) => (
                 <li key={m.id}>
                   <b>{m.title}</b>
-                  <span className="fx-decades">Average a year, by decade: {decadeLine(m)}</span>
+                  <span className="fx-decades">Average a year, 2000–2009 and the last 10 years: {decadeLine(m)}</span>
                   <span className={`fx-trend${m.trend?.verdict && m.trend.verdict !== "none" ? " yes" : ""}`}>{trendSentence(m)}</span>
                 </li>
               ))}
@@ -100,12 +101,14 @@ export function FutureContent({ payload, explanation }: { payload: FuturePayload
         </h2>
         {proj?.future && proj.baseline ? (
           <>
-            <p className="fx-big">
-              {fmt1(proj.future.min)} to {fmt1(proj.future.max)}
-              <small> days a year at or above {proj.thresholdF}°F, {proj.futurePeriod[0]} to {proj.futurePeriod[1]}</small>
-            </p>
+            {change ? (
+              <p className="fx-big">
+                {signed(change.median)}
+                <small> days a year by the {proj.futurePeriod[0]}–{proj.futurePeriod[1]} (the models’ own change; models range from {signed(change.min)} to {signed(change.max)})</small>
+              </p>
+            ) : null}
             <p className="fx-line">
-              The same models give {fmt1(proj.baseline.min)} to {fmt1(proj.baseline.max)} for {proj.baselinePeriod[0]} to {proj.baselinePeriod[1]}. The middle model goes from {fmt1(proj.baseline.median)} to {fmt1(proj.future.median)}.
+              Climate models: {fmt1(proj.baseline.median)}/yr ({proj.baselinePeriod[0]}–{proj.baselinePeriod[1]}, models) → {fmt1(proj.future.median)}/yr ({proj.futurePeriod[0]}–{proj.futurePeriod[1]}), days at or above {proj.thresholdF}°F. Middle model shown; the {proj.models.filter((m) => m.future !== null).length} models run from {fmt1(proj.baseline.min)} to {fmt1(proj.baseline.max)} in {proj.baselinePeriod[0]}–{proj.baselinePeriod[1]} and {fmt1(proj.future.min)} to {fmt1(proj.future.max)} in {proj.futurePeriod[0]}–{proj.futurePeriod[1]}.
             </p>
             <details className="textver">
               <summary>Each model</summary>
@@ -133,7 +136,7 @@ export function FutureContent({ payload, explanation }: { payload: FuturePayload
         ) : (
           <p className="fx-note">{payload.notices.projected ?? "The climate models could not be read for this address."}</p>
         )}
-        <p className="fx-caveat">{CAVEAT}</p>
+        <p className="fx-caveat">{caveatLine(chart?.modelRun ?? null)}</p>
         <p className="fx-fine">{SCENARIO_NOTE}</p>
       </section>
 

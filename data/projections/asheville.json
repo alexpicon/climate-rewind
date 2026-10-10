@@ -2,7 +2,7 @@
  "slug": "asheville",
  "lat": 35.59175950072,
  "lon": -82.571739541063,
- "built": "2026-10-09T00:07:13.496Z",
+ "built": "2026-10-10T06:08:29.500Z",
  "observed": {
   "firstYear": 2000,
   "lastYear": 2025,
@@ -49,20 +49,12 @@
       "perYear": 23.9
      },
      {
-      "label": "2010s",
-      "startYear": 2010,
-      "endYear": 2019,
-      "years": 10,
-      "total": 338,
-      "perYear": 33.8
-     },
-     {
-      "label": "2020 to 2025",
-      "startYear": 2020,
+      "label": "2016 to 2025",
+      "startYear": 2016,
       "endYear": 2025,
-      "years": 6,
-      "total": 208,
-      "perYear": 34.7
+      "years": 10,
+      "total": 334,
+      "perYear": 33.4
      }
     ],
     "trend": {
@@ -116,20 +108,12 @@
       "perYear": 0
      },
      {
-      "label": "2010s",
-      "startYear": 2010,
-      "endYear": 2019,
-      "years": 10,
-      "total": 5,
-      "perYear": 0.5
-     },
-     {
-      "label": "2020 to 2025",
-      "startYear": 2020,
+      "label": "2016 to 2025",
+      "startYear": 2016,
       "endYear": 2025,
-      "years": 6,
+      "years": 10,
       "total": 3,
-      "perYear": 0.5
+      "perYear": 0.3
      }
     ],
     "trend": {
@@ -183,19 +167,11 @@
       "perYear": 7.2
      },
      {
-      "label": "2010s",
-      "startYear": 2010,
-      "endYear": 2019,
-      "years": 10,
-      "total": 69,
-      "perYear": 6.9
-     },
-     {
-      "label": "2020 to 2025",
-      "startYear": 2020,
+      "label": "2016 to 2025",
+      "startYear": 2016,
       "endYear": 2025,
-      "years": 6,
-      "total": 41,
+      "years": 10,
+      "total": 68,
       "perYear": 6.8
      }
     ],
@@ -250,20 +226,12 @@
       "perYear": 1.7
      },
      {
-      "label": "2010s",
-      "startYear": 2010,
-      "endYear": 2019,
-      "years": 10,
-      "total": 25,
-      "perYear": 2.5
-     },
-     {
-      "label": "2020 to 2025",
-      "startYear": 2020,
+      "label": "2016 to 2025",
+      "startYear": 2016,
       "endYear": 2025,
-      "years": 6,
-      "total": 28,
-      "perYear": 4.7
+      "years": 10,
+      "total": 36,
+      "perYear": 3.6
      }
     ],
     "trend": {
@@ -339,73 +307,51 @@
  },
  "notices": {},
  "explanation": {
-  "generatedAt": "2026-10-09T00:07:13.496Z",
+  "generatedAt": "2026-10-10T06:08:29.500Z",
   "model": "claude-sonnet-5-5",
   "cached": false,
   "state": "ok",
   "sentences": [
    {
-    "text": "From 2000 to 2025, days with a feels-like high of 90°F or more averaged 23.9 a year in the 2000s, 33.8 in the 2010s and 34.7 from 2020 to 2025, but the record shows no clear trend yet.",
+    "text": "The trend test finds no clear trend yet in those days, so the record here does not show a direction.",
     "cites": [
-     "past-hot-days"
+     "past-air-hot-days"
     ]
    },
    {
-    "text": "Days with a feels-like high of 100°F or more and days with 1 inch of rain or more also show no clear trend yet.",
-    "cites": [
-     "past-very-hot-days",
-     "past-heavy-rain"
-    ]
-   },
-   {
-    "text": "Climate models project days at or above 90°F air temperature: for 2041 to 2050 the middle model has 22.4 days a year, and the 7 models range from 11.6 to 31.1.",
+    "text": "Climate models project about +12.4 days a year at or above 90°F in 2041 to 2050, with the change across 7 models ranging from +1.2 to +20.4 days a year.",
     "cites": [
      "future-hot-days"
     ]
    },
    {
-    "text": "For 2001 to 2020 the middle model has 10 days a year and the models range from 5.2 to 13.8, so the models disagree on how many hot days to expect.",
+    "text": "The models disagree, and they run hotter than the weather record here, so only their change is shown, not their raw level.",
     "cites": [
-     "future-hot-days"
+     "future-hot-days",
+     "caveat"
     ]
    },
    {
-    "text": "These are projections for a typical year in 2041 to 2050, on a grid about 25 km wide, and are not a forecast of any single year.",
+    "text": "These projections describe a typical year in 2041 to 2050, on climate-model grids of about 20–50 km, downscaled by Open-Meteo to about 10 km, and are not a forecast of any single year.",
     "cites": [
      "caveat"
     ]
    },
    {
-    "text": "The models follow a high-emissions path, and a trend in the past record is reported only when a statistical test gives p under 0.05, so 26 years may simply be too few to tell.",
+    "text": "The models follow a high-emissions path, and no clear trend yet means 26 years of record are too few or too variable to tell.",
     "cites": [
      "caveat"
     ]
    }
   ],
   "sources": {
-   "past-hot-days": {
-    "id": "past-hot-days",
+   "past-air-hot-days": {
+    "id": "past-air-hot-days",
     "kind": "history",
-    "chip": "Past: 90°F days",
-    "title": "Days with a feels-like high of 90°F or more",
+    "chip": "Past: 90°F air days",
+    "title": "Days with an air temperature high of 90°F or more",
     "origin": "Open-Meteo historical weather archive (ERA5 reanalysis), daily, 2000 to 2025. Counted from the daily record at this address.",
-    "text": "Days with a feels-like high of 90°F or more, 2000 to 2025. 2000s: 23.9 days a year on average (239 days in 10 years); 2010s: 33.8 days a year on average (338 days in 10 years); 2020 to 2025: 34.7 days a year on average (208 days in 6 years). Trend test (Mann-Kendall with Sen slope, one value per year; a trend counts only if p is under 0.05). Result: no clear trend yet."
-   },
-   "past-very-hot-days": {
-    "id": "past-very-hot-days",
-    "kind": "history",
-    "chip": "Past: 100°F days",
-    "title": "Days with a feels-like high of 100°F or more",
-    "origin": "Open-Meteo historical weather archive (ERA5 reanalysis), daily, 2000 to 2025. Counted from the daily record at this address.",
-    "text": "Days with a feels-like high of 100°F or more, 2000 to 2025. 2000s: 0 days a year on average (0 days in 10 years); 2010s: 0.5 days a year on average (5 days in 10 years); 2020 to 2025: 0.5 days a year on average (3 days in 6 years). Trend test (Mann-Kendall with Sen slope, one value per year; a trend counts only if p is under 0.05). Result: no clear trend yet."
-   },
-   "past-heavy-rain": {
-    "id": "past-heavy-rain",
-    "kind": "history",
-    "chip": "Past: heavy rain",
-    "title": "Days with 1 inch of rain or more",
-    "origin": "Open-Meteo historical weather archive (ERA5 reanalysis), daily, 2000 to 2025. Counted from the daily record at this address.",
-    "text": "Days with 1 inch of rain or more, 2000 to 2025. 2000s: 7.2 days a year on average (72 days in 10 years); 2010s: 6.9 days a year on average (69 days in 10 years); 2020 to 2025: 6.8 days a year on average (41 days in 6 years). Trend test (Mann-Kendall with Sen slope, one value per year; a trend counts only if p is under 0.05). Result: no clear trend yet."
+    "text": "Days with an air temperature high of 90°F or more, 2000 to 2025. 2000s: 1.7 days a year on average (17 days in 10 years); 2016 to 2025 (the last 10 years): 3.6 days a year on average (36 days in 10 years). Trend test (Mann-Kendall with Sen slope, one value per year; a trend counts only if p is under 0.05). Result: no clear trend yet."
    },
    "future-hot-days": {
     "id": "future-hot-days",
@@ -413,7 +359,7 @@
     "chip": "Climate models",
     "title": "Days per year with an air-temperature high of 90°F or more, in climate models",
     "origin": "Open-Meteo Climate API (CMIP6 HighResMIP models), daily temperature_2m_max. 7 of 7 CMIP6 HighResMIP models had data for this point.",
-    "text": "Average days a year at or above 90°F (air temperature, not feels-like) in the climate models, 7 models. 2001 to 2020: the middle model has 10 days a year; models range from 5.2 to 13.8. 2041 to 2050: the middle model has 22.4 days a year; models range from 11.6 to 31.1. The middle model changes by 12.4 days a year between the two periods. For comparison, the weather archive counted an average of 2.1 days a year at or above 90°F over 2001 to 2020."
+    "text": "The climate models' own change in days a year at or above 90°F (air temperature, not feels-like), 7 models. Climate models: 10/yr (2001 to 2020, models) to 22.4/yr (2041 to 2050), about +12.4 days a year. Across models the change ranges from +1.2 to +20.4 days a year. Models range from 5.2 to 13.8 in 2001 to 2020 and from 11.6 to 31.1 in 2041 to 2050. These models run hotter than the weather record counted at this spot, so the change is shown, not their raw level."
    },
    "caveat": {
     "id": "caveat",
@@ -421,10 +367,10 @@
     "chip": "How sure?",
     "title": "What the projections are, and are not",
     "origin": "Open-Meteo Climate API; CMIP6 HighResMIP climate models",
-    "text": "Climate-model projections (CMIP6), not a forecast; ~25 km grid; models disagree, so we show the range. These models follow a high-emissions path (as close to RCP8.5 as CMIP6 gets), and Open-Meteo adjusts them to match the past record at this spot, which does not change the size of the warming they show. They describe how often hot days could occur in a typical year of 2041 to 2050, not what any single year or day will do. A trend in the past record is reported only when a statistical test gives p under 0.05; otherwise the record says \"no clear trend yet\", which means the 26 years are too few or too variable to tell."
+    "text": "Climate models (CMIP6) are physics simulations, not a forecast; they run hotter than the record here, so we show their change. These models follow a high-emissions path (as close to RCP8.5 as CMIP6 gets). We show how much they say it changes, not their raw level. The models run on climate-model grids of about 20–50 km, downscaled by Open-Meteo to about 10 km, and they disagree, so the range across models is shown. They describe how often hot days could occur in a typical year of 2041 to 2050, not what any single year or day will do. A trend in the past record is reported only when a statistical test gives p under 0.05; otherwise the record says \"no clear trend yet\", which means the 26 years are too few or too variable to tell."
    }
   },
-  "dropped": 0,
+  "dropped": 1,
   "message": null
  }
 }

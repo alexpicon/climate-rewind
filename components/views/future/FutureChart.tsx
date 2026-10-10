@@ -9,7 +9,7 @@ const TOP = 26;
 const BOTTOM = 52;
 
 /**
- * Past decades as bars, then the projected range as a band: one picture, one measure (days a year at or above 90°F). No animation, so there
+ * The record's two windows as bars, then the projected range as a band: one picture, one measure (days a year at or above 90°F). No animation, so there
  * is nothing to pause; the same numbers are in the text version beside it.
  */
 export function FutureChart({ model }: { model: ChartModel }) {
@@ -47,9 +47,9 @@ export function FutureChart({ model }: { model: ChartModel }) {
             <text x={cx(i)} y={H - BOTTOM + 18} textAnchor="middle" className="fx-cat">
               {bar.label.replace(" to ", "–")}
             </text>
-            {bar.years < 10 ? (
+            {bar.sub || bar.years < 10 ? (
               <text x={cx(i)} y={H - BOTTOM + 33} textAnchor="middle" className="fx-sub">
-                {bar.years} years
+                {bar.years < 10 ? `${bar.years} years` : bar.sub}
               </text>
             ) : null}
           </g>

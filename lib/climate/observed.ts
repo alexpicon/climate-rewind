@@ -76,7 +76,26 @@ export function decadeRows(byYear: Record<string, number>): DecadeRow[] {
     });
 }
 
-/** Everything observed for an address: four counts by decade, and a trend verdict for each. */
+/** The two windows of the record compared everywhere (Story strip, What's changing, the AI explanation): the first decade and the latest ten years. */
+export const THEN_SPAN: [number, number] = [2000, 2009];
+export const NOW_SPAN: [number, number] = [2016, 2025];
+export const THEN_LABEL = "2000s";
+export const NOW_LABEL = "2016 to 2025";
+export const NOW_NAME = "last 10 years";
+
+/** The two windows as rows (replaces by-decade rows so one "now" number exists). A window needs 9 of its 10 years; otherwise it is left out. */
+export function windowRows(byYear: Record<string, number>): DecadeRow[] {
+  const rows: DecadeRow[] = [];
+  for (const [label, [from, to]] of [[THEN_LABEL, THEN_SPAN], [NOW_LABEL, NOW_SPAN]] as const) {
+    const counts = Object.entries(byYear).filter(([y]) => Number(y) >= from && Number(y) <= to).map(([, c]) => c);
+    if (counts.length < (to - from + 1) * 0.9) continue;
+    const total = counts.reduce((a, b) => a + b, 0);
+    rows.push({ label, startYear: from, endYear: to, years: counts.length, total, perYear: round1(total / counts.length) });
+  }
+  return rows;
+}
+
+/** Everything observed for an address: four counts over the two windows, and a trend verdict for each (the test uses every year). */
 export function buildObserved(days: readonly DailyObservation[], source: string): ObservedBlock | null {
   const measures: ObservedMeasure[] = [];
   for (const spec of MEASURES) {
@@ -87,7 +106,7 @@ export function buildObserved(days: readonly DailyObservation[], source: string)
       id: spec.id,
       title: spec.title,
       byYear,
-      decades: decadeRows(byYear),
+      decades: windowRows(byYear),
       trend: yearlyTrend(years.map((y) => byYear[y])),
     });
   }

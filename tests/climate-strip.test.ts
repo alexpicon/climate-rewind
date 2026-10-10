@@ -1,6 +1,7 @@
 /** The "then, now, 2040s" strip's numbers (lib/climate-strip), read from the shipped bellevue and fort-myers files. */
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { modelChange } from "@/lib/climate/projection";
 import { buildStrip } from "@/lib/climate-strip/strip-model";
 import type { FuturePayload } from "@/lib/climate/types";
 
@@ -16,9 +17,13 @@ describe("climate strip model", () => {
     };
     expect(strip.hot!.then).toBe(avg(2000, 2009));
     expect(strip.hot!.now).toBe(avg(2016, 2025));
-    expect(strip.hot!.projected).toEqual(file("bellevue").projected!.future);
+    expect(strip.hot!.change).toEqual(modelChange(file("bellevue").projected));
+    expect(strip.hot!.change!.min).toBeLessThanOrEqual(strip.hot!.change!.median);
+    expect(strip.hot!.change!.max).toBeGreaterThanOrEqual(strip.hot!.change!.median);
     expect(strip.projectedPeriod).toBe("2041–2050");
-    expect(strip.rain!.projected).toBeNull();
+    expect(strip.rain!.change).toBeNull();
+    expect(strip.caveat).toMatch(/^Climate models \(CMIP6\) are physics simulations, not a forecast; they run hotter than the record here, so we show their change\.$/);
+    expect(strip.hot!.summary).toMatch(/about \+[\d.]+ more days a year by the 2040s,/);
   });
 
   it("says trend only where the Mann-Kendall p is under 0.05", () => {
@@ -37,8 +42,22 @@ describe("climate strip model", () => {
 
   it("still shows the record when the models could not be read, and nothing when neither could", () => {
     const noModels = buildStrip({ ...file("bellevue"), projected: null })!;
-    expect(noModels.hot!.projected).toBeNull();
+    expect(noModels.hot!.change).toBeNull();
     expect(noModels.hot!.now).not.toBeNull();
     expect(buildStrip({ ...file("bellevue"), projected: null, observed: null })).toBeNull();
+  });
+});
+
+describe("the same years on both tabs", () => {
+  it("the strip's 'now' and then numbers equal the What's changing chart bars for every prepared address", async () => {
+    const { buildChartModel } = await import("@/lib/climate/chart-model");
+    for (const slug of ["asheville", "bellevue", "flushing", "fort-myers", "lahaina", "mayfield", "nashville", "portland", "rolling-fork", "san-antonio"]) {
+      const p = file(slug);
+      const strip = buildStrip(p)!.hot!;
+      const bars = buildChartModel(p)!.bars;
+      expect(bars.map((b) => b.label)).toEqual(["2000s", "2016 to 2025"]);
+      expect(bars[0].value).toBe(strip.then);
+      expect(bars[1].value).toBe(strip.now);
+    }
   });
 });

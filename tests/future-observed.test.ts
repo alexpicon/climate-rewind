@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildObserved, countByYear, decadeRows, trendSentence } from "@/lib/climate/observed";
+import { buildObserved, countByYear, decadeRows, trendSentence, windowRows } from "@/lib/climate/observed";
 import type { DailyObservation } from "@/lib/climate/types";
 
 /** 365 days a year (no Feb 29), with `hot(year)` days at 95 F feels-like and `wet(year)` days with 1.5 in of rain. */
@@ -32,6 +32,18 @@ describe("countByYear and decadeRows", () => {
     expect(rows[0]).toMatchObject({ total: 45, years: 10, perYear: 4.5 });
     expect(rows[1]).toMatchObject({ total: 145, perYear: 14.5 });
     expect(rows[2]).toMatchObject({ total: 135, years: 6, perYear: 22.5 });
+  });
+});
+
+describe("windowRows", () => {
+  it("cuts the record into the two windows used everywhere (2000-2009 and 2016-2025), and leaves a window out when it has under 9 years", () => {
+    const byYear: Record<string, number> = {};
+    for (let y = 2000; y <= 2025; y += 1) byYear[String(y)] = y - 2000;
+    const rows = windowRows(byYear);
+    expect(rows.map((r) => r.label)).toEqual(["2000s", "2016 to 2025"]);
+    expect(rows[0]).toMatchObject({ total: 45, years: 10, perYear: 4.5, startYear: 2000, endYear: 2009 });
+    expect(rows[1]).toMatchObject({ total: 205, years: 10, perYear: 20.5, startYear: 2016, endYear: 2025 });
+    expect(windowRows({ "2020": 1, "2021": 1 })).toEqual([]);
   });
 });
 

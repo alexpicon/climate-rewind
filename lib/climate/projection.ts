@@ -2,7 +2,7 @@
  * The projected half: days per year at or above 90 F in CMIP6 HighResMIP climate models (Open-Meteo Climate API), 2001 to 2020 against
  * 2041 to 2050, one number per model and the range across models. Pure functions over the API's reply, so they are tested without the network.
  *
- * These are climate-model projections, not a forecast. The grid is about 25 km, the models disagree, and so the page shows the range.
+ * These are climate-model projections, not a forecast. The models run on climate-model grids of about 20–50 km, downscaled by Open-Meteo to about 10 km; they disagree, and so the page shows the range.
  */
 import type { DailyObservation, ModelResult, ProjectionBlock, Spread } from "./types";
 
@@ -20,10 +20,35 @@ export const MIN_MODEL_DAYS_PER_YEAR = 300;
 /** A model's period average needs at least this share of its years. */
 export const MIN_YEAR_SHARE = 0.9;
 
-export const CAVEAT = "Climate-model projections (CMIP6), not a forecast; ~25 km grid; models disagree, so we show the range.";
+export const CAVEAT = "Climate-model projections (CMIP6), not a forecast; climate-model grids of about 20–50 km, downscaled by Open-Meteo to about 10 km; models disagree, so we show the range.";
 
-/** From Open-Meteo's documentation for the Climate API: what the models follow and how the numbers are adjusted. Shown under the caveat. */
-export const SCENARIO_NOTE = "These models follow a high-emissions path (as close to RCP8.5 as CMIP6 gets), and Open-Meteo adjusts them to match the past record at this spot, which does not change the size of the warming they show.";
+/** What the models follow. Shown under the caveat. No claim that the numbers are adjusted to the record: they are not, and they can run hotter. */
+export const SCENARIO_NOTE = "These models follow a high-emissions path (as close to RCP8.5 as CMIP6 gets). We show how much they say it changes, not their raw level.";
+
+/** How the models' own 2001-2020 compares with what the record counted here. */
+export type ModelRun = "higher" | "close" | "lower";
+
+/** The one short caveat line, same wording on the strip and on What's changing. */
+export function caveatLine(run: ModelRun | null): string {
+  if (run === "higher") return "Climate models (CMIP6) are physics simulations, not a forecast; they run hotter than the record here, so we show their change.";
+  if (run === "lower") return "Climate models (CMIP6) are physics simulations, not a forecast; they run cooler than the record here, so we show their change.";
+  return "Climate models (CMIP6) are physics simulations, not a forecast, so we show their change.";
+}
+
+/**
+ * The models' own change in days a year, 2001-2020 to the 2040s: the middle is the middle future minus the middle past, and the range is the lowest
+ * to the highest change of a single model (widened to hold the middle). Null if no model had both periods.
+ */
+export function modelChange(proj: { models: readonly { baseline: number | null; future: number | null }[]; baseline: Spread | null; future: Spread | null } | null | undefined): Spread | null {
+  if (!proj?.baseline || !proj.future) return null;
+  const each = proj.models.filter((m) => m.baseline !== null && m.future !== null).map((m) => (m.future as number) - (m.baseline as number));
+  if (each.length === 0) return null;
+  const median = round1(proj.future.median - proj.baseline.median);
+  return { min: Math.min(round1(Math.min(...each)), median), median, max: Math.max(round1(Math.max(...each)), median) };
+}
+
+/** "+4.1" or "−0.5": a signed change in days a year. */
+export const signed = (n: number): string => `${n < 0 ? "−" : "+"}${Math.abs(n).toFixed(1)}`;
 
 export interface ClimateReply {
   daily?: { time?: string[] } & Record<string, unknown>;

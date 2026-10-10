@@ -5,6 +5,7 @@
  *   node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --experimental-transform-types scripts/projections-samples.ts
  *   ... scripts/projections-samples.ts --only bellevue --refresh
  *   ... scripts/projections-samples.ts --no-explain        (numbers only)
+ *   ... scripts/projections-samples.ts --explain-again     (keep the numbers, redo the AI text; also re-cuts a kept record into the two windows, no fetch)
  *
  * Safe to run again: a part that is already complete is kept (--refresh fetches it again). Open-Meteo answers 429 with a "daily limit" message
  * until 00:00 UTC; this script stops at that point and says so (exit 1). A per-minute limit is retried with a growing wait.
@@ -35,7 +36,7 @@ try {
 const { PREPARED_ADDRESSES } = await import("../lib/ui/prepared.ts");
 const { geocodeAddress } = await import("../lib/sources.ts");
 const { slugify } = await import("../lib/index-store.ts");
-const { buildObserved } = await import("../lib/climate/observed.ts");
+const { buildObserved, windowRows } = await import("../lib/climate/observed.ts");
 const { archiveUrl, buildProjection, climateUrl, observationsFromArchive, BASELINE_PERIOD, FUTURE_PERIOD } = await import("../lib/climate/projection.ts");
 const { explainFuture } = await import("../lib/climate/explain.ts");
 const { createAiDeps } = await import("../lib/ai/service.ts");
@@ -49,6 +50,7 @@ const arg = (name: string) => {
 const only = arg("only");
 const refresh = flag("refresh");
 const explain = !flag("no-explain");
+const explainAgain = flag("explain-again");
 const OUT_DIR = path.join(process.cwd(), "data", "projections");
 const FIRST_YEAR = 2000;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -102,6 +104,11 @@ for (const sample of PREPARED_ADDRESSES) {
     explanation: refresh ? undefined : existing?.explanation,
   };
   const lastYear = new Date().getUTCFullYear() - 1;
+  // A kept record is re-cut into the two windows used everywhere (2000s, 2016 to 2025) from its own by-year counts: no fetch.
+  if (payload.observed) {
+    for (const m of payload.observed.measures) m.decades = windowRows(m.byYear);
+  }
+  if (explainAgain) payload.explanation = undefined;
 
   try {
     if (payload.observed) {

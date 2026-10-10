@@ -3,22 +3,26 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "@/components/nav-context";
 import { fmt1 } from "@/lib/climate/chart-model";
+import { signed } from "@/lib/climate/projection";
 import { requestFuture } from "@/lib/climate/client";
 import { buildStrip, type StripModel, type StripRow } from "@/lib/climate-strip/strip-model";
 import "./climate-strip.css";
 
 type State = { status: "loading" } | { status: "ready"; model: StripModel } | { status: "none"; message: string };
 
-function Cell({ label, children, tone }: { label: string; children: string; tone?: "future" }) {
+function Cell({ label, children, sub }: { label: string; children: string; sub?: string }) {
   return (
-    <div className={`cs-cell${tone === "future" ? " cs-future" : ""}`}>
-      <span className="cs-when">{label}</span>
+    <div className="cs-cell">
+      <span className="cs-when">
+        {label}
+        {sub ? <small> {sub}</small> : null}
+      </span>
       <b className="cs-num">{children}</b>
     </div>
   );
 }
 
-function Row({ row, period, model }: { row: StripRow; period: string | null; model: StripModel }) {
+function Row({ row, model }: { row: StripRow; model: StripModel }) {
   const dash = "—";
   return (
     <li className="cs-row">
@@ -27,14 +31,13 @@ function Row({ row, period, model }: { row: StripRow; period: string | null; mod
       <div className="cs-line" aria-hidden="true">
         <Cell label={model.thenLabel}>{row.then === null ? dash : fmt1(row.then)}</Cell>
         <span className="cs-arrow">→</span>
-        <Cell label={model.nowLabel}>{row.now === null ? dash : fmt1(row.now)}</Cell>
-        {row.projected ? (
-          <>
-            <span className="cs-arrow">→</span>
-            <Cell label={`${period?.slice(0, 4)}s, models`} tone="future">
-              {`${fmt1(row.projected.min)}–${fmt1(row.projected.max)}`}
-            </Cell>
-          </>
+        <Cell label={model.nowLabel} sub="last 10 years">
+          {row.now === null ? dash : fmt1(row.now)}
+        </Cell>
+        {row.change ? (
+          <p className="cs-models">
+            Models project about <b>{signed(row.change.median)}</b> more a year by the {model.projectedDecade} <span className="cs-range">(range {signed(row.change.min)} to {signed(row.change.max)})</span>
+          </p>
         ) : null}
       </div>
       <p className={`cs-trend${row.hasTrend ? " yes" : ""}`}>{row.hasTrend ? `A ${row.trend}.` : row.trend ? `Record: ${row.trend.replace(/^./, (c) => c.toUpperCase())}.` : ""}</p>
@@ -43,8 +46,8 @@ function Row({ row, period, model }: { row: StripRow; period: string | null; mod
 }
 
 /**
- * Climate change at this address in one glance, at the top of "Your history": days a year then (2000s), now (2016–2025) and projected
- * (2040s, the range across climate models). The numbers come from /api/future, which reads the precomputed file for prepared
+ * Climate change at this address in one glance, at the top of "Your history": days a year in the record then (2000s) and now (2016–2025, the
+ * last 10 years; the same windows What's changing uses), then the models' own change by the 2040s with the range across models. The numbers come from /api/future, which reads the precomputed file for prepared
  * addresses and the live archive otherwise.
  */
 export function ClimateStrip({ lat, lon, address }: { lat: number; lon: number; address: string }) {
@@ -78,15 +81,10 @@ export function ClimateStrip({ lat, lon, address }: { lat: number; lon: number; 
       ) : (
         <>
           <ul className="cs-rows">
-            {state.model.hot ? <Row row={state.model.hot} period={state.model.projectedPeriod} model={state.model} /> : null}
-            {state.model.rain ? <Row row={state.model.rain} period={null} model={state.model} /> : null}
+            {state.model.hot ? <Row row={state.model.hot} model={state.model} /> : null}
+            {state.model.rain ? <Row row={state.model.rain} model={state.model} /> : null}
           </ul>
-          {state.model.hot?.projected ? (
-            <p className="cs-caveat">
-              The {state.model.projectedPeriod?.slice(0, 4)}s range is from climate models (CMIP6), not a forecast: the lowest to the highest of the models, on a grid about 25 km wide.
-              {state.model.hotModelNote ? ` ${state.model.hotModelNote}` : ""}
-            </p>
-          ) : null}
+          {state.model.hot?.change ? <p className="cs-caveat">{state.model.caveat}</p> : null}
           <p className="cs-fine">Days a year, averaged over the years shown. From a weather reanalysis, not a thermometer at the address. “Trend” is said only when a Mann-Kendall test gives p under 0.05.</p>
           <p className="cs-more">
             <NavLink address={address} tab="future" className="cs-link">

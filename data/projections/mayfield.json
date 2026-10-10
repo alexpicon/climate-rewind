@@ -2,7 +2,7 @@
  "slug": "mayfield",
  "lat": 36.741570704769,
  "lon": -88.635704510878,
- "built": "2026-10-09T11:59:14.945Z",
+ "built": "2026-10-10T06:08:36.948Z",
  "observed": {
   "firstYear": 2000,
   "lastYear": 2025,
@@ -49,20 +49,12 @@
       "perYear": 73.4
      },
      {
-      "label": "2010s",
-      "startYear": 2010,
-      "endYear": 2019,
-      "years": 10,
-      "total": 865,
-      "perYear": 86.5
-     },
-     {
-      "label": "2020 to 2025",
-      "startYear": 2020,
+      "label": "2016 to 2025",
+      "startYear": 2016,
       "endYear": 2025,
-      "years": 6,
-      "total": 476,
-      "perYear": 79.3
+      "years": 10,
+      "total": 840,
+      "perYear": 84
      }
     ],
     "trend": {
@@ -116,20 +108,12 @@
       "perYear": 15.3
      },
      {
-      "label": "2010s",
-      "startYear": 2010,
-      "endYear": 2019,
-      "years": 10,
-      "total": 224,
-      "perYear": 22.4
-     },
-     {
-      "label": "2020 to 2025",
-      "startYear": 2020,
+      "label": "2016 to 2025",
+      "startYear": 2016,
       "endYear": 2025,
-      "years": 6,
-      "total": 117,
-      "perYear": 19.5
+      "years": 10,
+      "total": 192,
+      "perYear": 19.2
      }
     ],
     "trend": {
@@ -183,20 +167,12 @@
       "perYear": 10.7
      },
      {
-      "label": "2010s",
-      "startYear": 2010,
-      "endYear": 2019,
-      "years": 10,
-      "total": 115,
-      "perYear": 11.5
-     },
-     {
-      "label": "2020 to 2025",
-      "startYear": 2020,
+      "label": "2016 to 2025",
+      "startYear": 2016,
       "endYear": 2025,
-      "years": 6,
-      "total": 64,
-      "perYear": 10.7
+      "years": 10,
+      "total": 117,
+      "perYear": 11.7
      }
     ],
     "trend": {
@@ -250,20 +226,12 @@
       "perYear": 32.5
      },
      {
-      "label": "2010s",
-      "startYear": 2010,
-      "endYear": 2019,
-      "years": 10,
-      "total": 439,
-      "perYear": 43.9
-     },
-     {
-      "label": "2020 to 2025",
-      "startYear": 2020,
+      "label": "2016 to 2025",
+      "startYear": 2016,
       "endYear": 2025,
-      "years": 6,
-      "total": 193,
-      "perYear": 32.2
+      "years": 10,
+      "total": 348,
+      "perYear": 34.8
      }
     ],
     "trend": {
@@ -339,74 +307,57 @@
  },
  "notices": {},
  "explanation": {
-  "generatedAt": "2026-10-09T11:59:19.483Z",
+  "generatedAt": "2026-10-10T06:08:36.948Z",
   "model": "claude-sonnet-5-5",
   "cached": false,
   "state": "ok",
   "sentences": [
    {
-    "text": "From 2000 to 2025, days with a feels-like high of 90°F or more averaged 73.4 a year in the 2000s, 86.5 in the 2010s, and 79.3 from 2020 to 2025, with no clear trend yet.",
+    "text": "At this address, days with an air temperature high of 90°F or more averaged 32.5 days a year in the 2000s and 34.8 days a year in 2016 to 2025, the last 10 years.",
     "cites": [
-     "past-hot-days"
+     "past-air-hot-days"
     ]
    },
    {
-    "text": "Days with a feels-like high of 100°F or more and days with 1 inch of rain or more also show no clear trend yet.",
+    "text": "The trend test found no clear trend yet, so the record does not show a direction.",
     "cites": [
-     "past-very-hot-days",
-     "past-heavy-rain"
+     "past-air-hot-days"
     ]
    },
    {
-    "text": "Climate models project air-temperature highs of 90°F or more on 78.6 days a year in the middle model for 2041 to 2050, with models ranging from 57 to 81.5, compared with 51.7 in 2001 to 2020.",
-    "cites": [
-     "future-hot-days"
-    ]
-   },
-   {
-    "text": "The 7 models disagree on the exact number, which is why a range is shown instead of one value.",
+    "text": "Climate models project about +26.9 days a year at or above 90°F for a typical year in 2041 to 2050, compared with 2001 to 2020.",
     "cites": [
      "future-hot-days",
      "caveat"
     ]
    },
    {
-    "text": "These projections describe a typical year in 2041 to 2050 on a grid about 25 km wide, and they are not a forecast of any single year.",
+    "text": "The models disagree: across 7 models, the change ranges from +16.2 to +32.2 days a year.",
+    "cites": [
+     "future-hot-days"
+    ]
+   },
+   {
+    "text": "These are climate-model projections on climate-model grids of about 20–50 km, downscaled by Open-Meteo to about 10 km, not a forecast of any single year or day.",
     "cites": [
      "caveat"
     ]
    },
    {
-    "text": "The models follow a high-emissions path, and the past record's \"no clear trend yet\" means 26 years are too few or too variable to tell.",
+    "text": "The models follow a high-emissions path and run hotter than the record here, so only their change is shown, and the 26 years of past record are too few or too variable to show a trend.",
     "cites": [
      "caveat"
     ]
    }
   ],
   "sources": {
-   "past-hot-days": {
-    "id": "past-hot-days",
+   "past-air-hot-days": {
+    "id": "past-air-hot-days",
     "kind": "history",
-    "chip": "Past: 90°F days",
-    "title": "Days with a feels-like high of 90°F or more",
+    "chip": "Past: 90°F air days",
+    "title": "Days with an air temperature high of 90°F or more",
     "origin": "Open-Meteo historical weather archive (ERA5 reanalysis), daily, 2000 to 2025. Counted from the daily record at this address.",
-    "text": "Days with a feels-like high of 90°F or more, 2000 to 2025. 2000s: 73.4 days a year on average (734 days in 10 years); 2010s: 86.5 days a year on average (865 days in 10 years); 2020 to 2025: 79.3 days a year on average (476 days in 6 years). Trend test (Mann-Kendall with Sen slope, one value per year; a trend counts only if p is under 0.05). Result: no clear trend yet."
-   },
-   "past-very-hot-days": {
-    "id": "past-very-hot-days",
-    "kind": "history",
-    "chip": "Past: 100°F days",
-    "title": "Days with a feels-like high of 100°F or more",
-    "origin": "Open-Meteo historical weather archive (ERA5 reanalysis), daily, 2000 to 2025. Counted from the daily record at this address.",
-    "text": "Days with a feels-like high of 100°F or more, 2000 to 2025. 2000s: 15.3 days a year on average (153 days in 10 years); 2010s: 22.4 days a year on average (224 days in 10 years); 2020 to 2025: 19.5 days a year on average (117 days in 6 years). Trend test (Mann-Kendall with Sen slope, one value per year; a trend counts only if p is under 0.05). Result: no clear trend yet."
-   },
-   "past-heavy-rain": {
-    "id": "past-heavy-rain",
-    "kind": "history",
-    "chip": "Past: heavy rain",
-    "title": "Days with 1 inch of rain or more",
-    "origin": "Open-Meteo historical weather archive (ERA5 reanalysis), daily, 2000 to 2025. Counted from the daily record at this address.",
-    "text": "Days with 1 inch of rain or more, 2000 to 2025. 2000s: 10.7 days a year on average (107 days in 10 years); 2010s: 11.5 days a year on average (115 days in 10 years); 2020 to 2025: 10.7 days a year on average (64 days in 6 years). Trend test (Mann-Kendall with Sen slope, one value per year; a trend counts only if p is under 0.05). Result: no clear trend yet."
+    "text": "Days with an air temperature high of 90°F or more, 2000 to 2025. 2000s: 32.5 days a year on average (325 days in 10 years); 2016 to 2025 (the last 10 years): 34.8 days a year on average (348 days in 10 years). Trend test (Mann-Kendall with Sen slope, one value per year; a trend counts only if p is under 0.05). Result: no clear trend yet."
    },
    "future-hot-days": {
     "id": "future-hot-days",
@@ -414,7 +365,7 @@
     "chip": "Climate models",
     "title": "Days per year with an air-temperature high of 90°F or more, in climate models",
     "origin": "Open-Meteo Climate API (CMIP6 HighResMIP models), daily temperature_2m_max. 7 of 7 CMIP6 HighResMIP models had data for this point.",
-    "text": "Average days a year at or above 90°F (air temperature, not feels-like) in the climate models, 7 models. 2001 to 2020: the middle model has 51.7 days a year; models range from 39.3 to 59.8. 2041 to 2050: the middle model has 78.6 days a year; models range from 57 to 81.5. The middle model changes by 26.9 days a year between the two periods. For comparison, the weather archive counted an average of 37.9 days a year at or above 90°F over 2001 to 2020."
+    "text": "The climate models' own change in days a year at or above 90°F (air temperature, not feels-like), 7 models. Climate models: 51.7/yr (2001 to 2020, models) to 78.6/yr (2041 to 2050), about +26.9 days a year. Across models the change ranges from +16.2 to +32.2 days a year. Models range from 39.3 to 59.8 in 2001 to 2020 and from 57 to 81.5 in 2041 to 2050. These models run hotter than the weather record counted at this spot, so the change is shown, not their raw level."
    },
    "caveat": {
     "id": "caveat",
@@ -422,7 +373,7 @@
     "chip": "How sure?",
     "title": "What the projections are, and are not",
     "origin": "Open-Meteo Climate API; CMIP6 HighResMIP climate models",
-    "text": "Climate-model projections (CMIP6), not a forecast; ~25 km grid; models disagree, so we show the range. These models follow a high-emissions path (as close to RCP8.5 as CMIP6 gets), and Open-Meteo adjusts them to match the past record at this spot, which does not change the size of the warming they show. They describe how often hot days could occur in a typical year of 2041 to 2050, not what any single year or day will do. A trend in the past record is reported only when a statistical test gives p under 0.05; otherwise the record says \"no clear trend yet\", which means the 26 years are too few or too variable to tell."
+    "text": "Climate models (CMIP6) are physics simulations, not a forecast; they run hotter than the record here, so we show their change. These models follow a high-emissions path (as close to RCP8.5 as CMIP6 gets). We show how much they say it changes, not their raw level. The models run on climate-model grids of about 20–50 km, downscaled by Open-Meteo to about 10 km, and they disagree, so the range across models is shown. They describe how often hot days could occur in a typical year of 2041 to 2050, not what any single year or day will do. A trend in the past record is reported only when a statistical test gives p under 0.05; otherwise the record says \"no clear trend yet\", which means the 26 years are too few or too variable to tell."
    }
   },
   "dropped": 0,

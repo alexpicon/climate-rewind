@@ -127,12 +127,13 @@ describe("/api/future explanation", () => {
     const n = net();
     const payload = (await (await futureRoute(req(BELLEVUE), { future: { fetch: n.fetchFn, now: () => new Date(NOW) } })).json()) as FuturePayload;
     const sources = futureSources(payload);
-    expect(sources.map((s) => s.id)).toEqual(["past-hot-days", "past-very-hot-days", "past-heavy-rain", "future-hot-days", "caveat"]);
+    expect(sources.map((s) => s.id)).toEqual(["past-air-hot-days", "past-hot-days", "past-very-hot-days", "past-heavy-rain", "future-hot-days", "caveat"]);
     const future = sources.find((s) => s.id === "future-hot-days")!;
-    expect(future.text).toContain("the middle model has 10 days a year; models range from 6 to 14");
-    expect(future.text).toContain("the middle model has 24 days a year; models range from 16 to 40");
+    expect(future.text).toContain("Climate models: 10/yr (2001 to 2020, models) to 24/yr (2041 to 2050), about +14.0 days a year.");
+    expect(future.text).toMatch(/Across models the change ranges from \+[\d.]+ to \+[\d.]+ days a year\./);
+    expect(future.text).toContain("from 16 to 40 in 2041 to 2050");
     expect(sources.find((s) => s.id === "past-heavy-rain")!.text).toContain("Result: no clear trend yet.");
-    expect(sources.find((s) => s.id === "caveat")!.text).toContain("not a forecast; ~25 km grid; models disagree, so we show the range.");
+    expect(sources.find((s) => s.id === "caveat")!.text).toContain("physics simulations, not a forecast");
   });
 
   it("keeps verified sentences (with their sources) and drops one that changes a number", async () => {

@@ -3,11 +3,14 @@
  * same thing as the picture. Both halves are the SAME measure: days a year with an air-temperature high of 90 F or more (the archive for
  * the past decades, the climate models for 2041 to 2050).
  */
-import { observedAverage, trendSentence } from "./observed";
+import { NOW_LABEL, NOW_NAME, observedAverage, trendSentence } from "./observed";
+import { modelChange, signed, type ModelRun } from "./projection";
 import type { DecadeRow, FuturePayload, ObservedMeasure, ProjectionBlock, Spread } from "./types";
 
 export interface ChartBar {
   label: string;
+  /** Small second line under the label ("last 10 years"), or null. */
+  sub: string | null;
   value: number;
   years: number;
 }
@@ -23,6 +26,10 @@ export interface ChartModel {
   observedBaseline: number | null;
   /** One plain sentence on how the models' past compares with the record (they can run high or low at a spot). Null if either is missing. */
   modelNote: string | null;
+  /** The same comparison as a word, for the one-line caveat: do the models run higher than, close to, or lower than the record over 2001-2020? */
+  modelRun: ModelRun | null;
+  /** The models' own change, 2001-2020 to the 2040s, with the range across models. */
+  change: Spread | null;
   /** Top of the y axis, a round number above everything drawn. */
   yMax: number;
   ticks: number[];
@@ -51,7 +58,7 @@ export function airMeasure(payload: FuturePayload): ObservedMeasure | undefined 
   return payload.observed?.measures.find((m) => m.id === "air90");
 }
 
-const barOf = (d: DecadeRow): ChartBar => ({ label: d.label, value: d.perYear, years: d.years });
+const barOf = (d: DecadeRow): ChartBar => ({ label: d.label, sub: d.label === NOW_LABEL ? NOW_NAME : null, value: d.perYear, years: d.years });
 
 export function buildChartModel(payload: FuturePayload): ChartModel | null {
   const air = airMeasure(payload);
@@ -66,12 +73,14 @@ export function buildChartModel(payload: FuturePayload): ChartModel | null {
 
   const observedBaseline = proj && air ? observedAverage(air, proj.baselinePeriod[0], proj.baselinePeriod[1]) : null;
   let modelNote: string | null = null;
+  let modelRun: ModelRun | null = null;
   if (modelPast && observedBaseline !== null) {
     const mid = modelPast.spread.median;
     const close = Math.abs(mid - observedBaseline) < Math.max(1, observedBaseline * 0.2);
+    modelRun = close ? "close" : mid > observedBaseline ? "higher" : "lower";
     modelNote = close
       ? `For ${modelPast.label} the models' middle value (${fmt1(mid)}) is close to the ${fmt1(observedBaseline)} the weather record counted.`
-      : `For ${modelPast.label} the models' middle value (${fmt1(mid)}) is ${mid > observedBaseline ? "higher" : "lower"} than the ${fmt1(observedBaseline)} the weather record counted at this spot, so read the change from one model band to the next, not the height against the bars.`;
+      : `For ${modelPast.label} the models' middle value (${fmt1(mid)}) is ${mid > observedBaseline ? "higher" : "lower"} than the ${fmt1(observedBaseline)} the weather record counted at this spot, so we read the change from one model band to the next, not their height against the bars.`;
   }
 
   const parts: string[] = [];
@@ -85,23 +94,33 @@ export function buildChartModel(payload: FuturePayload): ChartModel | null {
     modelPast,
     observedBaseline,
     modelNote,
+    modelRun,
+    change: modelChange(proj),
     yMax,
     ticks,
     summary: parts.join(" "),
   };
 }
 
-/** The sentence under the heading: what the record counted lately, then how the models' middle value moves, with the range across models. */
+/**
+ * The sentence under the heading: what the record counted in the two windows, then the models' own change with the range across models
+ * ("Climate models: X/yr (2001–2020, models) → Y/yr (2041–2050), about +Z days a year").
+ */
 export function headline(payload: FuturePayload): string {
   const chart = buildChartModel(payload);
   if (!chart) return "";
+  const dash = (t: string) => t.replace(" to ", "–");
+  const first = chart.bars[0];
   const last = chart.bars[chart.bars.length - 1];
-  const pastPart = last ? `The weather record counted about ${fmt1(last.value)} days a year at or above 90°F in ${last.label.replace(" to ", "–")}.` : "";
+  let pastPart = "";
+  if (last && first && last !== first) pastPart = `The weather record counted about ${fmt1(last.value)} days a year at or above 90°F in ${dash(last.label)} (the last 10 years), ${last.value >= first.value ? "up" : "down"} from ${fmt1(first.value)} in the ${first.label}.`;
+  else if (last) pastPart = `The weather record counted about ${fmt1(last.value)} days a year at or above 90°F in ${dash(last.label)}.`;
   let futurePart = "";
-  if (chart.future && chart.modelPast) {
-    futurePart = `Climate models put the middle value at ${fmt1(chart.future.spread.median)} a year in ${chart.future.label}, ${chart.future.spread.median >= chart.modelPast.spread.median ? "up" : "down"} from ${fmt1(chart.modelPast.spread.median)} in ${chart.modelPast.label}, with models ranging from ${fmt1(chart.future.spread.min)} to ${fmt1(chart.future.spread.max)}.`;
+  if (chart.future && chart.modelPast && chart.change) {
+    const c = chart.change;
+    futurePart = `Climate models: ${fmt1(chart.modelPast.spread.median)} a year (${dash(chart.modelPast.label)}, models) → ${fmt1(chart.future.spread.median)} a year (${dash(chart.future.label)}), about ${signed(c.median)} days a year (models range from ${signed(c.min)} to ${signed(c.max)}).`;
   } else if (chart.future) {
-    futurePart = `Climate models put the middle value at ${fmt1(chart.future.spread.median)} a year in ${chart.future.label}, with models ranging from ${fmt1(chart.future.spread.min)} to ${fmt1(chart.future.spread.max)}.`;
+    futurePart = `Climate models put the middle value at ${fmt1(chart.future.spread.median)} a year in ${dash(chart.future.label)}, with models ranging from ${fmt1(chart.future.spread.min)} to ${fmt1(chart.future.spread.max)}.`;
   }
   return [pastPart, futurePart].filter(Boolean).join(" ");
 }
